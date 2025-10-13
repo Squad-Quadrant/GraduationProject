@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786b82f37d6e488d9861d17600d66f5f, type: 3}
+  m_Name: Editor
+  m_EditorClassIdentifier: 
+  PropertyBar: {fileID: 3451308049913169027, guid: bc9cc37bd6d182a41a074de58497300e, type: 3}
+  Icon_Flower: {fileID: 2800000, guid: ec70ff3f6477a2c4ab2f2c80a96ad417, type: 3}
+  Icon_Head: {fileID: 2800000, guid: 64609a1fb97fad143bfa4ad5ed68405c, type: 3}
