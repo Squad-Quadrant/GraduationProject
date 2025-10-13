@@ -45,7 +45,7 @@ namespace Fungus.EditorUtils
         [MenuItem("Tools/Fungus/Utilities/Export Fungus Package - Lite")]
         static void ExportFungusPackageLite()
         {
-            ExportFungusPackage(new string[] { "Assets/Fungus" });
+            ExportFungusPackage(new string[] { "Assets/Hmxs/Plugins/Fungus" });
         }
 
         static void ExportFungusPackage(string[] folders)
