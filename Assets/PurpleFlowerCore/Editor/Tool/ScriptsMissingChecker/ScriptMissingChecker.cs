@@ -70,7 +70,7 @@ namespace GP
                 if (num > 0)
                 {
                     _gos.Add(go);
-                    sb.AppendLine(go.ToString() + $"({num})");
+                    sb.AppendLine(go + $"({num})");
                 }
             }
             if(sb.Length == 0)
