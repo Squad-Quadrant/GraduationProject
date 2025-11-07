@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,17 +10,47 @@ namespace WarFog
     public class WarFogData
     {
         [SerializeField] private WarFogState[,] _visibilityGrids;
+        
+        
+        public WarFogState[,] VisibilityGrids
+        {
+            get
+            {
+                if (_visibilityGrids == null)
+                    return null;
 
-        // public WarFogState[,] VisibilityGrid
-        // {
-        //     get
-        //     {
-        //         // 深拷贝
-        //         // var currentVisibilityGrids 
-        //     }
-        // }
+                int rows = _visibilityGrids.GetLength(0);
+                int cols = _visibilityGrids.GetLength(1);
+                var data = new WarFogState[rows, cols];
 
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                        data[r, c] = _visibilityGrids[r, c];
+                }
+
+                foreach (var adjust in WarFogAdjusts)
+                {
+                    adjust?.Invoke(data);
+                }
+
+                return data;
+            }
+        }
+        
+        public void Init(WarFogState[,] visibilityGrids)
+        {
+            // todo: 我还没想好WarFogData本身序列化还是另起一数据类
+            _visibilityGrids = visibilityGrids;
+        }
+
+        // 外部添加的视野调整
         public List<WarFogAdjust> WarFogAdjusts = new();
+        
+        public void AddAdjust(WarFogAdjust adjust)
+        {
+            WarFogAdjusts.Add(adjust);
+        }
 
     }
     
