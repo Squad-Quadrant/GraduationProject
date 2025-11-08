@@ -25,7 +25,7 @@ namespace PurpleFlowerCore
         }
 #if PFC_DEBUGMENU
         
-        [RuntimeInitializeOnLoadMethod]
+        // [RuntimeInitializeOnLoadMethod]
         private static void OnGameStart()
         {
             MonoSystem.AddUpdateListener(DebugMenuOpen);
