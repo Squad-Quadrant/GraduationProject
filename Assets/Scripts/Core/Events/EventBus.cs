@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Log;
 
 namespace Core.Events
 {
@@ -22,6 +23,10 @@ namespace Core.Events
 		private readonly Dictionary<Type, List<Subscription>> _subscriptionDic = new();
 		private readonly List<Subscription> _onceToRemove = new();
 
+		private readonly ILog _logger;
+
+		public EventBus(ILog logger) => _logger = logger;
+
 		#region Subscribe Methods
 
 		public void Subscribe<TEvent>(Action<TEvent> handler, int priority = 0, bool onlyOnce = false) where TEvent : IEvent
@@ -38,11 +43,12 @@ namespace Core.Events
 			}
 
 			if (subscriptions.Exists(s => s.Handler.Equals(handler)))
-				throw new Exception($"[Event:Subscribe] {eventType.FullName} already exists");
+				_logger.LogWarning($"[Event] [Subscribe] {eventType.Name} already exists");
 
 			var subscription = new Subscription(handler, priority, onlyOnce);
 			subscriptions.Add(subscription);
 			subscriptions.Sort((a, b) => b.Priority.CompareTo(a.Priority));
+			_logger.Log("[Event] Subscribed to event: " + eventType.Name);
 		}
 
 		#endregion
@@ -58,9 +64,13 @@ namespace Core.Events
 			var eventType = typeof(TEvent);
 
 			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
-				throw new Exception($"[Event:Unsubscribe] {eventType.FullName} does not exist");
+			{
+				_logger.LogWarning($"[Event] [Unsubscribe] {eventType.Name} does not exist");
+				return;
+			}
 
 			subscriptions.RemoveAll(s => s.Handler.Equals(handler));
+			_logger.Log("[Event] Unsubscribed from event: " + eventType.Name);
 
 			if (subscriptions.Count == 0)
 				_subscriptionDic.Remove(eventType);
@@ -76,7 +86,10 @@ namespace Core.Events
 			var eventType = typeof(TEvent);
 
 			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
-				throw new Exception($"[Event:Publish] {eventType.FullName} does not exist");
+			{
+				_logger.LogWarning($"[Event] [Publish] {eventType.Name} does not exist");
+				return;
+			}
 
 			_onceToRemove.Clear();
 
@@ -92,9 +105,11 @@ namespace Core.Events
 				}
 				catch (Exception ex)
 				{
-					throw new Exception($"[Event:Publish] Error invoking handler for {eventType.FullName}", ex);
+					throw new Exception($"[Event] Error invoking handler for {eventType.Name}", ex);
 				}
 			}
+
+			_logger.Log($"[Event] Event published: {eventType.Name}");
 
 			foreach (var subscription in _onceToRemove)
 				subscriptions.Remove(subscription);

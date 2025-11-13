@@ -26,7 +26,6 @@ namespace WZHTest.EventBus
 		private void SubscribeTestEvent()
 		{
 			_eventBus.Subscribe<TestEvent>(OnTestEventReceived);
-			Debug.Log("Subscribed to TestEvent.");
 		}
 
 		[Button]
@@ -34,7 +33,6 @@ namespace WZHTest.EventBus
 		{
 			var testEvent = new TestEvent("Hello from EventBusTest!");
 			_eventBus.Publish(testEvent);
-			Debug.Log("Published TestEvent.");
 		}
 
 		private static void OnTestEventReceived(TestEvent obj)

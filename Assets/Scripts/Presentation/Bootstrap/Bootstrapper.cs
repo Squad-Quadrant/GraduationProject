@@ -1,5 +1,4 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -20,7 +19,7 @@ namespace Presentation.Bootstrap
 				Initialize();
 		}
 
-		public void Initialize()
+		private void Initialize()
 		{
 			Debug.Log("====================================");
 			Debug.Log("[Bootstrapper] Initialization started...");
