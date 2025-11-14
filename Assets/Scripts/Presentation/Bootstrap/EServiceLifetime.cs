@@ -1,6 +1,6 @@
 ﻿namespace Presentation.Bootstrap
 {
-	public enum ServiceLifetime
+	public enum EServiceLifetime
 	{
 		Singleton,
 		Transient
