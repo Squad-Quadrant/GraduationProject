@@ -60,7 +60,7 @@ Shader "MoreMountains/MMBoilingLine"
             #include "UnityShaderVariables.cginc"
 
 
-            struct appdata_t
+            struct AppData
             {
                 float4 vertex : POSITION;
                 float4 color : COLOR;
@@ -68,7 +68,7 @@ Shader "MoreMountains/MMBoilingLine"
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            struct v2f
+            struct V2F
             {
                 float4 vertex : SV_POSITION;
                 fixed4 color : COLOR;
@@ -89,9 +89,9 @@ Shader "MoreMountains/MMBoilingLine"
             uniform float4 _Noise_ST;
             uniform float _Amount;
 
-            v2f vert(appdata_t IN)
+            V2F vert(AppData IN)
             {
-                v2f OUT;
+                V2F OUT;
                 UNITY_SETUP_INSTANCE_ID(IN);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
                 OUT.worldPosition = IN.vertex;
@@ -106,7 +106,7 @@ Shader "MoreMountains/MMBoilingLine"
                 return OUT;
             }
 
-            fixed4 frag(v2f IN) : SV_Target
+            fixed4 frag(V2F IN) : SV_Target
             {
                 float2 uv_MainTex = IN.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
                 float2 panner23 = ((floor((_Time.y * _TimeQuantize)) / _TimeQuantize) * _PanSpeed + (uv_MainTex *

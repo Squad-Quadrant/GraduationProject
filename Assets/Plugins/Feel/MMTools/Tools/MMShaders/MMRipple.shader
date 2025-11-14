@@ -38,7 +38,7 @@ Shader "MoreMountains/MMRipple"
             sampler2D_float _CameraDepthTexture;
             float _Density;
 
-            struct v2f
+            struct V2F
             {
                 float4 grabScreenPosition : TEXCOORD0;
                 float4 position : SV_POSITION;
@@ -50,9 +50,9 @@ Shader "MoreMountains/MMRipple"
                 #endif
             };
 
-            v2f vert(appdata_full v)
+            V2F vert(appdata_full v)
             {
-                v2f o;
+                V2F o;
                 o.position = UnityObjectToClipPos(v.vertex);
 
                 #ifdef SOFTPARTICLES_ON
@@ -68,7 +68,7 @@ Shader "MoreMountains/MMRipple"
                 return o;
             }
 
-            half4 frag(v2f i) : SV_Target
+            half4 frag(V2F i) : SV_Target
             {
                 #ifdef SOFTPARTICLES_ON
 					float sceneZ = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.computedScreenPosition)));

@@ -49,14 +49,14 @@
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 			
-			struct appdata_t
+			struct AppData
 			{
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
 			};
 
-			struct v2f
+			struct V2F
 			{
 				float4 vertex   : SV_POSITION;
 				fixed4 color    : COLOR;
@@ -65,9 +65,9 @@
 			
 			fixed4 _Color;
 
-			v2f vert(appdata_t IN)
+			V2F vert(AppData IN)
 			{
-				v2f OUT;
+				V2F OUT;
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
 #ifdef UNITY_HALF_TEXEL_OFFSET
@@ -79,7 +79,7 @@
 
 			sampler2D _MainTex;
 
-			fixed4 frag(v2f IN) : SV_Target
+			fixed4 frag(V2F IN) : SV_Target
 			{
 				half4 color = tex2D(_MainTex, IN.texcoord) * IN.color;
 				clip (color.a - 0.01);

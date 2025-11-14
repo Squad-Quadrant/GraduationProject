@@ -60,7 +60,7 @@ Shader "MoreMountains/MMMatcap"
             #include "Lighting.cginc"
             #include "UnityPBSLighting.cginc"
 
-            struct v2f
+            struct V2F
             {
                 V2F_SHADOW_CASTER;
                 float3 worldPos : TEXCOORD1;
@@ -69,11 +69,11 @@ Shader "MoreMountains/MMMatcap"
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            v2f vert(appdata_full v)
+            V2F vert(appdata_full v)
             {
-                v2f o;
+                V2F o;
                 UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_INITIALIZE_OUTPUT(V2F, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
@@ -84,7 +84,7 @@ Shader "MoreMountains/MMMatcap"
                 return o;
             }
 
-            half4 frag(v2f IN
+            half4 frag(V2F IN
                 #if !defined( CAN_SKIP_VPOS )
 			, UNITY_VPOS_TYPE vpos : VPOS
                 #endif

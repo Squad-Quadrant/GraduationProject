@@ -43,7 +43,7 @@ Properties {
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            struct v2f
+            struct V2F
             {
 				float4 pos : SV_POSITION;
                 fixed4 color : COLOR;
@@ -71,11 +71,11 @@ Properties {
 			    return float4(pos.xy * flip, pos.z, 1.0);
 			}
 
-            v2f vert (appdata v)
+            V2F vert (appdata v)
             {
-				v2f o;
+				V2F o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_OUTPUT(v2f, o);
+				UNITY_INITIALIZE_OUTPUT(V2F, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
                 v.vertex.xy -= _Pivot;
@@ -105,7 +105,7 @@ Properties {
                 return o;
             }
             
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag (V2F i) : SV_Target
             {
                 float2 scrPos = i.pos.xy;
                 fixed4 color = i.color;

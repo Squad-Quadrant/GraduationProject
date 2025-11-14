@@ -34,17 +34,17 @@ Properties {
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-			struct v2f
+			struct V2F
 			{
 				float4 pos : SV_POSITION;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-            v2f vert (appdata v)
+            V2F vert (appdata v)
             {
-                v2f o;
+                V2F o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_OUTPUT(v2f, o);
+				UNITY_INITIALIZE_OUTPUT(V2F, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 v.vertex.xy *= 2.0;
                 o.pos = UnityObjectToClipPos(v.vertex);

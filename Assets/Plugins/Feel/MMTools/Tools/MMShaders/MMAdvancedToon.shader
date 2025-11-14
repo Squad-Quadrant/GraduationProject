@@ -400,7 +400,7 @@ Shader "MoreMountains/MMAdvancedToon"
             #include "Lighting.cginc"
             #include "UnityPBSLighting.cginc"
 
-            struct v2f
+            struct V2F
             {
                 V2F_SHADOW_CASTER;
                 float2 customPack1 : TEXCOORD1;
@@ -412,11 +412,11 @@ Shader "MoreMountains/MMAdvancedToon"
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            v2f vert(appdata_full v)
+            V2F vert(appdata_full v)
             {
-                v2f o;
+                V2F o;
                 UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_INITIALIZE_OUTPUT(V2F, o);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 Input customInputData;
                 vertexDataFunc(v, customInputData);
@@ -436,7 +436,7 @@ Shader "MoreMountains/MMAdvancedToon"
                 return o;
             }
 
-            half4 frag(v2f IN
+            half4 frag(V2F IN
                 #if !defined( CAN_SKIP_VPOS )
 			, UNITY_VPOS_TYPE vpos : VPOS
                 #endif

@@ -39,7 +39,7 @@
                 sampler2D _MainTex;
                 fixed4 _TintColor;
 
-                struct appdata_t
+                struct AppData
                 {
                     float4 vertex : POSITION;
                     fixed4 color : COLOR;
@@ -47,7 +47,7 @@
                     UNITY_VERTEX_INPUT_INSTANCE_ID
                 };
 
-                struct v2f
+                struct V2F
                 {
                     float4 vertex : SV_POSITION;
                     fixed4 color : COLOR;
@@ -58,9 +58,9 @@
 
                 float4 _MainTex_ST;
 
-                v2f vert(appdata_t v)
+                V2F vert(AppData v)
                 {
-                    v2f o;
+                    V2F o;
                     UNITY_SETUP_INSTANCE_ID(v);
                     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                     o.vertex = UnityObjectToClipPos(v.vertex);
@@ -73,7 +73,7 @@
                 UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
                 float _InvFade;
 
-                fixed4 frag(v2f i) : SV_Target
+                fixed4 frag(V2F i) : SV_Target
                 {
                     fixed4 col = 2.0f * i.color * _TintColor * tex2D(_MainTex, i.texcoord);
                     UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(0,0,0,0));

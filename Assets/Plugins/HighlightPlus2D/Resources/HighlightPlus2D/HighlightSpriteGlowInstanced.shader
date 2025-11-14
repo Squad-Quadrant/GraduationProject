@@ -44,7 +44,7 @@ Properties {
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            struct v2f
+            struct V2F
             {
                 fixed4 color : COLOR;
                 float2 uv : TEXCOORD0;
@@ -73,11 +73,11 @@ Properties {
 			    return float4(pos.xy * flip, pos.z, 1.0);
 			}
 
-            v2f vert (appdata v, out float4 pos : SV_POSITION)
+            V2F vert (appdata v, out float4 pos : SV_POSITION)
             {
-                v2f o;
+                V2F o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_OUTPUT(v2f, o);
+				UNITY_INITIALIZE_OUTPUT(V2F, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
 
@@ -111,7 +111,7 @@ Properties {
                 return o;
             }
             
-            fixed4 frag (v2f i, UNITY_VPOS_TYPE scrPos : VPOS) : SV_Target
+            fixed4 frag (V2F i, UNITY_VPOS_TYPE scrPos : VPOS) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
                 float4 _Glow = UNITY_ACCESS_INSTANCED_PROP(Props, _GlowArray);
