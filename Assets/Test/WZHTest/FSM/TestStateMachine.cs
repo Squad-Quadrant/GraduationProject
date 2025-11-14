@@ -3,10 +3,10 @@ using Core.FSM;
 using Core.Log;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Test.WZHTest.FSM.States;
 using UnityEngine;
-using WZHTest.FSM.States;
 
-namespace WZHTest.FSM
+namespace Test.WZHTest.FSM
 {
 	public class TestStateMachine : MonoBehaviour
 	{

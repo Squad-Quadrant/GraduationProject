@@ -1,16 +1,16 @@
 ﻿using Core.FSM;
 using UnityEngine;
 
-namespace WZHTest.FSM.States
+namespace Test.WZHTest.FSM.States
 {
-	public class EnemyTurnState : IState<TurnContext>
+	public class PlayerTurnState : IState<TurnContext>
 	{
-		public string Name => "EnemyTurn";
+		public string Name => "PlayerTurn";
 
 		public void OnEnter(TurnContext context)
 		{
-			Debug.Log($"===== 敌人回合开始 =====");
-			context.isPlayerTurn = false;
+			Debug.Log($"===== 玩家回合开始 (第 {context.turnNumber} 回合) =====");
+			context.isPlayerTurn = true;
 			context.turnTimer = 0f;
 		}
 
@@ -21,7 +21,8 @@ namespace WZHTest.FSM.States
 
 		public void OnExit(TurnContext context)
 		{
-			Debug.Log("敌人回合结束");
+			Debug.Log("玩家回合结束");
+			context.isPlayerTurn = false;
 			context.turnNumber++;
 		}
 	}

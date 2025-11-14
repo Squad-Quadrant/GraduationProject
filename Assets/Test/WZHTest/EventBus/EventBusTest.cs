@@ -3,7 +3,7 @@ using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace WZHTest.EventBus
+namespace Test.WZHTest.EventBus
 {
 	public class EventBusTest : MonoBehaviour
 	{

@@ -1,7 +1,7 @@
 using PurpleFlowerCore.Utility;
 using UnityEngine;
 
-namespace LJHTest
+namespace Test.LJHTest
 {
     public class LJHTestSingleton : AutoSingletonMono<LJHTestSingleton>
     {

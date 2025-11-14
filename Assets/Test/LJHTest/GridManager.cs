@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WarFog;
 
-namespace LJHTest
+namespace Test.LJHTest
 {
     public class GridManager : MonoBehaviour
     {

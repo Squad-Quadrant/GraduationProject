@@ -1,6 +1,6 @@
 ﻿using Core.Events;
 
-namespace WZHTest.EventBus
+namespace Test.WZHTest.EventBus
 {
 	public struct TestEvent : IEvent
 	{

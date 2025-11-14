@@ -1,6 +1,7 @@
 using UnityEngine;
 using WarFog;
-namespace LJHTest
+
+namespace Test.LJHTest
 {
     public class Grid : MonoBehaviour
     {

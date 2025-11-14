@@ -1,7 +1,6 @@
 ﻿using Presentation.FSM;
-using UnityEngine;
 
-namespace WZHTest.FSM
+namespace Test.WZHTest.FSM
 {
 	public class TestDebugger : StateMachineDebuggerBase<TurnContext>
 	{

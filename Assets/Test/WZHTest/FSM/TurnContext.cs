@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WZHTest.FSM
+namespace Test.WZHTest.FSM
 {
 	[Serializable]
 	public class TurnContext
