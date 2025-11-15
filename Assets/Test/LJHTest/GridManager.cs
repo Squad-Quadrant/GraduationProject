@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Systems.WarFog;
 using UnityEngine;
-using WarFog;
 
 namespace Test.LJHTest
 {
@@ -30,7 +30,7 @@ namespace Test.LJHTest
             {
                 for (int j = 0; j < Y; j++)
                 {
-                    GetGrid(i, j).warFog.SetWarFogState(states[i, j]);
+                    GetGrid(i, j).warFog.SetWarFogState(states[i, j], new Vector2(j - character.posX, character.posY - i) );
                 }
             }
         }

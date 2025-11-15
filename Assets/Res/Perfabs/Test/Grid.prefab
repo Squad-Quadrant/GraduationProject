@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d86eeed30674d7bb24990f6d6c2ac45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 3849556150644809911}
+  spriteRenderer: {fileID: 3849556150644809911}
+  warFogMaterialInstance: {fileID: 2100000, guid: ecc3390b23cd2ba4bb917d049140de02, type: 2}
 --- !u!114 &6156054707077352261
 MonoBehaviour:
   m_ObjectHideFlags: 0

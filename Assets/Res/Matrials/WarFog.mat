@@ -64,7 +64,7 @@ Material:
     - _NoiseIntensity: 0.47
     - _NoiseScale: 1
     - _NoiseStrength: 0.2
-    - _Progress: 0
+    - _Progress: -0.2
     - _Victor: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

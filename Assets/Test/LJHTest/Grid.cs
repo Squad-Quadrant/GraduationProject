@@ -1,5 +1,5 @@
+using Systems.WarFog;
 using UnityEngine;
-using WarFog;
 
 namespace Test.LJHTest
 {

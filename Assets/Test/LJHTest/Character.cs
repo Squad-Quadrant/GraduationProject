@@ -1,5 +1,5 @@
+using Systems.WarFog;
 using UnityEngine;
-using WarFog;
 
 namespace Test.LJHTest
 {
@@ -7,6 +7,9 @@ namespace Test.LJHTest
     {
         private WarFogData _warFogData = new(); // todo: 语义上应该是视野数据
         public WarFogData WarFogData => _warFogData;
+
+        public int posX = 2;
+        public int posY = 2;
 
         private void Awake()
         {
