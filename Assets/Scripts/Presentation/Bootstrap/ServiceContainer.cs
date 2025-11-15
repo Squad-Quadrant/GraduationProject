@@ -18,7 +18,7 @@ namespace Presentation.Bootstrap
 		{
 			public Type InterfaceType { get; set; }
 			public Type ImplementationType { get; set; }
-			public ServiceLifetime Lifetime { get; set; }
+			public EServiceLifetime Lifetime { get; set; }
 			public Func<ServiceContainer, object> Factory { get; set; }
 		}
 
@@ -37,7 +37,7 @@ namespace Presentation.Bootstrap
 		/// <param name="lifetime"></param>
 		/// <typeparam name="TInterface"></typeparam>
 		/// <typeparam name="TImplementation"></typeparam>
-		public void Register<TInterface, TImplementation>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+		public void Register<TInterface, TImplementation>(EServiceLifetime lifetime = EServiceLifetime.Singleton)
 			where TImplementation : TInterface
 		{
 			var interfaceType = typeof(TInterface);
@@ -61,7 +61,7 @@ namespace Presentation.Bootstrap
 		/// <param name="lifetime"></param>
 		/// <typeparam name="TInterface"></typeparam>
 		public void Register<TInterface>(Func<ServiceContainer, TInterface> factory,
-			ServiceLifetime lifetime = ServiceLifetime.Singleton)
+			EServiceLifetime lifetime = EServiceLifetime.Singleton)
 		{
 			var interfaceType = typeof(TInterface);
 
@@ -90,7 +90,7 @@ namespace Presentation.Bootstrap
 			{
 				InterfaceType = interfaceType,
 				ImplementationType = instance.GetType(),
-				Lifetime = ServiceLifetime.Singleton,
+				Lifetime = EServiceLifetime.Singleton,
 				Factory = null
 			};
 
@@ -144,7 +144,7 @@ namespace Presentation.Bootstrap
 
 		private object ResolveFromRegistration(ServiceRegistration registration)
 		{
-			if (registration.Lifetime == ServiceLifetime.Singleton)
+			if (registration.Lifetime == EServiceLifetime.Singleton)
 			{
 				if (_instances.TryGetValue(registration.InterfaceType, out var instance))
 					return instance;
@@ -154,7 +154,7 @@ namespace Presentation.Bootstrap
 				return newInstance;
 			}
 
-			if (registration.Lifetime == ServiceLifetime.Transient)
+			if (registration.Lifetime == EServiceLifetime.Transient)
 				return CreateInstance(registration);
 
 			throw new InvalidOperationException($"Unsupported service lifetime: {registration.Lifetime}");

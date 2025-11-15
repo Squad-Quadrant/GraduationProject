@@ -1,4 +1,8 @@
-﻿using Sirenix.OdinInspector;
+﻿using Data.Config;
+using Presentation.Map;
+using Sirenix.OdinInspector;
+using Systems.Interfaces;
+using Systems.Map;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -57,10 +61,7 @@ namespace Presentation.Bootstrap
 			Debug.Log("[Bootstrapper] RootContainer initialized.");
 		}
 
-		private void RegisterGlobalServices()
-		{
-			_rootContainerInstance.RegisterServices();
-		}
+		private void RegisterGlobalServices() => _rootContainerInstance.RegisterServices();
 
 		private void OnBootstrapComplete()
 		{
@@ -78,6 +79,21 @@ namespace Presentation.Bootstrap
 			var levelContainer = levelObj.AddComponent<LevelContainer>();
 			levelContainer.Initialize();
 			levelContainer.RegisterServices();
+
+			// MapLoading Example
+			var mapConfig = Resources.Load<MapConfig>("");
+			var mapData = new MapData();
+			var grid = FindObjectOfType<Grid>();
+			var coordinateConverter = new CoordinateConverter(grid);
+			levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
+			levelContainer.Services.Register(container =>
+			{
+				var converter = container.Resolve<ICoordinateConverter>();
+				var service = new MapSystem(mapData, converter);
+				service.LoadFromConfig(mapConfig);  // 加载配置
+				return service;
+			});
+
 			Debug.Log("[Bootstrapper] LevelContainer created and initialized.");
 			return levelContainer;
 		}
