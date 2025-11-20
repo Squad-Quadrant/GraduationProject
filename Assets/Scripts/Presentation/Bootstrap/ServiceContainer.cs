@@ -164,12 +164,11 @@ namespace Presentation.Bootstrap
 		{
 			// Use reflection to create instance
 			var implementationType = registration.ImplementationType;
-			if (_resolving.Contains(implementationType))
+			if (!_resolving.Add(implementationType))
 			{
 				throw new InvalidOperationException(
 					$"Circular dependency detected while resolving type {implementationType.FullName}");
 			}
-			_resolving.Add(implementationType);
 
 			try
 			{

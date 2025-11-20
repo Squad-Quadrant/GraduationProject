@@ -1,23 +1,13 @@
 ﻿using Data.Config;
-using Systems.Interfaces;
 using UnityEngine;
 
 namespace Systems.Map
 {
-	public class MapSystem
+	public class MapService : IMapService
 	{
 		public MapData Data { get; }
-		private readonly ICoordinateConverter _converter;
 
-		public MapSystem(MapData mapData, ICoordinateConverter converter)
-		{
-			Data = mapData;
-			_converter = converter;
-		}
-
-		public Vector2Int WorldToCell(Vector3 worldPosition) => _converter.WorldToCell(worldPosition);
-
-		public Vector3 CellToWorld(Vector2Int cellPosition) => _converter.CellToWorld(cellPosition);
+		public MapService(MapData mapData) => Data = mapData;
 
 		public void LoadFromConfig(MapConfig config)
 		{

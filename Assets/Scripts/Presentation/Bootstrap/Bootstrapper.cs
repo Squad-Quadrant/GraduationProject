@@ -15,6 +15,7 @@ namespace Presentation.Bootstrap
 		[Title("Prefabs")]
 		[SerializeField] private RootContainer rootContainerPrefab;
 
+		private static bool _initialized;
 		private RootContainer _rootContainerInstance;
 
 		private void Awake()
@@ -25,6 +26,9 @@ namespace Presentation.Bootstrap
 
 		private void Initialize()
 		{
+			if (_initialized) return; // Prevent double initialization
+			_initialized = true;
+
 			Debug.Log("====================================");
 			Debug.Log("[Bootstrapper] Initialization started...");
 
@@ -81,15 +85,16 @@ namespace Presentation.Bootstrap
 			levelContainer.RegisterServices();
 
 			// MapLoading Example
-			var mapConfig = Resources.Load<MapConfig>("");
-			var mapData = new MapData();
+
 			var grid = FindObjectOfType<Grid>();
 			var coordinateConverter = new CoordinateConverter(grid);
 			levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
-			levelContainer.Services.Register(container =>
+
+			levelContainer.Services.Register<IMapService>(container =>
 			{
-				var converter = container.Resolve<ICoordinateConverter>();
-				var service = new MapSystem(mapData, converter);
+				var mapConfig = Resources.Load<MapConfig>("");
+				var mapData = new MapData();
+				var service = new MapService(mapData);
 				service.LoadFromConfig(mapConfig);  // 加载配置
 				return service;
 			});

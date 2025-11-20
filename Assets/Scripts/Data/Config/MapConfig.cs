@@ -9,7 +9,7 @@ namespace Data.Config
 	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map Config")]
 	public class MapConfig : ScriptableObject
 	{
-		[Title("Basic Info")]
+		[Title("Basic Info", bold: true)]
 		[LabelText("地图名称")]
 		public string mapName = "New Map";
 
@@ -17,7 +17,7 @@ namespace Data.Config
 		[MinValue(5)]
 		public Vector2Int size = new(10, 10);
 
-		[Title("Terrain Data")]
+		[Title("Terrain Data", bold: true)]
 		[LabelText("地形配置")]
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
 		public CellConfig[] cells = Array.Empty<CellConfig>();
