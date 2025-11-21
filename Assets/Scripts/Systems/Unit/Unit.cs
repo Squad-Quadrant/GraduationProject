@@ -8,17 +8,17 @@ namespace Systems.Unit
 	[Serializable]
 	public class Unit : ITurnUnit
 	{
-		public string Id { get; set; }
-		public string configId; // 指向UnitConfig的ID
-		public string name;
-		public UnitStats stats = new();		// 角色属性
-		public UnitRuntime runtime = new();	// 角色运行时状态
-		public Vector2Int position;
+		public string Id { get; private set; }
+		public string ConfigId { get; private set; }
+		public string Name { get; private set; }
+		public UnitStats Stats { get; private set; } = new();
+		public UnitRuntime Runtime { get; private set; } = new();
+		public Vector2Int Position { get; set; }
 
 		#region ITurnUnit
 
-		int ITurnUnit.Speed => stats?.speed ?? 0;
-		bool ITurnUnit.CanAct => runtime is { StillAlive: true, isStunned: false };
+		int ITurnUnit.Speed => Stats?.speed ?? 0;
+		bool ITurnUnit.CanAct => Runtime is { StillAlive: true, isStunned: false };
 		public int ActionPriority { get; set; }
 
 		#endregion
@@ -28,16 +28,16 @@ namespace Systems.Unit
 			var unit = new Unit()
 			{
 				Id = unitId,
-				configId = config.configId,
-				name = config.unitName,
-				stats = config.stats.Clone(),
-				position = startPosition
+				ConfigId = config.configId,
+				Name = config.unitName,
+				Stats = config.stats.Clone(),
+				Position = startPosition
 			};
-			unit.runtime.Initialize(unit.stats.maxHp);
+			unit.Runtime.Initialize(unit.Stats.maxHp);
 			return unit;
 		}
 
 		public override string ToString() =>
-			$"[Unit] {name}({Id}) HP:{runtime?.currentHp}/{stats?.maxHp} Pos:{position}";
+			$"[Unit] {Name}({Id}) HP:{Runtime?.currentHp}/{Stats?.maxHp} Pos:{Position}";
 	}
 }

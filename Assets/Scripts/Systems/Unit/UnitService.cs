@@ -12,8 +12,11 @@ namespace Systems.Unit
 	{
 		private readonly IEventBus _eventBus;
 
-		public UnitService(IEventBus eventBus) =>
+		public UnitService(IEventBus eventBus)
+		{
 			_eventBus = eventBus ?? throw new System.ArgumentNullException(nameof(eventBus));
+			Debug.Log("[UnitService] Initialized");
+		}
 
 		private readonly Dictionary<string, Unit> _units = new();
 
@@ -45,7 +48,7 @@ namespace Systems.Unit
 				return;
 			}
 
-			Debug.Log($"[UnitService] Unit destroyed: {unit.name}({unitId})" +
+			Debug.Log($"[UnitService] Unit destroyed: {unit.Name}({unitId})" +
 			          (killerUnitId != null ? $" by {killerUnitId}" : ""));
 
 			_eventBus.Publish(new UnitDestroyedEvent(unit, killerUnitId));
@@ -73,7 +76,7 @@ namespace Systems.Unit
 			_units.Values.ToList();
 
 		public IReadOnlyList<Unit> GetAllAliveUnits() =>
-			_units.Values.Where(u => u.runtime.StillAlive).ToList();
+			_units.Values.Where(u => u.Runtime.StillAlive).ToList();
 
 		public IReadOnlyList<Unit> GetUnitsInRange(Vector2Int center, int range, bool includeCenter = true)
 		{
@@ -83,7 +86,7 @@ namespace Systems.Unit
 			return _units.Values
 				.Where(u =>
 				{
-					int distance = Math.Abs(u.position.x - center.x) + Math.Abs(u.position.y - center.y);
+					int distance = Math.Abs(u.Position.x - center.x) + Math.Abs(u.Position.y - center.y);
 					if (!includeCenter && distance == 0)
 						return false;
 					return distance <= range;

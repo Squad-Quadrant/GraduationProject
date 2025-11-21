@@ -7,7 +7,11 @@ namespace Systems.Map
 	{
 		public MapData Data { get; }
 
-		public MapService(MapData mapData) => Data = mapData;
+		public MapService(MapData mapData)
+		{
+			Data = mapData;
+			Debug.Log("[MapService] Initialized");
+		}
 
 		public void LoadFromConfig(MapConfig config)
 		{

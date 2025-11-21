@@ -20,6 +20,6 @@
 		/// <summary>
 		/// determine turn order when speed is equal
 		/// </summary>
-		int ActionPriority { get; }
+		int ActionPriority { get; set; }
 	}
 }
