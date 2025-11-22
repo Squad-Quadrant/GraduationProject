@@ -22,7 +22,7 @@ namespace Systems.Unit
 		public int ActionPriority { get; set; }
 
 		#endregion
-
+		
 		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
 		{
 			var unit = new Unit()

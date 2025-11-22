@@ -90,14 +90,15 @@ namespace Presentation.Bootstrap
 			var coordinateConverter = new CoordinateConverter(grid);
 			levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
 
-			levelContainer.Services.Register<IMapService>(container =>
-			{
-				var mapConfig = Resources.Load<MapConfig>("");
-				var mapData = new MapData();
-				var service = new MapService(mapData);
-				service.LoadFromConfig(mapConfig);  // 加载配置
-				return service;
-			});
+			// temp Error
+			// levelContainer.Services.Register<IMapService>(container =>
+			// {
+			// 	var mapConfig = Resources.Load<MapConfig>("");
+			// 	var mapData = new MapData();
+			// 	var service = new MapService(mapData);
+			// 	service.LoadFromConfig(mapConfig);  // 加载配置
+			// 	return service;
+			// });
 
 			Debug.Log("[Bootstrapper] LevelContainer created and initialized.");
 			return levelContainer;

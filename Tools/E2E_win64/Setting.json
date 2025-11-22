@@ -1,0 +1,19 @@
+{
+  "Json": {
+    "ExcelPath": "./Excel/",
+    "ExportPath": "./Json/"
+  },
+  "PFCJson": {
+    "ExcelPath": "./Excel/",
+    "ExportJsonPath": "../../Assets/Data/CS",
+    "ExportCSPath": "../../Assets/Data/Json",
+    "JsonUnityPath": "Assets/Data/Json/"
+  },
+  "Unity-SO": {
+    "ExcelPath": "./Excel/",
+    "ExportCSPath": "./CS/",
+    "ExportAssetPath": "./Asset/",
+    "NameSpace": "DefaultNamespace",
+    "Attribute": ""
+  }
+}
