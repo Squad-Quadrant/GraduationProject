@@ -1,0 +1,23 @@
+{
+	"1001":{
+		"ID":1001,
+		"Name":"M416",
+		"Damage":50,
+		"MentalDamage":0,
+		"Weight":0.5
+		},
+	"1002":{
+		"ID":1002,
+		"Name":"AK47",
+		"Damage":40,
+		"MentalDamage":0,
+		"Weight":0.5
+		},
+	"1003":{
+		"ID":1003,
+		"Name":"HappinessOfFire",
+		"Damage":30,
+		"MentalDamage":40,
+		"Weight":0.5
+		}
+}

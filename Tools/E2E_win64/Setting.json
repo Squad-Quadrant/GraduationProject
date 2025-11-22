@@ -5,8 +5,8 @@
   },
   "PFCJson": {
     "ExcelPath": "./Excel/",
-    "ExportJsonPath": "../../Assets/Data/CS",
-    "ExportCSPath": "../../Assets/Data/Json",
+    "ExportJsonPath": "../../Assets/Data/Json/",
+    "ExportCSPath": "../../Assets/Data/CS/",
     "JsonUnityPath": "Assets/Data/Json/"
   },
   "Unity-SO": {

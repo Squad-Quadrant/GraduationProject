@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 
 namespace Systems.Equipment
 {
@@ -21,6 +21,7 @@ namespace Systems.Equipment
     // · 射速：武器的射速，代表单位使用该武器进行攻击时，每消耗一点AP所能造成伤害的次数（发射子弹的数量）。
     // · 精确射击模式：部分自动武器在攻击时可以转换射击模式为精确射击模式。精确射击模式将降低射速，但是大幅度提高命中率。
 
+    [Obsolete("使用Json配置")]
     public class EquipmentData
     {
         public int Id;
