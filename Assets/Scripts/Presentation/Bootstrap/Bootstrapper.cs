@@ -72,36 +72,5 @@ namespace Presentation.Bootstrap
 			// Notify other systems that bootstrap is complete
 			Debug.Log("[Bootstrapper] Bootstrap process completed successfully.");
 		}
-
-		/// <summary>
-		/// Creates and returns a new LevelContainer instance.
-		/// </summary>
-		/// <returns></returns>
-		public static LevelContainer CreateLevelContainer()
-		{
-			var levelObj = new GameObject("LevelContainer");
-			var levelContainer = levelObj.AddComponent<LevelContainer>();
-			levelContainer.Initialize();
-			levelContainer.RegisterServices();
-
-			// MapLoading Example
-
-			var grid = FindObjectOfType<Grid>();
-			var coordinateConverter = new CoordinateConverter(grid);
-			levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
-
-			// temp Error
-			// levelContainer.Services.Register<IMapService>(container =>
-			// {
-			// 	var mapConfig = Resources.Load<MapConfig>("");
-			// 	var mapData = new MapData();
-			// 	var service = new MapService(mapData);
-			// 	service.LoadFromConfig(mapConfig);  // 加载配置
-			// 	return service;
-			// });
-
-			Debug.Log("[Bootstrapper] LevelContainer created and initialized.");
-			return levelContainer;
-		}
 	}
 }

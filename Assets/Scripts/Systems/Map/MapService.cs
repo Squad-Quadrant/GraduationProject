@@ -5,13 +5,9 @@ namespace Systems.Map
 {
 	public class MapService : IMapService
 	{
-		public MapData Data { get; }
+		public MapData Data { get; } = new();
 
-		public MapService(MapData mapData)
-		{
-			Data = mapData;
-			Debug.Log("[MapService] Initialized");
-		}
+		public MapService() => Debug.Log("[MapService] Initialized");
 
 		public void LoadFromConfig(MapConfig config)
 		{
