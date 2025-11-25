@@ -8,9 +8,9 @@ namespace Data.Config
 	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit Config")]
 	public class UnitConfig : ScriptableObject
 	{
-		#region basic info
+		#region Basic Info
 
-		[Title("Basic Info", bold: true)]
+		[Title("基础信息", bold: true)]
 		[LabelText("配置ID")]
 		[InfoBox("单位的唯一标识符", InfoMessageType.None)]
 		public string configId = "unit_001";
@@ -21,30 +21,31 @@ namespace Data.Config
 		public string unitName = "New Unit";
 
 		[Space]
-		[LabelText("描述")]
+		[LabelText("单位描述")]
 		[TextArea(2, 4)]
 		public string description = "This is a new unit.";
 
 		#endregion
 
 
-		#region visuals
+		#region Visuals
 
-		[Title("Visuals", bold: true)]
+		[Title("视觉表现", bold: true)]
 		[LabelText("单位图标")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]
 		public Sprite icon;
 
 		[Space]
-		[LabelText("预制体")]
+		[LabelText("单位预制体")]
 		public GameObject prefab;
 
 		#endregion
 
 
-		#region stats
+		#region Stats
 
-		[Title("Stats", bold: true)]
+		[Title("单位属性", bold: true)]
+		[LabelText("属性配置")]
 		public UnitStats stats = new()
 		{
 			maxHp = 100,
@@ -56,24 +57,42 @@ namespace Data.Config
 		#endregion
 
 
-		#region tools
+		#region Validation
 
-		[Button(ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
+		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
 		public void ValidateConfig()
 		{
 			bool isValid = true;
 
+			// Check config ID
 			if (string.IsNullOrEmpty(configId))
 			{
-				Debug.LogError($"[UnitConfig] [{unitName}] 配置ID不能为空！");
+				Debug.LogError($"[UnitConfig] [{unitName}] Config ID cannot be empty!");
 				isValid = false;
 			}
 
+			// Check prefab
+			if (!prefab)
+			{
+				Debug.LogWarning($"[UnitConfig] [{unitName}] No prefab assigned!");
+			}
+
+			// Check icon
+			if (!icon)
+			{
+				Debug.LogWarning($"[UnitConfig] [{unitName}] No icon assigned!");
+			}
+
 			if (isValid)
-				Debug.Log($"✓ [{unitName}] 配置验证通过！");
+				Debug.Log($"✓ [{unitName}] Configuration is valid!");
 			else
-				Debug.LogError($"✗ [{unitName}] 配置验证失败，请检查错误信息。");
+				Debug.LogError($"✗ [{unitName}] Configuration has errors, please check above messages.");
 		}
+
+		#endregion
+
+
+		#region Editor Display
 
 		[ShowInInspector, DisplayAsString, HideLabel]
 		[PropertyOrder(-1)]

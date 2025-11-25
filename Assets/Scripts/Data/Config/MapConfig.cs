@@ -9,20 +9,33 @@ namespace Data.Config
 	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map Config")]
 	public class MapConfig : ScriptableObject
 	{
-		[Title("Basic Info", bold: true)]
+		#region Basic Info
+
+		[Title("基础信息", bold: true)]
 		[LabelText("地图名称")]
 		public string mapName = "New Map";
 
+		[Space]
 		[LabelText("地图尺寸")]
 		[MinValue(5)]
 		public Vector2Int size = new(10, 10);
 
-		[Title("Terrain Data", bold: true)]
+		#endregion
+
+
+		#region Terrain Data
+
+		[Title("地形数据", bold: true)]
 		[LabelText("地形配置")]
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
 		public CellConfig[] cells = Array.Empty<CellConfig>();
 
-		[Button(ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
+		#endregion
+
+
+		#region Tools
+
+		[Button("生成默认地形", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
 		public void GenerateDefaultTerrain()
 		{
 			cells = new CellConfig[size.x * size.y];
@@ -43,7 +56,7 @@ namespace Data.Config
 			}
 		}
 
-		[Button(ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
+		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
 		public void ValidateConfig()
 		{
 			Debug.Log($"[MapConfig] Validating '{mapName}'...");
@@ -55,8 +68,23 @@ namespace Data.Config
 
 			Debug.Log($"[MapConfig] Validation complete. Total cells: {cells.Length}");
 		}
+
+		#endregion
+
+
+		#region Editor Display
+
+		[ShowInInspector, DisplayAsString, HideLabel]
+		[PropertyOrder(-1)]
+		[PropertySpace(SpaceAfter = 10)]
+		private string EditorTitle => $"地图配置: {mapName}";
+
+		#endregion
 	}
 
+	/// <summary>
+	/// Defines a single cell in the map grid.
+	/// </summary>
 	[Serializable]
 	public class CellConfig
 	{
@@ -65,7 +93,7 @@ namespace Data.Config
 		public Vector2Int position;
 
 		[HorizontalGroup("Main")]
-		[LabelText("地形"), LabelWidth(40)]
+		[LabelText("地形类型"), LabelWidth(60)]
 		public ETerrainType terrain;
 
 		[HorizontalGroup("Props")]
