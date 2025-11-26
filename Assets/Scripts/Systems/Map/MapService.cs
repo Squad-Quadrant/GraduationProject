@@ -11,7 +11,7 @@ namespace Systems.Map
 
 		public void LoadFromConfig(MapConfig config)
 		{
-			Data.Initialize(config.size);
+			Data.Initialize(config.Size);
 
 			foreach (var cellConfig in config.cells)
 			{
@@ -23,7 +23,7 @@ namespace Systems.Map
 				cell.Height = cellConfig.height;
 			}
 
-			Debug.Log($"[MapService] Loaded map '{config.mapName}' ({config.size.x}x{config.size.y})");
+			Debug.Log($"[MapService] Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
 		}
 
 		public bool IsCellWalkable(Vector2Int position)
