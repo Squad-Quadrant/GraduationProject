@@ -1,4 +1,5 @@
-﻿using Core.Events;
+﻿using Core.Commands;
+using Core.Events;
 using Core.Log;
 using Presentation.Services;
 using UnityEngine;
@@ -62,6 +63,7 @@ namespace Presentation.Bootstrap
 
 			Services.Register<ILog, UnityLog>();
 			Services.Register<IEventBus, EventBus>();
+			Services.Register<ICommandQueue, CommandQueue>();
 
 			Debug.Log($"[RootContainer] Service registration complete.");
 		}
