@@ -1,7 +1,6 @@
 ﻿using Core.Events;
-using Systems.Unit;
 
-namespace Data.Runtime.Events
+namespace Systems.Unit.Events
 {
 	/// <summary>
 	/// Triggered when a unit is created in the game.

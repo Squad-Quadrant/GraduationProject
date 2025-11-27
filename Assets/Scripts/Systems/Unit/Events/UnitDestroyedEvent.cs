@@ -1,8 +1,7 @@
 ﻿using Core.Events;
-using Systems.Unit;
 using UnityEngine;
 
-namespace Data.Runtime.Events
+namespace Systems.Unit.Events
 {
 	/// <summary>
 	/// Triggered when a unit is destroyed in the game.
