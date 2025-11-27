@@ -10,19 +10,31 @@ namespace Data.Config
 	public class MapConfig : ScriptableObject
 	{
 		#region Basic Info
-
-		[Title("基础信息", bold: true)]
-		[LabelText("地图名称")]
-		public string mapName = "New Map";
-
+#if UNITY_EDITOR
+		[Title("基础信息", bold: true)] [LabelText("地图名称")]
+		// [OnValueChanged("OnMapNameChanged")]
+		public string editedMapName = "New Map";
+		
 		[Space]
 		[LabelText("地图尺寸")]
 		[MinValue(5)]
-		public Vector2Int size = new(10, 10);
+		public Vector2 editedSize = new(10, 10);
+		
+		[Button("确认", ButtonSizes.Small), GUIColor(0.6f, 1f, 0.6f)]
+		private void Confirm()
+		{
+			OnMapNameChanged();
+			OnSizeChanged();
+		}
+#endif
+		private string _mapName = "New Map";
+		public string MapName => _mapName;
+		
+		private Vector2Int _size = new(10, 10);
+		public Vector2Int Size => _size;
 
 		#endregion
-
-
+		
 		#region Terrain Data
 
 		[Title("地形数据", bold: true)]
@@ -32,17 +44,40 @@ namespace Data.Config
 
 		#endregion
 
-
 		#region Tools
 
-		[Button("生成默认地形", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
-		public void GenerateDefaultTerrain()
+		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
+		public void ValidateConfig()
 		{
-			cells = new CellConfig[size.x * size.y];
+			Debug.Log($"[MapConfig] Validating '{_mapName}'...");
+
+			var positions = new HashSet<Vector2Int>();
+			foreach (var cell in cells)
+				if (!positions.Add(cell.position))
+					Debug.LogError($"Duplicate position found: {cell.position}");
+
+			Debug.Log($"[MapConfig] Validation complete. Total cells: {cells.Length}");
+		}
+
+		#endregion
+		
+		#region Editor Display
+
+		[ShowInInspector, DisplayAsString, HideLabel]
+		[PropertyOrder(-1)]
+		[PropertySpace(SpaceAfter = 10)]
+		private string EditorTitle => $"地图配置: {_mapName}";
+
+		#endregion
+		
+		// [Button("生成默认地形", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
+		public void Init()
+		{
+			cells = new CellConfig[Size.x * Size.y];
 			int index = 0;
-			for (int y = 0; y < size.y; y++)
+			for (int y = 0; y < Size.y; y++)
 			{
-				for (int x = 0; x < size.x; x++)
+				for (int x = 0; x < Size.x; x++)
 				{
 					cells[index] = new CellConfig
 					{
@@ -55,31 +90,46 @@ namespace Data.Config
 				}
 			}
 		}
-
-		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
-		public void ValidateConfig()
+		
+		private void OnSizeChanged()
 		{
-			Debug.Log($"[MapConfig] Validating '{mapName}'...");
-
-			var positions = new HashSet<Vector2Int>();
-			foreach (var cell in cells)
-				if (!positions.Add(cell.position))
-					Debug.LogError($"Duplicate position found: {cell.position}");
-
-			Debug.Log($"[MapConfig] Validation complete. Total cells: {cells.Length}");
+			var temp = cells;
+			cells = new CellConfig[Size.x * Size.y];
+			int index = 0;
+			for (int y = 0; y < Size.y; y++)
+			{
+				for (int x = 0; x < Size.x; x++)
+				{
+					var pos = new Vector2Int(x, y);
+					var existingCell = Array.Find(temp, c => c.position == pos);
+					if (existingCell != null)
+					{
+						cells[index] = existingCell;
+					}
+					else
+					{
+						cells[index] = new CellConfig
+						{
+							position = pos,
+							terrain = ETerrainType.Plain,
+							isWalkable = true,
+							moveCost = 1
+						};
+					}
+					index++;
+				}
+			}
 		}
-
-		#endregion
-
-
-		#region Editor Display
-
-		[ShowInInspector, DisplayAsString, HideLabel]
-		[PropertyOrder(-1)]
-		[PropertySpace(SpaceAfter = 10)]
-		private string EditorTitle => $"地图配置: {mapName}";
-
-		#endregion
+		
+		private void OnMapNameChanged()
+		{
+#if UNITY_EDITOR
+			_mapName = editedMapName;
+			string assetPath = UnityEditor.AssetDatabase.GetAssetPath(this);
+			UnityEditor.AssetDatabase.RenameAsset(assetPath, _mapName);
+			UnityEditor.AssetDatabase.SaveAssets();
+#endif
+		}
 	}
 
 	/// <summary>
@@ -89,7 +139,7 @@ namespace Data.Config
 	public class CellConfig
 	{
 		[HorizontalGroup("Main")]
-		[LabelText("坐标"), LabelWidth(40)]
+		[LabelText("坐标"), LabelWidth(40), ReadOnly]
 		public Vector2Int position;
 
 		[HorizontalGroup("Main")]
