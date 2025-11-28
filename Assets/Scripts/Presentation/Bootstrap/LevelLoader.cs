@@ -19,6 +19,9 @@ namespace Presentation.Bootstrap
 	/// </summary>
 	public class LevelLoader : MonoBehaviour
 	{
+		[Title("Settings")]
+		[SerializeField] private bool enableLogs = true;
+		
 		[Title("References")]
 		[SerializeField] private MapView mapView;
 		[SerializeField] private Grid grid;
@@ -55,7 +58,7 @@ namespace Presentation.Bootstrap
 
 		public void UnloadLevel()
 		{
-			Debug.Log("[LevelLoader] Unloading level...");
+			Log("[LevelLoader] Unloading level...");
 
 			// Clear all services
 			_turnService?.Clear();
@@ -75,40 +78,41 @@ namespace Presentation.Bootstrap
 			_turnService = null;
 			_eventBus = null;
 
-			Debug.Log("[LevelLoader] Level unloaded successfully.");
+			Log("[LevelLoader] Level unloaded successfully.");
 		}
 
 		private IEnumerator LoadLevelCoroutine()
 		{
-			Debug.Log("====================================");
-			Debug.Log("[LevelLoader] Loading level...");
+			Log("====================================");
+			Log("[LevelLoader] Loading level...");
 
+			yield return CreateLevelContainer();
 			yield return RegisterServices();
 			yield return InitializeMap();
 			yield return CreateUnits();
 
-			Debug.Log($"[LevelLoader] Level '{levelConfig.levelName}' loaded successfully!");
-			Debug.Log("====================================");
+			Log($"[LevelLoader] Level '{levelConfig.levelName}' loaded successfully!");
+			Log("====================================");
 
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
 		}
 
 		private IEnumerator CreateLevelContainer()
 		{
-			Debug.Log("[LevelLoader] Creating LevelContainer...");
+			Log("[LevelLoader] Creating LevelContainer...");
 
 			// Create level container GameObject
 			var containerObj = new GameObject("LevelContainer");
 			_levelContainer = containerObj.AddComponent<LevelContainer>();
 			_levelContainer.Initialize();
 
-			Debug.Log("[LevelLoader] ✓ LevelContainer created.");
+			Log("[LevelLoader] ✓ LevelContainer created.");
 			yield return null;
 		}
 
 		private IEnumerator RegisterServices()
 		{
-			Debug.Log("[LevelLoader] Registering services...");
+			Log("[LevelLoader] Registering services...");
 
 			// Get EventBus from RootContainer (global service)
 			_eventBus = RootContainer.Instance.Resolve<IEventBus>();
@@ -140,13 +144,13 @@ namespace Presentation.Bootstrap
 			_unitService = _levelContainer.Resolve<IUnitService>();
 			_turnService = _levelContainer.Resolve<ITurnService>();
 
-			Debug.Log("[LevelLoader] ✓ Services registered and resolved.");
+			Log("[LevelLoader] ✓ Services registered and resolved.");
 			yield return null;
 		}
 
 		private IEnumerator InitializeMap()
 		{
-			Debug.Log("[LevelLoader] Initializing map...");
+			Log("[LevelLoader] Initializing map...");
 
 			if (!levelConfig.mapConfig)
 			{
@@ -157,13 +161,13 @@ namespace Presentation.Bootstrap
 			// Load map from config
 			_mapService.LoadFromConfig(levelConfig.mapConfig);
 
-			Debug.Log($"[LevelLoader] ✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
+			Log($"[LevelLoader] ✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 			yield return null;
 		}
 
 		private IEnumerator CreateUnits()
 		{
-			Debug.Log("[LevelLoader] Spawning units...");
+			Log("[LevelLoader] Spawning units...");
 
 			if (levelConfig.unitPlacements.Count == 0)
 			{
@@ -199,7 +203,7 @@ namespace Presentation.Bootstrap
 					// Occupy cell on map
 					_mapService.OccupyCell(placement.startPosition, placement.unitId);
 
-					Debug.Log($"[LevelLoader] ✓ Spawned {unit.Name} at {placement.startPosition}");
+					Log($"[LevelLoader] ✓ Spawned {unit.Name} at {placement.startPosition}");
 				}
 				catch (Exception ex)
 				{
@@ -209,7 +213,17 @@ namespace Presentation.Bootstrap
 				yield return null;
 			}
 
-			Debug.Log($"[LevelLoader] ✓ Spawned {levelConfig.unitPlacements.Count} units.");
+			Log($"[LevelLoader] ✓ Spawned {levelConfig.unitPlacements.Count} units.");
 		}
+
+		#region Debug
+
+		private void Log(string message)
+		{
+			if (enableLogs)
+				Debug.Log(message);
+		}
+
+		#endregion
 	}
 }

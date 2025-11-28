@@ -11,6 +11,7 @@ namespace Presentation.Bootstrap
 	{
 		[Title("Settings")]
 		[SerializeField] private bool autoInitialize = true;
+		[SerializeField] private bool enableLogs = true;
 
 		[Title("Prefabs")]
 		[SerializeField] private RootContainer rootContainerPrefab;
@@ -29,8 +30,8 @@ namespace Presentation.Bootstrap
 			if (_initialized) return; // Prevent double initialization
 			_initialized = true;
 
-			Debug.Log("====================================");
-			Debug.Log("[Bootstrapper] Initialization started...");
+			Log("====================================");
+			Log("[Bootstrapper] Initialization started...");
 
 			InitializeRootContainer();
 
@@ -38,13 +39,13 @@ namespace Presentation.Bootstrap
 
 			OnBootstrapComplete();
 
-			Debug.Log("[Bootstrapper] Initialization complete.");
-			Debug.Log("====================================");
+			Log("[Bootstrapper] Initialization complete.");
+			Log("====================================");
 		}
 
 		private void InitializeRootContainer()
 		{
-			Debug.Log("[Bootstrapper] Initializing RootContainer...");
+			Log("[Bootstrapper] Initializing RootContainer...");
 			_rootContainerInstance = FindObjectOfType<RootContainer>();
 			if (!_rootContainerInstance)
 			{
@@ -52,17 +53,17 @@ namespace Presentation.Bootstrap
 				{
 					_rootContainerInstance = Instantiate(rootContainerPrefab);
 					_rootContainerInstance.name = "RootContainer";
-					Debug.Log("[Bootstrapper] RootContainer instantiated from prefab.");
+					Log("[Bootstrapper] RootContainer instantiated from prefab.");
 				}
 				else
 				{
 					var rootObj = new GameObject("RootContainer");
 					_rootContainerInstance = rootObj.AddComponent<RootContainer>();
-					Debug.Log("[Bootstrapper] RootContainer created as new GameObject.");
+					Log("[Bootstrapper] RootContainer created as new GameObject.");
 				}
 			}
 			_rootContainerInstance.Initialize();
-			Debug.Log("[Bootstrapper] RootContainer initialized.");
+			Log("[Bootstrapper] RootContainer initialized.");
 		}
 
 		private void RegisterGlobalServices() => _rootContainerInstance.RegisterServices();
@@ -70,7 +71,17 @@ namespace Presentation.Bootstrap
 		private void OnBootstrapComplete()
 		{
 			// Notify other systems that bootstrap is complete
-			Debug.Log("[Bootstrapper] Bootstrap process completed successfully.");
+			Log("[Bootstrapper] Bootstrap process completed successfully.");
 		}
+
+		#region Debug
+
+		private void Log(string message)
+		{
+			if (enableLogs)
+				Debug.Log(message);
+		}
+
+		#endregion
 	}
 }
