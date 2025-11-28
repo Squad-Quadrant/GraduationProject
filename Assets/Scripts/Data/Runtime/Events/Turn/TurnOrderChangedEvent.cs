@@ -1,6 +1,6 @@
 ﻿using Core.Events;
 
-namespace Systems.Turn.Events
+namespace Data.Runtime.Events.Turn
 {
 	/// <summary>
 	/// Reason why the turn order changed.

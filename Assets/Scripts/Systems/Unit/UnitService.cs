@@ -4,7 +4,7 @@ using System.Linq;
 using Core.Events;
 using Data.Config;
 using Data.Runtime.Events;
-using Systems.Unit.Events;
+using Data.Runtime.Events.Unit;
 using UnityEngine;
 
 namespace Systems.Unit

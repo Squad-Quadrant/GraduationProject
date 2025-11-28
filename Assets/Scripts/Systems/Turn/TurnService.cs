@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Data.Runtime.Events;
-using Systems.Turn.Events;
+using Data.Runtime.Events.Turn;
+using Data.Runtime.Events.Unit;
 using Systems.Unit;
-using Systems.Unit.Events;
 using UnityEngine;
 
 namespace Systems.Turn

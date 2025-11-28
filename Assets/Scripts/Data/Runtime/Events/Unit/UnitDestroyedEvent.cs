@@ -1,18 +1,18 @@
 ﻿using Core.Events;
 using UnityEngine;
 
-namespace Systems.Unit.Events
+namespace Data.Runtime.Events.Unit
 {
 	/// <summary>
 	/// Triggered when a unit is destroyed in the game.
 	/// </summary>
 	public readonly struct UnitDestroyedEvent : IEvent
 	{
-		public Unit Unit { get; }
+		public Systems.Unit.Unit Unit { get; }
 		public Vector2Int DeathPosition { get; }
 		public string KillerUnitId { get; }
 
-		public UnitDestroyedEvent(Unit unit, string killerUnitId = null)
+		public UnitDestroyedEvent(Systems.Unit.Unit unit, string killerUnitId = null)
 		{
 			Unit = unit;
 			DeathPosition = unit.Position;
