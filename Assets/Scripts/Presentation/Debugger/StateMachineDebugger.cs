@@ -4,7 +4,7 @@ using Core.FSM;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Presentation.FSM
+namespace Presentation.Debugger
 {
 	public abstract class StateMachineDebugger : MonoBehaviour
 	{
