@@ -3,6 +3,7 @@ using System.Collections;
 using Core.Events;
 using Data.Config;
 using Data.Runtime.Events;
+using Presentation.Input;
 using Presentation.Map;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
@@ -25,6 +26,7 @@ namespace Presentation.Bootstrap
 		[Title("References")]
 		[SerializeField] private MapView mapView;
 		[SerializeField] private Grid grid;
+		[SerializeField] private InputService inputService;
 
 		[Title("Configuration")]
 		[SerializeField] private LevelConfig levelConfig;
@@ -90,6 +92,7 @@ namespace Presentation.Bootstrap
 			yield return RegisterServices();
 			yield return InitializeMap();
 			yield return CreateUnits();
+			yield return InitializeInputService();
 
 			Log($"[LevelLoader] Level '{levelConfig.levelName}' loaded successfully!");
 			Log("====================================");
@@ -214,6 +217,27 @@ namespace Presentation.Bootstrap
 			}
 
 			Log($"[LevelLoader] ✓ Spawned {levelConfig.unitPlacements.Count} units.");
+		}
+
+		private IEnumerator InitializeInputService()
+		{
+			Log("[LevelLoader] Initializing InputService...");
+
+			if (!inputService)
+			{
+				inputService = FindObjectOfType<InputService>();
+				if (!inputService)
+				{
+					Debug.LogError("[LevelLoader] No InputService found in scene!");
+					yield break;
+				}
+			}
+
+			inputService.Initialize(
+				_eventBus,
+				_levelContainer.Resolve<ICoordinateConverter>(),
+				_mapService
+			);
 		}
 
 		#region Debug
