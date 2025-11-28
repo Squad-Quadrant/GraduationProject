@@ -1,0 +1,50 @@
+﻿using System.Collections.Generic;
+using Core.Events;
+using UnityEngine;
+
+namespace Data.Runtime.Events.Interaction
+{
+	public enum ERangeType
+	{
+		Movement,
+
+		Attack,
+
+		Skill,
+
+		AreaOfEffect
+	}
+
+	/// <summary>
+	/// Published when the game needs to display a range on the map.
+	/// </summary>
+	public readonly struct RangeDisplayEvent : IEvent
+	{
+		public ERangeType RangeType { get; }
+
+		public IReadOnlyList<Vector2Int> Cells { get; }
+
+		public Vector2Int? Origin { get; }
+
+		public string SourceUnitId { get; }
+
+		public RangeDisplayEvent(
+			ERangeType rangeType,
+			IReadOnlyList<Vector2Int> cells,
+			Vector2Int? origin = null,
+			string sourceUnitId = null)
+		{
+			RangeType = rangeType;
+			Cells = cells ?? new List<Vector2Int>();
+			Origin = origin;
+			SourceUnitId = sourceUnitId;
+		}
+
+		/// <summary>
+		/// Creates an event to hide/clear a specific range type.
+		/// </summary>
+		public static RangeDisplayEvent Clear(ERangeType rangeType) => new(rangeType, new List<Vector2Int>());
+
+		public override string ToString() => $"[RangeDisplay] {RangeType}: {Cells.Count} cells";
+	}
+}
