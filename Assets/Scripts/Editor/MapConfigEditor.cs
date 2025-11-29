@@ -14,15 +14,17 @@ namespace Editor
 		private MapConfig _currentConfig;
 		private MapConfig _dataBuffer;
 		private UnityEditor.Editor _currentDataEditor;
+        private static MapConfigEditor I { get; set; }
 
 		[MenuItem("Tools/Map Config Editor")]
 		private static void OpenWindow()
 		{
 			var window = GetWindow<MapConfigEditor>();
 			window.titleContent = new GUIContent("Map Config Editor");
-			window.minSize = new Vector2(500, 500);
+			window.minSize = new Vector2(400, 500);
 			window.Show();
-		}
+            I = window;
+        }
 		
 
 		protected void OnEnable()
@@ -32,13 +34,11 @@ namespace Editor
 
 		private void OnGUI()
 		{
-			// 下拉列表
 			DrawSelectMap();
 			CreateNewMapConfig();
 			ShowObject();
 			if (_currentConfig != null)
 			{
-				// DrawGridPreview();
 				if (GUILayout.Button("Open Grid Preview"))
 				{
                     MapGridPreviewWindow.ShowWindow(_currentConfig);
@@ -111,6 +111,17 @@ namespace Editor
 			}
 			_currentDataEditor.OnInspectorGUI();
 		}
+        
+        public static void HighlightCell(int index)
+        {
+            // Unity原生和奥丁都无法高亮显示ScriptableObject中的某个字段
+            Debug.Log(I._currentConfig.cells[index].position);
+        }
+        
+        public static void HighlightWall(int index)
+        {
+            Debug.Log(I._currentConfig.walls[index].position1 + " to " + I._currentConfig.walls[index].position2);
+        }
 	}
 }
 

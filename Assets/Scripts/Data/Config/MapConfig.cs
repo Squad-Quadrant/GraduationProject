@@ -47,9 +47,14 @@ namespace Data.Config
 		#region Terrain Data
 
 		[LabelText("地形配置")]
-		[PropertyOrder]
+		[PropertyOrder(1)]
 		[TableList(ShowIndexLabels = true)]
 		public CellConfig[] cells = Array.Empty<CellConfig>();
+        
+        [LabelText("墙体配置")]
+        [PropertyOrder(2)]
+        [TableList(ShowIndexLabels = true)]
+        public WallConfig[] walls = Array.Empty<WallConfig>();
 
 		#endregion
 
@@ -167,5 +172,26 @@ namespace Data.Config
 		[LabelText("高度"), LabelWidth(40)]
 		[Range(0, 5)]
 		public int height = 0;
-	}
+    }
+
+    [Serializable]
+    public class WallConfig
+    {
+        // 樯是两个格子之间的东西,所以墙的唯一ID用两个坐标标识
+        public Vector2Int position1;
+        public Vector2Int position2;
+        public WallType wallType;
+
+        public bool Check(Vector2Int posA, Vector2Int posB)
+        {
+            return (position1 == posA && position2 == posB) || (position1 == posB && position2 == posA);
+        }
+        
+    }
+    
+    public enum WallType
+    {
+        LowWall,
+        HighWall
+    }
 }
