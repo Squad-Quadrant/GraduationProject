@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85be0d89f0cd433084068ab7c1460437, type: 3}
   m_Name: NewMapConfig
   m_EditorClassIdentifier: 
-  mapName: New Map
-  size: {x: 10, y: 10}
+  editedMapName: New Map
+  editedSize: {x: 10, y: 10}
   cells: []

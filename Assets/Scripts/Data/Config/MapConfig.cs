@@ -11,20 +11,29 @@ namespace Data.Config
 	{
 		#region Basic Info
 #if UNITY_EDITOR
-		[Title("基础信息", bold: true)] [LabelText("地图名称")]
-		// [OnValueChanged("OnMapNameChanged")]
+		[LabelText("地图名称")]
 		public string editedMapName = "New Map";
 		
-		[Space]
 		[LabelText("地图尺寸")]
 		[MinValue(5)]
-		public Vector2 editedSize = new(10, 10);
-		
-		[Button("确认", ButtonSizes.Small), GUIColor(0.6f, 1f, 0.6f)]
+		public Vector2Int editedSize = new(10, 10);
+
+		private bool Dirty => editedMapName != _mapName || editedSize != _size;
+
+		[ShowIf("Dirty")]
+		[Button("保存更改", ButtonSizes.Medium), GUIColor(0.6f, 1f, 0.6f)]
 		private void Confirm()
 		{
 			OnMapNameChanged();
 			OnSizeChanged();
+		}
+		
+		[ShowIf("Dirty")]
+		[Button("还原更改", ButtonSizes.Medium), GUIColor(1f, 0.6f, 0.6f)]
+		private void Revert()
+		{
+			editedMapName = _mapName;
+			editedSize = _size;
 		}
 #endif
 		private string _mapName = "New Map";
@@ -37,9 +46,9 @@ namespace Data.Config
 		
 		#region Terrain Data
 
-		[Title("地形数据", bold: true)]
 		[LabelText("地形配置")]
-		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
+		[PropertyOrder]
+		[TableList(ShowIndexLabels = true)]
 		public CellConfig[] cells = Array.Empty<CellConfig>();
 
 		#endregion
@@ -65,12 +74,10 @@ namespace Data.Config
 
 		[ShowInInspector, DisplayAsString, HideLabel]
 		[PropertyOrder(-1)]
-		[PropertySpace(SpaceAfter = 10)]
 		private string EditorTitle => $"地图配置: {_mapName}";
 
 		#endregion
 		
-		// [Button("生成默认地形", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
 		public void Init()
 		{
 			cells = new CellConfig[Size.x * Size.y];
@@ -93,6 +100,7 @@ namespace Data.Config
 		
 		private void OnSizeChanged()
 		{
+			_size = editedSize;
 			var temp = cells;
 			cells = new CellConfig[Size.x * Size.y];
 			int index = 0;
