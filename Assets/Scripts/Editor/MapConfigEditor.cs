@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Editor
 {
+    // todo: Bug,编辑器中的更改需要应用到磁盘上，否则会丢失
+    // todo: 原定的高亮功能改为在新字段中显示选中单元格的信息
 	public class MapConfigEditor : EditorWindow
 	{
 		private const string SavePath = "Assets/Data/Map/";

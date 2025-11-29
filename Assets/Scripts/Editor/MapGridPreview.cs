@@ -11,10 +11,13 @@ namespace Editor
         private MapConfig _config;
         private Vector2 _scroll;
 
-        // 固定/可调的单格大小
-        private float _cellSize = 32f;
-        private const float MinCellSize = 8f;
-        private const float MaxCellSize = 128f;
+        // 固定/可调的单格槽位大小（包含缝隙）和缝隙大小
+        private float _cellSlotSize = 40f; // 一个格子占据的槽位大小（包括缝隙）
+        private float _cellGap = 4f;       // 格子之间的缝隙（像素）
+        private const float MinSlotSize = 8f;
+        private const float MaxSlotSize = 256f;
+        private const float MinGap = 0f;
+        private const float MaxGap = 64f;
 
         public static void ShowWindow(MapConfig config)
         {
@@ -34,14 +37,19 @@ namespace Editor
 
             EditorGUILayout.LabelField($"Preview: {_config.MapName}", EditorStyles.boldLabel);
 
-            // 单格大小控制
+            // 控制面板：槽位大小 & 缝隙
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Cell Size", GUILayout.Width(70));
-            _cellSize = EditorGUILayout.Slider(_cellSize, MinCellSize, MaxCellSize);
+            EditorGUILayout.LabelField("Slot Size", GUILayout.Width(70));
+            _cellSlotSize = EditorGUILayout.Slider(_cellSlotSize, MinSlotSize, MaxSlotSize);
             if (GUILayout.Button("Reset", GUILayout.Width(60)))
-            {
-                _cellSize = 32f;
-            }
+                _cellSlotSize = 40f;
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Gap", GUILayout.Width(70));
+            _cellGap = EditorGUILayout.Slider(_cellGap, MinGap, Mathf.Min(MaxGap, _cellSlotSize * 0.8f));
+            if (GUILayout.Button("Reset", GUILayout.Width(60)))
+                _cellGap = 4f;
             EditorGUILayout.EndHorizontal();
 
             if (_config.cells == null || _config.cells.Length == 0)
@@ -52,25 +60,31 @@ namespace Editor
             }
 
             var size = _config.Size;
-            var cellSize = _cellSize;
-            var totalW = size.x * cellSize;
-            var totalH = size.y * cellSize;
+            var slot = _cellSlotSize;
+            var gap = Mathf.Clamp(_cellGap, 0f, slot * 0.8f);
+            var totalW = size.x * slot;
+            var totalH = size.y * slot;
 
             _scroll = EditorGUILayout.BeginScrollView(_scroll,
-                GUILayout.Height(Mathf.Min(totalH + 10, position.height - 80)));
+                GUILayout.Height(Mathf.Min(totalH + 10, position.height - 100)));
 
-            // 固定大小的 grid 区域
             var gridRect = GUILayoutUtility.GetRect(totalW, totalH, GUILayout.ExpandWidth(false));
             Event e = Event.current;
 
-            // 先绘制所有格子
+            // 绘制格子（使用槽位位置，但实际绘制区域向内缩进 gap/2）
+            float inset = gap * 0.5f;
+            float cellDrawSize = Mathf.Max(0f, slot - gap);
+
             foreach (var cell in _config.cells)
             {
+                var slotX = gridRect.x + cell.position.x * slot;
+                var slotY = gridRect.y + (size.y - 1 - cell.position.y) * slot;
+
                 var cellRect = new Rect(
-                    gridRect.x + cell.position.x * cellSize,
-                    gridRect.y + (size.y - 1 - cell.position.y) * cellSize,
-                    cellSize,
-                    cellSize
+                    slotX + inset,
+                    slotY + inset,
+                    cellDrawSize,
+                    cellDrawSize
                 );
 
                 var color = GetTerrainColor(cell.terrain);
@@ -83,7 +97,7 @@ namespace Editor
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleCenter,
-                    fontSize = Mathf.Max(8, (int)(cellSize / 5))
+                    fontSize = Mathf.Max(8, (int)(cellDrawSize / 5))
                 };
                 GUI.Label(cellRect, $"{cell.position.x},{cell.position.y}", style);
 
@@ -96,10 +110,10 @@ namespace Editor
                 }
             }
 
-            // 绘制墙（在格子间的缝隙位置）
+            // 绘制墙：在槽位边界的缝隙区域内绘制，不与 cellRect 重叠
             if (_config.walls != null)
             {
-                float thickness = Mathf.Clamp(cellSize * 0.18f, 2f, cellSize * 0.45f);
+                float thickness = Mathf.Max(1f, gap); // 墙的厚度使用 gap（或最小值 1）
                 for (int i = 0; i < _config.walls.Length; i++)
                 {
                     var w = _config.walls[i];
@@ -113,30 +127,40 @@ namespace Editor
 
                     if (Mathf.Abs(dx) == 1 && dy == 0)
                     {
-                        // 垂直墙，x 方向相邻
+                        // 垂直墙（x 相邻），位于两个槽位的垂直边界
                         int minX = Mathf.Min(p1.x, p2.x);
-                        int y = p1.y; // 相同
-                        float edgeX = gridRect.x + (minX + 1) * cellSize;
-                        float yPos = gridRect.y + (size.y - 1 - y) * cellSize;
-                        wallRect = new Rect(edgeX - thickness * 0.5f, yPos, thickness, cellSize);
+                        int y = p1.y; // 相同 y
+                        float edgeX = gridRect.x + (minX + 1) * slot;
+                        float slotY = gridRect.y + (size.y - 1 - y) * slot;
+                        wallRect = new Rect(
+                            edgeX - thickness * 0.5f,
+                            slotY + inset,
+                            thickness,
+                            cellDrawSize
+                        );
                     }
                     else if (dx == 0 && Mathf.Abs(dy) == 1)
                     {
-                        // 水平墙，y 方向相邻
+                        // 水平墙（y 相邻），位于两个槽位的水平边界
                         int minY = Mathf.Min(p1.y, p2.y);
-                        int x = p1.x; // 相同
-                        float edgeY = gridRect.y + (size.y - 1 - minY) * cellSize;
-                        float xPos = gridRect.x + x * cellSize;
-                        wallRect = new Rect(xPos, edgeY - thickness * 0.5f, cellSize, thickness);
+                        int x = p1.x; // 相同 x
+                        float edgeY = gridRect.y + (size.y - 1 - minY) * slot; // boundary line between minY and minY+1
+                        float slotX = gridRect.x + x * slot;
+                        wallRect = new Rect(
+                            slotX + inset,
+                            edgeY - thickness * 0.5f,
+                            cellDrawSize,
+                            thickness
+                        );
                     }
                     else
                     {
-                        // 非相邻的墙（忽略或自定义处理）
+                        // 非相邻或斜墙：忽略或自定义处理
                         continue;
                     }
 
-                    EditorGUI.DrawRect(wallRect, new Color(0.15f, 0.15f, 0.15f));
-                    // 可选边框
+                    Color wallColor = GetWallColor(w.wallType);
+                    EditorGUI.DrawRect(wallRect, wallColor);
                     Handles.DrawSolidRectangleWithOutline(wallRect, Color.clear, Color.black * 0.25f);
 
                     if (e.type == EventType.MouseDown && e.button == 0 && wallRect.Contains(e.mousePosition))
@@ -160,6 +184,16 @@ namespace Editor
                 ETerrainType.Mountain => new Color(0.5f, 0.5f, 0.5f),
                 ETerrainType.Water => new Color(0.2f, 0.4f, 1f),
                 _ => Color.white
+            };
+        }
+        
+        private Color GetWallColor(WallType wallType)
+        {
+            return wallType switch
+            {
+                WallType.LowWall => new Color(0.5f, 0.3f, 0.1f),
+                WallType.HighWall => new Color(1f, 0.2f, 0.2f),
+                _ => Color.gray
             };
         }
     }
