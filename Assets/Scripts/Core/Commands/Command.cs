@@ -8,9 +8,9 @@ namespace Core.Commands
 	/// </summary>
 	public abstract class SyncCommand : ICommand
 	{
-		public string Name => GetType().Name;
+		public virtual string Name => GetType().Name;
 
-		public bool CanUndo => false;
+		public virtual bool CanUndo => false;
 
 		public void Execute(Action onComplete = null)
 		{
@@ -33,9 +33,9 @@ namespace Core.Commands
 
 	public abstract class AsyncCommand : ICommand
 	{
-		public string Name => GetType().Name;
+		public virtual string Name => GetType().Name;
 
-		public bool CanUndo => false;
+		public virtual bool CanUndo => false;
 
 		/// <summary>
 		/// Indicates whether the command is currently executing for debugging and state verification.

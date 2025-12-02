@@ -33,7 +33,7 @@ namespace Systems.Turn
 			RegisterUnit(unit);
 		}
 
-		private void OnUnitDestroyed(UnitDestroyedEvent e) => UnregisterUnit(e.Unit.Id);
+		private void OnUnitDestroyed(UnitDestroyedEvent e) => UnregisterUnit(e.Unit.id);
 
 		public void StartTurn()
 		{

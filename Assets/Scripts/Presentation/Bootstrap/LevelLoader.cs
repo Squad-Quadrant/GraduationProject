@@ -206,7 +206,7 @@ namespace Presentation.Bootstrap
 					// Occupy cell on map
 					_mapService.OccupyCell(placement.startPosition, placement.unitId);
 
-					Log($"[LevelLoader] ✓ Spawned {unit.Name} at {placement.startPosition}");
+					Log($"[LevelLoader] ✓ Spawned {unit.name} at {placement.startPosition}");
 				}
 				catch (Exception ex)
 				{
@@ -244,8 +244,7 @@ namespace Presentation.Bootstrap
 
 		private void Log(string message)
 		{
-			if (enableLogs)
-				Debug.Log(message);
+			if (enableLogs) Debug.Log(message);
 		}
 
 		#endregion

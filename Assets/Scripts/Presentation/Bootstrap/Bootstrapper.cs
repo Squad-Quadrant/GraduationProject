@@ -78,8 +78,7 @@ namespace Presentation.Bootstrap
 
 		private void Log(string message)
 		{
-			if (enableLogs)
-				Debug.Log(message);
+			if (enableLogs) Debug.Log(message);
 		}
 
 		#endregion

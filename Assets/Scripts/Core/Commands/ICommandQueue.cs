@@ -2,8 +2,6 @@
 {
 	public interface ICommandQueue
 	{
-		public interface ICommandQueue
-	{
 		/// <summary>
 		/// Number of commands waiting to be executed.
 		/// </summary>
@@ -83,6 +81,5 @@
 		/// Clears all state including executed history.
 		/// </summary>
 		void ClearAll();
-	}
 	}
 }
