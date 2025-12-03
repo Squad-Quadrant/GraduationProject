@@ -16,23 +16,22 @@ namespace Presentation.Interaction
 	{
 		[Title("Settings")]
 		[SerializeField] private bool enableLogs = true;
-		[InfoBox("If enabled, the interaction system will start automatically after initialization.", InfoMessageType.None)]
 		[SerializeField] private bool autoStart = true;
 
 		[Title("Info")]
-		[SerializeField] [ReadOnly] private InteractionContext context;
-		[SerializeField] [ReadOnly] private bool isInitialized;
-		[SerializeField] [ReadOnly] private bool isRunning;
+		[ShowInInspector, ReadOnly] private InteractionContext _context;
+		[ShowInInspector, ReadOnly] private bool _isInitialized;
+		[ShowInInspector, ReadOnly] private bool _isRunning;
 
 		public StateMachine<InteractionContext> StateMachine { get; private set; }
 
-		public InteractionContext Context => context;
-		public bool IsRunning => isRunning;
+		public InteractionContext Context => _context;
+		public bool IsRunning => _isRunning;
 		public string CurrentStateName => StateMachine?.CurrentState?.Name ?? "Not Initialized";
 
 		private void Update()
 		{
-			if (!isInitialized || !isRunning || StateMachine == null || context == null)
+			if (!_isInitialized || !_isRunning || StateMachine == null || _context == null)
 				return;
 
 			StateMachine.Update(Time.deltaTime);
@@ -42,8 +41,8 @@ namespace Presentation.Interaction
 		{
 			StopInteraction();
 			StateMachine = null;
-			context = null;
-			isInitialized = false;
+			_context = null;
+			_isInitialized = false;
 		}
 
 
@@ -55,13 +54,13 @@ namespace Presentation.Interaction
 			ICommandQueue commandQueue,
 			ILog logger)
 		{
-			if (isInitialized)
+			if (_isInitialized)
 			{
 				LogWarning("[InteractionController] Already initialized");
 				return;
 			}
 
-			context = new InteractionContext(
+			_context = new InteractionContext(
 				eventBus,
 				unitService,
 				mapService,
@@ -69,14 +68,14 @@ namespace Presentation.Interaction
 				commandQueue);
 
 			StateMachine = new StateMachine<InteractionContext>(
-				context,
+				_context,
 				enableLogs ? logger : null,
 				eventBus,
 				"InteractionStateMachine");
 
-			context.StateMachine = StateMachine;
+			_context.StateMachine = StateMachine;
 
-			isInitialized = true;
+			_isInitialized = true;
 			Log("[InteractionController] Initialized");
 
 			if (autoStart) StartInteraction();
@@ -84,52 +83,52 @@ namespace Presentation.Interaction
 
 		public void StartInteraction()
 		{
-			if (!isInitialized)
+			if (!_isInitialized)
 			{
 				LogWarning("[InteractionController] Cannot start - not initialized");
 				return;
 			}
 
-			if (isRunning)
+			if (_isRunning)
 			{
 				LogWarning("[InteractionController] Already running");
 				return;
 			}
 
 			StateMachine.ChangeState<IdleState>();
-			isRunning = true;
+			_isRunning = true;
 			Log("[InteractionController] Interaction started");
 		}
 
 		public void StopInteraction()
 		{
 			StateMachine?.Clear();
-			context?.ClearSelection();
-			isRunning = false;
+			_context?.ClearSelection();
+			_isRunning = false;
 			Log("[InteractionController] Interaction stopped");
 		}
 
 		public void Pause()
 		{
-			if (!isInitialized)
+			if (!_isInitialized)
 			{
 				LogWarning("[InteractionController] Cannot pause - not initialized");
 				return;
 			}
 
-			isRunning = false;
+			_isRunning = false;
 			Log("[InteractionController] Interaction paused");
 		}
 
 		public void Resume()
 		{
-			if (!isInitialized)
+			if (!_isInitialized)
 			{
 				LogWarning("[InteractionController] Cannot resume - not initialized");
 				return;
 			}
 
-			isRunning = true;
+			_isRunning = true;
 			Log("[InteractionController] Interaction resumed");
 		}
 

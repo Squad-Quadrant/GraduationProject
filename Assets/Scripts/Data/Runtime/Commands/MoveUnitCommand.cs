@@ -122,10 +122,7 @@ namespace Data.Runtime.Commands
 			if (EnableLogs) Debug.LogWarning($"{message}");
 		}
 
-		private void LogError(string message)
-		{
-			if (EnableLogs) Debug.LogError($"{message}");
-		}
+		private void LogError(string message) => Debug.LogError($"{message}");
 
 		#endregion
 	}

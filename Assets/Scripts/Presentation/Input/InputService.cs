@@ -20,7 +20,7 @@ namespace Presentation.Input
 
 		[Title("Settings")]
 		[SerializeField] private bool enableLogs = true;
-		[SerializeField] [ReadOnly] private bool isEnabled;
+		[ShowInInspector, ReadOnly] private bool _isEnabled;
 
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordinateConverter;
@@ -70,14 +70,14 @@ namespace Presentation.Input
 
 		private void Update()
 		{
-			if (!isEnabled || _inputActions == null) return;
+			if (!_isEnabled || _inputActions == null) return;
 
 			UpdatePointerHover();
 		}
 
 		public void SetEnabled(bool enable)
 		{
-			isEnabled = enable;
+			_isEnabled = enable;
 
 			if (enable)
 				_inputActions?.Gameplay.Enable();
@@ -89,7 +89,7 @@ namespace Presentation.Input
 
 		private void OnPrimaryClick(InputAction.CallbackContext ctx)
 		{
-			if (!isEnabled) return;
+			if (!_isEnabled) return;
 
 			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
 			ProcessClick(screenPos, 0);
@@ -97,7 +97,7 @@ namespace Presentation.Input
 
 		private void OnSecondaryClick(InputAction.CallbackContext ctx)
 		{
-			if (!isEnabled) return;
+			if (!_isEnabled) return;
 
 			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
 			ProcessClick(screenPos, 1);
@@ -105,7 +105,7 @@ namespace Presentation.Input
 
 		private void OnCancel(InputAction.CallbackContext ctx)
 		{
-			if (!isEnabled) return;
+			if (!_isEnabled) return;
 
 			Log("[InputService] Cancel pressed");
 			_eventBus.Publish(new ActionCancelledEvent());

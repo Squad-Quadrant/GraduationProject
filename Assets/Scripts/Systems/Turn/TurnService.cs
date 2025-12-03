@@ -153,9 +153,9 @@ namespace Systems.Turn
 			}
 
 			var unitId = _data.CurrentActingUnit.Id;
+			_data.CurrentActingUnit = null;
 			Debug.Log($"[TurnService] Unit '{unitId}' turn ended");
 			_eventBus.Publish(new UnitTurnEndedEvent(unitId, _data.CurrentTurnNumber));
-			_data.CurrentActingUnit = null;
 		}
 
 		public ITurnUnit GetCurrentUnit() => _data.CurrentActingUnit;

@@ -77,16 +77,16 @@ namespace Systems.Interaction.States
 					Context.availableActions
 				));
 
-				Context.StateMachine.ChangeState(new UnitSelectedState());
+				Context.StateMachine.ChangeState<UnitSelectedState>();
 			}
 			else
 			{
 				// Unit's turn is over
 				Log($"[ExecutingState] Unit {unit.name} turn complete, going to Idle");
 
-				Context.TurnService.EndTurn();
+				Context.TurnService.EndUnitTurn();
 
-				Context.StateMachine.ChangeState(new IdleState());
+				Context.StateMachine.ChangeState<IdleState>();
 			}
 		}
 	}
