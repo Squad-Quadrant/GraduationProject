@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Log;
 
 namespace Core.Commands
 {
@@ -28,10 +29,16 @@ namespace Core.Commands
 		public CompositeCommand Add(ICommand command)
 		{
 			if (command == null)
-				throw new ArgumentNullException(nameof(command));
+			{
+				this.LogWarning("Cannot add empty command.");
+				return this;
+			}
 
 			if (_isExecuting)
-				throw new InvalidOperationException("Cannot add commands while executing.");
+			{
+				this.LogWarning("Cannot add commands while executing.");
+				return this;
+			}
 
 			_commands.Add(command);
 			return this; // Fluent API
@@ -40,7 +47,10 @@ namespace Core.Commands
 		public void Execute(Action onComplete = null)
 		{
 			if (_isExecuting)
-				throw new InvalidOperationException($"CompositeCommand '{Name}' is already executing.");
+			{
+				this.LogWarning($"CompositeCommand '{Name}' is already executing.");
+				return;
+			}
 
 			if (_commands.Count == 0)
 			{
@@ -58,7 +68,10 @@ namespace Core.Commands
 		public void Undo(Action onComplete = null)
 		{
 			if (!CanUndo)
-				throw new InvalidOperationException($"CompositeCommand '{Name}' does not support undo.");
+			{
+				this.LogWarning($"CompositeCommand '{Name}' does not support undo.");
+				return;
+			}
 
 			if (_commands.Count == 0)
 			{

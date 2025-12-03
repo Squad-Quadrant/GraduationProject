@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Log;
 
 namespace Core.Commands
 {
@@ -21,7 +22,10 @@ namespace Core.Commands
 		public void Undo(Action onComplete = null)
 		{
 			if (!CanUndo)
-				throw new InvalidOperationException($"[Command] Command '{Name}' does not support undo operation.");
+			{
+				this.LogWarning($"Command '{Name}' does not support undo operation.");
+				return;
+			}
 			OnUndo();
 			onComplete?.Invoke();
 		}
@@ -48,7 +52,10 @@ namespace Core.Commands
 		public void Execute(Action onComplete = null)
 		{
 			if (IsExecuting)
-				throw new InvalidOperationException($"[Command] Command '{Name}' already executing.");
+			{
+				this.LogWarning($"Command '{Name}' already executing.");
+				return;
+			}
 			IsExecuting = true;
 			_onExecuteComplete = onComplete;
 			OnExecuteAsync();
@@ -57,9 +64,15 @@ namespace Core.Commands
 		public void Undo(Action onComplete = null)
 		{
 			if (!CanUndo)
-				throw new InvalidOperationException($"[Command] Command '{Name}' does not support undo operation.");
+			{
+				this.LogWarning($"Command '{Name}' does not support undo operation.");
+				return;
+			}
 			if (IsExecuting)
-				throw new InvalidOperationException($"[Command] Command '{Name}' already executing.");
+			{
+				this.LogWarning($"Command '{Name}' already executing.");
+				return;
+			}
 			IsExecuting = true;
 			_onUndoComplete = onComplete;
 			OnUndoAsync();

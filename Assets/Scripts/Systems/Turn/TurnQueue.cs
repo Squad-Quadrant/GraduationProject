@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Log;
 
 namespace Systems.Turn
 {
@@ -15,10 +16,16 @@ namespace Systems.Turn
 		public void Enqueue(ITurnUnit unit)
 		{
 			if (unit == null)
-				throw new ArgumentNullException(nameof(unit));
+			{
+				this.LogWarning("Unit is empty");
+				return;
+			}
 
 			if (_queue.Any(u => u.Id == unit.Id))
-				throw new InvalidOperationException($"[TurnQueue] Unit '{unit.Id}' is already in the queue!");
+			{
+				this.LogWarning($"Unit '{unit.Id}' is already in the queue");
+				return;
+			}
 
 			_queue.Add(unit);
 			SortQueue();
@@ -32,19 +39,29 @@ namespace Systems.Turn
 			foreach (var unit in units)
 			{
 				if (_queue.Any(u => u.Id == unit.Id))
-					throw new InvalidOperationException($"Unit '{unit.Id}' is already in the queue!");
+				{
+					this.LogWarning($"Unit '{unit.Id}' is already in the queue; skipping");
+					continue;
+				}
 				_queue.Add(unit);
 			}
 			SortQueue();
 		}
 
-		public ITurnUnit Peek() =>
-			IsEmpty ? throw new InvalidOperationException("Cannot peek from empty queue!") : _queue[0];
+		public ITurnUnit Peek()
+		{
+			if (!IsEmpty) return _queue[0];
+			this.LogWarning("Cannot peek from empty queue");
+			return null;
+		}
 
 		public ITurnUnit Dequeue()
 		{
 			if (IsEmpty)
-				throw new InvalidOperationException("Cannot dequeue from empty queue!");
+			{
+				this.LogWarning("Cannot dequeue from empty queue");
+				return null;
+			}
 
 			var unit = _queue[0];
 			_queue.RemoveAt(0);
@@ -81,7 +98,10 @@ namespace Systems.Turn
 		{
 			var unit = _queue.FirstOrDefault(u => u.Id == unitId);
 			if (unit == null)
-				throw new InvalidOperationException($"Unit '{unitId}' not found in queue!");
+			{
+				this.LogWarning($"Unit '{unitId}' not found in queue!");
+				return;
+			}
 
 			unit.ActionPriority = int.MaxValue;
 			SortQueue();
@@ -91,7 +111,10 @@ namespace Systems.Turn
 		{
 			var unit = _queue.FirstOrDefault(u => u.Id == unitId);
 			if (unit == null)
-				throw new InvalidOperationException($"Unit '{unitId}' not found in queue!");
+			{
+				this.LogWarning($"Unit '{unitId}' not found in queue!");
+				return;
+			}
 
 			unit.ActionPriority = priority;
 			SortQueue();

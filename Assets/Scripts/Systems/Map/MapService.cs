@@ -1,4 +1,5 @@
-﻿using Data.Config;
+﻿using Core.Log;
+using Data.Config;
 using UnityEngine;
 
 namespace Systems.Map
@@ -7,7 +8,7 @@ namespace Systems.Map
 	{
 		public MapData Data { get; } = new();
 
-		public MapService() => Debug.Log("[MapService] Initialized");
+		public MapService() => this.Log("Initialized");
 
 		public void LoadFromConfig(MapConfig config)
 		{
@@ -23,7 +24,7 @@ namespace Systems.Map
 				cell.Height = cellConfig.height;
 			}
 
-			Debug.Log($"[MapService] Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
+			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
 		}
 
 		public bool IsCellWalkable(Vector2Int position)

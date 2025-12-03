@@ -13,7 +13,7 @@ namespace Presentation.Bootstrap
 			get
 			{
 				if (!_instance)
-					Debug.LogError("No active LevelContainer. Please ensure a LevelContainer exists in the scene.");
+					Debug.LogError("[LevelContainer] No active LevelContainer. Please ensure a LevelContainer exists in the scene.");
 				return _instance;
 			}
 		}
@@ -27,7 +27,7 @@ namespace Presentation.Bootstrap
 		{
 			if (_instance && _instance != this)
 			{
-				Debug.LogWarning("Multiple LevelContainer instances detected. Destroying duplicate.");
+				Debug.LogWarning("[LevelContainer] Multiple LevelContainer instances detected. Destroying duplicate.");
 				Destroy(gameObject);
 				return;
 			}

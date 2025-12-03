@@ -1,5 +1,6 @@
 ﻿using System;
 using Core.Commands.Events;
+using Core.Log;
 using Data.Runtime.Events.Interaction;
 
 namespace Systems.Interaction.States
@@ -14,12 +15,12 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			Log("[ExecutingState] Entered - waiting for commands to complete");
+			this.Log("Entered - waiting for commands to complete");
 
 			// Check if queue is already empty (shouldn't happen, but safety check)
 			if (ctx.CommandQueue.IsIdle)
 			{
-				Log("[ExecutingState] Queue already idle, transitioning immediately");
+				this.Log("Queue already idle, transitioning immediately");
 				DetermineNextState();
 				return;
 			}
@@ -30,7 +31,7 @@ namespace Systems.Interaction.States
 
 		public override void OnExit(InteractionContext ctx)
 		{
-			Log("[ExecutingState] Exited");
+			this.Log("Exited");
 
 			Unsubscribe(ctx, _onQueueCompleted);
 			_onQueueCompleted = null;
@@ -47,7 +48,7 @@ namespace Systems.Interaction.States
 
 		private void OnCommandsCompleted(CommandCompletedEvent commandCompletedEvent)
 		{
-			Log("[ExecutingState] All commands completed");
+			this.Log("All commands completed");
 			DetermineNextState();
 		}
 
@@ -56,7 +57,7 @@ namespace Systems.Interaction.States
 			// Check if we still have a selected unit
 			if (Context.selectedUnit == null)
 			{
-				Log("[ExecutingState] No selected unit, going to Idle");
+				this.Log("No selected unit, going to Idle");
 				Context.StateMachine.ChangeState<IdleState>();
 				return;
 			}
@@ -68,7 +69,7 @@ namespace Systems.Interaction.States
 			if (currentTurnUnit != null && currentTurnUnit.Id == unit.id && currentTurnUnit.CanAct)
 			{
 				// Unit can still act - return to unit selected
-				Log($"[ExecutingState] Unit {unit.name} can still act, returning to UnitSelected");
+				this.Log($"Unit {unit.name} can still act, returning to UnitSelected");
 
 				// Re-publish selection event (UI might need to refresh)
 				Publish(Context, new UnitSelectedEvent(
@@ -82,7 +83,7 @@ namespace Systems.Interaction.States
 			else
 			{
 				// Unit's turn is over
-				Log($"[ExecutingState] Unit {unit.name} turn complete, going to Idle");
+				this.Log($"Unit {unit.name} turn complete, going to Idle");
 
 				Context.TurnService.EndUnitTurn();
 

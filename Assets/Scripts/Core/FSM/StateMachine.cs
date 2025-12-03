@@ -43,7 +43,6 @@ namespace Core.FSM
 
 		#region Field
 
-		private readonly ILog _logger;
 		private readonly IEventBus _eventBus;
 		private readonly Dictionary<Type, IState<TContext>> _stateCache = new();
 		private readonly List<ITransition<TContext>> _transitions = new();
@@ -56,18 +55,16 @@ namespace Core.FSM
 		#region Constructor
 
 		/// <param name="context">Context Instance</param>
-		/// <param name="logger">Logger Instance, optional; used for debugging</param>
 		/// <param name="eventBus">EventBus Instance, optional; used for broadcasting state change events</param>
 		/// <param name="name"></param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public StateMachine(TContext context, ILog logger = null, IEventBus eventBus = null, string name = null)
+		public StateMachine(TContext context, IEventBus eventBus = null, string name = null)
 		{
 			Context = context ?? throw new ArgumentNullException(nameof(context));
-			_logger = logger;
 			_eventBus = eventBus;
 			Name = name ?? "StateMachine";
 
-			Log($"[FSM] {GetType().Name} Initialized");
+			this.Log($"{GetType().Name} Initialized");
 		}
 
 		#endregion
@@ -87,13 +84,13 @@ namespace Core.FSM
 
 			if (!forceTransition && IsTransitioning)
 			{
-				LogWarning($"[FSM] [{Name}] Cannot change state while transitioning. Current: {CurrentState?.Name}, Requested: {newState.Name}");
+				this.LogWarning($"[{Name}] Cannot change state while transitioning. Current: {CurrentState?.Name}, Requested: {newState.Name}");
 				return;
 			}
 
 			if (CurrentState == newState)
 			{
-				LogWarning($"[FSM] [{Name}] Already in state {newState.Name}, ignoring change request.");
+				this.LogWarning($"[{Name}] Already in state {newState.Name}, ignoring change request.");
 				return;
 			}
 
@@ -103,7 +100,7 @@ namespace Core.FSM
 			{
 				if (CurrentState != null)
 				{
-					Log($"[FSM] [{Name}] Exiting state: {CurrentState.Name}");
+					this.Log($"[{Name}] Exiting state: {CurrentState.Name}");
 					CurrentState.OnExit(Context);
 				}
 
@@ -112,16 +109,16 @@ namespace Core.FSM
 
 				AddToHistory(CurrentState.Name);
 
-				Log($"[FSM] [{Name}] Entering state: {CurrentState.Name}");
+				this.Log($"[{Name}] Entering state: {CurrentState.Name}");
 				CurrentState.OnEnter(Context);
 
 				PublishStateChangedEvent();
 
-				Log($"[FSM] [{Name}] State changed: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
+				this.Log($"[{Name}] State changed: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
 			}
 			catch (Exception ex)
 			{
-				LogError($"[FSM] [{Name}] Error during state change: {ex.Message}\n{ex.StackTrace}");
+				this.LogError($"[{Name}] Error during state change: {ex.Message}\n{ex.StackTrace}");
 				throw;
 			}
 			finally
@@ -142,7 +139,7 @@ namespace Core.FSM
 			{
 				state = new TState();
 				_stateCache[stateType] = state;
-				Log($"[FSM] [{Name}] Created new state instance: {state.Name}");
+				this.Log($"[{Name}] Created new state instance: {state.Name}");
 			}
 			ChangeState(state);
 		}
@@ -154,7 +151,7 @@ namespace Core.FSM
 		{
 			if (CurrentState == null)
 			{
-				LogWarning($"[FSM] [{Name}] No current state to update.");
+				this.LogWarning($"[{Name}] No current state to update.");
 				return;
 			}
 
@@ -169,7 +166,7 @@ namespace Core.FSM
 			}
 			catch (Exception ex)
 			{
-				LogError($"[FSM] [{Name}] Error during state update ({CurrentState.Name}): {ex.Message}\n{ex.StackTrace}");
+				this.LogError($"[{Name}] Error during state update ({CurrentState.Name}): {ex.Message}\n{ex.StackTrace}");
 				throw;
 			}
 		}
@@ -178,17 +175,17 @@ namespace Core.FSM
 		{
 			if (PreviousState == null)
 			{
-				LogWarning($"[FSM] [{Name}] No previous state to revert to.");
+				this.LogWarning($"[{Name}] No previous state to revert to.");
 				return;
 			}
 
-			Log($"[FSM] [{Name}] Reverting to previous state: {PreviousState.Name}");
+			this.Log($"[{Name}] Reverting to previous state: {PreviousState.Name}");
 			ChangeState(PreviousState);
 		}
 
 		public void Clear()
 		{
-			Log($"[FSM] [{Name}] Clearing up...");
+			this.Log($"[{Name}] Clearing up...");
 			if (CurrentState != null)
 			{
 				CurrentState.OnExit(Context);
@@ -198,7 +195,7 @@ namespace Core.FSM
 			_stateCache.Clear();
 			_transitions.Clear();
 			_stateHistory.Clear();
-			Log($"[FSM] [{Name}] Cleared.");
+			this.Log($"[{Name}] Cleared.");
 		}
 
 		public bool IsInState<TState>() where TState : IState<TContext> => CurrentState != null && CurrentState.GetType() == typeof(TState);
@@ -215,25 +212,25 @@ namespace Core.FSM
 				throw new ArgumentNullException(nameof(transition));
 
 			if (_transitions.Any(t => t.From == transition.From && t.To == transition.To))
-				LogWarning($"[{Name}] Transition already exists: {transition.Name}");
+				this.LogWarning($"[{Name}] Transition already exists: {transition.Name}");
 
 			_transitions.Add(transition);
-			_transitions.Sort((a, b) => b.Priority.CompareTo(a.Priority)); // Higher priority first
-			Log($"[FSM] [{Name}] Added transition: {transition.Name} (Priority: {transition.Priority})");
+			_transitions.Sort((a, b) => b.Priority.CompareTo(a.Priority));
+			this.Log($"[{Name}] Added transition: {transition.Name} (Priority: {transition.Priority})");
 		}
 
 		public void RemoveTransition(ITransition<TContext> transition)
 		{
 			if (_transitions.Remove(transition))
-				Log($"[FSM] [{Name}] Removed transition: {transition.Name}");
+				this.Log($"[{Name}] Removed transition: {transition.Name}");
 			else
-				LogWarning($"[FSM] [{Name}] Transition not found: {transition.Name}");
+				this.LogWarning($"[{Name}] Transition not found: {transition.Name}");
 		}
 
 		public void ClearTransitions()
 		{
 			_transitions.Clear();
-			Log($"[FSM] [{Name}] All transitions cleared.");
+			this.Log($"[{Name}] All transitions cleared.");
 		}
 
 		private void CheckTransitions()
@@ -249,7 +246,7 @@ namespace Core.FSM
 				if (!transition.ShouldTransition(Context))
 					continue;
 
-				Log($"[FSM] [{Name}] Auto transition triggered: {transition.Name}");
+				this.Log($"[{Name}] Auto transition triggered: {transition.Name}");
 
 				try
 				{
@@ -259,7 +256,7 @@ namespace Core.FSM
 				}
 				catch (Exception ex)
 				{
-					LogError($"[FSM] [{Name}] Error during transition ({transition.Name}): {ex.Message}\n{ex.StackTrace}");
+					this.LogError($"[{Name}] Error during transition ({transition.Name}): {ex.Message}\n{ex.StackTrace}");
 					throw;
 				}
 			}
@@ -292,15 +289,6 @@ namespace Core.FSM
 			var stateChangedEvent = new StateChangedEvent<TContext>(this, PreviousState, CurrentState, Context);
 			_eventBus.Publish(stateChangedEvent);
 		}
-
-		#endregion
-
-
-		#region Logging
-
-		private void Log(string message) => _logger?.Log(message);
-		private void LogWarning(string message) => _logger?.LogWarning(message);
-		private void LogError(string message) => _logger?.LogError(message);
 
 		#endregion
 	}

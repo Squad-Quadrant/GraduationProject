@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
+using Core.Log;
 using Data.Runtime.Events;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
@@ -23,7 +24,7 @@ namespace Systems.Turn
 			_data = new TurnData();
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
-			Debug.Log("[TurnService] Initialized");
+			this.Log("Initialized");
 		}
 
 		private void OnUnitCreated(UnitCreatedEvent e)
@@ -39,20 +40,20 @@ namespace Systems.Turn
 		{
 			if (_data.IsTurnActive)
 			{
-				Debug.LogWarning("[TurnService] Cannot start turn: A turn is already active!");
+				this.LogWarning("Cannot start turn: A turn is already active!");
 				return;
 			}
 
 			if (_unitService.GetAllAliveUnits().Count == 0)
 			{
-				Debug.LogWarning("[TurnService] Cannot start turn: No alive units!");
+				this.LogWarning("Cannot start turn: No alive units!");
 				return;
 			}
 
 			_data.CurrentTurnNumber++;
 			_data.IsTurnActive = true;
 
-			Debug.Log($"[TurnService] Turn {_data.CurrentTurnNumber} Started");
+			this.Log($"Turn {_data.CurrentTurnNumber} Started");
 
 			RebuildQueue();
 
@@ -73,7 +74,7 @@ namespace Systems.Turn
 
 			if (actionableUnits.Count == 0)
 			{
-				Debug.LogWarning("[TurnService] No actionable units to build queue!");
+				this.LogWarning("No actionable units to build queue!");
 				return;
 			}
 
@@ -82,7 +83,7 @@ namespace Systems.Turn
 
 			_data.ActionQueue.EnqueueRange(actionableUnits);
 
-			Debug.Log($"[TurnService] Queue built with {actionableUnits.Count} units: {_data.ActionQueue}");
+			this.Log($"Queue built with {actionableUnits.Count} units: {_data.ActionQueue}");
 
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.TurnReset));
 		}
@@ -91,13 +92,13 @@ namespace Systems.Turn
 		{
 			if (!_data.IsTurnActive)
 			{
-				Debug.LogWarning("[TurnService] Cannot end turn: No active turn!");
+				this.LogWarning("Cannot end turn: No active turn!");
 				return;
 			}
 
 			if (_data.HasActingUnit) EndUnitTurn(); // End current unit's turn if active
 
-			Debug.Log($"[TurnService] Turn {_data.CurrentTurnNumber} Ended");
+			this.Log($"Turn {_data.CurrentTurnNumber} Ended");
 
 			_eventBus.Publish(new TurnEndedEvent(_data.CurrentTurnNumber));
 
@@ -113,14 +114,14 @@ namespace Systems.Turn
 		{
 			if (!_data.IsTurnActive)
 			{
-				Debug.LogWarning("[TurnService] Cannot get next unit: No active turn!");
+				this.LogWarning("Cannot get next unit: No active turn!");
 				return null;
 			}
 
 			// check if the queue is empty
 			if (_data.ActionQueue.IsEmpty)
 			{
-				Debug.Log("[TurnService] No more units in queue, turn should end");
+				this.Log("No more units in queue, turn should end");
 				return null;
 			}
 
@@ -128,18 +129,18 @@ namespace Systems.Turn
 
 			if (!_unitService.HasUnit(nextUnit.Id))
 			{
-				Debug.LogWarning($"[TurnService] Next unit '{nextUnit.Id}' not found in UnitService, skipping turn");
+				this.LogWarning($"Next unit '{nextUnit.Id}' not found in UnitService, skipping turn");
 				return NextUnit(); // Skip to the next unit
 			}
 
 			if (!nextUnit.CanAct)
 			{
-				Debug.Log($"[TurnService] Next unit '{nextUnit.Id}' cannot act, skipping turn");
+				this.Log($"Next unit '{nextUnit.Id}' cannot act, skipping turn");
 				return NextUnit(); // Skip to the next unit
 			}
 
 			_data.CurrentActingUnit = nextUnit;
-			Debug.Log($"[TurnService] Unit '{nextUnit.Id}' turn started (Speed: {nextUnit.Speed})");
+			this.Log($"Unit '{nextUnit.Id}' turn started (Speed: {nextUnit.Speed})");
 			_eventBus.Publish(new UnitTurnStartedEvent(nextUnit.Id, _data.CurrentTurnNumber));
 			return nextUnit;
 		}
@@ -148,13 +149,13 @@ namespace Systems.Turn
 		{
 			if (!_data.HasActingUnit)
 			{
-				Debug.LogWarning("[TurnService] Cannot end unit turn: No active unit!");
+				this.LogWarning("Cannot end unit turn: No active unit!");
 				return;
 			}
 
 			var unitId = _data.CurrentActingUnit.Id;
 			_data.CurrentActingUnit = null;
-			Debug.Log($"[TurnService] Unit '{unitId}' turn ended");
+			this.Log($"Unit '{unitId}' turn ended");
 			_eventBus.Publish(new UnitTurnEndedEvent(unitId, _data.CurrentTurnNumber));
 		}
 
@@ -169,20 +170,20 @@ namespace Systems.Turn
 
 			if (!unit.CanAct)
 			{
-				Debug.LogWarning($"[TurnService] Cannot register unit '{unit.Id}': Unit cannot act.");
+				this.LogWarning($"Cannot register unit '{unit.Id}': Unit cannot act.");
 				return;
 			}
 
 			if (_data.IsTurnActive)
 			{
 				_data.ActionQueue.Enqueue(unit);
-				Debug.Log($"[TurnService] Registered unit '{unit.Id}' into active turn queue.");
+				this.Log($"Registered unit '{unit.Id}' into active turn queue.");
 				_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdded, unit.Id));
 			}
 			else
 			{
 				// todo: ?
-				Debug.Log($"[TurnService] Unit '{unit.Id}' registered, will join queue on next StartTurn()");
+				this.Log($"Unit '{unit.Id}' registered, will join queue on next StartTurn()");
 			}
 		}
 
@@ -192,12 +193,12 @@ namespace Systems.Turn
 
 			if (_data.HasActingUnit && _data.CurrentActingUnit.Id == unitId)
 			{
-				Debug.Log($"[TurnService] Current acting unit '{unitId}' was unregistered, clearing reference");
+				this.Log($"Current acting unit '{unitId}' was unregistered, clearing reference");
 				_data.CurrentActingUnit = null;
 			}
 
 			if (!removed) return;
-			Debug.Log($"[TurnService] Unit '{unitId}' unregistered");
+			this.Log($"Unit '{unitId}' unregistered");
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitRemoved, unitId));
 		}
 
@@ -207,12 +208,12 @@ namespace Systems.Turn
 		{
 			if (!_data.ActionQueue.Contains(unitId))
 			{
-				Debug.LogWarning($"[TurnService] Unit '{unitId}' not in queue, cannot update speed");
+				this.LogWarning($"Unit '{unitId}' not in queue, cannot update speed");
 				return;
 			}
 
 			_data.ActionQueue.Reorder();
-			Debug.Log($"[TurnService] Unit '{unitId}' updated speed, queue reordered");
+			this.Log($"Unit '{unitId}' updated speed, queue reordered");
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.SpeedModified, unitId));
 		}
 
@@ -220,13 +221,13 @@ namespace Systems.Turn
 		{
 			if (!_data.ActionQueue.Contains(unitId))
 			{
-				Debug.LogWarning($"[TurnService] Unit '{unitId}' not in queue, cannot force insert");
+				this.LogWarning($"Unit '{unitId}' not in queue, cannot force insert");
 				return;
 			}
 
 			_data.ActionQueue.InsertWithPriority(unitId, priority);
 
-			Debug.Log($"[TurnService] Unit '{unitId}' force inserted with priority {priority}");
+			this.Log($"Unit '{unitId}' force inserted with priority {priority}");
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitInserted, unitId));
 		}
 
@@ -240,9 +241,9 @@ namespace Systems.Turn
 
 		public void Clear()
 		{
-			Debug.Log("[TurnService] Clearing...");
+			this.Log("Clearing...");
 			_data.Reset();
-			Debug.Log("[TurnService] Cleared");
+			this.Log("Cleared");
 		}
 	}
 }

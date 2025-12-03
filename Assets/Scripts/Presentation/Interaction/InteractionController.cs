@@ -15,7 +15,6 @@ namespace Presentation.Interaction
 	public class InteractionController : MonoBehaviour
 	{
 		[Title("Settings")]
-		[SerializeField] private bool enableLogs = true;
 		[SerializeField] private bool autoStart = true;
 
 		[Title("Info")]
@@ -51,12 +50,11 @@ namespace Presentation.Interaction
 			IUnitService unitService,
 			IMapService mapService,
 			ITurnService turnService,
-			ICommandQueue commandQueue,
-			ILog logger)
+			ICommandQueue commandQueue)
 		{
 			if (_isInitialized)
 			{
-				LogWarning("[InteractionController] Already initialized");
+				this.LogWarning("Already initialized");
 				return;
 			}
 
@@ -69,14 +67,13 @@ namespace Presentation.Interaction
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,
-				enableLogs ? logger : null,
 				eventBus,
 				"InteractionStateMachine");
 
 			_context.StateMachine = StateMachine;
 
 			_isInitialized = true;
-			Log("[InteractionController] Initialized");
+			this.Log("Initialized");
 
 			if (autoStart) StartInteraction();
 		}
@@ -85,19 +82,19 @@ namespace Presentation.Interaction
 		{
 			if (!_isInitialized)
 			{
-				LogWarning("[InteractionController] Cannot start - not initialized");
+				this.LogWarning("Cannot start - not initialized");
 				return;
 			}
 
 			if (_isRunning)
 			{
-				LogWarning("[InteractionController] Already running");
+				this.LogWarning("Already running");
 				return;
 			}
 
 			StateMachine.ChangeState<IdleState>();
 			_isRunning = true;
-			Log("[InteractionController] Interaction started");
+			this.Log("Interaction started");
 		}
 
 		public void StopInteraction()
@@ -105,45 +102,31 @@ namespace Presentation.Interaction
 			StateMachine?.Clear();
 			_context?.ClearSelection();
 			_isRunning = false;
-			Log("[InteractionController] Interaction stopped");
+			this.Log("Interaction stopped");
 		}
 
 		public void Pause()
 		{
 			if (!_isInitialized)
 			{
-				LogWarning("[InteractionController] Cannot pause - not initialized");
+				this.LogWarning("Cannot pause - not initialized");
 				return;
 			}
 
 			_isRunning = false;
-			Log("[InteractionController] Interaction paused");
+			this.Log("Interaction paused");
 		}
 
 		public void Resume()
 		{
 			if (!_isInitialized)
 			{
-				LogWarning("[InteractionController] Cannot resume - not initialized");
+				this.LogWarning("Cannot resume - not initialized");
 				return;
 			}
 
 			_isRunning = true;
-			Log("[InteractionController] Interaction resumed");
+			this.Log("Interaction resumed");
 		}
-
-		#region Debug
-
-		private void Log(string message)
-		{
-			if (enableLogs) Debug.Log($"{message}");
-		}
-
-		private void LogWarning(string message)
-		{
-			if (enableLogs) Debug.LogWarning($"{message}");
-		}
-
-		#endregion
 	}
 }

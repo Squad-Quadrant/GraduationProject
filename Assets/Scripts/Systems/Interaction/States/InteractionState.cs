@@ -7,9 +7,7 @@ namespace Systems.Interaction.States
 {
 	public abstract class InteractionState : State<InteractionContext>
 	{
-		private const bool EnableLogs = true;
-
-		protected InteractionContext Context { get; set; }
+		protected InteractionContext Context { get; private set; }
 
 		protected InteractionState(string name) : base(name) {}
 
@@ -18,32 +16,13 @@ namespace Systems.Interaction.States
 
 		protected StateMachine<InteractionContext> StateMachine(InteractionContext ctx) => ctx.StateMachine;
 
-		protected void Subscribe<TEvent>(InteractionContext ctx, Action<TEvent> handler, int priority = 0) where TEvent : IEvent
+		protected static void Subscribe<TEvent>(InteractionContext ctx, Action<TEvent> handler, int priority = 0) where TEvent : IEvent
 			=> ctx.EventBus.Subscribe(handler, priority);
 
-		protected void Unsubscribe<TEvent>(InteractionContext ctx, Action<TEvent> handler) where TEvent : IEvent
+		protected static void Unsubscribe<TEvent>(InteractionContext ctx, Action<TEvent> handler) where TEvent : IEvent
 			=> ctx.EventBus.Unsubscribe(handler);
 
-		protected void Publish<TEvent>(InteractionContext ctx, TEvent evt) where TEvent : IEvent
+		protected static void Publish<TEvent>(InteractionContext ctx, TEvent evt) where TEvent : IEvent
 			=> ctx.EventBus.Publish(evt);
-
-		#region Debug
-
-		protected static void Log(string message)
-		{
-			if (EnableLogs) Debug.Log($"{message}");
-		}
-
-		protected static void LogWarning(string message)
-		{
-			if (EnableLogs) Debug.LogWarning($"{message}");
-		}
-
-		protected static void LogError(string message)
-		{
-			if (EnableLogs) Debug.LogError($"{message}");
-		}
-
-		#endregion
 	}
 }

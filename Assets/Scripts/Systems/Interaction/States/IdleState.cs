@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
@@ -18,7 +19,7 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			Log("[IdleState] Entered Idle State");
+			this.Log("Entered Idle State");
 
 			ctx.ClearSelection(); // Clear any selected units or UI elements
 			Publish(ctx, new UnitDeselectedEvent(null));
@@ -31,7 +32,7 @@ namespace Systems.Interaction.States
 
 		public override void OnExit(InteractionContext ctx)
 		{
-			Log("[IdleState] Exiting Idle State");
+			this.Log("Exiting Idle State");
 
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onCellClicked);
@@ -50,7 +51,7 @@ namespace Systems.Interaction.States
 
 					if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
 					{
-						LogWarning($"[IdleState] Clicked unit with ID {e.UnitId} not found.");
+						this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
 						return;
 					}
 
@@ -58,7 +59,7 @@ namespace Systems.Interaction.States
 						SelectUnit(unit);
 					else
 					{
-						Log($"[IdleState] Cannot control unit with ID {e.UnitId}.");
+						this.Log($"Cannot control unit with ID {e.UnitId}.");
 						// todo: provide feedback to the player here
 					}
 
@@ -67,11 +68,11 @@ namespace Systems.Interaction.States
 		}
 
 		private void OnCellClicked(CellClickedEvent e) =>
-			Log($"[IdleState] Empty cell clicked: {e.CellPosition}");
+			this.Log($"Empty cell clicked: {e.CellPosition}");
 
 		private void SelectUnit(Unit.Unit unit)
 		{
-			Log($"[IdleState] Selecting unit: {unit.name}");
+			this.Log($"Selecting unit: {unit.name}");
 
 			Context.selectedUnit = unit;
 

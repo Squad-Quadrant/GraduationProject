@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Core.Events;
+using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.Input;
@@ -20,9 +21,6 @@ namespace Presentation.Bootstrap
 	/// </summary>
 	public class LevelLoader : MonoBehaviour
 	{
-		[Title("Settings")]
-		[SerializeField] private bool enableLogs = true;
-		
 		[Title("References")]
 		[SerializeField] private MapView mapView;
 		[SerializeField] private Grid grid;
@@ -50,7 +48,7 @@ namespace Presentation.Bootstrap
 		{
 			if (!config)
 			{
-				Debug.LogError("[LevelLoader] Cannot load null level config!");
+				this.LogError("Cannot load null level config!");
 				return;
 			}
 
@@ -60,7 +58,7 @@ namespace Presentation.Bootstrap
 
 		public void UnloadLevel()
 		{
-			Log("[LevelLoader] Unloading level...");
+			this.Log("Unloading level...");
 
 			// Clear all services
 			_turnService?.Clear();
@@ -80,13 +78,13 @@ namespace Presentation.Bootstrap
 			_turnService = null;
 			_eventBus = null;
 
-			Log("[LevelLoader] Level unloaded successfully.");
+			this.Log("Level unloaded successfully.");
 		}
 
 		private IEnumerator LoadLevelCoroutine()
 		{
-			Log("====================================");
-			Log("[LevelLoader] Loading level...");
+			this.Log("====================================", false);
+			this.Log("Loading level...");
 
 			yield return CreateLevelContainer();
 			yield return RegisterServices();
@@ -94,28 +92,28 @@ namespace Presentation.Bootstrap
 			yield return CreateUnits();
 			yield return InitializeInputService();
 
-			Log($"[LevelLoader] Level '{levelConfig.levelName}' loaded successfully!");
-			Log("====================================");
+			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
+			this.Log("====================================", false);
 
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
 		}
 
 		private IEnumerator CreateLevelContainer()
 		{
-			Log("[LevelLoader] Creating LevelContainer...");
+			this.Log("Creating LevelContainer...");
 
 			// Create level container GameObject
 			var containerObj = new GameObject("LevelContainer");
 			_levelContainer = containerObj.AddComponent<LevelContainer>();
 			_levelContainer.Initialize();
 
-			Log("[LevelLoader] ✓ LevelContainer created.");
+			this.Log("✓ LevelContainer created.");
 			yield return null;
 		}
 
 		private IEnumerator RegisterServices()
 		{
-			Log("[LevelLoader] Registering services...");
+			this.Log("Registering services...");
 
 			// Get EventBus from RootContainer (global service)
 			_eventBus = RootContainer.Instance.Resolve<IEventBus>();
@@ -126,7 +124,7 @@ namespace Presentation.Bootstrap
 
 			if (!grid)
 			{
-				Debug.LogError("[LevelLoader] No Grid found in scene! Please add a Grid component.");
+				this.LogError("No Grid found in scene! Please add a Grid component.");
 				yield break;
 			}
 
@@ -147,34 +145,34 @@ namespace Presentation.Bootstrap
 			_unitService = _levelContainer.Resolve<IUnitService>();
 			_turnService = _levelContainer.Resolve<ITurnService>();
 
-			Log("[LevelLoader] ✓ Services registered and resolved.");
+			this.Log("✓ Services registered and resolved.");
 			yield return null;
 		}
 
 		private IEnumerator InitializeMap()
 		{
-			Log("[LevelLoader] Initializing map...");
+			this.Log("Initializing map...");
 
 			if (!levelConfig.mapConfig)
 			{
-				Debug.LogError("[LevelLoader] No MapConfig assigned to LevelConfig!");
+				this.LogError("No MapConfig assigned to LevelConfig!");
 				yield break;
 			}
 
 			// Load map from config
 			_mapService.LoadFromConfig(levelConfig.mapConfig);
 
-			Log($"[LevelLoader] ✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
+			this.Log($"✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 			yield return null;
 		}
 
 		private IEnumerator CreateUnits()
 		{
-			Log("[LevelLoader] Spawning units...");
+			this.Log("Spawning units...");
 
 			if (levelConfig.unitPlacements.Count == 0)
 			{
-				Debug.LogWarning("[LevelLoader] No units to spawn!");
+				this.LogWarning("No units to spawn!");
 				yield break;
 			}
 
@@ -185,14 +183,14 @@ namespace Presentation.Bootstrap
 					// Validate placement
 					if (!placement.unitConfig)
 					{
-						Debug.LogError($"[LevelLoader] Unit '{placement.unitId}' has no config!");
+						this.LogError($"Unit '{placement.unitId}' has no config!");
 						continue;
 					}
 
 					// Check if position is valid
 					if (!_mapService.Data.IsInBounds(placement.startPosition))
 					{
-						Debug.LogError($"[LevelLoader] Unit '{placement.unitId}' spawn position {placement.startPosition} is out of bounds!");
+						this.LogError($"Unit '{placement.unitId}' spawn position {placement.startPosition} is out of bounds!");
 						continue;
 					}
 
@@ -206,29 +204,29 @@ namespace Presentation.Bootstrap
 					// Occupy cell on map
 					_mapService.OccupyCell(placement.startPosition, placement.unitId);
 
-					Log($"[LevelLoader] ✓ Spawned {unit.name} at {placement.startPosition}");
+					this.Log($"✓ Spawned {unit.name} at {placement.startPosition}");
 				}
 				catch (Exception ex)
 				{
-					Debug.LogError($"[LevelLoader] Failed to spawn unit '{placement.unitId}': {ex.Message}");
+					this.LogError($"Failed to spawn unit '{placement.unitId}': {ex.Message}");
 				}
 
 				yield return null;
 			}
 
-			Log($"[LevelLoader] ✓ Spawned {levelConfig.unitPlacements.Count} units.");
+			this.Log($"✓ Spawned {levelConfig.unitPlacements.Count} units.");
 		}
 
 		private IEnumerator InitializeInputService()
 		{
-			Log("[LevelLoader] Initializing InputService...");
+			this.Log("Initializing InputService...");
 
 			if (!inputService)
 			{
 				inputService = FindObjectOfType<InputService>();
 				if (!inputService)
 				{
-					Debug.LogError("[LevelLoader] No InputService found in scene!");
+					this.LogError("No InputService found in scene!");
 					yield break;
 				}
 			}
@@ -239,14 +237,5 @@ namespace Presentation.Bootstrap
 				_mapService
 			);
 		}
-
-		#region Debug
-
-		private void Log(string message)
-		{
-			if (enableLogs) Debug.Log(message);
-		}
-
-		#endregion
 	}
 }

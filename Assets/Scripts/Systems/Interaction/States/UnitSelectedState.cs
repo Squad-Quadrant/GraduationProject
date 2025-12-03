@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
@@ -19,11 +20,11 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			Log($"[UnitSelectedState] Entered - Unit: {ctx.selectedUnit?.name}");
+			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
 
 			if (ctx.selectedUnit == null)
 			{
-				LogError("[UnitSelectedState] No unit selected! Returning to Idle.");
+				this.LogError("No unit selected! Returning to Idle.");
 				ctx.StateMachine.ChangeState(new IdleState());
 				return;
 			}
@@ -40,7 +41,7 @@ namespace Systems.Interaction.States
 
 		public override void OnExit(InteractionContext ctx)
 		{
-			Log("[UnitSelectedState] Exited");
+			this.Log("Exited");
 
 			Unsubscribe(ctx, _onActionSelected);
 			Unsubscribe(ctx, _onActionCancelled);
@@ -57,7 +58,7 @@ namespace Systems.Interaction.States
 
 		private void OnActionSelected(ActionSelectedEvent e)
 		{
-			Log($"[UnitSelectedState] Action selected: {e.ActionType}");
+			this.Log($"Action selected: {e.ActionType}");
 
 			Context.currentAction = e.ActionType;
 
@@ -84,14 +85,14 @@ namespace Systems.Interaction.States
 				case EActionType.UseItem:
 				case EActionType.Defend:
 				default:
-					LogWarning($"[UnitSelectedState] Unhandled action: {e.ActionType}");
+					this.LogWarning($"Unhandled action: {e.ActionType}");
 					break;
 			}
 		}
 
 		private void OnActionCancelled(ActionCancelledEvent e)
 		{
-			Log("[UnitSelectedState] Action cancelled, returning to Idle");
+			this.Log("Action cancelled, returning to Idle");
 			DeselectAndGoIdle();
 		}
 
@@ -106,7 +107,7 @@ namespace Systems.Interaction.States
 
 					if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
 					{
-						LogWarning($"[UnitSelectedState] Clicked unit with ID {e.UnitId} not found.");
+						this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
 						return;
 					}
 
@@ -114,7 +115,7 @@ namespace Systems.Interaction.States
 						SwitchToUnit(unit);
 					else
 					{
-						Log($"[UnitSelectedState] Cannot control unit with ID {e.UnitId}.");
+						this.Log($"Cannot control unit with ID {e.UnitId}.");
 						// todo: provide feedback to the player here
 					}
 
@@ -127,7 +128,7 @@ namespace Systems.Interaction.States
 			switch (e.MouseButton)
 			{
 				case 1: // Right-click
-					Log($"[UnitSelectedState] Empty cell clicked: {e.CellPosition}");
+					this.Log($"Empty cell clicked: {e.CellPosition}");
 					DeselectAndGoIdle();
 					return;
 			}
@@ -135,7 +136,7 @@ namespace Systems.Interaction.States
 
 		private void SwitchToUnit(Unit.Unit newUnit)
 		{
-			Log($"[UnitSelectedState] Switching to unit: {newUnit.name}");
+			this.Log($"Switching to unit: {newUnit.name}");
 
 			// Publish deselection of current unit
 			Publish(Context, new UnitDeselectedEvent(Context.selectedUnit?.id));
@@ -165,7 +166,7 @@ namespace Systems.Interaction.States
 		private void ExecuteWait()
 		{
 			// todo: need more logic here
-			Log("[UnitSelectedState] Executing Wait action");
+			this.Log("Executing Wait action");
 
 			Context.TurnService.EndUnitTurn();
 
@@ -188,7 +189,7 @@ namespace Systems.Interaction.States
 
 		private void ExecuteEndTurn()
 		{
-			Log("[UnitSelectedState] Executing EndTurn action");
+			this.Log("Executing EndTurn action");
 
 			Context.TurnService.EndTurn();
 			Context.StateMachine.ChangeState(new IdleState());

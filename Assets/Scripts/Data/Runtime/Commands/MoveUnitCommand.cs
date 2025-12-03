@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
+using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
 using Systems.Map;
@@ -11,8 +12,6 @@ namespace Data.Runtime.Commands
 {
 	public class MoveUnitCommand : AsyncCommand
 	{
-		private const bool EnableLogs = true;
-
 		private readonly string _unitId;
 		private readonly Vector2Int _fromPosition;
 		private readonly Vector2Int _toPosition;
@@ -45,11 +44,11 @@ namespace Data.Runtime.Commands
 
 		protected override void OnExecuteAsync()
 		{
-			Log($"[MoveUnitCommand] Executing: {Name}");
+			this.Log($"[MoveUnitCommand] Executing: {Name}");
 
 			if (!_unitService.TryGetUnit(_unitId, out var unit))
 			{
-				LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
+				this.LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
 				CompleteExecution();
 				return;
 			}
@@ -72,11 +71,11 @@ namespace Data.Runtime.Commands
 
 		protected override void OnUndoAsync()
 		{
-			Log($"[MoveUnitCommand] Undoing: {Name}");
+			this.Log($"[MoveUnitCommand] Undoing: {Name}");
 
 			if (!_unitService.TryGetUnit(_unitId, out var unit))
 			{
-				Debug.LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
+				this.LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
 				CompleteUndo();
 				return;
 			}
@@ -106,24 +105,8 @@ namespace Data.Runtime.Commands
 			if (e.EntityId != _unitId || e.AnimationType != EAnimationType.Move)
 				return;
 
-			Log($"[MoveUnitCommand] Animation complete for {_unitId}");
+			this.Log($"[MoveUnitCommand] Animation complete for {_unitId}");
 			CompleteExecution();
 		}
-
-		#region Debug
-
-		private void Log(string message)
-		{
-			if (EnableLogs) Debug.Log($"{message}");
-		}
-
-		private void LogWarning(string message)
-		{
-			if (EnableLogs) Debug.LogWarning($"{message}");
-		}
-
-		private void LogError(string message) => Debug.LogError($"{message}");
-
-		#endregion
 	}
 }

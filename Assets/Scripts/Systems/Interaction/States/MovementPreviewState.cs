@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
@@ -20,11 +21,11 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			Log($"[MovementPreviewState] Entered - Unit: {ctx.selectedUnit?.name}");
+			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
 
 			if (ctx.selectedUnit == null)
 			{
-				LogError("[MovementPreviewState] No unit selected! Returning to Idle.");
+				this.LogError("No unit selected! Returning to Idle.");
 				ctx.StateMachine.ChangeState<IdleState>();
 				return;
 			}
@@ -48,7 +49,7 @@ namespace Systems.Interaction.States
 
 		public override void OnExit(InteractionContext ctx)
 		{
-			Log("[MovementPreviewState] Exited");
+			this.Log("Exited");
 
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Movement));
 			Publish(ctx, PathPreviewEvent.Hide());
@@ -71,7 +72,7 @@ namespace Systems.Interaction.States
 				case 0: // Left-click - check if valid target
 					if (!Context.validTargetCells.Contains(e.CellPosition))
 					{
-						Log($"[MovementPreviewState] Invalid target: {e.CellPosition}");
+						this.Log($"Invalid target: {e.CellPosition}");
 						// todo: Could play error sound or show feedback
 						return;
 					}
@@ -118,14 +119,14 @@ namespace Systems.Interaction.States
 
 		private void CancelAndReturn()
 		{
-			Log("[MovementPreviewState] Cancelled, returning to UnitSelected");
+			this.Log("Cancelled, returning to UnitSelected");
 			Context.ClearTarget();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private void ExecuteMove(Vector2Int targetCell)
 		{
-			Log($"[MovementPreviewState] Executing move to {targetCell}");
+			this.Log($"Executing move to {targetCell}");
 
 			Context.targetCell = targetCell;
 

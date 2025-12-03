@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
+using Core.Log;
 using Data.Runtime.Events.Turn;
 using Sirenix.OdinInspector;
 using Systems.Turn;
@@ -15,7 +16,6 @@ namespace Presentation.Turn
 	{
 		[Title("Settings")]
 		[SerializeField] private bool autoStart = true;
-		[SerializeField] private bool enableLogs = true;
 
 		[Tooltip("Delay before starting a new turn")]
 		[SerializeField, Range(0f, 2f)] private float turnStartDelay = 0.5f;
@@ -43,7 +43,7 @@ namespace Presentation.Turn
 		{
 			if (_isInitialized)
 			{
-				LogWarning("Already initialized!");
+				this.LogWarning("Already initialized!");
 				return;
 			}
 
@@ -55,7 +55,7 @@ namespace Presentation.Turn
 			_eventBus.Subscribe<TurnEndedEvent>(OnTurnEnded);
 
 			_isInitialized = true;
-			Log("Initialized");
+			this.Log("Initialized");
 
 			if (autoStart)
 				StartTurnCycle();
@@ -69,24 +69,24 @@ namespace Presentation.Turn
 		{
 			if (!_isInitialized)
 			{
-				LogError("Not initialized!");
+				this.LogError("Not initialized!");
 				return;
 			}
 
 			if (IsRunning)
 			{
-				LogWarning("Already running!");
+				this.LogWarning("Already running!");
 				return;
 			}
 
 			if (_unitService.GetAllAliveUnits().Count == 0)
 			{
-				LogError("No units available!");
+				this.LogError("No units available!");
 				return;
 			}
 
 			IsRunning = true;
-			Log("Turn cycle started");
+			this.Log("Turn cycle started");
 
 			_turnService.StartTurn();
 		}
@@ -104,7 +104,7 @@ namespace Presentation.Turn
 				_turnService.EndTurn();
 
 			IsRunning = false;
-			Log("Turn cycle stopped");
+			this.Log("Turn cycle stopped");
 		}
 
 		[HorizontalGroup("Controls/Buttons")]
@@ -113,23 +113,23 @@ namespace Presentation.Turn
 		public void Pause()
 		{
 			StopAllCoroutines();
-			Log("Paused");
+			this.Log("Paused");
 		}
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
 			if (!IsRunning) return;
 
-			Log($"Unit '{e.UnitId}' turn ended");
+			this.Log($"Unit '{e.UnitId}' turn ended");
 
 			if (_turnService.IsCurrentTurnComplete())
 			{
-				Log("Queue empty → EndTurn");
+				this.Log("Queue empty → EndTurn");
 				StartCoroutine(DelayedAction(unitSwitchDelay, () => _turnService.EndTurn()));
 			}
 			else
 			{
-				Log($"Queue has {QueueCount} units → NextUnit");
+				this.Log($"Queue has {QueueCount} units → NextUnit");
 				StartCoroutine(DelayedAction(unitSwitchDelay, () => _turnService.NextUnit()));
 			}
 		}
@@ -138,7 +138,7 @@ namespace Presentation.Turn
 		{
 			if (!IsRunning) return;
 
-			Log($"Turn {e.TurnNumber} ended → StartTurn");
+			this.Log($"Turn {e.TurnNumber} ended → StartTurn");
 			StartCoroutine(DelayedAction(turnStartDelay, () => _turnService.StartTurn()));
 		}
 
@@ -152,7 +152,7 @@ namespace Presentation.Turn
 		}
 
 		#region Debug
-
+#if UNITY_EDITOR
 		[TitleGroup("Debug")]
 		[HorizontalGroup("Debug/Buttons")]
 		[Button("Force Next")]
@@ -172,22 +172,7 @@ namespace Presentation.Turn
 			var str = string.Join(" → ", order.Select(u => $"{u.Id}(S:{u.Speed})"));
 			Debug.Log($"[TurnController] Queue: {str}");
 		}
-
-		private void Log(string msg)
-		{
-			if (enableLogs) Debug.Log($"[TurnController] {msg}");
-		}
-
-		private void LogWarning(string msg)
-		{
-			if (enableLogs) Debug.LogWarning($"[TurnController] {msg}");
-		}
-
-		private void LogError(string msg)
-		{
-			Debug.LogError($"[TurnController] {msg}");
-		}
-
+#endif
 		#endregion
 	}
 }
