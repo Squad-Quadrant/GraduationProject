@@ -7,6 +7,7 @@ using Data.Runtime.Events;
 using Presentation.Input;
 using Presentation.Map;
 using Sirenix.OdinInspector;
+using Systems.GamePlay;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Turn;
@@ -31,10 +32,11 @@ namespace Presentation.Bootstrap
 		[SerializeField] private bool autoLoadLevel = false;
 
 		private LevelContainer _levelContainer;
+		private IEventBus _eventBus;
 		private IMapService _mapService;
 		private IUnitService _unitService;
 		private ITurnService _turnService;
-		private IEventBus _eventBus;
+		private IGameServer _gameServer;
 
 		private void Start()
 		{
@@ -95,6 +97,7 @@ namespace Presentation.Bootstrap
 			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
 			this.Log("====================================", false);
 
+			_gameServer.StartGame();
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
 		}
 
@@ -140,10 +143,14 @@ namespace Presentation.Bootstrap
 			// Register TurnService
 			_levelContainer.Services.Register<ITurnService, TurnService>();
 
+			_levelContainer.Services.Register<IGameServer, GameServer>();
+
 			// Resolve services
 			_mapService = _levelContainer.Resolve<IMapService>();
 			_unitService = _levelContainer.Resolve<IUnitService>();
 			_turnService = _levelContainer.Resolve<ITurnService>();
+			_gameServer = _levelContainer.Resolve<IGameServer>();
+
 
 			this.Log("✓ Services registered and resolved.");
 			yield return null;

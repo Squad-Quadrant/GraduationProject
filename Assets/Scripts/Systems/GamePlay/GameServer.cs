@@ -1,7 +1,10 @@
 ﻿using System;
+using Core.Commands;
 using Core.Events;
 using Core.Log;
+using Data.Runtime.Commands;
 using Data.Runtime.Events.Turn;
+using Data.Runtime.Events.View;
 using Systems.Turn;
 using Systems.Unit;
 
@@ -10,16 +13,23 @@ namespace Systems.GamePlay
 	public class GameServer : IGameServer, IDisposable
 	{
 		public bool IsRunning { get; private set; }
+		public bool WaitForPresentation { get; set; } = true;
 
 		private readonly ITurnService _turnService;
 		private readonly IUnitService _unitService;
 		private readonly IEventBus _eventBus;
+		private readonly ICommandQueue _commandQueue;
 
-		public GameServer(ITurnService turnService, IUnitService unitService, IEventBus eventBus)
+		public GameServer(
+			ITurnService turnService,
+			IUnitService unitService,
+			IEventBus eventBus,
+			ICommandQueue commandQueue)
 		{
 			_turnService = turnService ?? throw new ArgumentNullException(nameof(turnService));
 			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+			_commandQueue = commandQueue ?? throw new ArgumentNullException(nameof(commandQueue));
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
 			_eventBus.Subscribe<TurnEndedEvent>(OnTurnEnded);
@@ -42,21 +52,29 @@ namespace Systems.GamePlay
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
-			this.Log($"Unit '{e.UnitId}' finished. Checking queue...");
+			this.Log($"Unit '{e.UnitId}' finished. Processing transition...");
 
-			// Check win/lose conditions here if needed
-			// if (CheckGameOver()) return;
+			if (WaitForPresentation)
+			{
+				_commandQueue.EnqueueAndExecute(
+					new AwaitPresentationCommand(_eventBus, onComplete: ProcessNextUnit)
+						.Expect(EPresentationCategory.UI, PresentationType.UI.TurnBanner) // todo: Need specific type
+					);
+			}
+			else
+				ProcessNextUnit();
+		}
 
+		private void ProcessNextUnit()
+		{
 			if (_turnService.IsCurrentTurnComplete())
 			{
-				// Queue is empty - end the turn
 				this.Log("Queue empty, ending turn");
 				_turnService.EndTurn();
 			}
 			else
 			{
-				// More units to act - proceed to next
-				this.Log("More units in queue, proceeding to next");
+				this.Log("Proceeding to next unit");
 				_turnService.NextUnit();
 			}
 		}
@@ -70,7 +88,16 @@ namespace Systems.GamePlay
 
 			// Auto-start next turn
 			this.Log("Starting next turn...");
-			_turnService.StartTurn();
+
+			if (WaitForPresentation)
+			{
+				_commandQueue.EnqueueAndExecute(
+					new AwaitPresentationCommand(_eventBus, onComplete: () => _turnService.StartTurn())
+						.Expect(EPresentationCategory.UI, PresentationType.UI.TurnBanner) // todo: Need specific type
+					);
+			}
+			else
+				_turnService.StartTurn();
 		}
 
 		public void Dispose()

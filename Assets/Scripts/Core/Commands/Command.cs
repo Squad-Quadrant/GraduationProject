@@ -111,4 +111,20 @@ namespace Core.Commands
 			_onUndoComplete = null;
 		}
 	}
+
+	public class LambdaCommand : SyncCommand
+	{
+		private readonly Action _action;
+		private readonly string _name;
+
+		public override string Name => _name;
+
+		public LambdaCommand(string name, Action action)
+		{
+			_name = name ?? "LambdaCommand";
+			_action = action ?? throw new ArgumentNullException(nameof(action));
+		}
+
+		protected override void OnExecute() => _action();
+	}
 }

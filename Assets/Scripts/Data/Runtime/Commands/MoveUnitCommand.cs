@@ -22,10 +22,13 @@ namespace Data.Runtime.Commands
 		private readonly IMapService _mapService;
 		private readonly IEventBus _eventBus;
 
+		public bool WaitForAnimation { get; set; } = true;
+
+		private Action<PresentationCompleteEvent> _onPresentationComplete;
+
 		public override string Name => $"Move({_unitId}: {_fromPosition} → {_toPosition})";
 		public override bool CanUndo => true;
 
-		private Action<AnimationCompleteEvent> _onAnimationComplete;
 
 		public MoveUnitCommand(
 			string unitId,
@@ -60,9 +63,6 @@ namespace Data.Runtime.Commands
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.position = _toPosition;
 
-			_onAnimationComplete = OnAnimationComplete;
-			_eventBus.Subscribe(_onAnimationComplete);
-
 			_eventBus.Publish(new UnitMovedEvent(
 				_unitId,
 				_fromPosition,
@@ -70,7 +70,13 @@ namespace Data.Runtime.Commands
 				_path
 			));
 
-			CompleteExecution(); // todo: just for testing without animation
+			if (WaitForAnimation)
+			{
+				_onPresentationComplete = OnPresentationComplete;
+				_eventBus.Subscribe(_onPresentationComplete);
+			}
+			else
+				CompleteExecution();
 		}
 
 		protected override void OnUndoAsync()
@@ -100,23 +106,26 @@ namespace Data.Runtime.Commands
 				reversePath
 			));
 
-			CompleteUndo(); // todo: just for testing without animation
+			CompleteUndo();
 		}
 
-		private void OnAnimationComplete(AnimationCompleteEvent e)
+		private void OnPresentationComplete(PresentationCompleteEvent e)
 		{
 			// Check if this is our animation
-			if (e.EntityId != _unitId || e.AnimationType != EAnimationType.Move)
+			if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Move, _unitId))
 				return;
 
 			this.Log($"Animation complete for {_unitId}");
 
-			if (_onAnimationComplete != null)
-			{
-				_eventBus.Unsubscribe(_onAnimationComplete);
-				_onAnimationComplete = null;
-			}
+			Cleanup();
 			CompleteExecution();
+		}
+
+		private void Cleanup()
+		{
+			if (_onPresentationComplete == null) return;
+			_eventBus.Unsubscribe(_onPresentationComplete);
+			_onPresentationComplete = null;
 		}
 	}
 }
