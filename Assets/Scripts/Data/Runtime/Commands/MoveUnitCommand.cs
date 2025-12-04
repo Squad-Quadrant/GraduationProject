@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
@@ -24,6 +25,8 @@ namespace Data.Runtime.Commands
 		public override string Name => $"Move({_unitId}: {_fromPosition} → {_toPosition})";
 		public override bool CanUndo => true;
 
+		private Action<AnimationCompleteEvent> _onAnimationComplete;
+
 		public MoveUnitCommand(
 			string unitId,
 			Vector2Int fromPosition,
@@ -44,11 +47,11 @@ namespace Data.Runtime.Commands
 
 		protected override void OnExecuteAsync()
 		{
-			this.Log($"[MoveUnitCommand] Executing: {Name}");
+			this.Log($"Executing: {Name}");
 
 			if (!_unitService.TryGetUnit(_unitId, out var unit))
 			{
-				this.LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
+				this.LogError($"Unit '{_unitId}' not found!");
 				CompleteExecution();
 				return;
 			}
@@ -57,7 +60,8 @@ namespace Data.Runtime.Commands
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.position = _toPosition;
 
-			_eventBus.Subscribe<AnimationCompleteEvent>(OnAnimationComplete, onlyOnce: true);
+			_onAnimationComplete = OnAnimationComplete;
+			_eventBus.Subscribe(_onAnimationComplete);
 
 			_eventBus.Publish(new UnitMovedEvent(
 				_unitId,
@@ -71,11 +75,11 @@ namespace Data.Runtime.Commands
 
 		protected override void OnUndoAsync()
 		{
-			this.Log($"[MoveUnitCommand] Undoing: {Name}");
+			this.Log($"Undoing: {Name}");
 
 			if (!_unitService.TryGetUnit(_unitId, out var unit))
 			{
-				this.LogError($"[MoveUnitCommand] Unit '{_unitId}' not found!");
+				this.LogError($"Unit '{_unitId}' not found!");
 				CompleteUndo();
 				return;
 			}
@@ -105,7 +109,13 @@ namespace Data.Runtime.Commands
 			if (e.EntityId != _unitId || e.AnimationType != EAnimationType.Move)
 				return;
 
-			this.Log($"[MoveUnitCommand] Animation complete for {_unitId}");
+			this.Log($"Animation complete for {_unitId}");
+
+			if (_onAnimationComplete != null)
+			{
+				_eventBus.Unsubscribe(_onAnimationComplete);
+				_onAnimationComplete = null;
+			}
 			CompleteExecution();
 		}
 	}

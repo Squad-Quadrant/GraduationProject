@@ -63,13 +63,13 @@ namespace Systems.GamePlay
 
 		private void OnTurnEnded(TurnEndedEvent e)
 		{
-			this.Log($"[GameCoordinator] Turn {e.TurnNumber} ended");
+			this.Log($"Turn {e.TurnNumber} ended");
 
 			// Check win/lose conditions
 			// if (CheckGameOver()) return;
 
 			// Auto-start next turn
-			this.Log("[GameCoordinator] Starting next turn...");
+			this.Log("Starting next turn...");
 			_turnService.StartTurn();
 		}
 
