@@ -5,7 +5,7 @@ using Core.Log;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Presentation.Services
+namespace Data.Config
 {
 	[CreateAssetMenu(fileName = "LogSettings", menuName = "Game/LogSettings", order = 0)]
 	public class LogSettings : ScriptableObject
@@ -107,14 +107,14 @@ namespace Presentation.Services
 			[Tooltip("'System.*' | 'System.Turn.TurnService'")]
 			public string typeName;
 
-			[TableColumnWidth(80)]
+			[TableColumnWidth(10)]
 			public bool enabled = true;
 
-			[TableColumnWidth(100)]
+			[TableColumnWidth(300)]
 			[EnumToggleButtons]
 			public LogLevel minLogLevel = LogLevel.Debug;
 
-			[TableColumnWidth(80)]
+			[TableColumnWidth(10)]
 			[ReadOnly]
 			public bool autoDiscovered;
 		}
@@ -131,7 +131,7 @@ namespace Presentation.Services
 			Debug.Log($"[LogSettings] Removed {removed} auto-discovered types.");
 		}
 
-		[Button("Sort Rules Alphabetically")]
+		[Button("Sort Rules")]
 		private void SortRules()
 		{
 			rules = rules.OrderBy(r => r.typeName).ToList();

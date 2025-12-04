@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &186015075
 Transform:
   m_ObjectHideFlags: 0
@@ -304,7 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455bdc0e4fe844c18184185ec7a5bfa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableLogs: 1
   autoStart: 1
 --- !u!1 &1002381215
 GameObject:
@@ -366,7 +365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1149436536
 Transform:
   m_ObjectHideFlags: 0
@@ -395,7 +394,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStart: 1
-  enableLogs: 1
   turnStartDelay: 0.5
   unitSwitchDelay: 0.2
 --- !u!1 &1543364665
@@ -586,6 +584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoInitialize: 1
   enableLogs: 1
+  logSettings: {fileID: 11400000, guid: 731d1a68061b8304d9778fdd60b7fa58, type: 2}
   rootContainerPrefab: {fileID: 0}
 --- !u!4 &1682671515
 Transform:
@@ -650,7 +649,6 @@ MonoBehaviour:
   unitLayer:
     serializedVersion: 2
     m_Bits: 55
-  enableLogs: 1
 --- !u!1 &1728810327
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,7 +665,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1728810328
 Transform:
   m_ObjectHideFlags: 0
@@ -776,7 +774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2072388754
 Transform:
   m_ObjectHideFlags: 0
@@ -805,7 +803,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fafe039fb524ccab241a9d4f253243c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableLogs: 1
   mapView: {fileID: 0}
   grid: {fileID: 2123669984}
   inputService: {fileID: 1700392936}

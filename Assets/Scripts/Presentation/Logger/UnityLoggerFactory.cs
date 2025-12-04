@@ -1,8 +1,9 @@
 using System;
 using Core.Log;
+using Data.Config;
 using UnityEngine;
 
-namespace Presentation.Services
+namespace Presentation.Logger
 {
 	public class UnityLoggerFactory : ILoggerFactory
 	{

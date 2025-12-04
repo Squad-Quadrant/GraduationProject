@@ -58,14 +58,5 @@ namespace Presentation.Bootstrap
 		private void OnDestroy() => Cleanup();
 
 		private void OnApplicationQuit() => Services?.Clear(); // Ensure cleanup on application quit
-
-		public void RegisterServices()
-		{
-			Debug.Log("[LevelContainer] Registering services...");
-
-			// todo: Register level-specific services here
-
-			Debug.Log($"[LevelContainer] Service registration complete.");
-		}
 	}
 }

@@ -1,7 +1,8 @@
 using System;
 using Core.Log;
+using Data.Config;
 
-namespace Presentation.Services
+namespace Presentation.Logger
 {
 	public class UnityLogger : ILogger
 	{
