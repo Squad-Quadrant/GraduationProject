@@ -1,4 +1,4 @@
-﻿namespace Data.Runtime.Events
+﻿namespace Data.Runtime
 {
 	/// <summary>
 	/// Types of actions a unit can perform during their turn.

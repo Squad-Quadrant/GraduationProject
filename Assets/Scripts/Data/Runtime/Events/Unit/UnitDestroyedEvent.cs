@@ -15,14 +15,14 @@ namespace Data.Runtime.Events.Unit
 		public UnitDestroyedEvent(Systems.Unit.Unit unit, string killerUnitId = null)
 		{
 			Unit = unit;
-			DeathPosition = unit.Position;
+			DeathPosition = unit.position;
 			KillerUnitId = killerUnitId;
 		}
 
 		public override string ToString()
 		{
 			var killerInfo = string.IsNullOrEmpty(KillerUnitId) ? "自然死亡" : $"被 {KillerUnitId} 击杀";
-			return $"[UnitDestroyed] {Unit.Name}({Unit.Id}) at {DeathPosition}, {killerInfo}";
+			return $"[UnitDestroyed] {Unit.name}({Unit.id}) at {DeathPosition}, {killerInfo}";
 		}
 	}
 }

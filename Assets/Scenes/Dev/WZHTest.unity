@@ -260,6 +260,51 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!1 &186015074
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186015075}
+  - component: {fileID: 186015076}
+  m_Layer: 0
+  m_Name: InteractionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &186015075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186015074}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1616099773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &186015076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186015074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455bdc0e4fe844c18184185ec7a5bfa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoStart: 1
 --- !u!1 &1002381215
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +349,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc86f2c051e4424f914ca08e0982f4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1149436535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1149436536}
+  - component: {fileID: 1149436537}
+  m_Layer: 0
+  m_Name: TurnController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1149436536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149436535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1616099773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1149436537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149436535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b18e0680f54b02b04e839ec2af0b8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoStart: 1
+  turnStartDelay: 0.5
+  unitSwitchDelay: 0.2
 --- !u!1 &1543364665
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,6 +549,8 @@ Transform:
   - {fileID: 1872576982}
   - {fileID: 2072388754}
   - {fileID: 1728810328}
+  - {fileID: 1149436536}
+  - {fileID: 186015075}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682671513
@@ -490,6 +584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoInitialize: 1
   enableLogs: 1
+  logSettings: {fileID: 11400000, guid: 731d1a68061b8304d9778fdd60b7fa58, type: 2}
   rootContainerPrefab: {fileID: 0}
 --- !u!4 &1682671515
 Transform:
@@ -554,8 +649,6 @@ MonoBehaviour:
   unitLayer:
     serializedVersion: 2
     m_Bits: 55
-  enableLogs: 1
-  isEnabled: 0
 --- !u!1 &1728810327
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +665,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1728810328
 Transform:
   m_ObjectHideFlags: 0
@@ -681,7 +774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2072388754
 Transform:
   m_ObjectHideFlags: 0
@@ -710,7 +803,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fafe039fb524ccab241a9d4f253243c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableLogs: 1
   mapView: {fileID: 0}
   grid: {fileID: 2123669984}
   inputService: {fileID: 1700392936}

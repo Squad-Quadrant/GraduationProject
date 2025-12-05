@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Log;
 
 namespace Core.Commands
 {
@@ -8,9 +9,9 @@ namespace Core.Commands
 	/// </summary>
 	public abstract class SyncCommand : ICommand
 	{
-		public string Name => GetType().Name;
+		public virtual string Name => GetType().Name;
 
-		public bool CanUndo => false;
+		public virtual bool CanUndo => false;
 
 		public void Execute(Action onComplete = null)
 		{
@@ -21,7 +22,10 @@ namespace Core.Commands
 		public void Undo(Action onComplete = null)
 		{
 			if (!CanUndo)
-				throw new InvalidOperationException($"[Command] Command '{Name}' does not support undo operation.");
+			{
+				this.LogWarning($"Command '{Name}' does not support undo operation.");
+				return;
+			}
 			OnUndo();
 			onComplete?.Invoke();
 		}
@@ -33,9 +37,9 @@ namespace Core.Commands
 
 	public abstract class AsyncCommand : ICommand
 	{
-		public string Name => GetType().Name;
+		public virtual string Name => GetType().Name;
 
-		public bool CanUndo => false;
+		public virtual bool CanUndo => false;
 
 		/// <summary>
 		/// Indicates whether the command is currently executing for debugging and state verification.
@@ -48,7 +52,10 @@ namespace Core.Commands
 		public void Execute(Action onComplete = null)
 		{
 			if (IsExecuting)
-				throw new InvalidOperationException($"[Command] Command '{Name}' already executing.");
+			{
+				this.LogWarning($"Command '{Name}' already executing.");
+				return;
+			}
 			IsExecuting = true;
 			_onExecuteComplete = onComplete;
 			OnExecuteAsync();
@@ -57,9 +64,15 @@ namespace Core.Commands
 		public void Undo(Action onComplete = null)
 		{
 			if (!CanUndo)
-				throw new InvalidOperationException($"[Command] Command '{Name}' does not support undo operation.");
+			{
+				this.LogWarning($"Command '{Name}' does not support undo operation.");
+				return;
+			}
 			if (IsExecuting)
-				throw new InvalidOperationException($"[Command] Command '{Name}' already executing.");
+			{
+				this.LogWarning($"Command '{Name}' already executing.");
+				return;
+			}
 			IsExecuting = true;
 			_onUndoComplete = onComplete;
 			OnUndoAsync();
@@ -97,5 +110,21 @@ namespace Core.Commands
 			_onUndoComplete?.Invoke();
 			_onUndoComplete = null;
 		}
+	}
+
+	public class LambdaCommand : SyncCommand
+	{
+		private readonly Action _action;
+		private readonly string _name;
+
+		public override string Name => _name;
+
+		public LambdaCommand(string name, Action action)
+		{
+			_name = name ?? "LambdaCommand";
+			_action = action ?? throw new ArgumentNullException(nameof(action));
+		}
+
+		protected override void OnExecute() => _action();
 	}
 }

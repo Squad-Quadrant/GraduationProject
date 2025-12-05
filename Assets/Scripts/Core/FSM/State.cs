@@ -10,10 +10,10 @@
 
 		protected State(string name = null) => Name = name ?? GetType().Name;
 
-		public virtual void OnEnter(TContext context) { }
+		public virtual void OnEnter(TContext ctx) { }
 
-		public virtual void OnUpdate(TContext context, float deltaTime) { }
+		public virtual void OnUpdate(TContext ctx, float deltaTime) { }
 
-		public virtual void OnExit(TContext context) { }
+		public virtual void OnExit(TContext ctx) { }
 	}
 }

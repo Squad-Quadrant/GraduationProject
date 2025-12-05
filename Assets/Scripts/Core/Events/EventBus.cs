@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Core.Log;
 
@@ -20,15 +20,8 @@ namespace Core.Events
 			}
 		}
 
-		public static bool EnableLogs = false;
-		public static bool EnableWarnings = false;
-
 		private readonly Dictionary<Type, List<Subscription>> _subscriptionDic = new();
 		private readonly List<Subscription> _onceToRemove = new();
-
-		private readonly ILog _logger;
-
-		public EventBus(ILog logger) => _logger = logger;
 
 		#region Subscribe Methods
 
@@ -46,12 +39,12 @@ namespace Core.Events
 			}
 
 			if (subscriptions.Exists(s => s.Handler.Equals(handler)))
-				LogWarning($"[Event] [Subscribe] {eventType.Name} already exists");
+				this.LogWarning($"[Subscribe] {eventType.Name} already exists");
 
 			var subscription = new Subscription(handler, priority, onlyOnce);
 			subscriptions.Add(subscription);
 			subscriptions.Sort((a, b) => b.Priority.CompareTo(a.Priority));
-			Log("[Event] Subscribed to event: " + eventType.Name);
+			this.Log("Subscribed to event: " + eventType.Name);
 		}
 
 		#endregion
@@ -68,12 +61,12 @@ namespace Core.Events
 
 			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
 			{
-				LogWarning($"[Event] [Unsubscribe] {eventType.Name} does not exist");
+				this.LogWarning($"[Unsubscribe] {eventType.Name} does not exist");
 				return;
 			}
 
 			subscriptions.RemoveAll(s => s.Handler.Equals(handler));
-			Log("[Event] Unsubscribed from event: " + eventType.Name);
+			this.Log("Unsubscribed from event: " + eventType.Name);
 
 			if (subscriptions.Count == 0)
 				_subscriptionDic.Remove(eventType);
@@ -90,7 +83,7 @@ namespace Core.Events
 
 			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
 			{
-				LogWarning($"[Event] [Publish] {eventType.Name} does not exist");
+				this.LogWarning($"[Publish] {eventType.Name} does not exist");
 				return;
 			}
 
@@ -108,11 +101,11 @@ namespace Core.Events
 				}
 				catch (Exception ex)
 				{
-					throw new Exception($"[Event] Error invoking handler for {eventType.Name}", ex);
+					throw new Exception($"Error invoking handler for {eventType.Name}", ex);
 				}
 			}
 
-			Log($"[Event] Event published: {eventType.Name}");
+			this.Log($"Event published: {eventType.Name}");
 
 			foreach (var subscription in _onceToRemove)
 				subscriptions.Remove(subscription);
@@ -130,20 +123,6 @@ namespace Core.Events
 		{
 			_subscriptionDic.Clear();
 			_onceToRemove.Clear();
-		}
-
-		#endregion
-
-		#region Debug
-
-		private void Log(string msg)
-		{
-			if (EnableLogs) _logger.Log(msg);
-		}
-
-		private void LogWarning(string msg)
-		{
-			if (EnableWarnings) _logger.LogWarning(msg);
 		}
 
 		#endregion

@@ -7,23 +7,23 @@ namespace Test.WZHTest.FSM.States
 	{
 		public string Name => "PlayerTurn";
 
-		public void OnEnter(TurnContext context)
+		public void OnEnter(TurnContext ctx)
 		{
-			Debug.Log($"===== 玩家回合开始 (第 {context.turnNumber} 回合) =====");
-			context.isPlayerTurn = true;
-			context.turnTimer = 0f;
+			Debug.Log($"===== 玩家回合开始 (第 {ctx.turnNumber} 回合) =====");
+			ctx.isPlayerTurn = true;
+			ctx.turnTimer = 0f;
 		}
 
-		public void OnUpdate(TurnContext context, float deltaTime)
+		public void OnUpdate(TurnContext ctx, float deltaTime)
 		{
-			context.turnTimer += deltaTime;
+			ctx.turnTimer += deltaTime;
 		}
 
-		public void OnExit(TurnContext context)
+		public void OnExit(TurnContext ctx)
 		{
 			Debug.Log("玩家回合结束");
-			context.isPlayerTurn = false;
-			context.turnNumber++;
+			ctx.isPlayerTurn = false;
+			ctx.turnNumber++;
 		}
 	}
 }

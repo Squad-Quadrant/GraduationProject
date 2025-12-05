@@ -11,6 +11,6 @@ namespace Data.Runtime.Events.Unit
 
 		public UnitCreatedEvent(Systems.Unit.Unit unit) => Unit = unit;
 
-		public override string ToString() => $"[UnitCreated] {Unit.Name}({Unit.Id}) at {Unit.Position}";
+		public override string ToString() => $"[UnitCreated] {Unit.name}({Unit.id}) at {Unit.position}";
 	}
 }

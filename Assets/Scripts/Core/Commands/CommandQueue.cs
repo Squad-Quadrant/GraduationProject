@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Core.Commands.Events;
 using Core.Events;
@@ -10,8 +10,7 @@ namespace Core.Commands
 	{
 		private readonly Queue<ICommand> _pendingCommands = new();
 		private readonly Stack<ICommand> _executedCommands = new();  // For undo
-		private readonly Stack<ICommand> _undoneCommands = new();    // For
-		private readonly ILog _logger;
+		private readonly Stack<ICommand> _undoneCommands = new();    // For redo
 		private readonly IEventBus _eventBus;
 
 		private ICommand _currentCommand;
@@ -48,9 +47,8 @@ namespace Core.Commands
 		/// </summary>
 		public bool IsIdle => !_isExecuting && _pendingCommands.Count == 0;
 
-		public CommandQueue(ILog logger, IEventBus eventBus)
+		public CommandQueue(IEventBus eventBus)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 		}
 
@@ -64,7 +62,7 @@ namespace Core.Commands
 				throw new ArgumentNullException(nameof(command));
 			_pendingCommands.Enqueue(command);
 			_undoneCommands.Clear();
-			Log($"[CommandQueue] Enqueued: {command.Name} (Pending: {PendingCount})");
+			this.Log($"Enqueued: {command.Name} (Pending: {PendingCount})");
 		}
 
 		/// <summary>
@@ -87,13 +85,13 @@ namespace Core.Commands
 		{
 			if (_isExecuting)
 			{
-				Log("[CommandQueue] Already executing, ignoring ExecuteAll call.");
+				this.Log("Already executing, ignoring ExecuteAll call.");
 				return;
 			}
 
 			if (_isPaused)
 			{
-				Log("[CommandQueue] Queue is paused, ignoring ExecuteAll call.");
+				this.Log("Queue is paused, ignoring ExecuteAll call.");
 				return;
 			}
 
@@ -108,13 +106,13 @@ namespace Core.Commands
 		{
 			if (_isExecuting)
 			{
-				LogWarning("[CommandQueue] Cannot undo while executing.");
+				this.LogWarning("Cannot undo while executing.");
 				return false;
 			}
 
 			if (_executedCommands.Count == 0)
 			{
-				Log("[CommandQueue] Nothing to undo.");
+				this.Log("Nothing to undo.");
 				return false;
 			}
 
@@ -122,20 +120,20 @@ namespace Core.Commands
 
 			if (!command.CanUndo)
 			{
-				LogWarning($"[CommandQueue] Command '{command.Name}' does not support undo.");
+				this.LogWarning($"Command '{command.Name}' does not support undo.");
 				return false;
 			}
 
 			_executedCommands.Pop();
 			_isExecuting = true;
 
-			Log($"[CommandQueue] Undoing: {command.Name}");
+			this.Log($"Undoing: {command.Name}");
 
 			command.Undo(() =>
 			{
 				_isExecuting = false;
 				_undoneCommands.Push(command);
-				Log($"[CommandQueue] Undo completed: {command.Name}");
+				this.Log($"Undo completed: {command.Name}");
 			});
 
 			return true;
@@ -149,20 +147,20 @@ namespace Core.Commands
 		{
 			if (_isExecuting)
 			{
-				LogWarning("[CommandQueue] Cannot redo while executing.");
+				this.LogWarning("Cannot redo while executing.");
 				return false;
 			}
 
 			if (_undoneCommands.Count == 0)
 			{
-				Log("[CommandQueue] Nothing to redo.");
+				this.Log("Nothing to redo.");
 				return false;
 			}
 
 			var command = _undoneCommands.Pop();
 			_isExecuting = true;
 
-			Log($"[CommandQueue] Redoing: {command.Name}");
+			this.Log($"Redoing: {command.Name}");
 			_eventBus.Publish(new CommandStartedEvent(command));
 
 			command.Execute(() =>
@@ -171,7 +169,7 @@ namespace Core.Commands
 				_currentCommand = null;
 				_executedCommands.Push(command);
 
-				Log($"[CommandQueue] Redo completed: {command.Name}");
+				this.Log($"Redo completed: {command.Name}");
 				_eventBus.Publish(new CommandCompletedEvent(command));
 			});
 
@@ -184,7 +182,7 @@ namespace Core.Commands
 		public void Pause()
 		{
 			_isPaused = true;
-			Log("[CommandQueue] Paused.");
+			this.Log("Paused.");
 		}
 
 		/// <summary>
@@ -195,7 +193,7 @@ namespace Core.Commands
 			if (!_isPaused) return;
 
 			_isPaused = false;
-			Log("[CommandQueue] Resumed.");
+			this.Log("Resumed.");
 
 			if (!_isExecuting && _pendingCommands.Count > 0)
 				ExecuteNext();
@@ -209,7 +207,7 @@ namespace Core.Commands
 			var count = _pendingCommands.Count;
 			_pendingCommands.Clear();
 
-			Log($"[CommandQueue] Cleared {count} pending commands.");
+			this.Log($"Cleared {count} pending commands.");
 			_eventBus.Publish(new CommandQueueClearedEvent());
 		}
 
@@ -222,27 +220,27 @@ namespace Core.Commands
 			_executedCommands.Clear();
 			_undoneCommands.Clear();
 
-			Log("[CommandQueue] Cleared all history.");
+			this.Log("Cleared all history.");
 		}
 
 		private void ExecuteNext()
 		{
 			if (_pendingCommands.Count == 0)
 			{
-				Log("[CommandQueue] All commands executed.");
+				this.Log("All commands executed.");
 				_eventBus.Publish(new CommandQueueCompletedEvent());
 				return;
 			}
 
 			if (_isPaused)
 			{
-				Log("[CommandQueue] Execution paused, waiting for resume.");
+				this.Log("Execution paused, waiting for resume.");
 				return;
 			}
 
 			_currentCommand = _pendingCommands.Dequeue();
 			_isExecuting = true;
-			Log($"[CommandQueue] Executing: {_currentCommand.Name} (Remaining: {PendingCount})");
+			this.Log($"Executing: {_currentCommand.Name} (Remaining: {PendingCount})");
 			_eventBus.Publish(new CommandStartedEvent(_currentCommand));
 
 			_currentCommand.Execute(() =>
@@ -255,19 +253,12 @@ namespace Core.Commands
 				if (completed.CanUndo)
 					_executedCommands.Push(completed);
 
-				Log($"[CommandQueue] Completed: {completed.Name}");
+				this.Log($"Completed: {completed.Name}");
 				_eventBus.Publish(new CommandCompletedEvent(completed));
 
 				// Continue with next command
 				ExecuteNext();
 			});
 		}
-
-		#region Logging
-
-		private void Log(string message) => _logger?.Log(message);
-		private void LogWarning(string message) => _logger?.LogWarning(message);
-
-		#endregion
 	}
 }

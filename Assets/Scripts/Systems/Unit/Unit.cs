@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Data.Config;
+using Data.Runtime;
+using Sirenix.OdinInspector;
 using Systems.Turn;
 using UnityEngine;
 
@@ -8,17 +11,18 @@ namespace Systems.Unit
 	[Serializable]
 	public class Unit : ITurnUnit
 	{
-		public string Id { get; private set; }
-		public string ConfigId { get; private set; }
-		public string Name { get; private set; }
-		public UnitStats Stats { get; private set; } = new();
-		public UnitRuntime Runtime { get; private set; } = new();
-		public Vector2Int Position { get; set; }
+		[ReadOnly] public string id;
+		[ReadOnly] public string configId;
+		[ReadOnly] public string name;
+		[ReadOnly] public UnitStats stats = new();
+		[ReadOnly] public UnitRuntime runtime = new();
+		[ReadOnly] public Vector2Int position;
 
 		#region ITurnUnit
 
-		int ITurnUnit.Speed => Stats?.speed ?? 0;
-		bool ITurnUnit.CanAct => Runtime is { StillAlive: true, isStunned: false };
+		string ITurnUnit.Id => id;
+		int ITurnUnit.Speed => stats?.speed ?? 0;
+		bool ITurnUnit.CanAct => runtime is { StillAlive: true, isStunned: false };
 		public int ActionPriority { get; set; }
 
 		#endregion
@@ -27,17 +31,31 @@ namespace Systems.Unit
 		{
 			var unit = new Unit()
 			{
-				Id = unitId,
-				ConfigId = config.configId,
-				Name = config.unitName,
-				Stats = config.stats.Clone(),
-				Position = startPosition
+				id = unitId,
+				configId = config.configId,
+				name = config.unitName,
+				stats = config.stats.Clone(),
+				position = startPosition
 			};
-			unit.Runtime.Initialize(unit.Stats.maxHp);
+			unit.runtime.Initialize(unit.stats.maxHp);
 			return unit;
 		}
 
+		public List<EActionType> GetAvailableActions()
+		{
+			// todo: need to calculate based on unit state, abilities, etc.
+			var actions = new List<EActionType>
+			{
+				EActionType.Move,
+				EActionType.Attack,
+				EActionType.Wait,
+				EActionType.EndTurn
+			};
+
+			return actions;
+		}
+
 		public override string ToString() =>
-			$"[Unit] {Name}({Id}) HP:{Runtime?.currentHp}/{Stats?.maxHp} Pos:{Position}";
+			$"[Unit] {name}({id}) HP:{runtime?.currentHp}/{stats?.maxHp} Pos:{position}";
 	}
 }

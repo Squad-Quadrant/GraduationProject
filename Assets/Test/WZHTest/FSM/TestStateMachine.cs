@@ -19,11 +19,10 @@ namespace Test.WZHTest.FSM
 		[Button]
 		private void Setup()
 		{
-			var logger = RootContainer.Instance.Resolve<ILog>();
 			var eventBus = RootContainer.Instance.Resolve<IEventBus>();
 
 			context = new TurnContext();
-			_fsm = new StateMachine<TurnContext>(context, logger, eventBus, name: "TestStateMachine");
+			_fsm = new StateMachine<TurnContext>(context, eventBus, name: "TestStateMachine");
 
 			_playerTurnState = new PlayerTurnState();
 			_enemyTurnState = new EnemyTurnState();

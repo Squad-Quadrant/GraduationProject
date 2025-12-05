@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
+using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
 using Data.Runtime.Events.Unit;
@@ -16,7 +17,7 @@ namespace Systems.Unit
 		public UnitService(IEventBus eventBus)
 		{
 			_eventBus = eventBus ?? throw new System.ArgumentNullException(nameof(eventBus));
-			Debug.Log("[UnitService] Initialized");
+			this.Log("Initialized");
 		}
 
 		private readonly Dictionary<string, Unit> _units = new();
@@ -26,17 +27,17 @@ namespace Systems.Unit
 		public Unit CreateUnit(string unitId, UnitConfig config, Vector2Int position)
 		{
 			if (string.IsNullOrEmpty(unitId))
-				throw new ArgumentException("[UnitService] Unit ID cannot be null or empty.", nameof(unitId));
+				throw new ArgumentException("Unit ID cannot be null or empty.", nameof(unitId));
 
 			if (!config)
-				throw new ArgumentNullException(nameof(config), "[UnitService] UnitConfig cannot be null.");
+				throw new ArgumentNullException(nameof(config), "UnitConfig cannot be null.");
 
 			if (_units.ContainsKey(unitId))
-				throw new InvalidOperationException($"[UnitService] A unit with ID '{unitId}' already exists.");
+				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
 			var unit = Unit.LoadFromConfig(unitId, config, position);
 			_units[unitId] = unit;
-			Debug.Log($"[UnitService] Created unit: {unit}");
+			this.Log($"Created unit: {unit}");
 			_eventBus.Publish(new UnitCreatedEvent(unit));
 			return unit;
 		}
@@ -45,11 +46,11 @@ namespace Systems.Unit
 		{
 			if (!_units.Remove(unitId, out var unit))
 			{
-				Debug.LogWarning($"[UnitService] Attempted to destroy non-existent unit: {unitId}");
+				this.LogWarning($"Attempted to destroy non-existent unit: {unitId}");
 				return;
 			}
 
-			Debug.Log($"[UnitService] Unit destroyed: {unit.Name}({unitId})" +
+			this.Log($"Unit destroyed: {unit.name}({unitId})" +
 			          (killerUnitId != null ? $" by {killerUnitId}" : ""));
 
 			_eventBus.Publish(new UnitDestroyedEvent(unit, killerUnitId));
@@ -59,14 +60,15 @@ namespace Systems.Unit
 		{
 			int count = _units.Count;
 			_units.Clear();
-			Debug.Log($"[UnitService] Cleared {count} units");
+			this.Log($"Cleared {count} units");
 		}
 
 		public Unit GetUnit(string unitId)
 		{
 			if (_units.TryGetValue(unitId, out var unit))
 				return unit;
-			throw new KeyNotFoundException($"[UnitService] No unit found with ID '{unitId}'.");
+			this.LogWarning($"No unit found with ID '{unitId}'.");
+			return null;
 		}
 
 		public bool TryGetUnit(string unitId, out Unit unit) => _units.TryGetValue(unitId, out unit);
@@ -77,7 +79,7 @@ namespace Systems.Unit
 			_units.Values.ToList();
 
 		public IReadOnlyList<Unit> GetAllAliveUnits() =>
-			_units.Values.Where(u => u.Runtime.StillAlive).ToList();
+			_units.Values.Where(u => u.runtime.StillAlive).ToList();
 
 		public IReadOnlyList<Unit> GetUnitsInRange(Vector2Int center, int range, bool includeCenter = true)
 		{
@@ -87,7 +89,7 @@ namespace Systems.Unit
 			return _units.Values
 				.Where(u =>
 				{
-					int distance = Math.Abs(u.Position.x - center.x) + Math.Abs(u.Position.y - center.y);
+					int distance = Math.Abs(u.position.x - center.x) + Math.Abs(u.position.y - center.y);
 					if (!includeCenter && distance == 0)
 						return false;
 					return distance <= range;

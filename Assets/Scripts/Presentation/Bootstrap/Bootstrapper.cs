@@ -1,8 +1,7 @@
-﻿using Data.Config;
-using Presentation.Map;
+using Core.Log;
+using Data.Config;
+using Presentation.Logger;
 using Sirenix.OdinInspector;
-using Systems.Interfaces;
-using Systems.Map;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -12,6 +11,9 @@ namespace Presentation.Bootstrap
 		[Title("Settings")]
 		[SerializeField] private bool autoInitialize = true;
 		[SerializeField] private bool enableLogs = true;
+
+		[Title("Configuration")]
+		[SerializeField, InlineEditor] private LogSettings logSettings;
 
 		[Title("Prefabs")]
 		[SerializeField] private RootContainer rootContainerPrefab;
@@ -66,7 +68,14 @@ namespace Presentation.Bootstrap
 			Log("[Bootstrapper] RootContainer initialized.");
 		}
 
-		private void RegisterGlobalServices() => _rootContainerInstance.RegisterServices();
+		private void RegisterGlobalServices()
+		{
+			// initialize logger
+			_rootContainerInstance.Services.Register<ILoggerFactory>(_ => new UnityLoggerFactory(logSettings));
+			LogExtensions.Initialize(_rootContainerInstance.Services.Resolve<ILoggerFactory>());
+
+			_rootContainerInstance.RegisterServices();
+		}
 
 		private void OnBootstrapComplete()
 		{
@@ -78,8 +87,7 @@ namespace Presentation.Bootstrap
 
 		private void Log(string message)
 		{
-			if (enableLogs)
-				Debug.Log(message);
+			if (enableLogs) Debug.Log(message);
 		}
 
 		#endregion

@@ -7,22 +7,22 @@ namespace Test.WZHTest.FSM.States
 	{
 		public string Name => "EnemyTurn";
 
-		public void OnEnter(TurnContext context)
+		public void OnEnter(TurnContext ctx)
 		{
 			Debug.Log($"===== 敌人回合开始 =====");
-			context.isPlayerTurn = false;
-			context.turnTimer = 0f;
+			ctx.isPlayerTurn = false;
+			ctx.turnTimer = 0f;
 		}
 
-		public void OnUpdate(TurnContext context, float deltaTime)
+		public void OnUpdate(TurnContext ctx, float deltaTime)
 		{
-			context.turnTimer += deltaTime;
+			ctx.turnTimer += deltaTime;
 		}
 
-		public void OnExit(TurnContext context)
+		public void OnExit(TurnContext ctx)
 		{
 			Debug.Log("敌人回合结束");
-			context.turnNumber++;
+			ctx.turnNumber++;
 		}
 	}
 }

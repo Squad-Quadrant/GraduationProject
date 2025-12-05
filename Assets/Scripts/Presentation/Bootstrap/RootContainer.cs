@@ -1,7 +1,6 @@
 ﻿using Core.Commands;
 using Core.Events;
 using Core.Log;
-using Presentation.Services;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -52,7 +51,7 @@ namespace Presentation.Bootstrap
 			Debug.Log("[RootContainer] Cleaning up...");
 			Services?.Clear();
 			_instance = null;
-			Debug.Log("[LevelContainer] Cleanup complete.");
+			Debug.Log("[RootContainer] Cleanup complete.");
 		}
 
 		private void OnApplicationQuit() => Services?.Clear(); // Ensure cleanup on application quit
@@ -61,7 +60,6 @@ namespace Presentation.Bootstrap
 		{
 			Debug.Log("[RootContainer] Registering services...");
 
-			Services.Register<ILog, UnityLog>();
 			Services.Register<IEventBus, EventBus>();
 			Services.Register<ICommandQueue, CommandQueue>();
 
