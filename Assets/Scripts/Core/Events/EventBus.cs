@@ -83,7 +83,7 @@ namespace Core.Events
 
 			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
 			{
-				this.LogWarning($"[Publish] {eventType.Name} does not exist");
+				this.LogDebug($"[Publish] {eventType.Name} does not exist");
 				return;
 			}
 
