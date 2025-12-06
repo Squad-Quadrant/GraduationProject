@@ -88,7 +88,7 @@ namespace Editor
                 );
 
                 var color = GetTerrainColor(cell.terrain);
-                if (!cell.isWalkable)
+                if (!cell.IsWalkable)
                     color = Color.gray;
 
                 EditorGUI.DrawRect(cellRect, color);
@@ -100,6 +100,62 @@ namespace Editor
                     fontSize = Mathf.Max(8, (int)(cellDrawSize / 5))
                 };
                 GUI.Label(cellRect, $"{cell.position.x},{cell.position.y}", style);
+
+                // 绘制 SceneActor 的像素标识
+                if (cell.sceneActor != null)
+                {
+                    // 根据类型选择颜色
+                    Color actorColor = GetActorColor(cell.sceneActor.SceneActorType);
+                    float frac = 0.3f; // 比例
+                    float w = cellDrawSize * frac;
+                    float h = cellDrawSize * frac;
+
+                    switch (cell.sceneActor.Direction)
+                    {
+                        case SceneActorDirection.East:
+                        {
+                            var r = new Rect(cellRect.xMax - w, cellRect.y, w, cellRect.height);
+                            EditorGUI.DrawRect(r, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                            break;
+                        }
+                        case SceneActorDirection.West:
+                        {
+                            var r = new Rect(cellRect.x, cellRect.y, w, cellRect.height);
+                            EditorGUI.DrawRect(r, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                            break;
+                        }
+                        case SceneActorDirection.North:
+                        {
+                            var r = new Rect(cellRect.x, cellRect.y, cellRect.width, h);
+                            EditorGUI.DrawRect(r, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                            break;
+                        }
+                        case SceneActorDirection.South:
+                        {
+                            var r = new Rect(cellRect.x, cellRect.yMax - h, cellRect.width, h);
+                            EditorGUI.DrawRect(r, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                            break;
+                        }
+                        case SceneActorDirection.None:
+                        default:
+                        {
+                            // 纵向中心条带
+                            var vRect = new Rect(cellRect.x + (cellRect.width - w) * 0.5f, cellRect.y, w, cellRect.height);
+                            EditorGUI.DrawRect(vRect, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(vRect, Color.clear, Color.black * 0.25f);
+
+                            // 横向中心条带
+                            var hRect = new Rect(cellRect.x, cellRect.y + (cellRect.height - h) * 0.5f, cellRect.width, h);
+                            EditorGUI.DrawRect(hRect, actorColor);
+                            Handles.DrawSolidRectangleWithOutline(hRect, Color.clear, Color.black * 0.25f);
+                            break;
+                        }
+                    }
+                }
 
                 if (e.type == EventType.MouseDown && e.button == 0 && cellRect.Contains(e.mousePosition))
                 {
@@ -186,7 +242,7 @@ namespace Editor
                 _ => Color.white
             };
         }
-        
+
         private Color GetWallColor(WallType wallType)
         {
             return wallType switch
@@ -194,6 +250,16 @@ namespace Editor
                 WallType.LowWall => new Color(0.5f, 0.3f, 0.1f),
                 WallType.HighWall => new Color(1f, 0.2f, 0.2f),
                 _ => Color.gray
+            };
+        }
+
+        private Color GetActorColor(SceneActorType type)
+        {
+            return type switch
+            {
+                SceneActorType.Table => new Color(0.8f, 0.6f, 0.3f, 0.95f),
+                SceneActorType.Obstacle => new Color(0.1f, 0.1f, 0.1f, 0.95f),
+                _ => new Color(0f, 0f, 0f, 0.95f)
             };
         }
     }

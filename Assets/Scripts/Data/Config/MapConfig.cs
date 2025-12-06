@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Systems.Map;
 using UnityEngine;
@@ -50,12 +51,12 @@ namespace Data.Config
 		[PropertyOrder(1)]
 		[TableList(ShowIndexLabels = true)]
 		public CellConfig[] cells = Array.Empty<CellConfig>();
-        
+        public int CellCount => Size.x * Size.y;
         [LabelText("墙体配置")]
         [PropertyOrder(2)]
         [TableList(ShowIndexLabels = true)]
         public WallConfig[] walls = Array.Empty<WallConfig>();
-
+        public int WallCount => (Size.x - 1) * Size.y + (Size.y - 1) * Size.x;
 		#endregion
 
 		#region Tools
@@ -82,57 +83,140 @@ namespace Data.Config
 		private string EditorTitle => $"地图配置: {_mapName}";
 
 		#endregion
-		
-		public void Init()
-		{
-			cells = new CellConfig[Size.x * Size.y];
-			int index = 0;
-			for (int y = 0; y < Size.y; y++)
-			{
-				for (int x = 0; x < Size.x; x++)
-				{
-					cells[index] = new CellConfig
-					{
-						position = new Vector2Int(x, y),
-						terrain = ETerrainType.Plain,
-						isWalkable = true,
-						moveCost = 1
-					};
-					index++;
-				}
-			}
-		}
-		
-		private void OnSizeChanged()
-		{
-			_size = editedSize;
-			var temp = cells;
-			cells = new CellConfig[Size.x * Size.y];
-			int index = 0;
-			for (int y = 0; y < Size.y; y++)
-			{
-				for (int x = 0; x < Size.x; x++)
-				{
-					var pos = new Vector2Int(x, y);
-					var existingCell = Array.Find(temp, c => c.position == pos);
-					if (existingCell != null)
-					{
-						cells[index] = existingCell;
-					}
-					else
-					{
-						cells[index] = new CellConfig
-						{
-							position = pos,
-							terrain = ETerrainType.Plain,
-							isWalkable = true,
-							moveCost = 1
-						};
-					}
-					index++;
-				}
-			}
-		}
+
+        public void Init()
+        {
+            cells = new CellConfig[Size.x * Size.y];
+            int index = 0;
+            for (int y = 0; y < Size.y; y++)
+            {
+                for (int x = 0; x < Size.x; x++)
+                {
+                    cells[index] = new CellConfig
+                    {
+                        position = new Vector2Int(x, y),
+                        terrain = ETerrainType.Plain,
+                        // IsWalkable = true,
+                        moveCost = 1
+                    };
+                    index++;
+                }
+            }
+
+            // 考虑到功能制作的便利性，也初始化墙体数据
+            walls = new WallConfig[WallCount];
+            int wallIndex = 0;
+            for (int y = 0; y < Size.y; y++)
+            {
+                for (int x = 0; x < Size.x; x++)
+                {
+                    // 水平墙
+                    if (x < Size.x - 1)
+                    {
+                        walls[wallIndex++] = new WallConfig
+                        {
+                            position1 = new Vector2Int(x, y),
+                            position2 = new Vector2Int(x + 1, y),
+                            wallType = WallType.None
+                        };
+                    }
+                    // 垂直墙
+                    if (y < Size.y - 1)
+                    {
+                        walls[wallIndex++] = new WallConfig
+                        {
+                            position1 = new Vector2Int(x, y),
+                            position2 = new Vector2Int(x, y + 1),
+                            wallType = WallType.None
+                        };
+                    }
+                }
+            }
+        }
+
+        private void OnSizeChanged()
+        {
+            _size = editedSize;
+            var temp = cells;
+            cells = new CellConfig[Size.x * Size.y];
+            int index = 0;
+            for (int y = 0; y < Size.y; y++)
+            {
+                for (int x = 0; x < Size.x; x++)
+                {
+                    var pos = new Vector2Int(x, y);
+                    var existingCell = Array.Find(temp, c => c.position == pos);
+                    if (existingCell != null)
+                    {
+                        cells[index] = existingCell;
+                    }
+                    else
+                    {
+                        cells[index] = new CellConfig
+                        {
+                            position = pos,
+                            terrain = ETerrainType.Plain,
+                            // IsWalkable = true,
+                            moveCost = 1
+                        };
+                    }
+                    index++;
+                }
+            }
+        
+            // 处理 walls 的迁移与重建
+            var tempWalls = walls ?? Array.Empty<WallConfig>();
+            walls = new WallConfig[WallCount];
+            int wallIndex = 0;
+            for (int y = 0; y < Size.y; y++)
+            {
+                for (int x = 0; x < Size.x; x++)
+                {
+                    // 水平墙（x -> x+1）
+                    if (x < Size.x - 1)
+                    {
+                        var p1 = new Vector2Int(x, y);
+                        var p2 = new Vector2Int(x + 1, y);
+                        var existingWall = Array.Find(tempWalls, w => w != null && w.Check(p1, p2));
+                        if (existingWall != null)
+                        {
+                            walls[wallIndex++] = existingWall;
+                        }
+                        else
+                        {
+                            walls[wallIndex++] = new WallConfig
+                            {
+                                position1 = p1,
+                                position2 = p2,
+                                wallType = WallType.None
+                            };
+                        }
+                    }
+        
+                    // 垂直墙（y -> y+1）
+                    if (y < Size.y - 1)
+                    {
+                        var p1 = new Vector2Int(x, y);
+                        var p2 = new Vector2Int(x, y + 1);
+                        var existingWall = Array.Find(tempWalls, w => w != null && w.Check(p1, p2));
+                        if (existingWall != null)
+                        {
+                            walls[wallIndex++] = existingWall;
+                        }
+                        else
+                        {
+                            walls[wallIndex++] = new WallConfig
+                            {
+                                position1 = p1,
+                                position2 = p2,
+                                wallType = WallType.None
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
 		
 		private void OnMapNameChanged()
 		{
@@ -159,19 +243,23 @@ namespace Data.Config
 		[LabelText("地形类型"), LabelWidth(60)]
 		public ETerrainType terrain;
 
-		[HorizontalGroup("Props")]
-		[LabelText("可通行"), LabelWidth(60)]
-		public bool isWalkable = true;
+		// [HorizontalGroup("Props")]
+		// [LabelText("可通行"), LabelWidth(60)]
+        public bool IsWalkable => sceneActor.IsWalkable;
 
 		[HorizontalGroup("Props")]
 		[LabelText("移动消耗"), LabelWidth(60)]
 		[Range(1, 10)]
 		public int moveCost = 1;
 
-		[HorizontalGroup("Props")]
-		[LabelText("高度"), LabelWidth(40)]
-		[Range(0, 5)]
-		public int height = 0;
+		// [HorizontalGroup("Props")]
+		// [LabelText("高度"), LabelWidth(40)]
+		// [Range(0, 5)]
+		// public int height = 0;
+
+        [HorizontalGroup("Props")] 
+        [LabelText("场景物体"), LabelWidth(40)]
+        public SceneActorConfig sceneActor;
     }
 
     [Serializable]
@@ -191,6 +279,7 @@ namespace Data.Config
     
     public enum WallType
     {
+        None,
         LowWall,
         HighWall
     }
