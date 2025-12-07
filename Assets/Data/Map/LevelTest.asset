@@ -1232,7 +1232,7 @@ MonoBehaviour:
   - position: {x: 3, y: 15}
     terrain: 0
     moveCost: 1
-    sceneActor: {fileID: 0}
+    sceneActor: {fileID: 11400000, guid: 3fa6b32e98734074da8c21aa2ce72e93, type: 2}
   - position: {x: 4, y: 15}
     terrain: 0
     moveCost: 1
@@ -1320,7 +1320,7 @@ MonoBehaviour:
   - position: {x: 5, y: 16}
     terrain: 0
     moveCost: 1
-    sceneActor: {fileID: 0}
+    sceneActor: {fileID: 11400000, guid: 3fa6b32e98734074da8c21aa2ce72e93, type: 2}
   - position: {x: 6, y: 16}
     terrain: 0
     moveCost: 1
@@ -1394,9 +1394,9 @@ MonoBehaviour:
     moveCost: 1
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 17}
-    terrain: 0
+    terrain: 3
     moveCost: 1
-    sceneActor: {fileID: 0}
+    sceneActor: {fileID: 11400000, guid: 3fa6b32e98734074da8c21aa2ce72e93, type: 2}
   - position: {x: 5, y: 17}
     terrain: 0
     moveCost: 1
@@ -3599,7 +3599,7 @@ MonoBehaviour:
     wallType: 0
   - position1: {x: 4, y: 16}
     position2: {x: 4, y: 17}
-    wallType: 0
+    wallType: 2
   - position1: {x: 5, y: 16}
     position2: {x: 6, y: 16}
     wallType: 0
@@ -3707,7 +3707,7 @@ MonoBehaviour:
     wallType: 0
   - position1: {x: 3, y: 17}
     position2: {x: 4, y: 17}
-    wallType: 0
+    wallType: 1
   - position1: {x: 3, y: 17}
     position2: {x: 3, y: 18}
     wallType: 0

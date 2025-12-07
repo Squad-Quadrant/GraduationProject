@@ -13,7 +13,7 @@ namespace Editor
 
         // 固定/可调的单格槽位大小（包含缝隙）和缝隙大小
         private float _cellSlotSize = 40f; // 一个格子占据的槽位大小（包括缝隙）
-        private float _cellGap = 4f;       // 格子之间的缝隙（像素）
+        private float _cellGap = 10f;       // 格子之间的缝隙（像素）
         private const float MinSlotSize = 8f;
         private const float MaxSlotSize = 256f;
         private const float MinGap = 0f;
