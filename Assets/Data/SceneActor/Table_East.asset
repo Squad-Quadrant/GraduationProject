@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85be0d89f0cd433084068ab7c1460437, type: 3}
-  m_Name: NewMapConfig
+  m_Script: {fileID: 11500000, guid: dc7b3ddaebc6431ea79db67ef2f6e246, type: 3}
+  m_Name: Table_East
   m_EditorClassIdentifier: 
-  editedMapName: New Map
-  editedSize: {x: 10, y: 10}
-  cells: []
-  walls: []
+  ID: 0
+  SceneActorType: 0
+  Direction: 2

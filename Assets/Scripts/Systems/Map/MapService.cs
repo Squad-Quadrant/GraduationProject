@@ -19,9 +19,9 @@ namespace Systems.Map
 				var cell = Data.GetCell(cellConfig.position);
 				if (cell == null) continue;
 				cell.Terrain = cellConfig.terrain;
-				cell.IsWalkable = cellConfig.isWalkable;
+				cell.IsWalkable = cellConfig.IsWalkable;
 				cell.MoveCost = cellConfig.moveCost;
-				cell.Height = cellConfig.height;
+				// cell.Height = cellConfig.height;
 			}
 
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
