@@ -101,8 +101,8 @@ namespace Editor
 			string[] options = new string[_mapConfigs.Count];
 			int currentIndex = -1;
 			for (int i = 0; i < _mapConfigs.Count; i++)
-			{
-				options[i] = _mapConfigs[i].MapName;
+            {
+                options[i] = _mapConfigs[i].MapName;
 				if (_mapConfigs[i] == _currentConfig)
 					currentIndex = i;
 			}

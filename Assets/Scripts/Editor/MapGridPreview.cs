@@ -88,8 +88,6 @@ namespace Editor
                 );
 
                 var color = GetTerrainColor(cell.terrain);
-                if (!cell.IsWalkable)
-                    color = Color.gray;
 
                 EditorGUI.DrawRect(cellRect, color);
                 Handles.DrawSolidRectangleWithOutline(cellRect, Color.clear, Color.black * 0.2f);

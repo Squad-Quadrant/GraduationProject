@@ -19,7 +19,7 @@ namespace Data.Config
 		[MinValue(5)]
 		public Vector2Int editedSize = new(10, 10);
 
-		private bool Dirty => editedMapName != _mapName || editedSize != _size;
+		private bool Dirty => editedMapName != mapName || editedSize != size;
 
 		[ShowIf("Dirty")]
 		[Button("保存更改", ButtonSizes.Medium), GUIColor(0.6f, 1f, 0.6f)]
@@ -33,15 +33,15 @@ namespace Data.Config
 		[Button("还原更改", ButtonSizes.Medium), GUIColor(1f, 0.6f, 0.6f)]
 		private void Revert()
 		{
-			editedMapName = _mapName;
-			editedSize = _size;
+			editedMapName = mapName;
+			editedSize = size;
 		}
 #endif
-		private string _mapName = "New Map";
-		public string MapName => _mapName;
+		[SerializeField][HideInInspector]private string mapName = "New Map";
+		public string MapName => mapName;
 		
-		private Vector2Int _size = new(10, 10);
-		public Vector2Int Size => _size;
+		[SerializeField][HideInInspector]private Vector2Int size = new(10, 10);
+		public Vector2Int Size => size;
 
 		#endregion
 		
@@ -64,7 +64,7 @@ namespace Data.Config
 		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
 		public void ValidateConfig()
 		{
-			Debug.Log($"[MapConfig] Validating '{_mapName}'...");
+			Debug.Log($"[MapConfig] Validating '{mapName}'...");
 
 			var positions = new HashSet<Vector2Int>();
 			foreach (var cell in cells)
@@ -80,7 +80,7 @@ namespace Data.Config
 
 		[ShowInInspector, DisplayAsString, HideLabel]
 		[PropertyOrder(-1)]
-		private string EditorTitle => $"地图配置: {_mapName}";
+		private string EditorTitle => $"地图配置: {mapName}";
 
 		#endregion
 
@@ -136,7 +136,7 @@ namespace Data.Config
 
         private void OnSizeChanged()
         {
-            _size = editedSize;
+            size = editedSize;
             var temp = cells;
             cells = new CellConfig[Size.x * Size.y];
             int index = 0;
@@ -221,9 +221,9 @@ namespace Data.Config
 		private void OnMapNameChanged()
 		{
 #if UNITY_EDITOR
-			_mapName = editedMapName;
+			mapName = editedMapName;
 			string assetPath = UnityEditor.AssetDatabase.GetAssetPath(this);
-			UnityEditor.AssetDatabase.RenameAsset(assetPath, _mapName);
+			UnityEditor.AssetDatabase.RenameAsset(assetPath, mapName);
 			UnityEditor.AssetDatabase.SaveAssets();
 #endif
 		}
