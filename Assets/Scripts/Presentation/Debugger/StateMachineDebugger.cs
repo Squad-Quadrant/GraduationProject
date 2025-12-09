@@ -21,7 +21,7 @@ namespace Presentation.Debugger
 		[ShowInInspector, ReadOnly, DisplayAsString]
 		[PropertyOrder(-99)]
 		[ShowIf("@!IsConnected")]
-		private string ConnectionHint => "Waiting for target... (Auto-connect on play)";
+		private string ConnectionHint => "Waiting for target...";
 
 		#endregion
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 
 namespace Core.Events
@@ -23,7 +24,65 @@ namespace Core.Events
 		private readonly Dictionary<Type, List<Subscription>> _subscriptionDic = new();
 		private readonly List<Subscription> _onceToRemove = new();
 
-		#region Subscribe Methods
+		#region Debugging
+
+		public bool RecordHistory { get; set; } = true;
+
+		public int MaxHistorySize { get; set; } = 50;
+
+		private readonly List<EventHistoryEntry> _eventHistory = new();
+
+		public readonly struct SubscriptionInfo
+		{
+			public Type EventType { get; }
+			public int SubscriberCount { get; }
+			public int OnceCount { get; }
+
+			public SubscriptionInfo(Type eventType, int subscriberCount, int onceCount)
+			{
+				EventType = eventType;
+				SubscriberCount = subscriberCount;
+				OnceCount = onceCount;
+			}
+		}
+
+		public readonly struct EventHistoryEntry
+		{
+			public DateTime Timestamp { get; }
+			public string EventTypeName { get; }
+			public string EventData { get; }
+			public int HandlerCount { get; }
+
+			public EventHistoryEntry(DateTime timestamp, string eventTypeName, string eventData, int handlerCount)
+			{
+				Timestamp = timestamp;
+				EventTypeName = eventTypeName;
+				EventData = eventData;
+				HandlerCount = handlerCount;
+			}
+		}
+
+		public IReadOnlyList<SubscriptionInfo> GetSubscriptionInfos()
+		{
+			return _subscriptionDic.Select(kvp => new SubscriptionInfo(
+				kvp.Key,
+				kvp.Value.Count,
+				kvp.Value.Count(s => s.IsOnce)
+			)).ToList();
+		}
+
+		public IReadOnlyList<EventHistoryEntry> GetEventHistory() => _eventHistory;
+
+		public void ClearHistory() => _eventHistory.Clear();
+
+		public int SubscribedEventTypeCount => _subscriptionDic.Count;
+
+		public int TotalSubscriptionCount => _subscriptionDic.Values.Sum(list => list.Count);
+
+		#endregion
+
+
+		#region Subscribe
 
 		public void Subscribe<TEvent>(Action<TEvent> handler, int priority = 0, bool onlyOnce = false) where TEvent : IEvent
 		{
@@ -49,7 +108,6 @@ namespace Core.Events
 
 		#endregion
 
-
 		#region Unsubscribe Methods
 
 		public void Unsubscribe<TEvent>(Action<TEvent> handler) where TEvent : IEvent
@@ -74,48 +132,61 @@ namespace Core.Events
 
 		#endregion
 
-
 		#region Publish Methods
 
 		public void Publish<TEvent>(TEvent eventData) where TEvent : IEvent
 		{
 			var eventType = typeof(TEvent);
+			var handlerCount = 0;
 
-			if (!_subscriptionDic.TryGetValue(eventType, out var subscriptions))
+			if (_subscriptionDic.TryGetValue(eventType, out var subscriptions))
 			{
-				this.LogDebug($"[Publish] {eventType.Name} does not exist");
-				return;
+				_onceToRemove.Clear();
+				handlerCount = subscriptions.Count;
+
+				foreach (var subscription in subscriptions)
+				{
+					try
+					{
+						var action = (Action<TEvent>)subscription.Handler;
+						action.Invoke(eventData);
+
+						if (subscription.IsOnce)
+							_onceToRemove.Add(subscription);
+					}
+					catch (Exception ex)
+					{
+						throw new Exception($"Error invoking handler for {eventType.Name}", ex);
+					}
+				}
+
+				foreach (var subscription in _onceToRemove)
+					subscriptions.Remove(subscription);
+
+				if (subscriptions.Count == 0)
+					_subscriptionDic.Remove(eventType);
 			}
 
-			_onceToRemove.Clear();
-
-			foreach (var subscription in subscriptions)
+			if (RecordHistory)
 			{
-				try
-				{
-					var action = (Action<TEvent>)subscription.Handler;
-					action.Invoke(eventData);
+				var entry = new EventHistoryEntry(
+					DateTime.Now,
+					eventType.Name,
+					eventData.ToString(),
+					handlerCount
+				);
 
-					if (subscription.IsOnce)
-						_onceToRemove.Add(subscription);
-				}
-				catch (Exception ex)
-				{
-					throw new Exception($"Error invoking handler for {eventType.Name}", ex);
-				}
+				_eventHistory.Insert(0, entry); // Most recent first
+
+				// Trim history if exceeds max size
+				while (_eventHistory.Count > MaxHistorySize)
+					_eventHistory.RemoveAt(_eventHistory.Count - 1);
 			}
 
 			this.Log($"Event published: {eventType.Name}");
-
-			foreach (var subscription in _onceToRemove)
-				subscriptions.Remove(subscription);
-
-			if (subscriptions.Count == 0)
-				_subscriptionDic.Remove(eventType);
 		}
 
 		#endregion
-
 
 		#region Lifetime Management
 
@@ -123,6 +194,7 @@ namespace Core.Events
 		{
 			_subscriptionDic.Clear();
 			_onceToRemove.Clear();
+			_eventHistory.Clear();
 		}
 
 		#endregion
