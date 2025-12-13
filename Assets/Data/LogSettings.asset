@@ -14,4 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalLogLevel: 1
   enableAllLogs: 1
-  rules: []
+  rules:
+  - typeName: Presentation.Bootstrap.LevelLoader
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.UnitService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Core.Events.EventBus
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.GameServer
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

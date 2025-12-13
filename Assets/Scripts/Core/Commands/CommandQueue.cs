@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Commands.Events;
 using Core.Events;
 using Core.Log;
@@ -46,6 +47,30 @@ namespace Core.Commands
 		/// True if there are no pending commands and no command is executing.
 		/// </summary>
 		public bool IsIdle => !_isExecuting && _pendingCommands.Count == 0;
+
+		/// <summary>
+		/// The command currently being executed. Null if idle.
+		/// </summary>
+		public ICommand CurrentCommand => _currentCommand;
+
+		/// <summary>
+		/// Names of all pending commands in execution order. For Debugging
+		/// </summary>
+		public IReadOnlyList<string> PendingCommandNames =>
+			_pendingCommands.Select(c => c.Name).ToList();
+
+		/// <summary>
+		/// Names of all executed commands. For Debugging
+		/// </summary>
+		public IReadOnlyList<string> ExecutedCommandNames =>
+			_executedCommands.Select(c => c.Name).ToList();
+
+		/// <summary>
+		/// Names of all undone commands. For Debugging
+		/// </summary>
+		public IReadOnlyList<string> UndoneCommandNames =>
+			_undoneCommands.Select(c => c.Name).ToList();
+
 
 		public CommandQueue(IEventBus eventBus)
 		{

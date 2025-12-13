@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Presentation.Debugger
 {
+	[AddComponentMenu("Debugger/Interaction State Machine Debugger")]
 	public class InteractionStateMachineDebugger : StateMachineDebuggerBase<InteractionContext>
 	{
 		private InteractionController _cachedController;
