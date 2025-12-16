@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cbd17dc887f7a4c9a2103da13bb5ae, type: 3}
   m_Name: LogSettings
   m_EditorClassIdentifier: 
-  globalLogLevel: 1
+  globalLogLevel: 0
   enableAllLogs: 1
   rules:
+  - typeName: Presentation.UI.Core.UIManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
     enabled: 1
     minLogLevel: 1
@@ -38,4 +42,12 @@ MonoBehaviour:
   - typeName: Systems.GamePlay.GameServer
     enabled: 1
     minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UINavigator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Test.WZHTest.Test
+    enabled: 1
+    minLogLevel: 0
     autoDiscovered: 1
