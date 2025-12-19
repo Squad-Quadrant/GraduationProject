@@ -17,37 +17,13 @@ MonoBehaviour:
   rules:
   - typeName: Presentation.UI.Core.UIManager
     enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Bootstrap.LevelLoader
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Map.MapService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.UnitService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Core.Events.EventBus
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.GameServer
-    enabled: 1
-    minLogLevel: 1
+    minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.UI.Core.UINavigator
     enabled: 1
-    minLogLevel: 1
+    minLogLevel: 0
     autoDiscovered: 1
-  - typeName: Test.WZHTest.Test
+  - typeName: Presentation.Bootstrap.LevelLoader
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1

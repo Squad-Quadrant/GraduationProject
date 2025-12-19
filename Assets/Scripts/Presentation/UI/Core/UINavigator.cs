@@ -1,155 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Core.Log;
-using Sirenix.OdinInspector;
 
 namespace Presentation.UI.Core
 {
-	[Serializable]
 	public class UINavigator
 	{
-		private Stack<UIPanel> _panelStack = new();
+		private readonly List<UIPanel> _stack = new();
 
-		public int Count => _panelStack.Count;
-		public bool IsEmpty => _panelStack.Count == 0;
-		public UIPanel TopPanel => _panelStack.Count > 0 ? _panelStack.Peek() : null;
+		public int Count => _stack.Count;
+		public bool IsEmpty => _stack.Count == 0;
+		public UIPanel TopPanel => _stack.Count > 0 ? _stack[^1] : null;
 
-		public void Push(UIPanel panel)
+		public bool Push(UIPanel panel)
 		{
 			if (!panel)
 			{
-				this.LogWarning("Trying to push a null panel onto the stack.");
-				return;
+				this.LogWarning("Cannot push null panel");
+				return false;
 			}
 
-			if (_panelStack.Count > 0)
+			if (Contains(panel))
 			{
-				var top = _panelStack.Peek();
-				if (top)
-				{
-					top.NotifyLostFocus();
-					if (top.HideWhenCovered)
-						top.SetVisible(false);
-				}
+				this.LogWarning($"Panel already in stack: {panel.PanelId}");
+				return false;
 			}
 
-			_panelStack.Push(panel);
-			panel.NotifyOpen();
-			panel.NotifyFocus();
-
-			this.Log($"Pushed: {panel.PanelName} | Stack depth: {_panelStack.Count}");
-		}
-
-		public UIPanel Pop()
-		{
-			CleanupDestroyedPanels();
-
-			if (_panelStack.Count == 0)
-			{
-				this.LogWarning("Cannot pop from empty stack");
-				return null;
-			}
-
-			var panel = _panelStack.Pop();
-			panel?.NotifyLostFocus();
-			panel?.NotifyClose();
-
-			if (_panelStack.Count > 0)
-			{
-				var top = _panelStack.Peek();
-				if (top)
-				{
-					if (top.HideWhenCovered)
-						top.SetVisible(true);
-					top.NotifyFocus();
-				}
-			}
-
-			this.Log($"Popped: {panel?.PanelName ?? "null"} | Stack depth: {_panelStack.Count}");
-			return panel;
+			_stack.Add(panel);
+			this.Log($"Pushed: {panel.PanelId} | Depth: {_stack.Count}");
+			return true;
 		}
 
 		public bool Remove(UIPanel panel)
 		{
 			if (!panel) return false;
 
-			var tempList = new List<UIPanel>(_panelStack);
-			bool wasTop = _panelStack.Count > 0 && ReferenceEquals(_panelStack.Peek(), panel);
+			bool removed = _stack.Remove(panel);
+			if (removed)
+				this.Log($"Removed: {panel.PanelId} | Depth: {_stack.Count}");
 
-			if (!tempList.Remove(panel))
-				return false;
-
-			_panelStack.Clear();
-			for (int i = tempList.Count - 1; i >= 0; i--)
-				_panelStack.Push(tempList[i]);
-
-			// If we removed the top panel, notify new top
-			if (wasTop && _panelStack.Count > 0)
-			{
-				var top = _panelStack.Peek();
-				if (top)
-				{
-					if (top.HideWhenCovered)
-						top.SetVisible(true);
-					top.NotifyFocus();
-				}
-			}
-
-			this.Log($"Removed: {panel.PanelName} | Stack depth: {_panelStack.Count}");
-			return true;
+			return removed;
 		}
 
-		public bool HandleBack()
+		public bool HandleBack(out UIPanel panelToClose)
 		{
+			panelToClose = null;
 			CleanupDestroyedPanels();
 
-			if (_panelStack.Count == 0)
-				return false;
+			if (_stack.Count == 0) return false;
 
-			var top = _panelStack.Peek();
+			var top = _stack[^1];
 			if (!top) return false;
 
-			// Let panel handle back first (for multi-level menus)
+			// Let panel consume input first
 			if (top.OnBackPressed())
 			{
-				this.Log($"Back consumed by: {top.PanelName}");
+				this.Log($"Back consumed by: {top.PanelId}");
 				return true;
 			}
 
-			// Panel didn't consume, so pop it
-			Pop();
+			// Check if panel allows closing via back
+			if (!top.CloseOnBack)
+			{
+				this.Log($"Back blocked: {top.PanelId}");
+				return true;
+			}
+			panelToClose = top;
 			return true;
 		}
 
+		public bool Contains(UIPanel panel) => panel && _stack.Contains(panel);
+
+		public T Find<T>() where T : UIPanel
+		{
+			for (int i = _stack.Count - 1; i >= 0; i--)
+				if (_stack[i] is T panel)
+					return panel;
+			return null;
+		}
+
+		public IReadOnlyList<UIPanel> GetAllPanels() => _stack;
+
 		public void CleanupDestroyedPanels()
 		{
-			if (_panelStack.Count == 0) return;
-
-			var validPanels = _panelStack.Where(panel => panel).ToList();
-
-			if (validPanels.Count == _panelStack.Count) return;
-
-			_panelStack.Clear();
-			for (int i = validPanels.Count - 1; i >= 0; i--)
-				_panelStack.Push(validPanels[i]);
-
-			this.Log($"Cleaned up {_panelStack.Count - validPanels.Count} destroyed panel(s)");
+			int removed = _stack.RemoveAll(p => !p);
+			if (removed > 0)
+				this.Log($"Cleaned {removed} destroyed panel(s)");
 		}
 
 		public void Clear()
 		{
-			_panelStack.Clear();
-			this.Log("Navigator cleared");
+			// Close all panels in reverse order (top first)
+			for (int i = _stack.Count - 1; i >= 0; i--)
+				_stack[i]?.DoClose();
+			_stack.Clear();
+			this.Log("Cleared");
 		}
-
-		public IReadOnlyList<UIPanel> GetAllPanels()
-		{
-			var list = new List<UIPanel>(_panelStack);
-			list.Reverse(); // Stack enumerates top-to-bottom, we want bottom-to-top
-			return list;
-		}
-
-		public bool Contains(UIPanel panel) => panel && _panelStack.Any(p => ReferenceEquals(p, panel));
 	}
 }

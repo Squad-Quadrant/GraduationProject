@@ -85,6 +85,7 @@ namespace Presentation.Bootstrap
 			_rootContainerInstance.RegisterServices();
 
 			_rootContainerInstance.Services.RegisterInstance(uiManager);
+			uiManager.Initialize(_rootContainerInstance.Resolve<IEventBus>());
 			Log("[Bootstrapper] Global services registered.");
 		}
 

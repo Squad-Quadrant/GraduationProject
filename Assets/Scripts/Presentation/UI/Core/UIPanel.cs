@@ -1,5 +1,6 @@
-﻿using Core.Log;
-using Presentation.Bootstrap;
+﻿using System;
+using Core.Log;
+using Data.Config;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,23 +9,7 @@ namespace Presentation.UI.Core
 	[RequireComponent(typeof(CanvasGroup))]
 	public abstract class UIPanel : MonoBehaviour
 	{
-		[TitleGroup("Panel Settings")]
-		[SerializeField]
-		[LabelText("Panel Name")]
-		[Tooltip("Identifier for debugging and logging. Uses GameObject name if empty.")]
-		private string panelName;
-
-		[TitleGroup("Panel Settings")]
-		[SerializeField]
-		[LabelText("Hide When Covered")]
-		[Tooltip("If true, this panel becomes invisible when another panel is pushed on top.")]
-		private bool hideWhenCovered;
-
-		[TitleGroup("Panel Settings")]
-		[SerializeField]
-		[LabelText("Block Input When Open")]
-		[Tooltip("If true, blocks raycasts to UI elements behind this panel.")]
-		private bool blockInputWhenOpen = true;
+		#region Runtime State
 
 		[TitleGroup("Runtime State")]
 		[ShowInInspector, ReadOnly]
@@ -38,149 +23,208 @@ namespace Presentation.UI.Core
 
 		[TitleGroup("Runtime State")]
 		[ShowInInspector, ReadOnly]
-		public bool IsVisible { get; private set; } = true;
+		public bool IsVisible { get; private set; }
 
-		public string PanelName => string.IsNullOrEmpty(panelName) ? gameObject.name : panelName;
+		[TitleGroup("Runtime State")]
+		[ShowInInspector, ReadOnly]
+		public bool IsAnimating => _animation?.IsAnimating ?? false;
 
-		public bool HideWhenCovered => hideWhenCovered;
+		public string PanelId => _config?.PanelId ?? gameObject.name;
 
-		public CanvasGroup CanvasGroup
-		{
-			get
-			{
-				if (!_canvasGroup)
-					_canvasGroup = GetComponent<CanvasGroup>();
-				return _canvasGroup;
-			}
-		}
+		#endregion
+
+		private UIPanelConfig _config;
+		private IUIAnimation _animation;
+
+		public bool ManagedByStack => _config?.ManagedByStack ?? true;
+		public bool HideWhenCovered => _config?.HideWhenCovered ?? false;
+		public bool CloseOnBack => _config?.CloseOnBack ?? true;
+		public bool BlockInput => _config?.BlockInput ?? true;
+		public bool CacheOnClose => _config?.CacheOnClose ?? false;
+
 		private CanvasGroup _canvasGroup;
+		public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
 
-		private bool _isDestroying;
-
-		protected virtual void OnDestroy()
+		internal void Initialize(UIPanelConfig config)
 		{
-			if (_isDestroying) return;
-			_isDestroying = true;
+			_config = config;
+			_animation = GetComponent<IUIAnimation>();
 
-			var manager = RootContainer.Instance.Resolve<UIManager>();
-			if (manager && manager.Navigator != null)
-				manager.Navigator.Remove(this);
-		}
-
-		public void SetVisible(bool visible)
-		{
-			IsVisible = visible;
-			CanvasGroup.alpha = visible ? 1 : 0;
-			CanvasGroup.interactable = visible;
-			CanvasGroup.blocksRaycasts = visible && blockInputWhenOpen;
-		}
-
-		internal void NotifyOpen()
-		{
-			if (IsOpen) return;
-
-			IsOpen = true;
-			SetVisible(true);
-
-			this.Log($"Opened: {PanelName}");
-			OnOpen();
-		}
-
-		internal void NotifyClose()
-		{
-			if (!IsOpen) return;
-
+			SetVisibleImmediate(false);
 			IsOpen = false;
 			HasFocus = false;
 
-			this.Log($"Closed: {PanelName}");
+			OnInitialize();
+			this.Log($"Initialized: {PanelId}");
+		}
+
+		protected virtual void OnDestroy()
+		{
+			_animation?.CompleteImmediately();
+			this.Log($"Destroyed: {PanelId}");
+		}
+
+		public virtual bool OnBackPressed() => false;
+
+		protected virtual void OnInitialize() { }
+		protected virtual void OnOpen() { }
+		protected virtual void OnClose() { }
+		protected virtual void OnFocus() { }
+		protected virtual void OnUnfocus() { }
+
+		internal void DoOpen(Action onComplete = null)
+		{
+			if (IsOpen)
+			{
+				onComplete?.Invoke();
+				return;
+			}
+
+			IsOpen = true;
+			gameObject.SetActive(true);
+
+			if (_animation != null)
+			{
+				SetVisibleImmediate(true);
+				CanvasGroup.interactable = false;
+				_animation.PlayOpen(() =>
+				{
+					this.Log($"Opened: {PanelId}");
+					OnOpen();
+					onComplete?.Invoke();
+				});
+			}
+			else
+			{
+				SetVisibleImmediate(true);
+				this.Log($"Opened: {PanelId}");
+				OnOpen();
+				onComplete?.Invoke();
+			}
+		}
+
+		internal void DoClose(Action onComplete = null)
+		{
+			if (!IsOpen)
+			{
+				onComplete?.Invoke();
+				return;
+			}
+
+			HasFocus = false;
+			CanvasGroup.interactable = false;
+
+			if (_animation != null)
+				_animation.PlayClose(CompleteClose);
+			else
+				CompleteClose();
+			return;
+
+			void CompleteClose()
+			{
+				IsOpen = false;
+				SetVisibleImmediate(false);
+				this.Log($"Closed: {PanelId}");
+				OnClose();
+				onComplete?.Invoke();
+			}
+		}
+
+		internal void DoCloseImmediate()
+		{
+			_animation?.CompleteImmediately();
+			IsOpen = false;
+			HasFocus = false;
+			SetVisibleImmediate(false);
 			OnClose();
 		}
 
-		internal void NotifyFocus()
+		internal void DoFocus()
 		{
 			if (HasFocus) return;
 
 			HasFocus = true;
 			CanvasGroup.interactable = true;
-			CanvasGroup.blocksRaycasts = blockInputWhenOpen;
+			CanvasGroup.blocksRaycasts = BlockInput;
 
-			this.Log($"Focused: {PanelName}");
+			this.Log($"Focused: {PanelId}");
 			OnFocus();
 		}
 
-		internal void NotifyLostFocus()
+		internal void DoUnfocus()
 		{
 			if (!HasFocus) return;
 
 			HasFocus = false;
 			CanvasGroup.interactable = false;
 
-			this.Log($"Lost focus: {PanelName}");
-			OnLostFocus();
+			this.Log($"Unfocused: {PanelId}");
+			OnUnfocus();
 		}
 
-		protected virtual void OnOpen() { }
-
-		protected virtual void OnClose() { }
-
-		protected virtual void OnFocus() { }
-
-		protected virtual void OnLostFocus() { }
-
-		/// <summary>
-		/// Handle back/ESC input
-		/// </summary>
-		/// <returns>True if input was consumed, false to allow pop.</returns>
-		public virtual bool OnBackPressed() => false;
-
-		#region Debug Action
-
-		[Button("Open Panel"), GUIColor(0.3f, 1f, 0.5f)]
-		[HorizontalGroup("Debug Actions")]
-		[EnableIf("@UnityEngine.Application.isPlaying && !IsOpen")]
-		public void Open()
+		internal void DoShow(Action onComplete = null)
 		{
-			if (IsOpen)
+			if (IsVisible)
 			{
-				this.LogWarning($"Panel '{PanelName}' is already open");
+				onComplete?.Invoke();
 				return;
 			}
 
-			var manager = RootContainer.Instance.Resolve<UIManager>();
-			if (!manager)
-			{
-				this.LogError($"Cannot open '{PanelName}': UIManager not found");
-				return;
-			}
-			manager.Navigator.Push(this);
-		}
+			SetVisibleImmediate(true);
 
-		[Button("Close Panel"), GUIColor(1f, 0.5f, 0.3f)]
-		[HorizontalGroup("Debug Actions")]
-		[EnableIf("@UnityEngine.Application.isPlaying && IsOpen")]
-		public void Close()
-		{
-			if (!IsOpen)
-			{
-				this.LogWarning($"Panel '{PanelName}' is not open");
-				return;
-			}
-
-			var manager = RootContainer.Instance.Resolve<UIManager>();
-			if (!manager)
-			{
-				this.LogError($"Cannot open '{PanelName}': UIManager not found");
-				return;
-			}
-
-			// Use Pop if we're the top panel, Remove otherwise
-			if (manager.Navigator.TopPanel == this)
-				manager.Navigator.Pop();
+			if (_animation != null)
+				_animation.PlayShow(onComplete);
 			else
-				manager.Navigator.Remove(this);
+				onComplete?.Invoke();
 		}
 
-		#endregion
+		internal void DoHide(Action onComplete = null)
+		{
+			if (!IsVisible)
+			{
+				onComplete?.Invoke();
+				return;
+			}
+
+			if (_animation != null)
+			{
+				_animation.PlayHide(() =>
+				{
+					SetVisibleImmediate(false);
+					onComplete?.Invoke();
+				});
+			}
+			else
+			{
+				SetVisibleImmediate(false);
+				onComplete?.Invoke();
+			}
+		}
+
+		private void SetVisibleImmediate(bool visible)
+		{
+			IsVisible = visible;
+			CanvasGroup.alpha = visible ? 1f : 0f;
+			CanvasGroup.interactable = visible && HasFocus;
+			CanvasGroup.blocksRaycasts = visible && BlockInput;
+		}
+
+		public void SetVisible(bool visible, bool animate = true)
+		{
+			if (visible)
+			{
+				if (animate)
+					DoShow();
+				else
+					SetVisibleImmediate(true);
+			}
+			else
+			{
+				if (animate)
+					DoHide();
+				else
+					SetVisibleImmediate(false);
+			}
+		}
 	}
 }
