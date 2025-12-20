@@ -10,6 +10,7 @@ namespace Systems.Map
 	public class MapData
 	{
 		private readonly Dictionary<Vector2Int, MapCell> _cells = new();
+        private readonly Dictionary<WallKey, MapWall> _walls = new();
 
 		public Vector2Int Size { get; private set; } // Map Size
 		public IReadOnlyDictionary<Vector2Int, MapCell> Cells => _cells; // Read-only access to map cells
@@ -27,9 +28,14 @@ namespace Systems.Map
 					_cells[position] = new MapCell(position);
 				}
 			}
+            
+            _walls.Clear();
 		}
 
 		public MapCell GetCell(Vector2Int position) => _cells.GetValueOrDefault(position);
+        
+        public MapWall GetWall(WallKey key) => _walls.GetValueOrDefault(key);
+        
 
 		public bool IsInBounds(Vector2Int position) =>
 			position.x >= 0 && position.x < Size.x &&

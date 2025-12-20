@@ -22,7 +22,7 @@ namespace Systems.Map
 				cell.IsWalkable = cellConfig.IsWalkable;
 				cell.MoveCost = cellConfig.MoveCost;
 				// cell.Height = cellConfig.height;
-                cell.tile = cellConfig.tile?.Tile;
+                cell.tile = cellConfig.cell?.Tile;
 			}
 
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");

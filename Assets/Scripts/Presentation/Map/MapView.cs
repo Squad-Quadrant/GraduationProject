@@ -8,10 +8,12 @@ namespace Presentation.Map
 	public class MapView : MonoBehaviour
 	{
 		[Title("References")]
-		[SerializeField] private Tilemap terrainTilemap;
+		[SerializeField] private Tilemap GroundTilemap;
+        [SerializeField] private Tilemap LeftWallTilemap;
+        [SerializeField] private Tilemap RightTilemap;
 
-		[Title("Tiles")]
-		[SerializeField] private TileBase[] tiles;
+		// [Title("Tiles")]
+		// [SerializeField] private TileBase[] tiles;
 
 		// todo: implement highlighting and indicators
 		public void HighlightCells(Vector2Int[] positions, EHighlightType type)
@@ -36,12 +38,12 @@ namespace Presentation.Map
 
 		public void RenderTerrain(MapData mapData)
 		{
-			terrainTilemap.ClearAllTiles();
+			RightTilemap.ClearAllTiles();
 
 			foreach (var cell in mapData.Cells.Values)
             {
 				if (cell.tile)
-					terrainTilemap.SetTile((Vector3Int)cell.Position, cell.tile);
+					RightTilemap.SetTile((Vector3Int)cell.Position, cell.tile);
 			}
 		}
 	}

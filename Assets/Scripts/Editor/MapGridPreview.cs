@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using Data.Config;
+using Data.Config.Map;
 using Systems.Map;
 using UnityEditor;
 using UnityEngine;
@@ -213,7 +214,7 @@ namespace Editor
                         continue;
                     }
 
-                    Color wallColor = GetWallColor(w.wallType);
+                    Color wallColor = GetWallColor(w.WallType);
                     EditorGUI.DrawRect(wallRect, wallColor);
                     Handles.DrawSolidRectangleWithOutline(wallRect, Color.clear, Color.black * 0.25f);
 

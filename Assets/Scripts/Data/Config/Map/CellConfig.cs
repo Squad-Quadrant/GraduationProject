@@ -5,9 +5,9 @@ using UnityEngine.Tilemaps;
 
 namespace Data.Config
 {
-    [Configurable("Map/Tile")]
-    [CreateAssetMenu(fileName = "TileConfig", menuName = "Configs/Map/TileConfig")]
-    public class TileConfig : ScriptableObject
+    [Configurable("Map/Cell")]
+    [CreateAssetMenu(fileName = "CellConfig", menuName = "Game/Map/CellConfig")]
+    public class CellConfig : ScriptableObject
     {
         public TileBase Tile;
         public bool IsWalkable = true;
