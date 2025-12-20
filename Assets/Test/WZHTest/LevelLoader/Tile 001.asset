@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37492c62a17d4feca233a688a5595265, type: 3}
+  m_Name: Tile 001
+  m_EditorClassIdentifier: 
+  Tile: {fileID: 11400000, guid: b657c6369d5ea2745b81837939c728ce, type: 2}
+  IsWalkable: 1
+  MoveCost: 1

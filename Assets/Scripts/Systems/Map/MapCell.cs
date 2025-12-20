@@ -1,5 +1,7 @@
-﻿using Systems.Map.SceneActor;
+﻿using JetBrains.Annotations;
+using Systems.Map.SceneActor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Systems.Map
 {
@@ -13,6 +15,8 @@ namespace Systems.Map
 		// public int Height { get; set; } = 0;
 		public bool IsWalkable { get; set; } = true;
 		public int MoveCost { get; set; } = 1;
+        
+        [CanBeNull] public TileBase tile { get; set; } // todo: 放这有点怪 
 
         public bool IsOccupied
         {

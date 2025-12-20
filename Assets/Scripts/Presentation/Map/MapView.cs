@@ -39,22 +39,10 @@ namespace Presentation.Map
 			terrainTilemap.ClearAllTiles();
 
 			foreach (var cell in mapData.Cells.Values)
-			{
-				var tile = GetTileForTerrain(cell.Terrain);
-				if (tile != null)
-					terrainTilemap.SetTile((Vector3Int)cell.Position, tile);
+            {
+				if (cell.tile)
+					terrainTilemap.SetTile((Vector3Int)cell.Position, cell.tile);
 			}
-		}
-
-		private TileBase GetTileForTerrain(ETerrainType terrainType)
-		{
-			// todo: implement tile retrieval based on terrain type
-			return terrainType switch
-			{
-				ETerrainType.Plain => null,
-				ETerrainType.Forest => null,
-				_ => null
-			};
 		}
 	}
 }

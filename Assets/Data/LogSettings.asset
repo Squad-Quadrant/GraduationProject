@@ -31,3 +31,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Unit.UnitService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Core.Events.EventBus
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.GameServer
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

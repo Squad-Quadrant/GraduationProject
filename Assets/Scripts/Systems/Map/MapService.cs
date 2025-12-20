@@ -18,10 +18,11 @@ namespace Systems.Map
 			{
 				var cell = Data.GetCell(cellConfig.position);
 				if (cell == null) continue;
-				cell.Terrain = cellConfig.terrain;
+				cell.Terrain = cellConfig.Terrain;
 				cell.IsWalkable = cellConfig.IsWalkable;
-				cell.MoveCost = cellConfig.moveCost;
+				cell.MoveCost = cellConfig.MoveCost;
 				// cell.Height = cellConfig.height;
+                cell.tile = cellConfig.tile?.Tile;
 			}
 
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");

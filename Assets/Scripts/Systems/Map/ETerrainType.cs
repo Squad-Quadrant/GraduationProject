@@ -5,6 +5,7 @@
 		Plain,
 		Forest,
 		Mountain,
-		Water
+		Water, 
+        Void
 	}
 }

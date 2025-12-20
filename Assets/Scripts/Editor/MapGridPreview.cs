@@ -87,7 +87,7 @@ namespace Editor
                     cellDrawSize
                 );
 
-                var color = GetTerrainColor(cell.terrain);
+                var color = GetTerrainColor(cell.Terrain);
 
                 EditorGUI.DrawRect(cellRect, color);
                 Handles.DrawSolidRectangleWithOutline(cellRect, Color.clear, Color.black * 0.2f);

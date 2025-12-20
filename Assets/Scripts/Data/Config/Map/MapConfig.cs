@@ -95,9 +95,9 @@ namespace Data.Config
                     cells[index] = new CellConfig
                     {
                         position = new Vector2Int(x, y),
-                        terrain = ETerrainType.Plain,
+                        // terrain = ETerrainType.Plain,
                         // IsWalkable = true,
-                        moveCost = 1
+                        // moveCost = 1
                     };
                     index++;
                 }
@@ -155,9 +155,9 @@ namespace Data.Config
                         cells[index] = new CellConfig
                         {
                             position = pos,
-                            terrain = ETerrainType.Plain,
+                            // terrain = ETerrainType.Plain,
                             // IsWalkable = true,
-                            moveCost = 1
+                            // moveCost = 1
                         };
                     }
                     index++;
@@ -236,20 +236,45 @@ namespace Data.Config
 	public class CellConfig
 	{
 		[HorizontalGroup("Main")]
-		[LabelText("坐标"), LabelWidth(40), ReadOnly]
+		[LabelText("坐标"), LabelWidth(20), ReadOnly]
 		public Vector2Int position;
 
-		[HorizontalGroup("Main")]
-		[LabelText("地形类型"), LabelWidth(60)]
-		public ETerrainType terrain;
+        public ETerrainType Terrain
+        {
+            get
+            {
+                if (!tile)
+                {
+                    return ETerrainType.Void;
+                }
+                return tile.TerrainType;
+            }
+        }
 
-        [HorizontalGroup("Props")] [LabelText("可通行"), LabelWidth(60)]
-        public bool IsWalkable = true;
+        // 指地块本身是否支持通行，不算场景物体等其他因素的影响
+        public bool IsWalkable
+        {
+            get
+            {
+                if (!tile)
+                {
+                    return false;
+                }
+                return tile.IsWalkable;
+            }
+        }
 
-		[HorizontalGroup("Props")]
-		[LabelText("移动消耗"), LabelWidth(60)]
-		[Range(1, 10)]
-		public int moveCost = 1;
+        public int MoveCost
+        {
+            get 
+            {
+                if (!tile)
+                {
+                    return int.MaxValue;
+                }
+                return tile.MoveCost;
+            }
+        }
 
 		// [HorizontalGroup("Props")]
 		// [LabelText("高度"), LabelWidth(40)]
@@ -257,7 +282,13 @@ namespace Data.Config
 		// public int height = 0;
 
         [HorizontalGroup("Props")] 
+        [LabelText("地块"), LabelWidth(40)]
+        [CanBeNull]
+        public TileConfig tile;
+
+        [HorizontalGroup("Props")] 
         [LabelText("场景物体"), LabelWidth(40)]
+        [CanBeNull]
         public SceneActorConfig sceneActor;
     }
 
