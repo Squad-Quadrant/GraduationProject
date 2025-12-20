@@ -1,6 +1,8 @@
+using Core.Events;
 using Core.Log;
 using Data.Config;
 using Presentation.Logger;
+using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,15 +10,21 @@ namespace Presentation.Bootstrap
 {
 	public class Bootstrapper : MonoBehaviour
 	{
-		[Title("Settings")]
+		[TitleGroup("Settings")]
 		[SerializeField] private bool autoInitialize = true;
 		[SerializeField] private bool enableLogs = true;
 
-		[Title("Configuration")]
-		[SerializeField, InlineEditor] private LogSettings logSettings;
+		[TitleGroup("Configuration")]
+		[SerializeField, Required, InlineEditor]
+		private LogSettings logSettings;
 
-		[Title("Prefabs")]
-		[SerializeField] private RootContainer rootContainerPrefab;
+		[TitleGroup("Configuration")]
+		[SerializeField, Required]
+		private UIManager uiManager;
+
+		[TitleGroup("Prefabs")]
+		[SerializeField]
+		private RootContainer rootContainerPrefab;
 
 		private static bool _initialized;
 		private RootContainer _rootContainerInstance;
@@ -75,12 +83,15 @@ namespace Presentation.Bootstrap
 			LogExtensions.Initialize(_rootContainerInstance.Services.Resolve<ILoggerFactory>());
 
 			_rootContainerInstance.RegisterServices();
+
+			_rootContainerInstance.Services.RegisterInstance(uiManager);
+			uiManager.Initialize(_rootContainerInstance.Resolve<IEventBus>());
+			Log("[Bootstrapper] Global services registered.");
 		}
 
 		private void OnBootstrapComplete()
 		{
 			// Notify other systems that bootstrap is complete
-			Log("[Bootstrapper] Bootstrap process completed successfully.");
 		}
 
 		#region Debug

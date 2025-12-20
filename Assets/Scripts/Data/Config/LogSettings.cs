@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Data.Config
 {
-	[CreateAssetMenu(fileName = "LogSettings", menuName = "Game/LogSettings", order = 0)]
+	[CreateAssetMenu(fileName = "LogSettings", menuName = "Game/Log Settings", order = 0)]
 	public class LogSettings : ScriptableObject
 	{
 		[Title("Global")]
