@@ -243,9 +243,8 @@ namespace Data.Config
 		[LabelText("地形类型"), LabelWidth(60)]
 		public ETerrainType terrain;
 
-		// [HorizontalGroup("Props")]
-		// [LabelText("可通行"), LabelWidth(60)]
-        public bool IsWalkable => sceneActor.IsWalkable;
+        [HorizontalGroup("Props")] [LabelText("可通行"), LabelWidth(60)]
+        public bool IsWalkable = true;
 
 		[HorizontalGroup("Props")]
 		[LabelText("移动消耗"), LabelWidth(60)]

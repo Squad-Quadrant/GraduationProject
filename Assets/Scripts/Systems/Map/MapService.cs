@@ -37,16 +37,16 @@ namespace Systems.Map
 		{
 			var cell = Data.GetCell(position);
 			if (cell == null) return;
-			cell.IsOccupied = true;
-			cell.OccupantId = unitId;
+			// cell.IsOccupied = true;
+			// cell.OccupantId = unitId;
 		}
 
 		public void ReleaseCell(Vector2Int position)
 		{
 			var cell = Data.GetCell(position);
 			if (cell == null) return;
-			cell.IsOccupied = false;
-			cell.OccupantId = null;
+			// cell.IsOccupied = false;
+			// cell.OccupantId = null;
 		}
 	}
 }

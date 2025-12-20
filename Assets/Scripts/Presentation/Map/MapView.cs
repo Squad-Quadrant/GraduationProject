@@ -16,22 +16,22 @@ namespace Presentation.Map
 		// todo: implement highlighting and indicators
 		public void HighlightCells(Vector2Int[] positions, EHighlightType type)
 		{
-
+            
 		}
 
 		public void ClearHighlights()
 		{
-
+            
 		}
 
 		public void ShowCellIndicator(Vector2Int position, EIndicatorType type)
 		{
-
+            
 		}
 
 		public void HideCellIndicator()
 		{
-
+            
 		}
 
 		public void RenderTerrain(MapData mapData)

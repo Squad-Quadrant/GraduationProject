@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Systems.Map.SceneActor;
+using UnityEngine;
 
 namespace Systems.Map
 {
@@ -9,11 +10,24 @@ namespace Systems.Map
 	{
 		public Vector2Int Position { get; }
 		public ETerrainType Terrain { get; set; }
-		public int Height { get; set; } = 0;
+		// public int Height { get; set; } = 0;
 		public bool IsWalkable { get; set; } = true;
 		public int MoveCost { get; set; } = 1;
-		public bool IsOccupied { get; set; } = false; // Indicates if an entity is currently occupying the cell
-		public string OccupantId { get; set; }
+
+        public bool IsOccupied
+        {
+            get
+            {
+                if (SceneActor != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+        } // Indicates if an entity is currently occupying the cell
+        
+		// public string OccupantId { get; set; }
+        public SceneActorBase SceneActor { get; set; }
 
 		public MapCell(Vector2Int position) => Position = position;
 	}
