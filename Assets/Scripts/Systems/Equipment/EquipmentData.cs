@@ -33,11 +33,13 @@ namespace Systems.Equipment
         public float Weight;
     }
     
+    [Obsolete("Obsolete")]
     public class WeaponData : EquipmentData
     {
         public int AmmoCapacity;
     }
     
+    [Obsolete("Obsolete")]
     public class TacticalItemData : EquipmentData
     {
         

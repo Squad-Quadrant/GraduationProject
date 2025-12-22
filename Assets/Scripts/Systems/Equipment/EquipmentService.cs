@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Systems.Equipment
 {
+    [Obsolete("Obsolete")]
     public class EquipmentService : IEquipmentService
     {
         private readonly Dictionary<int, EquipmentData> _data = new();
