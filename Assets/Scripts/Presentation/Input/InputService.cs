@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Input;
@@ -6,6 +7,7 @@ using Data.Runtime.Events.UI;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map;
+using Systems.Unit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,17 +27,19 @@ namespace Presentation.Input
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordinateConverter;
 		private IMapService _mapService;
+		private IUnitService _unitService;
 
 		private GameInputActions _inputActions;
 
 		private Vector2Int? _lastHoveredCell;
 		private string _lastHoveredUnitId;
 
-		public void Initialize(IEventBus eventBus, ICoordinateConverter coordinateConverter, IMapService mapService)
+		public void Initialize(IEventBus eventBus, ICoordinateConverter coordinateConverter, IMapService mapService, IUnitService unitService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
 			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
+			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 
 			if (!mainCamera) mainCamera = Camera.main;
 
@@ -117,7 +121,8 @@ namespace Presentation.Input
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
 
 			// First, check if we hit a unit
-			var unitId = DetectUnitAtPosition(screenPosition);
+			// var unitId = DetectUnitAtPosition(screenPosition);
+			var unitId = GetUnitAtCell(cellPos); // todo: physical detection has not been implemented yet
 			if (unitId != null)
 			{
 				this.Log($"Unit clicked: {unitId} at {cellPos}");
@@ -158,7 +163,8 @@ namespace Presentation.Input
 			if (_mapService.Data.IsInBounds(cellPos))
 			{
 				currentCell = cellPos;
-				currentUnitId = DetectUnitAtPosition(screenPos);
+				// currentUnitId = DetectUnitAtPosition(screenPos);
+				currentUnitId = GetUnitAtCell(cellPos); // todo: physical detection has not been implemented yet
 			}
 
 			// Only publish if something changed
@@ -175,8 +181,7 @@ namespace Presentation.Input
 
 			if (currentCell.HasValue)
 			{
-				// this.LogInfo($"Hover: Cell={currentCell}, Unit={currentUnitId ?? "none"}");
-				this.Log($"{screenPos} -> {worldPos} -> {cellPos}");
+				this.LogDebug($"Hover: Cell={currentCell}, Unit={currentUnitId ?? "none"}");
 			}
 		}
 
@@ -195,13 +200,13 @@ namespace Presentation.Input
 			// Use OverlapPoint for precise 2D detection at a single point
 			var collider2d = Physics2D.OverlapPoint(worldPos, unitLayer);
 
-			if (collider2d)
-			{
-				var clickableUnit = collider2d.GetComponent<IClickableUnit>();
-				return clickableUnit?.UnitId;
-			}
+			if (!collider2d) return null;
 
-			return null;
+			var clickableUnit = collider2d.GetComponent<IClickableUnit>();
+			return clickableUnit?.UnitId;
 		}
+
+		private string GetUnitAtCell(Vector2Int cellPosition)
+			=> (from unit in _unitService.GetAllUnits() where unit.position == cellPosition select unit.id).FirstOrDefault();
 	}
 }

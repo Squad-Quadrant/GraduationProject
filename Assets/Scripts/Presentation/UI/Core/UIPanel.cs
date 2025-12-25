@@ -23,10 +23,12 @@ namespace Presentation.UI.Core
 
 		[TitleGroup("Runtime State")]
 		[ShowInInspector, ReadOnly]
+		[GUIColor("@IsVisible ? new Color(0.3f, 0.8f, 1f) : new Color(0.5f, 0.5f, 0.5f)")]
 		public bool IsVisible { get; private set; }
 
 		[TitleGroup("Runtime State")]
 		[ShowInInspector, ReadOnly]
+		[GUIColor("@IsAnimating ? new Color(0.3f, 0.8f, 1f) : new Color(0.5f, 0.5f, 0.5f)")]
 		public bool IsAnimating => _animation?.IsAnimating ?? false;
 
 		public string PanelId => _config?.PanelId ?? gameObject.name;

@@ -12,42 +12,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cbd17dc887f7a4c9a2103da13bb5ae, type: 3}
   m_Name: LogSettings
   m_EditorClassIdentifier: 
-  globalLogLevel: 0
+  globalLogLevel: 1
   enableAllLogs: 1
   rules:
-  - typeName: Presentation.UI.Core.UIManager
+  - typeName: Core.Events.EventBus
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UINavigator
+  - typeName: Core.FSM.StateMachine`1[[Systems.Interaction.InteractionContext, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Input.InputService
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
-  - typeName: Systems.Map.MapService
+  - typeName: Presentation.Interaction.InteractionController
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
-  - typeName: Systems.Unit.UnitService
+  - typeName: Presentation.UI.Core.UIManager
     enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Core.Events.EventBus
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnService
-    enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.GamePlay.GameServer
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.IdleState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.UnitService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIFactory
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UINavigator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.UnitSelectedState
+    enabled: 1
+    minLogLevel: 1
     autoDiscovered: 1

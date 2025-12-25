@@ -5,17 +5,12 @@ namespace Data.Runtime.Events.UI
 {
 	public readonly struct PanelClosedEvent : IEvent
 	{
-		public string PanelId { get; }
 		public UIPanel Panel { get; }
 
-		public PanelClosedEvent(string panelId, UIPanel panel)
-		{
-			PanelId = panelId;
-			Panel = panel;
-		}
+		public PanelClosedEvent(UIPanel panel) => Panel = panel;
 
 		public override string ToString()
-			=> $"[PanelClosed] Id:{PanelId}";
+			=> $"[PanelClosed] Id:{Panel.PanelId}";
 	}
 
 	/// <summary>

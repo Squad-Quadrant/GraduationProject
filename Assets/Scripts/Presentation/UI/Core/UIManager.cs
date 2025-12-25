@@ -58,7 +58,7 @@ namespace Presentation.UI.Core
 			});
 
 			// Subscribe
-			if (inputModule) inputModule.cancel.action.performed += OnCancelInput;
+			// if (inputModule) inputModule.cancel.action.performed += OnCancelInput;
 			SceneManager.sceneUnloaded += OnSceneUnloaded;
 
 			_factory.PreloadPanels();
@@ -68,7 +68,7 @@ namespace Presentation.UI.Core
 
 		private void OnDestroy()
 		{
-			if (inputModule) inputModule.cancel.action.performed -= OnCancelInput;
+			// if (inputModule) inputModule.cancel.action.performed -= OnCancelInput;
 			SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
 			_navigator?.Clear();
@@ -188,7 +188,7 @@ namespace Presentation.UI.Core
 				panel.DoOpen();
 			}
 
-			_eventBus?.Publish(new PanelOpenedEvent(config.PanelId, panel));
+			_eventBus?.Publish(new PanelOpenedEvent(panel));
 			return panel;
 		}
 
@@ -210,7 +210,7 @@ namespace Presentation.UI.Core
 				panel.DoClose(() =>
 				{
 					_factory.Release(panel, config);
-					_eventBus?.Publish(new PanelClosedEvent(panel.PanelId, panel));
+					_eventBus?.Publish(new PanelClosedEvent(panel));
 
 					if (_navigator.IsEmpty)
 						_eventBus?.Publish(new AllPanelsClosedEvent());
@@ -232,7 +232,7 @@ namespace Presentation.UI.Core
 				panel.DoClose(() =>
 				{
 					_factory.Release(panel, config);
-					_eventBus?.Publish(new PanelClosedEvent(panel.PanelId, panel));
+					_eventBus?.Publish(new PanelClosedEvent(panel));
 				});
 			}
 		}

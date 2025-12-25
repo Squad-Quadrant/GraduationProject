@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Dev/GirdTest.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Scenes/Dev/WZHTest_0_Menu.unity
+    guid: 702d6dfad82d62d4ca9b487d309b180b
+  - enabled: 1
+    path: Assets/Scenes/Dev/WZHTest_1_Level.unity
+    guid: fe9c48285a10952459223be96261108e
   m_configObjects: {}

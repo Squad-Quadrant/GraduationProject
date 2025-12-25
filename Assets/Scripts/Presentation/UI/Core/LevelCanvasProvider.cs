@@ -42,7 +42,7 @@ namespace Presentation.UI.Core
 		private void OnDisable()
 		{
 			if (!_registered) return;
-
+			if (!RootContainer.Instance) return;
 			var uiManager = RootContainer.Instance.TryResolve<UIManager>();
 			uiManager?.UnregisterCanvas(layer);
 			_registered = false;

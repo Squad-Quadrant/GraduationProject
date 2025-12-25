@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad17bca720a42f5ba290565dee9956a, type: 3}
   m_Name: UISettings
   m_EditorClassIdentifier: 
-  panelConfigs: []
+  panelConfigs:
+  - {fileID: 11400000, guid: 73c8f6b739237164f9b6450702622f94, type: 2}
   enableEscNavigation: 1

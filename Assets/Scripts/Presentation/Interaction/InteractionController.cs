@@ -28,23 +28,6 @@ namespace Presentation.Interaction
 		public bool IsRunning => _isRunning;
 		public string CurrentStateName => StateMachine?.CurrentState?.Name ?? "Not Initialized";
 
-		private void Update()
-		{
-			if (!_isInitialized || !_isRunning || StateMachine == null || _context == null)
-				return;
-
-			StateMachine.Update(Time.deltaTime);
-		}
-
-		private void OnDestroy()
-		{
-			StopInteraction();
-			StateMachine = null;
-			_context = null;
-			_isInitialized = false;
-		}
-
-
 		public void Initialize(
 			IEventBus eventBus,
 			IUnitService unitService,
@@ -77,6 +60,23 @@ namespace Presentation.Interaction
 
 			if (autoStart) StartInteraction();
 		}
+
+		private void Update()
+		{
+			if (!_isInitialized || !_isRunning || StateMachine == null || _context == null)
+				return;
+
+			StateMachine.Update(Time.deltaTime);
+		}
+
+		private void OnDestroy()
+		{
+			StopInteraction();
+			StateMachine = null;
+			_context = null;
+			_isInitialized = false;
+		}
+
 
 		public void StartInteraction()
 		{

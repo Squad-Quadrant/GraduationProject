@@ -144,7 +144,8 @@ namespace Core.Events
 				_onceToRemove.Clear();
 				handlerCount = subscriptions.Count;
 
-				foreach (var subscription in subscriptions)
+				var subscriptionsCopy = subscriptions.ToList();
+				foreach (var subscription in subscriptionsCopy)
 				{
 					try
 					{
@@ -183,7 +184,7 @@ namespace Core.Events
 					_eventHistory.RemoveAt(_eventHistory.Count - 1);
 			}
 
-			this.Log($"Event published: {eventType.Name}");
+			this.LogDebug($"Event published: {eventType.Name}");
 		}
 
 		#endregion

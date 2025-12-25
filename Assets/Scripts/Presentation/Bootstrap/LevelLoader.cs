@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
+using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.Input;
+using Presentation.Interaction;
 using Presentation.Map;
+using Presentation.UI.Core;
+using Presentation.UI.Presenter;
 using Sirenix.OdinInspector;
 using Systems.GamePlay;
 using Systems.Interfaces;
@@ -26,6 +30,7 @@ namespace Presentation.Bootstrap
 		[SerializeField] private MapView mapView;
 		[SerializeField] private Grid grid;
 		[SerializeField] private InputService inputService;
+		[SerializeField] private InteractionController interactionController;
 
 		[Title("Configuration")]
 		[SerializeField] private LevelConfig levelConfig;
@@ -60,6 +65,7 @@ namespace Presentation.Bootstrap
 
 		public void UnloadLevel()
 		{
+			this.Log("====================================", false);
 			this.Log("Unloading level...");
 
 			// Clear all services
@@ -67,20 +73,15 @@ namespace Presentation.Bootstrap
 			_unitService?.Clear();
 
 			// Destroy level container
-			if (_levelContainer != null)
+			if (_levelContainer)
 			{
-				_levelContainer.Cleanup();
+				_levelContainer.Clear();
 				Destroy(_levelContainer.gameObject);
 				_levelContainer = null;
 			}
 
-			// Clear references
-			_mapService = null;
-			_unitService = null;
-			_turnService = null;
-			_eventBus = null;
-
 			this.Log("Level unloaded successfully.");
+			this.Log("====================================", false);
 		}
 
 		private IEnumerator LoadLevelCoroutine()
@@ -92,6 +93,8 @@ namespace Presentation.Bootstrap
 			yield return RegisterServices();
 			yield return InitializeMap();
 			yield return CreateUnits();
+			yield return InitializeUIPresenter();
+			yield return InitializeInteractionController();
 			yield return InitializeInputService();
 
 			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
@@ -134,15 +137,9 @@ namespace Presentation.Bootstrap
 			var coordinateConverter = new CoordinateConverter(grid);
 			_levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
 
-			// Register MapService
 			_levelContainer.Services.Register<IMapService, MapService>();
-
-			// Register UnitService
 			_levelContainer.Services.Register<IUnitService, UnitService>();
-
-			// Register TurnService
 			_levelContainer.Services.Register<ITurnService, TurnService>();
-
 			_levelContainer.Services.Register<IGameServer, GameServer>();
 
 			// Resolve services
@@ -150,7 +147,6 @@ namespace Presentation.Bootstrap
 			_unitService = _levelContainer.Resolve<IUnitService>();
 			_turnService = _levelContainer.Resolve<ITurnService>();
 			_gameServer = _levelContainer.Resolve<IGameServer>();
-
 
 			this.Log("✓ Services registered and resolved.");
 			yield return null;
@@ -168,7 +164,7 @@ namespace Presentation.Bootstrap
 
 			// Load map from config
 			_mapService.LoadFromConfig(levelConfig.mapConfig);
-            mapView.RenderTerrain(_mapService.Data);
+            // mapView?.RenderTerrain(_mapService.Data);
             
 			this.Log($"✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 			yield return null;
@@ -225,6 +221,54 @@ namespace Presentation.Bootstrap
 			this.Log($"✓ Spawned {levelConfig.unitPlacements.Count} units.");
 		}
 
+		private IEnumerator InitializeUIPresenter()
+		{
+			this.Log("Initializing UI Presenter...");
+
+			var uiManager = RootContainer.Instance.TryResolve<UIManager>();
+			if (!uiManager)
+			{
+				this.LogWarning("No UIManager found in RootContainer!");
+				yield break;
+			}
+			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
+
+			this.Log("✓ UI Presenter initialized.");
+			yield return null;
+		}
+
+		private IEnumerator InitializeInteractionController()
+		{
+			this.Log("Initializing InteractionController...");
+
+			if (!interactionController)
+			{
+				interactionController = FindObjectOfType<InteractionController>();
+				if (!interactionController)
+				{
+					this.LogWarning("No InteractionController found in scene!");
+					yield break;
+				}
+			}
+
+			var commandQueue = RootContainer.Instance.TryResolve<ICommandQueue>();
+			if (commandQueue == null)
+			{
+				this.LogWarning("No ICommandQueue found in RootContainer!");
+				yield break;
+			}
+
+			interactionController.Initialize(
+				_eventBus,
+				_unitService,
+				_mapService,
+				_turnService,
+				commandQueue
+			);
+			this.Log("✓ InteractionController initialized.");
+			yield return null;
+		}
+
 		private IEnumerator InitializeInputService()
 		{
 			this.Log("Initializing InputService...");
@@ -242,8 +286,11 @@ namespace Presentation.Bootstrap
 			inputService.Initialize(
 				_eventBus,
 				_levelContainer.Resolve<ICoordinateConverter>(),
-				_mapService
+				_mapService,
+				_unitService
 			);
+			this.Log("✓ InputService initialized.");
+			yield return null;
 		}
 	}
 }

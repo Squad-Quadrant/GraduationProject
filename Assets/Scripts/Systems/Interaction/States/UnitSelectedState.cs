@@ -160,7 +160,7 @@ namespace Systems.Interaction.States
 		{
 			var unitId = Context.selectedUnit?.id;
 			Publish(Context, new UnitDeselectedEvent(unitId));
-			Context.StateMachine.ChangeState<IdleState>();
+			StateMachine(Context).ChangeState<IdleState>();
 		}
 
 		private void ExecuteWait()

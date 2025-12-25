@@ -10,16 +10,7 @@ namespace Presentation.Bootstrap
 	/// </summary>
 	public class RootContainer : MonoBehaviour
 	{
-		private static RootContainer _instance;
-		public static RootContainer Instance
-		{
-			get
-			{
-				if (!_instance)
-					Debug.LogError("RootContainer instance is not initialized. Please ensure a RootContainer exists in the scene.");
-				return _instance;
-			}
-		}
+		public static RootContainer Instance { get; private set; }
 
 		public ServiceContainer Services { get; private set; }
 
@@ -28,14 +19,14 @@ namespace Presentation.Bootstrap
 		/// </summary>
 		public void Initialize()
 		{
-			if (_instance && _instance != this)
+			if (Instance && Instance != this)
 			{
 				Debug.LogWarning("Multiple RootContainer instances detected. Destroying duplicate.");
 				Destroy(gameObject);
 				return;
 			}
 
-			_instance = this;
+			Instance = this;
 			DontDestroyOnLoad(gameObject);
 			Services = new ServiceContainer();
 			Debug.Log("[RootContainer] Initialized");
@@ -47,14 +38,12 @@ namespace Presentation.Bootstrap
 
 		private void OnDestroy()
 		{
-			if (_instance != this) return;
+			if (Instance != this) return;
 			Debug.Log("[RootContainer] Cleaning up...");
 			Services?.Clear();
-			_instance = null;
+			Instance = null;
 			Debug.Log("[RootContainer] Cleanup complete.");
 		}
-
-		private void OnApplicationQuit() => Services?.Clear(); // Ensure cleanup on application quit
 
 		public void RegisterServices()
 		{
