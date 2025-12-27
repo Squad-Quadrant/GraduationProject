@@ -1,5 +1,7 @@
-﻿using Core.Log;
+﻿using Core.Events;
+using Core.Log;
 using Data.Config;
+using Data.Runtime.Events.Map;
 using UnityEngine;
 
 namespace Systems.Map
@@ -7,8 +9,13 @@ namespace Systems.Map
 	public class MapService : IMapService
 	{
 		public MapData Data { get; } = new();
+        
+        private readonly IEventBus _eventBus;
 
-		public MapService() => this.Log("Initialized");
+        public MapService(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
 		public void LoadFromConfig(MapConfig config)
 		{
@@ -21,7 +28,6 @@ namespace Systems.Map
 				cell.Terrain = cellConfig.Terrain;
 				cell.IsWalkable = cellConfig.IsWalkable;
 				cell.MoveCost = cellConfig.MoveCost;
-				// cell.Height = cellConfig.height;
                 cell.Tile = cellConfig.cell?.Tile;
 			}
             
@@ -34,7 +40,9 @@ namespace Systems.Map
             }
             
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
-		}
+            
+            _eventBus.Publish(new MapViewInitEvent(Data));
+        }
 
 		public bool IsCellWalkable(Vector2Int position)
 		{

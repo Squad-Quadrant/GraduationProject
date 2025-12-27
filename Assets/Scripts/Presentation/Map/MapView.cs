@@ -1,4 +1,8 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Core.Events;
+using Data.Runtime.Events.Map;
+using Presentation.Bootstrap;
+using Sirenix.OdinInspector;
 using Systems.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,9 +15,22 @@ namespace Presentation.Map
 		[SerializeField] private Tilemap GroundTilemap;
         [SerializeField] private Tilemap LeftWallTilemap;
         [SerializeField] private Tilemap RightTilemap;
+        private IEventBus _eventBus;
 
-		// [Title("Tiles")]
-		// [SerializeField] private TileBase[] tiles;
+        private void Awake()
+        {
+            _eventBus = RootContainer.Instance.Resolve<IEventBus>();
+        }
+
+        private void OnEnable()
+        {
+            _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+        }
+
+        private void OnDisable()
+        {
+            _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
+        }
 
 		// todo: implement highlighting and indicators
 		public void HighlightCells(Vector2Int[] positions, EHighlightType type)
@@ -36,8 +53,9 @@ namespace Presentation.Map
             
 		}
 
-		public void RenderTerrain(MapData mapData)
+		private void RenderTerrain(MapViewInitEvent mapViewInitEvent)
 		{
+            var mapData = mapViewInitEvent.MapData;
             GroundTilemap.ClearAllTiles();
 
 			foreach (var cell in mapData.Cells.Values)
