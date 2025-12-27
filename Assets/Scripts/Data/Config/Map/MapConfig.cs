@@ -298,6 +298,7 @@ namespace Data.Config
     {
         public Vector2Int position1;
         public Vector2Int position2;
+        public WallKey WallKey => new WallKey(position1, position2);
         public WallConfig wall;
 
         public WallType WallType

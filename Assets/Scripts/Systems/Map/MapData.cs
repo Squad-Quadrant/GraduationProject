@@ -14,6 +14,7 @@ namespace Systems.Map
 
 		public Vector2Int Size { get; private set; } // Map Size
 		public IReadOnlyDictionary<Vector2Int, MapCell> Cells => _cells; // Read-only access to map cells
+        public IReadOnlyDictionary<WallKey, MapWall> Walls => _walls; // Read-only access to map walls
 
 		public void Initialize(Vector2Int size)
 		{
@@ -30,6 +31,23 @@ namespace Systems.Map
 			}
             
             _walls.Clear();
+            for (int x = 0; x <= size.x; x++)
+            {
+                for (int y = 0; y <= size.y; y++)
+                {
+                    var pos = new Vector2Int(x, y);
+                    if (x < size.x)
+                    {
+                        var wallKeyV = new WallKey(pos, new Vector2Int(x + 1, y));
+                        _walls[wallKeyV] = new MapWall(wallKeyV);
+                    }
+                    if (y < size.y)
+                    {
+                        var wallKeyH = new WallKey(pos, new Vector2Int(x, y + 1));
+                        _walls[wallKeyH] = new MapWall(wallKeyH);
+                    }
+                }
+            }
 		}
 
 		public MapCell GetCell(Vector2Int position) => _cells.GetValueOrDefault(position);

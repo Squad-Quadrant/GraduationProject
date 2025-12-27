@@ -8,22 +8,22 @@ namespace Data.Config
     {
         public int ID;
         public SceneActorType SceneActorType;
-        public SceneActorDirection Direction;
+        // public SceneActorDirection Direction;
         public bool IsWalkable;
     }
-
     public enum SceneActorType
     {
         Table,
         Obstacle,
     }
-    
-    public enum SceneActorDirection
-    {
-        None,
-        North,
-        East,
-        South,
-        West
-    }
+    //
+    // public enum SceneActorDirection
+    // {
+    //     None,
+    //     North,
+    //     East,
+    //     South,
+    //     West
+
+    // }
 }

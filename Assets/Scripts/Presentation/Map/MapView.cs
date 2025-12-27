@@ -38,13 +38,29 @@ namespace Presentation.Map
 
 		public void RenderTerrain(MapData mapData)
 		{
-			RightTilemap.ClearAllTiles();
+            GroundTilemap.ClearAllTiles();
 
 			foreach (var cell in mapData.Cells.Values)
             {
-				if (cell.tile)
-					RightTilemap.SetTile((Vector3Int)cell.Position, cell.tile);
+				if (cell.Tile)
+                    GroundTilemap.SetTile((Vector3Int)cell.Position, cell.Tile);
 			}
+
+            foreach (var wall in mapData.Walls.Values)
+            {
+                if (wall.Tile)
+                {
+                    (Vector2Int pos, bool isLeft) wallKey = wall.Key.ToPositionAndIsLeft();
+                    if (wallKey.isLeft)
+                    {
+                        LeftWallTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
+                    }
+                    else
+                    {
+                        RightTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
+                    }
+                }
+            }
 		}
 	}
 }

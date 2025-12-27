@@ -1,5 +1,6 @@
 using System;
 using Data.Config.Map;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -23,7 +24,7 @@ namespace Systems.Map
             position2 = pos2;
         }
         
-        public (Vector2Int, bool) ToPositionAndSide()
+        public (Vector2Int, bool) ToPositionAndIsLeft()
         {
             if (position1.x == position2.x)
             {
@@ -43,6 +44,11 @@ namespace Systems.Map
                 return (position2, false);
             }
             throw new ArgumentException("Positions do not form a valid wall.");
+        }
+
+        public bool IsLeft()
+        {
+            return ToPositionAndIsLeft().Item2;
         }
         
         public override bool Equals(object obj)
@@ -70,7 +76,7 @@ namespace Systems.Map
     {
         public WallKey Key { get; }
         public WallType WallType { get; set; }
-        public TileBase Tile { get; set; }
+        [CanBeNull] public TileBase Tile { get; set; }
 
         public MapWall(WallKey key)
         {

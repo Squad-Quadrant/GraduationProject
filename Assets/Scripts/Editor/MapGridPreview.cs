@@ -109,39 +109,39 @@ namespace Editor
                     float w = cellDrawSize * frac;
                     float h = cellDrawSize * frac;
 
-                    switch (cell.sceneActor.Direction)
-                    {
-                        case SceneActorDirection.East:
-                        {
-                            var r = new Rect(cellRect.xMax - w, cellRect.y, w, cellRect.height);
-                            EditorGUI.DrawRect(r, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                            break;
-                        }
-                        case SceneActorDirection.West:
-                        {
-                            var r = new Rect(cellRect.x, cellRect.y, w, cellRect.height);
-                            EditorGUI.DrawRect(r, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                            break;
-                        }
-                        case SceneActorDirection.North:
-                        {
-                            var r = new Rect(cellRect.x, cellRect.y, cellRect.width, h);
-                            EditorGUI.DrawRect(r, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                            break;
-                        }
-                        case SceneActorDirection.South:
-                        {
-                            var r = new Rect(cellRect.x, cellRect.yMax - h, cellRect.width, h);
-                            EditorGUI.DrawRect(r, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                            break;
-                        }
-                        case SceneActorDirection.None:
-                        default:
-                        {
+                    // switch (cell.sceneActor.Direction)
+                    // {
+                    //     case SceneActorDirection.East:
+                    //     {
+                    //         var r = new Rect(cellRect.xMax - w, cellRect.y, w, cellRect.height);
+                    //         EditorGUI.DrawRect(r, actorColor);
+                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                    //         break;
+                    //     }
+                    //     case SceneActorDirection.West:
+                    //     {
+                    //         var r = new Rect(cellRect.x, cellRect.y, w, cellRect.height);
+                    //         EditorGUI.DrawRect(r, actorColor);
+                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                    //         break;
+                    //     }
+                    //     case SceneActorDirection.North:
+                    //     {
+                    //         var r = new Rect(cellRect.x, cellRect.y, cellRect.width, h);
+                    //         EditorGUI.DrawRect(r, actorColor);
+                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                    //         break;
+                    //     }
+                    //     case SceneActorDirection.South:
+                    //     {
+                    //         var r = new Rect(cellRect.x, cellRect.yMax - h, cellRect.width, h);
+                    //         EditorGUI.DrawRect(r, actorColor);
+                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
+                    //         break;
+                    //     }
+                    //     case SceneActorDirection.None:
+                    //     default:
+                    //     {
                             // 纵向中心条带
                             var vRect = new Rect(cellRect.x + (cellRect.width - w) * 0.5f, cellRect.y, w, cellRect.height);
                             EditorGUI.DrawRect(vRect, actorColor);
@@ -152,8 +152,8 @@ namespace Editor
                             EditorGUI.DrawRect(hRect, actorColor);
                             Handles.DrawSolidRectangleWithOutline(hRect, Color.clear, Color.black * 0.25f);
                             break;
-                        }
-                    }
+                        // }
+                    // }
                 }
 
                 if (e.type == EventType.MouseDown && e.button == 0 && cellRect.Contains(e.mousePosition))

@@ -22,9 +22,17 @@ namespace Systems.Map
 				cell.IsWalkable = cellConfig.IsWalkable;
 				cell.MoveCost = cellConfig.MoveCost;
 				// cell.Height = cellConfig.height;
-                cell.tile = cellConfig.cell?.Tile;
+                cell.Tile = cellConfig.cell?.Tile;
 			}
-
+            
+            foreach (var wallConfig in config.walls)
+            {
+                var wall = Data.GetWall(wallConfig.WallKey);
+                if (wall == null) continue;
+                wall.WallType = wallConfig.WallType;
+                wall.Tile = wallConfig.WallKey.IsLeft() ? wallConfig.wall?.leftTile : wallConfig.wall?.rightTile;
+            }
+            
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
 		}
 
