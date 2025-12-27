@@ -16,7 +16,7 @@ namespace Systems.Map
 		public bool IsWalkable { get; set; } = true;
 		public int MoveCost { get; set; } = 1;
         
-        [CanBeNull] public TileBase tile { get; set; } // todo: 放这有点怪 
+        [CanBeNull] public TileBase Tile { get; set; }
 
         public bool IsOccupied
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Data.Config.Map;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Systems.Map;
@@ -50,12 +51,12 @@ namespace Data.Config
 		[LabelText("地形配置")]
 		[PropertyOrder(1)]
 		[TableList(ShowIndexLabels = true)]
-		public CellConfig[] cells = Array.Empty<CellConfig>();
+		public CellConfigData[] cells = Array.Empty<CellConfigData>();
         public int CellCount => Size.x * Size.y;
         [LabelText("墙体配置")]
         [PropertyOrder(2)]
         [TableList(ShowIndexLabels = true)]
-        public WallConfig[] walls = Array.Empty<WallConfig>();
+        public WallConfigData[] walls = Array.Empty<WallConfigData>();
         public int WallCount => (Size.x - 1) * Size.y + (Size.y - 1) * Size.x;
 		#endregion
 
@@ -86,13 +87,13 @@ namespace Data.Config
 
         public void Init()
         {
-            cells = new CellConfig[Size.x * Size.y];
+            cells = new CellConfigData[Size.x * Size.y];
             int index = 0;
             for (int y = 0; y < Size.y; y++)
             {
                 for (int x = 0; x < Size.x; x++)
                 {
-                    cells[index] = new CellConfig
+                    cells[index] = new CellConfigData
                     {
                         position = new Vector2Int(x, y),
                         // terrain = ETerrainType.Plain,
@@ -104,7 +105,7 @@ namespace Data.Config
             }
 
             // 考虑到功能制作的便利性，也初始化墙体数据
-            walls = new WallConfig[WallCount];
+            walls = new WallConfigData[WallCount];
             int wallIndex = 0;
             for (int y = 0; y < Size.y; y++)
             {
@@ -113,21 +114,21 @@ namespace Data.Config
                     // 水平墙
                     if (x < Size.x - 1)
                     {
-                        walls[wallIndex++] = new WallConfig
+                        walls[wallIndex++] = new WallConfigData
                         {
                             position1 = new Vector2Int(x, y),
                             position2 = new Vector2Int(x + 1, y),
-                            wallType = WallType.None
+                            // wallType = WallType.None
                         };
                     }
                     // 垂直墙
                     if (y < Size.y - 1)
                     {
-                        walls[wallIndex++] = new WallConfig
+                        walls[wallIndex++] = new WallConfigData
                         {
                             position1 = new Vector2Int(x, y),
                             position2 = new Vector2Int(x, y + 1),
-                            wallType = WallType.None
+                            // wallType = WallType.None
                         };
                     }
                 }
@@ -138,7 +139,7 @@ namespace Data.Config
         {
             size = editedSize;
             var temp = cells;
-            cells = new CellConfig[Size.x * Size.y];
+            cells = new CellConfigData[Size.x * Size.y];
             int index = 0;
             for (int y = 0; y < Size.y; y++)
             {
@@ -152,7 +153,7 @@ namespace Data.Config
                     }
                     else
                     {
-                        cells[index] = new CellConfig
+                        cells[index] = new CellConfigData
                         {
                             position = pos,
                             // terrain = ETerrainType.Plain,
@@ -165,8 +166,8 @@ namespace Data.Config
             }
         
             // 处理 walls 的迁移与重建
-            var tempWalls = walls ?? Array.Empty<WallConfig>();
-            walls = new WallConfig[WallCount];
+            var tempWalls = walls ?? Array.Empty<WallConfigData>();
+            walls = new WallConfigData[WallCount];
             int wallIndex = 0;
             for (int y = 0; y < Size.y; y++)
             {
@@ -184,11 +185,11 @@ namespace Data.Config
                         }
                         else
                         {
-                            walls[wallIndex++] = new WallConfig
+                            walls[wallIndex++] = new WallConfigData
                             {
                                 position1 = p1,
                                 position2 = p2,
-                                wallType = WallType.None
+                                // wallType = WallType.None
                             };
                         }
                     }
@@ -205,11 +206,11 @@ namespace Data.Config
                         }
                         else
                         {
-                            walls[wallIndex++] = new WallConfig
+                            walls[wallIndex++] = new WallConfigData
                             {
                                 position1 = p1,
                                 position2 = p2,
-                                wallType = WallType.None
+                                // wallType = WallType.None
                             };
                         }
                     }
@@ -233,7 +234,7 @@ namespace Data.Config
 	/// Defines a single cell in the map grid.
 	/// </summary>
 	[Serializable]
-	public class CellConfig
+	public class CellConfigData
 	{
 		[HorizontalGroup("Main")]
 		[LabelText("坐标"), LabelWidth(20), ReadOnly]
@@ -243,11 +244,11 @@ namespace Data.Config
         {
             get
             {
-                if (!tile)
+                if (!cell)
                 {
                     return ETerrainType.Void;
                 }
-                return tile.TerrainType;
+                return cell.TerrainType;
             }
         }
 
@@ -256,11 +257,11 @@ namespace Data.Config
         {
             get
             {
-                if (!tile)
+                if (!cell)
                 {
                     return false;
                 }
-                return tile.IsWalkable;
+                return cell.IsWalkable;
             }
         }
 
@@ -268,11 +269,11 @@ namespace Data.Config
         {
             get 
             {
-                if (!tile)
+                if (!cell)
                 {
                     return int.MaxValue;
                 }
-                return tile.MoveCost;
+                return cell.MoveCost;
             }
         }
 
@@ -284,7 +285,7 @@ namespace Data.Config
         [HorizontalGroup("Props")] 
         [LabelText("地块"), LabelWidth(40)]
         [CanBeNull]
-        public TileConfig tile;
+        public CellConfig cell;
 
         [HorizontalGroup("Props")] 
         [LabelText("场景物体"), LabelWidth(40)]
@@ -293,24 +294,28 @@ namespace Data.Config
     }
 
     [Serializable]
-    public class WallConfig
+    public class WallConfigData
     {
-        // 樯是两个格子之间的东西,所以墙的唯一ID用两个坐标标识
         public Vector2Int position1;
         public Vector2Int position2;
-        public WallType wallType;
+        public WallKey WallKey => new WallKey(position1, position2);
+        public WallConfig wall;
 
+        public WallType WallType
+        {
+
+            get{
+                if (!wall)
+                {
+                    return WallType.None;
+                }
+                return wall.wallType;
+            }
+        }
+        
         public bool Check(Vector2Int posA, Vector2Int posB)
         {
             return (position1 == posA && position2 == posB) || (position1 == posB && position2 == posA);
         }
-        
-    }
-    
-    public enum WallType
-    {
-        None,
-        LowWall,
-        HighWall
     }
 }

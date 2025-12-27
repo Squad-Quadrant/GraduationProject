@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Data.Config;
+using Data.Config.Map;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,8 +16,8 @@ namespace Editor
 		private MapConfig _currentConfig;
 		private MapConfig _dataBuffer;
 		private UnityEditor.Editor _currentDataEditor;
-        private CellConfig _currentCell;
-        private WallConfig _currentWall;
+        private CellConfigData _currentCell;
+        private WallConfigData _currentWall;
         private int _currentCellIndex = -1;
         private int _currentWallIndex = -1;
         private static MapConfigEditor I { get; set; }
