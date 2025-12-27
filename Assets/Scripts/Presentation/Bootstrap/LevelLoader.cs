@@ -164,7 +164,7 @@ namespace Presentation.Bootstrap
 
 			// Load map from config
 			_mapService.LoadFromConfig(levelConfig.mapConfig);
-            // mapView?.RenderTerrain(_mapService.Data);
+            mapView?.RenderTerrain(_mapService.Data);
             
 			this.Log($"✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 			yield return null;

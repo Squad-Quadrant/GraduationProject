@@ -15,7 +15,7 @@ MonoBehaviour:
   levelId: level_001
   levelName: Level 1
   description: This is a new level.
-  mapConfig: {fileID: 11400000, guid: b467b8e513df364488c2291f8f2357cc, type: 2}
+  mapConfig: {fileID: 11400000, guid: 9e33460c1f9fb7f448c83a8ce2f9d26a, type: 2}
   unitPlacements:
   - unitId: 001
     unitConfig: {fileID: 11400000, guid: 7e4103ec156aca740a3cc7f2f958f5ae, type: 2}
