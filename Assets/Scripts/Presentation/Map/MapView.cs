@@ -24,7 +24,7 @@ namespace Presentation.Map
 
         private void OnEnable()
         {
-            _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+            // _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
         }
 
         private void OnDisable()

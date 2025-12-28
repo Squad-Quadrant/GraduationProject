@@ -620,7 +620,7 @@ MonoBehaviour:
   mapView: {fileID: 2047838852}
   grid: {fileID: 2047838850}
   inputService: {fileID: 1868383104}
-  interactionController: {fileID: 0}
+  interactionController: {fileID: 300474405}
   levelConfig: {fileID: 11400000, guid: dfb71d7da9329884f83e6d0513381b72, type: 2}
   autoLoadLevel: 1
 --- !u!4 &1138979030
@@ -746,8 +746,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d1da5165344d9d9fc16cb9e303d07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainTilemap: {fileID: 851042725}
-  tiles: []
+  GroundTilemap: {fileID: 0}
+  LeftWallTilemap: {fileID: 0}
+  RightTilemap: {fileID: 0}
 --- !u!1 &2112800853
 GameObject:
   m_ObjectHideFlags: 0

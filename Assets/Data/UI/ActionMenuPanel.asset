@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ActionMenuPanel
   m_EditorClassIdentifier: 
   panelId: ActionMenuPanel
-  prefab: {fileID: 6552741338846052319, guid: 97d4bd74ea3ca9f4289fef6b684c1cca, type: 3}
+  prefab: {fileID: 6552741338846052319, guid: 136e8d1f3120aec4e963893212f7ff3a, type: 3}
   layer: 1
   managedByStack: 1
   hideWhenCovered: 0
