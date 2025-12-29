@@ -16,14 +16,4 @@ namespace Data.Config
         Table,
         Obstacle,
     }
-    //
-    // public enum SceneActorDirection
-    // {
-    //     None,
-    //     North,
-    //     East,
-    //     South,
-    //     West
-
-    // }
 }
