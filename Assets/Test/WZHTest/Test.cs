@@ -2,26 +2,19 @@
 using Presentation.Bootstrap;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
+using Spine.Unity;
 using UnityEngine;
 
 namespace Test.WZHTest
 {
 	public class Test : MonoBehaviour
 	{
+		[SerializeField] private SkeletonAnimation skeletonAnimation;
+
 		[Button]
 		private void Foo()
 		{
-			var manager = RootContainer.Instance.Resolve<UIManager>();
-			if (manager)
-			{
-				this.LogDebug("Found UIManager via RootContainer.");
-
-				this.LogDebug($"{manager.Navigator.Count}");
-			}
-			else
-			{
-				this.LogDebug("UIManager not found in RootContainer.");
-			}
+			skeletonAnimation.Skeleton.SetAttachment("BG", null);
 		}
 	}
 }

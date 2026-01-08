@@ -1,0 +1,48 @@
+
+人类1.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG
+  rotate: false
+  xy: 2, 2
+  size: 400, 400
+  orig: 402, 402
+  offset: 1, 1
+  index: -1
+Body
+  rotate: true
+  xy: 30, 419
+  size: 53, 102
+  orig: 57, 108
+  offset: 3, 2
+  index: -1
+Head
+  rotate: true
+  xy: 134, 417
+  size: 55, 58
+  orig: 59, 61
+  offset: 2, 1
+  index: -1
+Left
+  rotate: true
+  xy: 2, 448
+  size: 24, 26
+  orig: 27, 29
+  offset: 2, 1
+  index: -1
+Right
+  rotate: true
+  xy: 2, 448
+  size: 24, 26
+  orig: 27, 29
+  offset: 2, 1
+  index: -1
+Weapon
+  rotate: false
+  xy: 194, 404
+  size: 102, 68
+  orig: 105, 70
+  offset: 1, 1
+  index: -1
