@@ -1,7 +1,7 @@
 ﻿using Systems.Map;
 using UnityEngine;
 
-namespace Systems.PathFinding
+namespace Systems.PathFinding.TraversalRule
 {
 	public interface ITraversalRule
 	{

@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Systems.Interaction;
 using Systems.Interaction.States;
 using Systems.Map;
+using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
 using UnityEngine;
@@ -33,7 +34,8 @@ namespace Presentation.Interaction
 			IUnitService unitService,
 			IMapService mapService,
 			ITurnService turnService,
-			ICommandQueue commandQueue)
+			ICommandQueue commandQueue,
+			IPathFindingService pathFinding)
 		{
 			if (_isInitialized)
 			{
@@ -46,7 +48,8 @@ namespace Presentation.Interaction
 				unitService,
 				mapService,
 				turnService,
-				commandQueue);
+				commandQueue,
+				pathFinding);
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

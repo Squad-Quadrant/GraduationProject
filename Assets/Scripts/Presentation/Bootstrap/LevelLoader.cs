@@ -14,6 +14,8 @@ using Sirenix.OdinInspector;
 using Systems.GamePlay;
 using Systems.Interfaces;
 using Systems.Map;
+using Systems.PathFinding;
+using Systems.PathFinding.TraversalRule;
 using Systems.Turn;
 using Systems.Unit;
 using UnityEngine;
@@ -141,8 +143,14 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IUnitService, UnitService>();
 			_levelContainer.Services.Register<ITurnService, TurnService>();
 			_levelContainer.Services.Register<IGameServer, GameServer>();
+			_levelContainer.Services.Register<IPathFindingService>(container =>
+			{
+				var mapService = container.Resolve<IMapService>();
+				var unitService = container.Resolve<IUnitService>();
+				var traversalRule = new DefaultTraversalRule(unitService);
+				return new PathFindingService(mapService, traversalRule);
+			});
 
-			// Resolve services
 			_mapService = _levelContainer.Resolve<IMapService>();
 			_unitService = _levelContainer.Resolve<IUnitService>();
 			_turnService = _levelContainer.Resolve<ITurnService>();
@@ -257,12 +265,20 @@ namespace Presentation.Bootstrap
 				yield break;
 			}
 
+			var pathfinding = _levelContainer.Resolve<IPathFindingService>();
+			if (pathfinding == null)
+			{
+				this.LogWarning("No IPathFindingService found in LevelContainer!");
+				yield break;
+			}
+
 			interactionController.Initialize(
 				_eventBus,
 				_unitService,
 				_mapService,
 				_turnService,
-				commandQueue
+				commandQueue,
+				pathfinding
 			);
 			this.Log("✓ InteractionController initialized.");
 			yield return null;

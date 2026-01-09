@@ -1,4 +1,4 @@
-﻿namespace Systems.PathFinding
+﻿namespace Systems.PathFinding.TraversalRule
 {
 	public class TraversalCheckResult
 	{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Log;
 using Systems.Map;
+using Systems.PathFinding.TraversalRule;
 using UnityEngine;
 
 namespace Systems.PathFinding
@@ -14,8 +15,8 @@ namespace Systems.PathFinding
 
 		public PathFindingService(IMapService mapService, ITraversalRule traversalRule)
 		{
-			_mapService = mapService ?? throw new System.ArgumentNullException(nameof(mapService));
-			_traversalRule = traversalRule ?? throw new System.ArgumentNullException(nameof(traversalRule));
+			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
+			_traversalRule = traversalRule ?? throw new ArgumentNullException(nameof(traversalRule));
 			this.Log($"Initialized with rule: {traversalRule.GetType().Name}");
 		}
 

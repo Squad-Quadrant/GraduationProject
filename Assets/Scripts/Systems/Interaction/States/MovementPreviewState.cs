@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.UI;
+using Systems.PathFinding;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -98,24 +100,81 @@ namespace Systems.Interaction.States
 			var targetCell = e.CellPosition.Value;
 
 			// Calculate path to hovered cell
-			var path = CalculatePath(Context.selectedUnit.position, targetCell);
-			var isValid = Context.validTargetCells.Contains(targetCell);
-			var cost = CalculatePathCost(path);
+			var pathResult = GetPathFromCache(targetCell);
+			var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
 
 			// Update context
 			Context.currentPath.Clear();
-			Context.currentPath.AddRange(path);
-			Context.currentPathCost = cost;
+			if (pathResult.Found)
+			{
+				Context.currentPath.AddRange(pathResult.Path);
+				Context.currentPathCost = pathResult.TotalCost;
+			}
+			else
+				Context.currentPathCost = 0;
 
 			Publish(Context, new PathPreviewEvent(
-				path,
-				cost,
+				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
+				pathResult.TotalCost,
 				isValid,
 				Context.selectedUnit.id
 			));
 		}
 
 		private void OnActionCancelled(ActionCancelledEvent e) => CancelAndReturn();
+
+		private void CalculateReachableArea(InteractionContext ctx)
+		{
+			var unit = ctx.selectedUnit;
+			var pathfinding = ctx.PathFindingService;
+
+			if (pathfinding == null)
+			{
+				this.LogError("PathfindingService not available!");
+				ctx.validTargetCells.Clear();
+				return;
+			}
+
+			// Build pathfinding options based on unit capabilities
+			// NOTE: Unit.faction is not yet implemented, using null for now
+			// which means all other units will block movement
+			var options = new PathFindingOptions(
+				canPassThroughAllies: true,
+				enemiesBlockMovement: true,
+				movingUnitFaction: null,  // TODO: add faction to Unit when implemented
+				movingUnitId: unit.id,
+				canCrossLowWalls: false,  // TODO: could be unit-specific
+				canCrossHighWalls: false,
+				ignoreTerrainWalkability: false
+			);
+
+			// Calculate reachable area (this is where Dijkstra runs)
+			// maxMovementPoints is passed separately from options
+			var reachableArea = pathfinding.GetReachableArea(
+				unit.position,
+				unit.stats.moveRange * unit.stats.actionPoints,
+				options);
+
+			// Cache the result for path queries during hover
+			ctx.CachedReachableArea = reachableArea;
+
+			// Populate validTargetCells with stoppable cells only
+			ctx.validTargetCells.Clear();
+			ctx.validTargetCells.AddRange(reachableArea.GetStoppableCellsList());
+
+			this.Log($"Calculated reachable area: {reachableArea.StoppableCount} stoppable cells, " +
+			         $"{reachableArea.ReachableCount} total reachable");
+		}
+
+		private PathResult GetPathFromCache(Vector2Int target)
+		{
+			var cachedArea = Context.CachedReachableArea;
+
+			if (cachedArea != null) return cachedArea.GetPathTo(target);
+
+			this.LogWarning("No cached reachable area, cannot get path");
+			return PathResult.Failure();
+		}
 
 		private void CancelAndReturn()
 		{
@@ -145,16 +204,6 @@ namespace Systems.Interaction.States
 
 			// Transition to executing state
 			Context.StateMachine.ChangeState<ExecutingState>();
-		}
-
-		private IReadOnlyList<Vector2Int> CalculatePath(Vector2Int selectedUnitPosition, Vector2Int targetCell)
-		{
-			return new List<Vector2Int>(); // Placeholder implementation
-		}
-
-		private int CalculatePathCost(IReadOnlyList<Vector2Int> path)
-		{
-			return 1; // Placeholder implementation
 		}
 	}
 }

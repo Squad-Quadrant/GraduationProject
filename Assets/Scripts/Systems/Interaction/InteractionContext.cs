@@ -6,6 +6,7 @@ using Core.FSM;
 using Data.Runtime;
 using Systems.Interaction.States;
 using Systems.Map;
+using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace Systems.Interaction
 		public IMapService MapService { get; }
 		public ITurnService TurnService { get; }
 		public ICommandQueue CommandQueue { get; }
+
+		public IPathFindingService PathFindingService { get; }
 
 		#endregion
 
@@ -45,18 +48,22 @@ namespace Systems.Interaction
 
 		public int currentPathCost;
 
+		public ReachableAreaResult CachedReachableArea;
+
 		public InteractionContext(
 			IEventBus eventBus,
 			IUnitService unitService,
 			IMapService mapService,
 			ITurnService turnService,
-			ICommandQueue commandQueue)
+			ICommandQueue commandQueue,
+			IPathFindingService pathFindingService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
 			MapService = mapService;
 			TurnService = turnService;
 			CommandQueue = commandQueue;
+			PathFindingService = pathFindingService;
 		}
 
 		/// <summary>
