@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 
 namespace Systems.Map.SceneActor
@@ -9,6 +10,10 @@ namespace Systems.Map.SceneActor
         public SceneActorType Type => _type;
         protected uint _uid;
         public uint Uid => _uid;
+        
+        public MapCell BaseCell { get; set; }
+
+        public List<MapCell> ExtraCells { get; set; } = new();
         
         public Tile Tile { get; set; } 
         

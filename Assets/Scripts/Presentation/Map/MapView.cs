@@ -15,6 +15,8 @@ namespace Presentation.Map
 		[SerializeField] private Tilemap GroundTilemap;
         [SerializeField] private Tilemap LeftWallTilemap;
         [SerializeField] private Tilemap RightTilemap;
+        [SerializeField] private Tilemap SceneActorTilemap;
+        
         private IEventBus _eventBus;
         
 #if UNITY_EDITOR
@@ -71,6 +73,10 @@ namespace Presentation.Map
             {
 				if (cell.Tile)
                     GroundTilemap.SetTile((Vector3Int)cell.Position, cell.Tile);
+                if (cell.SceneActor != null && cell.SceneActor.BaseCell == cell)
+                {
+                    SceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
+                }
 			}
 
             foreach (var wall in mapData.Walls.Values)
