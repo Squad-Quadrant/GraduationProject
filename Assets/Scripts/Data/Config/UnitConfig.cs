@@ -51,7 +51,8 @@ namespace Data.Config
 			maxHp = 100,
 			speed = 10,
 			moveRange = 2,
-			actionPoints = 2
+			actionPoints = 2,
+			faction = "Neutral"
 		};
 
 		#endregion
@@ -64,20 +65,17 @@ namespace Data.Config
 		{
 			bool isValid = true;
 
-			// Check config ID
 			if (string.IsNullOrEmpty(configId))
 			{
 				Debug.LogError($"[UnitConfig] [{unitName}] Config ID cannot be empty!");
 				isValid = false;
 			}
 
-			// Check prefab
 			if (!prefab)
 			{
 				Debug.LogWarning($"[UnitConfig] [{unitName}] No prefab assigned!");
 			}
 
-			// Check icon
 			if (!icon)
 			{
 				Debug.LogWarning($"[UnitConfig] [{unitName}] No icon assigned!");

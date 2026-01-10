@@ -136,8 +136,6 @@ namespace Systems.Interaction.States
 			}
 
 			// Build pathfinding options based on unit capabilities
-			// NOTE: Unit.faction is not yet implemented, using null for now
-			// which means all other units will block movement
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
 				enemiesBlockMovement: true,
@@ -148,11 +146,11 @@ namespace Systems.Interaction.States
 				ignoreTerrainWalkability: false
 			);
 
-			// Calculate reachable area (this is where Dijkstra runs)
-			// maxMovementPoints is passed separately from options
+			var maxMovementPoints = unit.stats.moveRange * unit.stats.actionPoints;
+
 			var reachableArea = pathfinding.GetReachableArea(
 				unit.position,
-				unit.stats.moveRange * unit.stats.actionPoints,
+				maxMovementPoints,
 				options);
 
 			// Cache the result for path queries during hover

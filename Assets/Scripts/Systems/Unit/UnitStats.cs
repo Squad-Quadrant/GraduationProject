@@ -28,13 +28,19 @@ namespace Systems.Unit
 		[InfoBox("单位每回合可用的行动点数", InfoMessageType.None)]
 		public int actionPoints;
 
+		[Space]
+		[LabelText("阵营")]
+		public string faction;
+
 		public UnitStats Clone()
 		{
 			return new UnitStats
 			{
 				maxHp = maxHp,
 				speed = speed,
-				moveRange = moveRange
+				moveRange = moveRange,
+				actionPoints = actionPoints,
+				faction = faction
 			};
 		}
 	}
