@@ -42,10 +42,10 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 8, y: 0}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 9, y: 0}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 0, y: 1}
     cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
@@ -72,10 +72,10 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 8, y: 1}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 9, y: 1}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 0, y: 2}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
@@ -123,8 +123,8 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 3}
-    cell: {fileID: 0}
-    sceneActor: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
+    sceneActor: {fileID: 11400000, guid: c97e83f10e88fd347b9da763dcd56d0f, type: 2}
   - position: {x: 6, y: 3}
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
@@ -183,10 +183,10 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 5}
-    cell: {fileID: 0}
-    sceneActor: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
+    sceneActor: {fileID: 11400000, guid: 0c123a8f64fbdf84797ac3af4d7c8997, type: 2}
   - position: {x: 6, y: 5}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 7, y: 5}
     cell: {fileID: 0}
@@ -362,7 +362,7 @@ MonoBehaviour:
     wall: {fileID: 0}
   - position1: {x: 7, y: 0}
     position2: {x: 8, y: 0}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: c500d28f2572bfe419af303c11b50665, type: 2}
   - position1: {x: 7, y: 0}
     position2: {x: 7, y: 1}
     wall: {fileID: 0}
@@ -419,7 +419,7 @@ MonoBehaviour:
     wall: {fileID: 0}
   - position1: {x: 7, y: 1}
     position2: {x: 8, y: 1}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: 4bc7bd7cea6a3be44b5442806b5026ec, type: 2}
   - position1: {x: 7, y: 1}
     position2: {x: 7, y: 2}
     wall: {fileID: 0}
@@ -428,10 +428,10 @@ MonoBehaviour:
     wall: {fileID: 0}
   - position1: {x: 8, y: 1}
     position2: {x: 8, y: 2}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: c500d28f2572bfe419af303c11b50665, type: 2}
   - position1: {x: 9, y: 1}
     position2: {x: 9, y: 2}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: 4bc7bd7cea6a3be44b5442806b5026ec, type: 2}
   - position1: {x: 0, y: 2}
     position2: {x: 1, y: 2}
     wall: {fileID: 0}
