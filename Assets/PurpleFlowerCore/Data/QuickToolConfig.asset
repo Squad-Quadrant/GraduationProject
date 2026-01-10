@@ -17,7 +17,15 @@ MonoBehaviour:
     commandType: 0
     color: {r: 0.5610232, g: 0.16967781, b: 0.8773585, a: 1}
     lineBreak: 0
-    commandParam: Assets/Scenes/PurpleTest.unity
+    commandParam: Assets/Scenes/Dev/PurpleTest_Map.unity
+    command:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: "\u573A\u666F\u7269\u4F53\u914D\u7F6E"
+    commandType: 3
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 1
+    commandParam: Assets/Data/SceneActor/Box.asset
     command:
       m_PersistentCalls:
         m_Calls: []

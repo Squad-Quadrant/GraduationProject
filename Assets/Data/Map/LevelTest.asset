@@ -123,8 +123,8 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 3}
-    cell: {fileID: 0}
-    sceneActor: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
+    sceneActor: {fileID: 11400000, guid: c97e83f10e88fd347b9da763dcd56d0f, type: 2}
   - position: {x: 6, y: 3}
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
@@ -183,10 +183,10 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 5}
-    cell: {fileID: 0}
-    sceneActor: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
+    sceneActor: {fileID: 11400000, guid: 0c123a8f64fbdf84797ac3af4d7c8997, type: 2}
   - position: {x: 6, y: 5}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 7, y: 5}
     cell: {fileID: 0}

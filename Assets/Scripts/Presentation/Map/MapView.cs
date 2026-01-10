@@ -16,7 +16,10 @@ namespace Presentation.Map
         [SerializeField] private Tilemap LeftWallTilemap;
         [SerializeField] private Tilemap RightTilemap;
         private IEventBus _eventBus;
-
+        
+#if UNITY_EDITOR
+        public bool enableGenerate = true;
+#endif
         private void Awake()
         {
             _eventBus = RootContainer.Instance.Resolve<IEventBus>();
@@ -24,11 +27,17 @@ namespace Presentation.Map
 
         private void OnEnable()
         {
-            // _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+#if UNITY_EDITOR
+            if (enableGenerate)
+#endif
+            _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
         }
 
         private void OnDisable()
         {
+#if UNITY_EDITOR
+            if (enableGenerate)
+#endif
             _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
         }
 
