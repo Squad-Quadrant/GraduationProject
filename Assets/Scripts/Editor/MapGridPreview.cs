@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using Data.Config;
 using Data.Config.Map;
 using Systems.Map;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -75,6 +77,7 @@ namespace Editor
             // 绘制格子（使用槽位位置，但实际绘制区域向内缩进 gap/2）
             float inset = gap * 0.5f;
             float cellDrawSize = Mathf.Max(0f, slot - gap);
+            var actorOverlays = new List<(Rect rect, Color color)>();
 
             foreach (var cell in _config.cells)
             {
@@ -103,57 +106,39 @@ namespace Editor
                 // 绘制 SceneActor 的像素标识
                 if (cell.sceneActor != null)
                 {
-                    // 根据类型选择颜色
-                    Color actorColor = GetActorColor(cell.sceneActor.SceneActorType);
+                    Color actorColor = GetActorColor();
                     float frac = 0.3f; // 比例
                     float w = cellDrawSize * frac;
                     float h = cellDrawSize * frac;
 
-                    // switch (cell.sceneActor.Direction)
-                    // {
-                    //     case SceneActorDirection.East:
-                    //     {
-                    //         var r = new Rect(cellRect.xMax - w, cellRect.y, w, cellRect.height);
-                    //         EditorGUI.DrawRect(r, actorColor);
-                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                    //         break;
-                    //     }
-                    //     case SceneActorDirection.West:
-                    //     {
-                    //         var r = new Rect(cellRect.x, cellRect.y, w, cellRect.height);
-                    //         EditorGUI.DrawRect(r, actorColor);
-                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                    //         break;
-                    //     }
-                    //     case SceneActorDirection.North:
-                    //     {
-                    //         var r = new Rect(cellRect.x, cellRect.y, cellRect.width, h);
-                    //         EditorGUI.DrawRect(r, actorColor);
-                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                    //         break;
-                    //     }
-                    //     case SceneActorDirection.South:
-                    //     {
-                    //         var r = new Rect(cellRect.x, cellRect.yMax - h, cellRect.width, h);
-                    //         EditorGUI.DrawRect(r, actorColor);
-                    //         Handles.DrawSolidRectangleWithOutline(r, Color.clear, Color.black * 0.25f);
-                    //         break;
-                    //     }
-                    //     case SceneActorDirection.None:
-                    //     default:
-                    //     {
-                            // 纵向中心条带
-                            var vRect = new Rect(cellRect.x + (cellRect.width - w) * 0.5f, cellRect.y, w, cellRect.height);
-                            EditorGUI.DrawRect(vRect, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(vRect, Color.clear, Color.black * 0.25f);
+                    // 纵向中心条带（存入列表）
+                    var vRect = new Rect(cellRect.x + (cellRect.width - w) * 0.5f, cellRect.y, w, cellRect.height);
+                    actorOverlays.Add((vRect, actorColor));
+                    // 横向中心条带（存入列表）
+                    var hRect = new Rect(cellRect.x, cellRect.y + (cellRect.height - h) * 0.5f, cellRect.width, h);
+                    actorOverlays.Add((hRect, actorColor));
 
-                            // 横向中心条带
-                            var hRect = new Rect(cellRect.x, cellRect.y + (cellRect.height - h) * 0.5f, cellRect.width, h);
-                            EditorGUI.DrawRect(hRect, actorColor);
-                            Handles.DrawSolidRectangleWithOutline(hRect, Color.clear, Color.black * 0.25f);
-                            break;
-                        // }
-                    // }
+                    // ExtraGrid: 只计算并加入列表，不立即绘制
+                    foreach (var extra in cell.sceneActor.ExtraGrid)
+                    {
+                        int extraX = cell.position.x + extra.x;
+                        int extraY = cell.position.y + extra.y;
+                        if (extraX < 0 || extraX >= size.x || extraY < 0 || extraY >= size.y)
+                            continue;
+
+                        var extraSlotX = gridRect.x + extraX * slot;
+                        var extraSlotY = gridRect.y + (size.y - 1 - extraY) * slot;
+                        var extraCellRect = new Rect(
+                            extraSlotX + inset,
+                            extraSlotY + inset,
+                            cellDrawSize,
+                            cellDrawSize );
+
+                        var evRect = new Rect(extraCellRect.x + (extraCellRect.width - w) * 0.5f, extraCellRect.y, w, extraCellRect.height);
+                        actorOverlays.Add((evRect, actorColor));
+                        var ehRect = new Rect(extraCellRect.x, extraCellRect.y + (extraCellRect.height - h) * 0.5f, extraCellRect.width, h);
+                        actorOverlays.Add((ehRect, actorColor));
+                    }
                 }
 
                 if (e.type == EventType.MouseDown && e.button == 0 && cellRect.Contains(e.mousePosition))
@@ -226,6 +211,12 @@ namespace Editor
                     }
                 }
             }
+            
+            foreach (var (rect, color) in actorOverlays)
+            {
+                EditorGUI.DrawRect(rect, color);
+                Handles.DrawSolidRectangleWithOutline(rect, Color.clear, Color.black * 0.25f);
+            }
 
             EditorGUILayout.EndScrollView();
         }
@@ -252,14 +243,9 @@ namespace Editor
             };
         }
 
-        private Color GetActorColor(SceneActorType type)
+        private Color GetActorColor()
         {
-            return type switch
-            {
-                SceneActorType.Table => new Color(0.8f, 0.6f, 0.3f, 0.95f),
-                SceneActorType.Obstacle => new Color(0.1f, 0.1f, 0.1f, 0.95f),
-                _ => new Color(0f, 0f, 0f, 0.95f)
-            };
+            return new Color(1f, 1f, 0f);
         }
     }
 }

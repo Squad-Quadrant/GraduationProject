@@ -2,6 +2,7 @@
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events.Map;
+using Systems.Map.SceneActor;
 using UnityEngine;
 
 namespace Systems.Map
@@ -37,6 +38,22 @@ namespace Systems.Map
                 if (wall == null) continue;
                 wall.WallType = wallConfig.WallType;
                 wall.Tile = wallConfig.WallKey.IsLeft() ? wallConfig.wall?.leftTile : wallConfig.wall?.rightTile;
+            }
+            
+            var SceneActorFactory = new SceneActorFactory();
+            // 场景物体的初始化逻辑需要滞后于地图单元格的初始化
+            foreach (var cellConfig in config.cells)
+            {
+                var cell = Data.GetCell(cellConfig.position);
+                if (cell == null) continue;
+                
+                if (!cellConfig.sceneActor) continue;
+                
+                cell.SceneActor = SceneActorFactory.CreateSceneActor(cellConfig.sceneActor, Data, cell);
+                foreach (var extraCell in cell.SceneActor.ExtraCells)
+                {
+                    extraCell.SceneActor = cell.SceneActor;
+                }
             }
             
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");

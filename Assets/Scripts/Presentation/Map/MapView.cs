@@ -15,8 +15,13 @@ namespace Presentation.Map
 		[SerializeField] private Tilemap GroundTilemap;
         [SerializeField] private Tilemap LeftWallTilemap;
         [SerializeField] private Tilemap RightTilemap;
+        [SerializeField] private Tilemap SceneActorTilemap;
+        
         private IEventBus _eventBus;
-
+        
+#if UNITY_EDITOR
+        public bool enableGenerate = true;
+#endif
         private void Awake()
         {
             _eventBus = RootContainer.Instance.Resolve<IEventBus>();
@@ -24,11 +29,17 @@ namespace Presentation.Map
 
         private void OnEnable()
         {
-            // _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+#if UNITY_EDITOR
+            if (enableGenerate)
+#endif
+            _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
         }
 
         private void OnDisable()
         {
+#if UNITY_EDITOR
+            if (enableGenerate)
+#endif
             _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
         }
 
@@ -62,6 +73,10 @@ namespace Presentation.Map
             {
 				if (cell.Tile)
                     GroundTilemap.SetTile((Vector3Int)cell.Position, cell.Tile);
+                if (cell.SceneActor != null && cell.SceneActor.BaseCell == cell)
+                {
+                    SceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
+                }
 			}
 
             foreach (var wall in mapData.Walls.Values)

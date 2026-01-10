@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc7b3ddaebc6431ea79db67ef2f6e246, type: 3}
-  m_Name: Table_North
+  m_Name: WeaponCabinet
   m_EditorClassIdentifier: 
-  ID: 0
-  SceneActorType: 0
-  Direction: 1
+  SceneActorType: 3
+  ExtraGrid: []
+  tiles:
+  - {fileID: 11400000, guid: 17ef4f4523675644da26b4031c8ebc35, type: 2}
+  - {fileID: 11400000, guid: 09e094628392f1f4e818e10ce712b5f7, type: 2}
