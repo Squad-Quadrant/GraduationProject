@@ -32,7 +32,9 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			// calculate movement preview path here
+			CalculateReachableArea(ctx);
+
+			this.LogDebug($"Valid target cells: {string.Join(", ", ctx.validTargetCells)}");
 
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
@@ -89,36 +91,36 @@ namespace Systems.Interaction.States
 
 		private void OnPointerHover(PointerHoverEvent e)
 		{
-			if (!e.CellPosition.HasValue)
-			{
-				// Pointer outside map - hide path
-				Publish(Context, PathPreviewEvent.Hide());
-				Context.currentPath.Clear();
-				return;
-			}
-
-			var targetCell = e.CellPosition.Value;
-
-			// Calculate path to hovered cell
-			var pathResult = GetPathFromCache(targetCell);
-			var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
-
-			// Update context
-			Context.currentPath.Clear();
-			if (pathResult.Found)
-			{
-				Context.currentPath.AddRange(pathResult.Path);
-				Context.currentPathCost = pathResult.TotalCost;
-			}
-			else
-				Context.currentPathCost = 0;
-
-			Publish(Context, new PathPreviewEvent(
-				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
-				pathResult.TotalCost,
-				isValid,
-				Context.selectedUnit.id
-			));
+			// if (!e.CellPosition.HasValue)
+			// {
+			// 	// Pointer outside map - hide path
+			// 	Publish(Context, PathPreviewEvent.Hide());
+			// 	Context.currentPath.Clear();
+			// 	return;
+			// }
+			//
+			// var targetCell = e.CellPosition.Value;
+			//
+			// // Calculate path to hovered cell
+			// var pathResult = GetPathFromCache(targetCell);
+			// var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
+			//
+			// // Update context
+			// Context.currentPath.Clear();
+			// if (pathResult.Found)
+			// {
+			// 	Context.currentPath.AddRange(pathResult.Path);
+			// 	Context.currentPathCost = pathResult.TotalCost;
+			// }
+			// else
+			// 	Context.currentPathCost = 0;
+			//
+			// Publish(Context, new PathPreviewEvent(
+			// 	pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
+			// 	pathResult.TotalCost,
+			// 	isValid,
+			// 	Context.selectedUnit.id
+			// ));
 		}
 
 		private void OnActionCancelled(ActionCancelledEvent e) => CancelAndReturn();
@@ -139,7 +141,7 @@ namespace Systems.Interaction.States
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
 				enemiesBlockMovement: true,
-				movingUnitFaction: null,  // TODO: add faction to Unit when implemented
+				movingUnitFaction: unit.stats.faction,
 				movingUnitId: unit.id,
 				canCrossLowWalls: false,  // TODO: could be unit-specific
 				canCrossHighWalls: false,

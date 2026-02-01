@@ -40,10 +40,6 @@ namespace Presentation.Bootstrap
 
 		private LevelContainer _levelContainer;
 		private IEventBus _eventBus;
-		private IMapService _mapService;
-		private IUnitService _unitService;
-		private ITurnService _turnService;
-		private IGameServer _gameServer;
 
 		private void Start()
 		{
@@ -71,8 +67,8 @@ namespace Presentation.Bootstrap
 			this.Log("Unloading level...");
 
 			// Clear all services
-			_turnService?.Clear();
-			_unitService?.Clear();
+			_levelContainer.Resolve<ITurnService>()?.Clear();
+			_levelContainer.Resolve<IUnitService>()?.Clear();
 
 			// Destroy level container
 			if (_levelContainer)
@@ -102,7 +98,7 @@ namespace Presentation.Bootstrap
 			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
 			this.Log("====================================", false);
 
-			_gameServer.StartGame();
+			_levelContainer.Resolve<IGameServer>().StartGame();
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
 		}
 
@@ -151,11 +147,6 @@ namespace Presentation.Bootstrap
 				return new PathFindingService(mapService, traversalRule);
 			});
 
-			_mapService = _levelContainer.Resolve<IMapService>();
-			_unitService = _levelContainer.Resolve<IUnitService>();
-			_turnService = _levelContainer.Resolve<ITurnService>();
-			_gameServer = _levelContainer.Resolve<IGameServer>();
-
 			this.Log("✓ Services registered and resolved.");
 			yield return null;
 		}
@@ -171,7 +162,7 @@ namespace Presentation.Bootstrap
 			}
 
 			// Load map from config
-			_mapService.LoadFromConfig(levelConfig.mapConfig);
+			_levelContainer.Resolve<IMapService>().LoadFromConfig(levelConfig.mapConfig);
             
 			this.Log($"✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 			yield return null;
@@ -180,6 +171,9 @@ namespace Presentation.Bootstrap
 		private IEnumerator CreateUnits()
 		{
 			this.Log("Spawning units...");
+
+			var mapService = _levelContainer.Resolve<IMapService>();
+			var unitService = _levelContainer.Resolve<IUnitService>();
 
 			if (levelConfig.unitPlacements.Count == 0)
 			{
@@ -199,21 +193,21 @@ namespace Presentation.Bootstrap
 					}
 
 					// Check if position is valid
-					if (!_mapService.Data.IsInBounds(placement.startPosition))
+					if (!mapService.Data.IsInBounds(placement.startPosition))
 					{
 						this.LogError($"Unit '{placement.unitId}' spawn position {placement.startPosition} is out of bounds!");
 						continue;
 					}
 
 					// Create unit through UnitService
-					var unit = _unitService.CreateUnit(
+					var unit = unitService.CreateUnit(
 						placement.unitId,
 						placement.unitConfig,
 						placement.startPosition
 					);
 
 					// Occupy cell on map
-					_mapService.OccupyCell(placement.startPosition, placement.unitId);
+					mapService.OccupyCell(placement.startPosition, placement.unitId);
 
 					this.Log($"✓ Spawned {unit.name} at {placement.startPosition}");
 				}
@@ -274,9 +268,9 @@ namespace Presentation.Bootstrap
 
 			interactionController.Initialize(
 				_eventBus,
-				_unitService,
-				_mapService,
-				_turnService,
+				_levelContainer.Resolve<IUnitService>(),
+				_levelContainer.Resolve<IMapService>(),
+				_levelContainer.Resolve<ITurnService>(),
 				commandQueue,
 				pathfinding
 			);
@@ -301,8 +295,8 @@ namespace Presentation.Bootstrap
 			inputService.Initialize(
 				_eventBus,
 				_levelContainer.Resolve<ICoordinateConverter>(),
-				_mapService,
-				_unitService
+				_levelContainer.Resolve<IMapService>(),
+				_levelContainer.Resolve<IUnitService>()
 			);
 			this.Log("✓ InputService initialized.");
 			yield return null;

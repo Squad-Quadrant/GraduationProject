@@ -1,6 +1,8 @@
 ﻿using System;
+using Core.Events;
 using Core.Log;
 using Data.Config;
+using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -46,6 +48,9 @@ namespace Presentation.UI.Core
 
 		private CanvasGroup _canvasGroup;
 		public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
+
+		private IEventBus _eventBus;
+		protected IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
 
 		internal void Initialize(UIPanelConfig config)
 		{

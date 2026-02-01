@@ -1,9 +1,8 @@
-﻿using System;
-using Core.Events;
+﻿using Core.Events;
+using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
-using Systems.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,6 +15,8 @@ namespace Presentation.Map
         [SerializeField] private Tilemap LeftWallTilemap;
         [SerializeField] private Tilemap RightTilemap;
         [SerializeField] private Tilemap SceneActorTilemap;
+        [SerializeField] private Tilemap HighlightTilemap;
+        [SerializeField] private Tile HighlightTile; // just a simple highlight tile for demonstration
         
         private IEventBus _eventBus;
         
@@ -33,6 +34,7 @@ namespace Presentation.Map
             if (enableGenerate)
 #endif
             _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+            _eventBus.Subscribe<RangeDisplayEvent>(DisplayHighlight);
         }
 
         private void OnDisable()
@@ -41,13 +43,8 @@ namespace Presentation.Map
             if (enableGenerate)
 #endif
             _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
+            _eventBus.Unsubscribe<RangeDisplayEvent>(DisplayHighlight);
         }
-
-		// todo: implement highlighting and indicators
-		public void HighlightCells(Vector2Int[] positions, EHighlightType type)
-		{
-            
-		}
 
 		public void ClearHighlights()
 		{
@@ -94,6 +91,18 @@ namespace Presentation.Map
                     }
                 }
             }
+		}
+
+		private void DisplayHighlight(RangeDisplayEvent e)
+		{
+			if (e.Cells.Count == 0)
+			{
+				HighlightTilemap.ClearAllTiles();
+				return;
+			}
+
+			foreach (var cellPos in e.Cells)
+				HighlightTilemap.SetTile((Vector3Int)cellPos, HighlightTile);
 		}
 	}
 }

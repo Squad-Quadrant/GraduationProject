@@ -76,3 +76,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.PathFinding.PathFindingService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.MovementPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
