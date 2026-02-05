@@ -20,5 +20,6 @@ MonoBehaviour:
   stats:
     maxHp: 100
     speed: 10
-    moveRange: 2
-    actionPoints: 2
+    moveRange: 1
+    actionPoints: 3
+    faction: Neutral

@@ -21,7 +21,7 @@ MonoBehaviour:
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 1, y: 0}
-    cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 2, y: 0}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
@@ -30,10 +30,10 @@ MonoBehaviour:
     cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 0}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 0}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 6, y: 0}
     cell: {fileID: 0}
@@ -60,10 +60,10 @@ MonoBehaviour:
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 1}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 1}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 6, y: 1}
     cell: {fileID: 0}
@@ -87,13 +87,13 @@ MonoBehaviour:
     cell: {fileID: 11400000, guid: 26225b421e4216b46b5a14e4a750a8eb, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 3, y: 2}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 2}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 2}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 6, y: 2}
     cell: {fileID: 0}
@@ -108,19 +108,19 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 0, y: 3}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 1, y: 3}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 2, y: 3}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 3, y: 3}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 3}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 3}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
@@ -138,22 +138,22 @@ MonoBehaviour:
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
   - position: {x: 0, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 1, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 2, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 3, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 4, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 5, y: 4}
-    cell: {fileID: 0}
+    cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
   - position: {x: 6, y: 4}
     cell: {fileID: 0}
@@ -320,16 +320,16 @@ MonoBehaviour:
   walls:
   - position1: {x: 0, y: 0}
     position2: {x: 1, y: 0}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: 4bc7bd7cea6a3be44b5442806b5026ec, type: 2}
   - position1: {x: 0, y: 0}
     position2: {x: 0, y: 1}
     wall: {fileID: 0}
   - position1: {x: 1, y: 0}
     position2: {x: 2, y: 0}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: 4bc7bd7cea6a3be44b5442806b5026ec, type: 2}
   - position1: {x: 1, y: 0}
     position2: {x: 1, y: 1}
-    wall: {fileID: 0}
+    wall: {fileID: 11400000, guid: 4bc7bd7cea6a3be44b5442806b5026ec, type: 2}
   - position1: {x: 2, y: 0}
     position2: {x: 3, y: 0}
     wall: {fileID: 0}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cbd17dc887f7a4c9a2103da13bb5ae, type: 3}
   m_Name: LogSettings
   m_EditorClassIdentifier: 
-  globalLogLevel: 1
+  globalLogLevel: 0
   enableAllLogs: 1
   rules:
   - typeName: Core.Events.EventBus
@@ -36,7 +36,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIFactory
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Core.UIManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UINavigator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenuPanel
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -48,7 +60,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.MovementPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.UnitSelectedState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.PathFinding.PathFindingService
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -57,30 +81,6 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.Unit.UnitService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.ActionMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UIFactory
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UINavigator
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.UnitSelectedState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.PathFinding.PathFindingService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.MovementPreviewState
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1

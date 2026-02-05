@@ -18,7 +18,7 @@ namespace Systems.PathFinding.TraversalRule
 
 			var targetCell = mapData.GetCell(to);
 			if (targetCell == null ||
-			    !options.IgnoreTerrainWalkability && !targetCell.IsWalkable ||
+			    (!options.IgnoreTerrainWalkability && !targetCell.IsWalkable) ||
 			    !CanCrossWall(from, to, mapData, options))
 				return TraversalCheckResult.Blocked;
 

@@ -1,6 +1,7 @@
 ﻿using Core.Events;
 using Core.Log;
 using Data.Config;
+using Data.Config.Map;
 using Data.Runtime.Events.Map;
 using Systems.Map.SceneActor;
 using UnityEngine;
