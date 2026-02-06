@@ -24,10 +24,6 @@ namespace Presentation.UI.Core
 		[Tooltip("The overlay canvas that persists across scenes (DDOL).")]
 		private Canvas overlayCanvas;
 
-		[TitleGroup("Configuration")]
-		[SerializeField, Required]
-		private InputSystemUIInputModule inputModule;
-
 		private UINavigator _navigator;
 		private UIFactory _factory;
 		private IEventBus _eventBus;
@@ -38,7 +34,6 @@ namespace Presentation.UI.Core
 
 		private readonly List<UIPanel> _independentPanels = new();
 
-		public UINavigator Navigator => _navigator;
 		public bool HasOpenPanels => _navigator?.Count > 0;
 		public UIPanel TopPanel => _navigator?.TopPanel;
 
@@ -50,15 +45,13 @@ namespace Presentation.UI.Core
 			{
 				return layer switch
 				{
-					EUICanvasLayer.Overlay => overlayCanvas?.transform,
-					EUICanvasLayer.Screen => _screenCanvas?.transform,
-					EUICanvasLayer.World => _worldCanvas?.transform,
+					EUICanvasLayer.Overlay => overlayCanvas ? overlayCanvas.transform : null,
+					EUICanvasLayer.Screen  => _screenCanvas ? _screenCanvas.transform : null,
+					EUICanvasLayer.World   => _worldCanvas  ? _worldCanvas.transform  : null,
 					_ => null
 				};
 			});
 
-			// Subscribe
-			// if (inputModule) inputModule.cancel.action.performed += OnCancelInput;
 			SceneManager.sceneUnloaded += OnSceneUnloaded;
 
 			_factory.PreloadPanels();
@@ -68,25 +61,14 @@ namespace Presentation.UI.Core
 
 		private void OnDestroy()
 		{
-			// if (inputModule) inputModule.cancel.action.performed -= OnCancelInput;
 			SceneManager.sceneUnloaded -= OnSceneUnloaded;
-
 			_navigator?.Clear();
 			_factory?.ClearCache();
 			ClearIndependentPanels();
-
 			this.Log("Destroyed");
 		}
 
 		#region Callbacks
-
-		private void OnCancelInput(InputAction.CallbackContext ctx)
-		{
-			if (!settings.EnableEscNavigation) return;
-
-			if (!_navigator.HandleBack(out var panelToClose)) return;
-			if (panelToClose) Close(panelToClose);
-		}
 
 		private void OnSceneUnloaded(Scene scene)
 		{
@@ -124,32 +106,6 @@ namespace Presentation.UI.Core
 			}
 
 			var panel = _factory.Acquire<TPanel, TData>(data);
-			return OpenInternal(panel, config) as TPanel;
-		}
-
-		public T OpenNew<T>() where T : UIPanel
-		{
-			var config = settings.GetConfig<T>();
-			if (!config)
-			{
-				this.LogError($"No config for: {typeof(T).Name}");
-				return null;
-			}
-
-			var panel = _factory.Create<T>();
-			return OpenInternal(panel, config) as T;
-		}
-
-		public TPanel OpenNew<TPanel, TData>(TData data) where TPanel : UIPanel, IInitializable<TData>
-		{
-			var config = settings.GetConfig<TPanel>();
-			if (!config)
-			{
-				this.LogError($"No config for: {typeof(TPanel).Name}");
-				return null;
-			}
-
-			var panel = _factory.Create<TPanel, TData>(data);
 			return OpenInternal(panel, config) as TPanel;
 		}
 
@@ -261,8 +217,7 @@ namespace Presentation.UI.Core
 		public void Close<T>() where T : UIPanel
 		{
 			var panel = GetPanel<T>();
-			if (panel)
-				Close(panel);
+			if (panel) Close(panel);
 		}
 
 		private void ClearIndependentPanels()

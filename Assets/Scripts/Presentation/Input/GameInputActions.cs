@@ -57,7 +57,7 @@ namespace Presentation.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Cancel"",
+                    ""name"": ""ESC"",
                     ""type"": ""Button"",
                     ""id"": ""72c3db6f-2d39-43f6-85fc-c6e7d80eba5b"",
                     ""expectedControlType"": ""Button"",
@@ -107,7 +107,7 @@ namespace Presentation.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Cancel"",
+                    ""action"": ""ESC"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -654,7 +654,7 @@ namespace Presentation.Input
             m_Gameplay_PrimaryClick = m_Gameplay.FindAction("PrimaryClick", throwIfNotFound: true);
             m_Gameplay_SecondaryClick = m_Gameplay.FindAction("SecondaryClick", throwIfNotFound: true);
             m_Gameplay_PointerPosition = m_Gameplay.FindAction("PointerPosition", throwIfNotFound: true);
-            m_Gameplay_Cancel = m_Gameplay.FindAction("Cancel", throwIfNotFound: true);
+            m_Gameplay_ESC = m_Gameplay.FindAction("ESC", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -731,7 +731,7 @@ namespace Presentation.Input
         private readonly InputAction m_Gameplay_PrimaryClick;
         private readonly InputAction m_Gameplay_SecondaryClick;
         private readonly InputAction m_Gameplay_PointerPosition;
-        private readonly InputAction m_Gameplay_Cancel;
+        private readonly InputAction m_Gameplay_ESC;
         public struct GameplayActions
         {
             private @GameInputActions m_Wrapper;
@@ -739,7 +739,7 @@ namespace Presentation.Input
             public InputAction @PrimaryClick => m_Wrapper.m_Gameplay_PrimaryClick;
             public InputAction @SecondaryClick => m_Wrapper.m_Gameplay_SecondaryClick;
             public InputAction @PointerPosition => m_Wrapper.m_Gameplay_PointerPosition;
-            public InputAction @Cancel => m_Wrapper.m_Gameplay_Cancel;
+            public InputAction @ESC => m_Wrapper.m_Gameplay_ESC;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -758,9 +758,9 @@ namespace Presentation.Input
                 @PointerPosition.started += instance.OnPointerPosition;
                 @PointerPosition.performed += instance.OnPointerPosition;
                 @PointerPosition.canceled += instance.OnPointerPosition;
-                @Cancel.started += instance.OnCancel;
-                @Cancel.performed += instance.OnCancel;
-                @Cancel.canceled += instance.OnCancel;
+                @ESC.started += instance.OnESC;
+                @ESC.performed += instance.OnESC;
+                @ESC.canceled += instance.OnESC;
             }
 
             private void UnregisterCallbacks(IGameplayActions instance)
@@ -774,9 +774,9 @@ namespace Presentation.Input
                 @PointerPosition.started -= instance.OnPointerPosition;
                 @PointerPosition.performed -= instance.OnPointerPosition;
                 @PointerPosition.canceled -= instance.OnPointerPosition;
-                @Cancel.started -= instance.OnCancel;
-                @Cancel.performed -= instance.OnCancel;
-                @Cancel.canceled -= instance.OnCancel;
+                @ESC.started -= instance.OnESC;
+                @ESC.performed -= instance.OnESC;
+                @ESC.canceled -= instance.OnESC;
             }
 
             public void RemoveCallbacks(IGameplayActions instance)
@@ -926,7 +926,7 @@ namespace Presentation.Input
             void OnPrimaryClick(InputAction.CallbackContext context);
             void OnSecondaryClick(InputAction.CallbackContext context);
             void OnPointerPosition(InputAction.CallbackContext context);
-            void OnCancel(InputAction.CallbackContext context);
+            void OnESC(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

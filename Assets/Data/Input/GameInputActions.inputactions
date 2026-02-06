@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Cancel",
+                    "name": "ESC",
                     "type": "Button",
                     "id": "72c3db6f-2d39-43f6-85fc-c6e7d80eba5b",
                     "expectedControlType": "Button",
@@ -83,7 +83,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "Cancel",
+                    "action": "ESC",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

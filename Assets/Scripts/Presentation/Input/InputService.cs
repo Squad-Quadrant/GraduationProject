@@ -55,7 +55,7 @@ namespace Presentation.Input
 			// Subscribe to input callbacks
 			_inputActions.Gameplay.PrimaryClick.performed += OnPrimaryClick;
 			_inputActions.Gameplay.SecondaryClick.performed += OnSecondaryClick;
-			_inputActions.Gameplay.Cancel.performed += OnCancel;
+			_inputActions.Gameplay.ESC.performed += OnESC;
 
 			SetEnabled(true);
 		}
@@ -66,7 +66,7 @@ namespace Presentation.Input
 
 			_inputActions.Gameplay.PrimaryClick.performed -= OnPrimaryClick;
 			_inputActions.Gameplay.SecondaryClick.performed -= OnSecondaryClick;
-			_inputActions.Gameplay.Cancel.performed -= OnCancel;
+			_inputActions.Gameplay.ESC.performed -= OnESC;
 
 			_inputActions.Dispose();
 			_inputActions = null;
@@ -107,7 +107,7 @@ namespace Presentation.Input
 			ProcessClick(screenPos, 1);
 		}
 
-		private void OnCancel(InputAction.CallbackContext ctx)
+		private void OnESC(InputAction.CallbackContext ctx)
 		{
 			if (!_isEnabled) return;
 

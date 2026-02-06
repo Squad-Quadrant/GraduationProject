@@ -42,9 +42,7 @@ namespace Presentation.UI.Core
 
 		public bool ManagedByStack => _config?.ManagedByStack ?? true;
 		public bool HideWhenCovered => _config?.HideWhenCovered ?? false;
-		public bool CloseOnBack => _config?.CloseOnBack ?? true;
 		public bool BlockInput => _config?.BlockInput ?? true;
-		public bool CacheOnClose => _config?.CacheOnClose ?? false;
 
 		private CanvasGroup _canvasGroup;
 		public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
@@ -70,8 +68,6 @@ namespace Presentation.UI.Core
 			_animation?.CompleteImmediately();
 			this.Log($"Destroyed: {PanelId}");
 		}
-
-		public virtual bool OnBackPressed() => false;
 
 		protected virtual void OnInitialize() { }
 		protected virtual void OnOpen() { }

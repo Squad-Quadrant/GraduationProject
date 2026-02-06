@@ -16,13 +16,6 @@ namespace Data.Config
 		[Tooltip("All panel configurations in the game.")]
 		private List<UIPanelConfig> panelConfigs = new();
 
-		[TitleGroup("Global Settings")]
-		[SerializeField]
-		[LabelText("Enable ESC Navigation")]
-		[Tooltip("If true, ESC key triggers back navigation in the UI stack.")]
-		private bool enableEscNavigation = true;
-
-		public bool EnableEscNavigation => enableEscNavigation;
 		public IReadOnlyList<UIPanelConfig> PanelConfigs => panelConfigs;
 
 		// Runtime lookup dictionary, built on first access

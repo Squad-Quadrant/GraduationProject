@@ -13,6 +13,8 @@ namespace Presentation.UI.Core
 		private readonly Func<EUICanvasLayer, Transform> _getCanvasRoot;
 		private readonly Dictionary<string, UIPanel> _cache = new();
 
+		public int CachedCount => _cache.Count;
+
 		public UIFactory(UISettings settings, Func<EUICanvasLayer, Transform> getCanvasRoot)
 		{
 			_settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -43,56 +45,13 @@ namespace Presentation.UI.Core
 				return cached;
 			}
 			_cache.Remove(config.PanelId);
-			return InstantiatePanelInstance(config, config.CacheOnClose);
+			return InstantiatePanel(config);
 		}
 
 		public TPanel Acquire<TPanel, TData>(TData data) where TPanel : UIPanel, IInitializable<TData>
 		{
 			var panel = Acquire<TPanel>();
 			panel?.Initialize(data);
-			return panel;
-		}
-
-		public T Create<T>() where T : UIPanel
-		{
-			var config = _settings.GetConfig<T>();
-			if (config)
-				return InstantiatePanelInstance(config, false) as T;
-
-			this.LogError($"No config for: {typeof(T).Name}");
-			return null;
-		}
-
-		public TPanel Create<TPanel, TData>(TData data) where TPanel : UIPanel, IInitializable<TData>
-		{
-			var panel = Create<TPanel>();
-			panel?.Initialize(data);
-			return panel;
-		}
-
-		private UIPanel InstantiatePanelInstance(UIPanelConfig config, bool addToCache)
-		{
-			if (!config.Prefab)
-			{
-				this.LogError($"Prefab is null: {config.PanelId}");
-				return null;
-			}
-
-			var canvasRoot = _getCanvasRoot(config.Layer);
-			if (!canvasRoot)
-			{
-				this.LogError($"No canvas for {config.Layer}: {config.PanelId}");
-				return null;
-			}
-
-			var panel = UnityEngine.Object.Instantiate(config.Prefab, canvasRoot);
-			panel.name = config.PanelId;
-			panel.Initialize(config);
-
-			if (addToCache)
-				_cache[config.PanelId] = panel;
-
-			this.Log($"Created: {config.PanelId} (cached: {addToCache})");
 			return panel;
 		}
 
@@ -141,9 +100,10 @@ namespace Presentation.UI.Core
 			{
 				if (_cache.ContainsKey(config.PanelId)) continue;
 
-				var panel = InstantiatePanelInstance(config, addToCache: true);
-
+				var panel = InstantiatePanel(config);
 				if (!panel) continue;
+
+				_cache[config.PanelId] = panel;
 				panel.gameObject.SetActive(false);
 				count++;
 			}
@@ -151,6 +111,27 @@ namespace Presentation.UI.Core
 				this.Log($"Preloaded {count} panel(s)");
 		}
 
-		public int CachedCount => _cache.Count;
+		private UIPanel InstantiatePanel(UIPanelConfig config)
+		{
+			if (!config.Prefab)
+			{
+				this.LogError($"Prefab is null: {config.PanelId}");
+				return null;
+			}
+
+			var canvasRoot = _getCanvasRoot(config.Layer);
+			if (!canvasRoot)
+			{
+				this.LogError($"No canvas for {config.Layer}: {config.PanelId}");
+				return null;
+			}
+
+			var panel = UnityEngine.Object.Instantiate(config.Prefab, canvasRoot);
+			panel.name = config.PanelId;
+			panel.Initialize(config);
+
+			this.Log($"Created: {config.PanelId}");
+			return panel;
+		}
 	}
 }

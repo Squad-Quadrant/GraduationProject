@@ -41,33 +41,6 @@ namespace Presentation.UI.Core
 			return removed;
 		}
 
-		public bool HandleBack(out UIPanel panelToClose)
-		{
-			panelToClose = null;
-			CleanupDestroyedPanels();
-
-			if (_stack.Count == 0) return false;
-
-			var top = _stack[^1];
-			if (!top) return false;
-
-			// Let panel consume input first
-			if (top.OnBackPressed())
-			{
-				this.Log($"Back consumed by: {top.PanelId}");
-				return true;
-			}
-
-			// Check if panel allows closing via back
-			if (!top.CloseOnBack)
-			{
-				this.Log($"Back blocked: {top.PanelId}");
-				return true;
-			}
-			panelToClose = top;
-			return true;
-		}
-
 		public bool Contains(UIPanel panel) => panel && _stack.Contains(panel);
 
 		public T Find<T>() where T : UIPanel
