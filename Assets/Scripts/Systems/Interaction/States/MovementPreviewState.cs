@@ -15,7 +15,8 @@ namespace Systems.Interaction.States
 	{
 		private Action<CellClickedEvent> _onCellClicked;
 		private Action<PointerHoverEvent> _onPointerHover;
-		private Action<ActionCancelledEvent> _onActionCancelled;
+		private Action<BackInputEvent> _onBack;
+		private Action<EscInputEvent> _onEsc;
 
 		public MovementPreviewState() : base(InteractionStates.MovementPreview) { }
 
@@ -44,11 +45,12 @@ namespace Systems.Interaction.States
 
 			_onCellClicked = OnCellClicked;
 			_onPointerHover = OnPointerHover;
-			_onActionCancelled = OnActionCancelled;
-
+			_onBack = OnBack;
+			_onEsc = OnEsc;
 			Subscribe(ctx, _onCellClicked);
 			Subscribe(ctx, _onPointerHover);
-			Subscribe(ctx, _onActionCancelled);
+			Subscribe(ctx, _onBack);
+			Subscribe(ctx, _onEsc);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -60,33 +62,27 @@ namespace Systems.Interaction.States
 
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onPointerHover);
-			Unsubscribe(ctx, _onActionCancelled);
+			Unsubscribe(ctx, _onBack);
+			Unsubscribe(ctx, _onEsc);
 
 			_onCellClicked = null;
 			_onPointerHover = null;
-			_onActionCancelled = null;
+			_onBack = null;
+			_onEsc = null;
 
 			base.OnExit(ctx);
 		}
 
 		private void OnCellClicked(CellClickedEvent e)
 		{
-			switch (e.MouseButton)
+			if (!Context.validTargetCells.Contains(e.CellPosition))
 			{
-				case 0: // Left-click - check if valid target
-					if (!Context.validTargetCells.Contains(e.CellPosition))
-					{
-						this.Log($"Invalid target: {e.CellPosition}");
-						// todo: Could play error sound or show feedback
-						return;
-					}
-					ExecuteMove(e.CellPosition);
-					break;
-
-				case 1: // Right-click = cancel
-					CancelAndReturn();
-					break;
+				this.Log($"Invalid target: {e.CellPosition}");
+				// todo: Could play error sound or show feedback
+				return;
 			}
+
+			ExecuteMove(e.CellPosition);
 		}
 
 		private void OnPointerHover(PointerHoverEvent e)
@@ -123,7 +119,20 @@ namespace Systems.Interaction.States
 			// ));
 		}
 
-		private void OnActionCancelled(ActionCancelledEvent e) => CancelAndReturn();
+		private void OnBack(BackInputEvent e)
+		{
+			this.Log("Back input → returning to UnitSelected");
+			CancelPreview();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
+		}
+
+		private void OnEsc(EscInputEvent e)
+		{
+			this.Log("ESC input → resetting to Idle");
+			CancelPreview();
+			Publish(Context, new UnitDeselectedEvent(Context.selectedUnit?.id));
+			Context.StateMachine.ChangeState<IdleState>();
+		}
 
 		private void CalculateReachableArea(InteractionContext ctx)
 		{
@@ -176,11 +185,10 @@ namespace Systems.Interaction.States
 			return PathResult.Failure();
 		}
 
-		private void CancelAndReturn()
+		private void CancelPreview()
 		{
-			this.Log("Cancelled, returning to UnitSelected");
 			Context.ClearTarget();
-			Context.StateMachine.ChangeState<UnitSelectedState>();
+			Publish(Context, PathPreviewEvent.Hide());
 		}
 
 		private void ExecuteMove(Vector2Int targetCell)

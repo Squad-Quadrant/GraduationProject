@@ -10,9 +10,9 @@ namespace Systems.Interaction.States
 	public class UnitSelectedState : InteractionState
 	{
 		private Action<ActionSelectedEvent> _onActionSelected;
-		private Action<ActionCancelledEvent> _onActionCancelled;
 		private Action<UnitClickedEvent> _onUnitClicked;
-		private Action<CellClickedEvent> _onCellClicked;
+		private Action<BackInputEvent> _onBack;
+		private Action<EscInputEvent> _onEsc;
 
 		public UnitSelectedState() : base(InteractionStates.UnitSelected) { }
 
@@ -30,13 +30,13 @@ namespace Systems.Interaction.States
 			}
 
 			_onActionSelected = OnActionSelected;
-			_onActionCancelled = OnActionCancelled;
 			_onUnitClicked = OnUnitClicked;
-			_onCellClicked = OnCellClicked;
+			_onBack = OnBack;
+			_onEsc = OnEsc;
 			Subscribe(ctx, _onActionSelected);
-			Subscribe(ctx, _onActionCancelled);
 			Subscribe(ctx, _onUnitClicked);
-			Subscribe(ctx, _onCellClicked);
+			Subscribe(ctx, _onBack);
+			Subscribe(ctx, _onEsc);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -44,14 +44,14 @@ namespace Systems.Interaction.States
 			this.Log("Exited");
 
 			Unsubscribe(ctx, _onActionSelected);
-			Unsubscribe(ctx, _onActionCancelled);
 			Unsubscribe(ctx, _onUnitClicked);
-			Unsubscribe(ctx, _onCellClicked);
+			Unsubscribe(ctx, _onBack);
+			Unsubscribe(ctx, _onEsc);
 
 			_onActionSelected = null;
-			_onActionCancelled = null;
 			_onUnitClicked = null;
-			_onCellClicked = null;
+			_onBack = null;
+			_onEsc = null;
 
 			base.OnExit(ctx);
 		}
@@ -90,48 +90,36 @@ namespace Systems.Interaction.States
 			}
 		}
 
-		private void OnActionCancelled(ActionCancelledEvent e)
+		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			this.Log("Action cancelled, returning to Idle");
+			if (e.UnitId == Context.selectedUnit?.id)
+				return;
+
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
+			{
+				this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
+				return;
+			}
+
+			if (Context.CanControlUnit(unit))
+				SwitchToUnit(unit);
+			else
+			{
+				this.Log($"Cannot control unit with ID {e.UnitId}.");
+				// todo: provide feedback to the player here
+			}
+		}
+
+		private void OnBack(BackInputEvent e)
+		{
+			this.Log("Back input received - Deselecting unit and going idle");
 			DeselectAndGoIdle();
 		}
 
-		private void OnUnitClicked(UnitClickedEvent e)
+		private void OnEsc(EscInputEvent e)
 		{
-			switch (e.MouseButton)
-			{
-				case 0: // Left-click
-
-					if (e.UnitId == Context.selectedUnit?.id)
-						return;
-
-					if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
-					{
-						this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
-						return;
-					}
-
-					if (Context.CanControlUnit(unit))
-						SwitchToUnit(unit);
-					else
-					{
-						this.Log($"Cannot control unit with ID {e.UnitId}.");
-						// todo: provide feedback to the player here
-					}
-
-					break;
-			}
-		}
-
-		private void OnCellClicked(CellClickedEvent e)
-		{
-			switch (e.MouseButton)
-			{
-				case 1: // Right-click
-					this.Log($"Empty cell clicked: {e.CellPosition}");
-					DeselectAndGoIdle();
-					return;
-			}
+			this.Log("Esc input received - Deselecting unit and going idle");
+			DeselectAndGoIdle();
 		}
 
 		private void SwitchToUnit(Unit.Unit newUnit)

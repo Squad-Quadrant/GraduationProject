@@ -12,6 +12,7 @@ namespace Systems.Interaction.States
 		// for event unsubscription
 		private Action<UnitClickedEvent> _onUnitClicked;
 		private Action<CellClickedEvent> _onCellClicked;
+		private Action<EscInputEvent> _onEsc;
 
 		public IdleState() : base(InteractionStates.Idle) { }
 
@@ -26,8 +27,10 @@ namespace Systems.Interaction.States
 
 			_onUnitClicked = OnUnitClicked;
 			_onCellClicked = OnCellClicked;
+			_onEsc = OnEsc;
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onCellClicked);
+			Subscribe(ctx, _onEsc);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -36,39 +39,39 @@ namespace Systems.Interaction.States
 
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onCellClicked);
-
+			Unsubscribe(ctx, _onEsc);
 			_onUnitClicked = null;
 			_onCellClicked = null;
+			_onEsc = null;
 
 			base.OnExit(ctx);
 		}
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			switch (e.MouseButton)
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
 			{
-				case 0: // Left-click
+				this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
+				return;
+			}
 
-					if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
-					{
-						this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
-						return;
-					}
-
-					if (Context.CanControlUnit(unit))
-						SelectUnit(unit);
-					else
-					{
-						this.Log($"Cannot control unit with ID {e.UnitId}.");
-						// todo: provide feedback to the player here
-					}
-
-					break;
+			if (Context.CanControlUnit(unit))
+				SelectUnit(unit);
+			else
+			{
+				this.Log($"Cannot control unit with ID {e.UnitId}.");
+				// todo: provide feedback to the player here
 			}
 		}
 
 		private void OnCellClicked(CellClickedEvent e) =>
 			this.Log($"Empty cell clicked: {e.CellPosition}");
+
+		private void OnEsc(EscInputEvent e)
+		{
+			this.Log("ESC pressed in Idle → requesting settings panel");
+			Publish(Context, new OpenSettingsRequestEvent());
+		}
 
 		private void SelectUnit(Unit.Unit unit)
 		{

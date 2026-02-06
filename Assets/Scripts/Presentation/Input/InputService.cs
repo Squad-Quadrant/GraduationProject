@@ -96,28 +96,7 @@ namespace Presentation.Input
 			if (!_isEnabled) return;
 
 			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
-			ProcessClick(screenPos, 0);
-		}
-
-		private void OnSecondaryClick(InputAction.CallbackContext ctx)
-		{
-			if (!_isEnabled) return;
-
-			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
-			ProcessClick(screenPos, 1);
-		}
-
-		private void OnESC(InputAction.CallbackContext ctx)
-		{
-			if (!_isEnabled) return;
-
-			this.Log("Cancel pressed");
-			_eventBus.Publish(new ActionCancelledEvent());
-		}
-
-		private void ProcessClick(Vector2 screenPosition, int mouseButton)
-		{
-			var worldPos = ScreenToWorldPosition(screenPosition);
+			var worldPos = ScreenToWorldPosition(screenPos);
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
 
 			// First, check if we hit a unit
@@ -130,8 +109,7 @@ namespace Presentation.Input
 				_eventBus.Publish(new UnitClickedEvent(
 					unitId,
 					cellPos,
-					worldPos,
-					mouseButton
+					worldPos
 				));
 				return;
 			}
@@ -143,12 +121,27 @@ namespace Presentation.Input
 
 				_eventBus.Publish(new CellClickedEvent(
 					cellPos,
-					worldPos,
-					mouseButton
+					worldPos
 				));
 			}
 			else
 				this.Log($"Click out of map bounds: {cellPos}");
+		}
+
+		private void OnSecondaryClick(InputAction.CallbackContext ctx)
+		{
+			if (!_isEnabled) return;
+
+			this.Log("Right-click pressed");
+			_eventBus.Publish(new BackInputEvent());
+		}
+
+		private void OnESC(InputAction.CallbackContext ctx)
+		{
+			if (!_isEnabled) return;
+
+			this.Log("Esc pressed");
+			_eventBus.Publish(new EscInputEvent());
 		}
 
 		private void UpdatePointerHover()

@@ -9,18 +9,12 @@ namespace Data.Runtime.Events.Input
 
 		public Vector3 WorldPosition { get; }
 
-		/// <summary>
-		/// 0 = Left, 1 = Right, 2 = Middle
-		/// </summary>
-		public int MouseButton { get; }
-
-		public CellClickedEvent(Vector2Int cellPosition, Vector3 worldPosition, int mouseButton = 0)
+		public CellClickedEvent(Vector2Int cellPosition, Vector3 worldPosition)
 		{
 			CellPosition = cellPosition;
 			WorldPosition = worldPosition;
-			MouseButton = mouseButton;
 		}
 
-		public override string ToString() => $"[CellClicked] Cell: {CellPosition}, Button: {MouseButton}";
+		public override string ToString() => $"[CellClicked] Cell: {CellPosition}";
 	}
 }
