@@ -1,6 +1,5 @@
 using Core.Events;
 using Systems.Map;
-
 namespace Data.Runtime.Events.Map
 {
     public class MapViewInitEvent : IEvent

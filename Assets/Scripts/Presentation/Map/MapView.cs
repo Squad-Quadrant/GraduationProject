@@ -2,12 +2,16 @@
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
+using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Presentation.Map
 {
+    /// <summary>
+    /// MapView 目前，该组件承担渲染所有与地图相关的视觉元素的责任，包括地形、墙壁、单位和高亮显示等，而不只是地图。
+    /// </summary>
 	public class MapView : MonoBehaviour
 	{
 		[Title("References")]
@@ -35,6 +39,7 @@ namespace Presentation.Map
 #endif
             _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
             _eventBus.Subscribe<RangeDisplayEvent>(DisplayHighlight);
+            _eventBus.Subscribe<MapViewRenderUnitEvent>(RenderUnit);
         }
 
         private void OnDisable()
@@ -44,6 +49,7 @@ namespace Presentation.Map
 #endif
             _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
             _eventBus.Unsubscribe<RangeDisplayEvent>(DisplayHighlight);
+            _eventBus.Unsubscribe<MapViewRenderUnitEvent>(RenderUnit);
         }
 
 		public void ClearHighlights()
@@ -104,5 +110,11 @@ namespace Presentation.Map
 			foreach (var cellPos in e.Cells)
 				HighlightTilemap.SetTile((Vector3Int)cellPos, HighlightTile);
 		}
+
+        private void RenderUnit(MapViewRenderUnitEvent e)
+        {
+            // todo: 实际渲染
+            PFCLog.Debug("render units");
+        }
 	}
 }

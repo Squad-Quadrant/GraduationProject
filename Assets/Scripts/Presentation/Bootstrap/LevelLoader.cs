@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
+using Data.Runtime.Events.Map;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;
@@ -180,7 +182,7 @@ namespace Presentation.Bootstrap
 				this.LogWarning("No units to spawn!");
 				yield break;
 			}
-
+            List<Unit> unitsToRender = new List<Unit>();
 			foreach (var placement in levelConfig.unitPlacements)
 			{
 				try
@@ -205,7 +207,7 @@ namespace Presentation.Bootstrap
 						placement.unitConfig,
 						placement.startPosition
 					);
-
+                    unitsToRender.Add(unit);
 					// Occupy cell on map
 					mapService.OccupyCell(placement.startPosition, placement.unitId);
 
@@ -218,7 +220,7 @@ namespace Presentation.Bootstrap
 
 				yield return null;
 			}
-
+            _eventBus.Publish(new MapViewRenderUnitEvent(unitsToRender));
 			this.Log($"✓ Spawned {levelConfig.unitPlacements.Count} units.");
 		}
 
