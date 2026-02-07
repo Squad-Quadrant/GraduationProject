@@ -200,6 +200,6 @@ namespace Presentation.Input
 		}
 
 		private string GetUnitAtCell(Vector2Int cellPosition)
-			=> (from unit in _unitService.GetAllUnits() where unit.position == cellPosition select unit.id).FirstOrDefault();
+			=> (from unit in _unitService.GetAllUnits() where unit.Position == cellPosition select unit.id).FirstOrDefault();
 	}
 }

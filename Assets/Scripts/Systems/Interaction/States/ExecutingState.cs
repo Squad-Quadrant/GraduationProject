@@ -74,7 +74,7 @@ namespace Systems.Interaction.States
 				// Re-publish selection event (UI might need to refresh)
 				Publish(Context, new UnitSelectedEvent(
 					unit.id,
-					unit.position,
+					unit.Position,
 					Context.availableActions
 				));
 

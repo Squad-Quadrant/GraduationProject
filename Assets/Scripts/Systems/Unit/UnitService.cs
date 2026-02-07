@@ -89,7 +89,7 @@ namespace Systems.Unit
 			return _units.Values
 				.Where(u =>
 				{
-					int distance = Math.Abs(u.position.x - center.x) + Math.Abs(u.position.y - center.y);
+					int distance = Math.Abs(u.Position.x - center.x) + Math.Abs(u.Position.y - center.y);
 					if (!includeCenter && distance == 0)
 						return false;
 					return distance <= range;

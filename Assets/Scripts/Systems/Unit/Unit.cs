@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using Data.Config;
 using Data.Runtime;
 using Sirenix.OdinInspector;
+using Systems.Equipment;
 using Systems.Turn;
 using UnityEngine;
 
 namespace Systems.Unit
 {
 	[Serializable]
-	public class Unit : ITurnUnit
+	public class Unit : ITurnUnit, IEquipable
 	{
 		[ReadOnly] public string id;
 		[ReadOnly] public string configId;
 		[ReadOnly] public string name;
 		[ReadOnly] public UnitStats stats = new();
 		[ReadOnly] public UnitRuntime runtime = new();
-		[ReadOnly] public Vector2Int position;
 
+        public Vector2Int Position
+        {
+            get => runtime.position;
+            set => runtime.position = value;
+        }
+        
 		#region ITurnUnit
 
 		string ITurnUnit.Id => id;
@@ -35,9 +41,8 @@ namespace Systems.Unit
 				configId = config.configId,
 				name = config.unitName,
 				stats = config.stats.Clone(),
-				position = startPosition
 			};
-			unit.runtime.Initialize(unit.stats.maxHp);
+			unit.runtime.Initialize(unit.stats.maxHp, startPosition, unit);
 			return unit;
 		}
 
@@ -56,6 +61,23 @@ namespace Systems.Unit
 		}
 
 		public override string ToString() =>
-			$"[Unit] {name}({id}) HP:{runtime?.currentHp}/{stats?.maxHp} Pos:{position}";
+			$"[Unit] {name}({id}) HP:{runtime?.currentHp}/{stats?.maxHp} Pos:{Position}";
+        
+        #region IEquipable
+
+        // todo:武器道具初始化
+        public WeaponInfo MainWeapon { get; set; }
+        public WeaponInfo SecondaryWeapon { get; set; }
+        public TacticalItemInfo TacticalItemInfo0 { get; set; }
+        public TacticalItemInfo TacticalItemInfo1 { get; set; }
+        public TacticalItemInfo TacticalItemInfo2 { get; set; }
+        public List<TacticalItemInfo> TacticalItemInfos => new()
+        {
+            TacticalItemInfo0,
+            TacticalItemInfo1,
+            TacticalItemInfo2
+        };
+
+        #endregion
 	}
 }

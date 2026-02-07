@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.PathFinding;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Presentation.Debugger
@@ -65,7 +66,7 @@ namespace Presentation.Debugger
             var options = new PathFindingOptions(
                 canPassThroughAllies: testPassAllies,
                 enemiesBlockMovement: testBlockEnemies,
-                movingUnitFaction: null,
+                movingUnitFaction: UnitFaction.None,
                 movingUnitId: null,
                 canCrossLowWalls: false,
                 canCrossHighWalls: false,
@@ -85,7 +86,7 @@ namespace Presentation.Debugger
             var options = new PathFindingOptions(
                 canPassThroughAllies: testPassAllies,
                 enemiesBlockMovement: testBlockEnemies,
-                movingUnitFaction: null,
+                movingUnitFaction: UnitFaction.None,
                 movingUnitId: null,
                 canCrossLowWalls: false,
                 canCrossHighWalls: false,

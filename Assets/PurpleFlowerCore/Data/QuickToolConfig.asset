@@ -24,8 +24,24 @@ MonoBehaviour:
   - name: "\u573A\u666F\u7269\u4F53\u914D\u7F6E"
     commandType: 3
     color: {r: 1, g: 1, b: 1, a: 1}
-    lineBreak: 1
+    lineBreak: 0
     commandParam: Assets/Data/SceneActor/Box.asset
+    command:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: WZHTest_0_Menu
+    commandType: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 1
+    commandParam: Assets/Scenes/Dev/WZHTest_0_Menu.unity
+    command:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: WZHTest_1_Level
+    commandType: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 0
+    commandParam: Assets/Scenes/Dev/WZHTest_1_Level.unity
     command:
       m_PersistentCalls:
         m_Calls: []

@@ -139,7 +139,7 @@ namespace Systems.Interaction.States
 			// Publish new selection
 			Publish(Context, new UnitSelectedEvent(
 				newUnit.id,
-				newUnit.position,
+				newUnit.Position,
 				Context.availableActions
 			));
 		}

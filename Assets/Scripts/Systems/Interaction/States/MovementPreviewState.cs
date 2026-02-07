@@ -40,7 +40,7 @@ namespace Systems.Interaction.States
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
 				ctx.validTargetCells,
-				ctx.selectedUnit.position,
+				ctx.selectedUnit.Position,
 				ctx.selectedUnit.id));
 
 			_onCellClicked = OnCellClicked;
@@ -160,7 +160,7 @@ namespace Systems.Interaction.States
 			var maxMovementPoints = unit.stats.moveRange * unit.stats.actionPoints;
 
 			var reachableArea = pathfinding.GetReachableArea(
-				unit.position,
+				unit.Position,
 				maxMovementPoints,
 				options);
 
@@ -200,7 +200,7 @@ namespace Systems.Interaction.States
 			// Create and queue move command
 			var moveCommand = new MoveUnitCommand(
 				Context.selectedUnit.id,
-				Context.selectedUnit.position,
+				Context.selectedUnit.Position,
 				targetCell,
 				new List<Vector2Int>(Context.currentPath),
 				Context.UnitService,

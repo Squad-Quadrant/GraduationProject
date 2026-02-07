@@ -1,5 +1,6 @@
 ﻿using System;
 using Sirenix.OdinInspector;
+using Systems.Unit;
 
 namespace Systems.PathFinding
 {
@@ -15,7 +16,7 @@ namespace Systems.PathFinding
         /// Used to determine which units are allies vs enemies.
         /// Null means ignore unit blocking entirely.
         /// </summary>
-        [ShowInInspector, ReadOnly] public readonly string MovingUnitFaction;
+        [ShowInInspector, ReadOnly] public readonly UnitFaction MovingUnitFaction;
 
         [ShowInInspector, ReadOnly] public readonly string MovingUnitId;
 
@@ -28,7 +29,7 @@ namespace Systems.PathFinding
         public PathFindingOptions(
             bool canPassThroughAllies,
             bool enemiesBlockMovement,
-            string movingUnitFaction,
+            UnitFaction movingUnitFaction,
             string movingUnitId,
             bool canCrossLowWalls,
             bool canCrossHighWalls,
@@ -46,7 +47,7 @@ namespace Systems.PathFinding
         public static PathFindingOptions Default => new(
             canPassThroughAllies: true,
             enemiesBlockMovement: true,
-            movingUnitFaction: null,
+            movingUnitFaction: UnitFaction.None,
             movingUnitId: null,
             canCrossLowWalls: false,
             canCrossHighWalls: false,
@@ -54,7 +55,7 @@ namespace Systems.PathFinding
         );
 
         // Builder-style methods for easy customization
-        public PathFindingOptions WithMovingUnit(string unitId, string faction) => new(
+        public PathFindingOptions WithMovingUnit(string unitId, UnitFaction faction) => new(
 	        CanPassThroughAllies,
 	        EnemiesBlockMovement,
 	        faction,
@@ -65,6 +66,6 @@ namespace Systems.PathFinding
 
         public override string ToString() =>
             $"[PathfindingOptions] PassAllies:{CanPassThroughAllies}, " +
-            $"EnemyBlock:{EnemiesBlockMovement}, Faction:{MovingUnitFaction ?? "N/A"}";
+            $"EnemyBlock:{EnemiesBlockMovement}, Faction:{MovingUnitFaction.ToString()}";
 	}
 }

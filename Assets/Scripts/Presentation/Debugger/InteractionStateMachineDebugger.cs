@@ -78,7 +78,7 @@ namespace Presentation.Debugger
 		{
 			var unit = _cachedController?.Context?.selectedUnit;
 			if (unit == null) return "None";
-			return $"{unit.name} ({unit.id}) at {unit.position}";
+			return $"{unit.name} ({unit.id}) at {unit.Position}";
 		}
 
 		private string GetTargetCellInfo()

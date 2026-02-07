@@ -84,3 +84,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Core.Commands.CommandQueue
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.MoveUnitCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.ExecutingState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

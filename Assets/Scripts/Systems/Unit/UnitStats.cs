@@ -30,7 +30,7 @@ namespace Systems.Unit
 
 		[Space]
 		[LabelText("阵营")]
-		public string faction;
+		public UnitFaction faction;
 
 		public UnitStats Clone()
 		{
@@ -44,4 +44,12 @@ namespace Systems.Unit
 			};
 		}
 	}
+
+    public enum UnitFaction
+    {
+        Player,
+        Enemy,
+        Neutral, 
+        None, // 用于占位或特殊情况
+    }
 }

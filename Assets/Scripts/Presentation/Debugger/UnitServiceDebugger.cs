@@ -80,7 +80,7 @@ namespace Presentation.Debugger
 				{
 					Id = u.id ?? "null",
 					Name = u.name ?? "null",
-					Position = u.position,
+					Position = u.Position,
 					CurrentHp = u.runtime?.currentHp ?? 0,
 					MaxHp = u.stats?.maxHp ?? 0,
 					Speed = u.stats?.speed ?? 0,
@@ -332,7 +332,7 @@ namespace Presentation.Debugger
 				Id = unit.id ?? "null",
 				ConfigId = unit.configId ?? "null",
 				Name = unit.name ?? "null",
-				Position = unit.position
+				Position = unit.Position
 			};
 		}
 

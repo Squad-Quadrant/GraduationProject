@@ -84,7 +84,7 @@ namespace Systems.Interaction.States
 
 			Publish(Context, new UnitSelectedEvent(
 				unit.id,
-				unit.position,
+				unit.Position,
 				Context.availableActions
 				));
 

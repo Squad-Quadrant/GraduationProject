@@ -37,7 +37,7 @@ namespace Data.Config
 
 		[Space]
 		[LabelText("单位预制体")]
-		public GameObject prefab;
+		public GameObject prefab; // todo: 考虑单一的单位预制体,在生成单位时为该预制体做装饰，而不是为每个单位配置一个预制体
 
 		#endregion
 
@@ -52,7 +52,7 @@ namespace Data.Config
 			speed = 10,
 			moveRange = 2,
 			actionPoints = 2,
-			faction = "Neutral"
+			faction = UnitFaction.Neutral
 		};
 
 		#endregion

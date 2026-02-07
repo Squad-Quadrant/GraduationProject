@@ -61,7 +61,7 @@ namespace Data.Runtime.Commands
 
 			_mapService.ReleaseCell(_fromPosition);
 			_mapService.OccupyCell(_toPosition, _unitId);
-			unit.position = _toPosition;
+			unit.Position = _toPosition;
 
 			_eventBus.Publish(new UnitMovedEvent(
 				_unitId,
@@ -93,7 +93,7 @@ namespace Data.Runtime.Commands
 			// Reverse the move
 			_mapService.ReleaseCell(_toPosition);
 			_mapService.OccupyCell(_fromPosition, _unitId);
-			unit.position = _fromPosition;
+			unit.Position = _fromPosition;
 
 			// Publish reverse movement event
 			var reversePath = new List<Vector2Int>(_path);
