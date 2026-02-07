@@ -45,3 +45,11 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
+  - name: "\u6D4B\u8BD5\u914D\u7F6E\u6587\u4EF6\u5939"
+    commandType: 3
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 1
+    commandParam: Assets/Test/WZHTest/LevelLoader/Level 001.asset
+    command:
+      m_PersistentCalls:
+        m_Calls: []

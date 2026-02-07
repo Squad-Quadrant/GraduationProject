@@ -13,7 +13,7 @@ namespace Data.Config
 	{
 		[HorizontalGroup("Main")]
 		[LabelText("单位ID"), LabelWidth(60)]
-		[InfoBox("该单位实例的运行时唯一标识符", InfoMessageType.None)]
+		[InfoBox("该单位实例的运行时唯一标识符", InfoMessageType.None)] // todo: 考虑自动分配局内id
 		public string unitId;
 
 		[HorizontalGroup("Main")]
