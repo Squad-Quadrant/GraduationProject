@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using Systems.Unit;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Data.Config
 {
@@ -37,7 +38,7 @@ namespace Data.Config
 
 		[Space]
 		[LabelText("单位预制体")]
-		public GameObject prefab; // todo: 考虑单一的单位预制体,在生成单位时为该预制体做装饰，而不是为每个单位配置一个预制体
+		public RuleTile ruleTile; // todo: 考虑单一的单位预制体,在生成单位时为该预制体做装饰，而不是为每个单位配置一个预制体
 
 		#endregion
 
@@ -71,7 +72,7 @@ namespace Data.Config
 				isValid = false;
 			}
 
-			if (!prefab)
+			if (!ruleTile)
 			{
 				Debug.LogWarning($"[UnitConfig] [{unitName}] No prefab assigned!");
 			}

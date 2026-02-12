@@ -16,7 +16,7 @@ MonoBehaviour:
   unitName: Unit 001
   description: This is a new unit.
   icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
-  prefab: {fileID: 216587518513712756, guid: 75f55f3595c0f00438efdfd774a6e4be, type: 3}
+  ruleTile: {fileID: 11400000, guid: 3565166c1c2a8464e98cd7a49a06745e, type: 2}
   stats:
     maxHp: 100
     speed: 10

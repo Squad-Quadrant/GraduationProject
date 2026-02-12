@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Mono;
 using Data.Config;
 using Data.Runtime;
+using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using Systems.Equipment;
 using Systems.Turn;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Systems.Unit
 {
@@ -17,6 +20,7 @@ namespace Systems.Unit
 		[ReadOnly] public string name;
 		[ReadOnly] public UnitStats stats = new();
 		[ReadOnly] public UnitRuntime runtime = new();
+        [ReadOnly] public RuleTile ruleTile;
 
         public Vector2Int Position
         {
@@ -41,6 +45,7 @@ namespace Systems.Unit
 				configId = config.configId,
 				name = config.unitName,
 				stats = config.stats.Clone(),
+                ruleTile = config.ruleTile,
 			};
 			unit.runtime.Initialize(unit.stats.maxHp, startPosition, unit);
 			return unit;

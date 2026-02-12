@@ -2,7 +2,6 @@
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
-using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -20,6 +19,7 @@ namespace Presentation.Map
         [SerializeField] private Tilemap RightTilemap;
         [SerializeField] private Tilemap SceneActorTilemap;
         [SerializeField] private Tilemap HighlightTilemap;
+        [SerializeField] private Tilemap UnitTilemap;
         [SerializeField] private Tile HighlightTile; // just a simple highlight tile for demonstration
         
         private IEventBus _eventBus;
@@ -113,8 +113,24 @@ namespace Presentation.Map
 
         private void RenderUnit(MapViewRenderUnitEvent e)
         {
-            // todo: 实际渲染
-            PFCLog.Debug("render units");
+            var units = e.UnitsToRender;
+            UnitTilemap.ClearAllTiles();
+
+            // todo: 考虑到某些没有UnitServer上下文的情况,也需要能够渲染单位, 因此提供一个AutoGetUnits的选项, 让MapView自己去UnitServer里拿需要渲染的单位列表
+            // todo: 获得UnitServer里Unit的办法
+            
+            // if (e.AutoGetUnits)
+            // {
+            //     units = 
+            // }
+            
+            foreach (var unit in units)
+            {
+                var pos = unit.Position;
+                RuleTile tile = unit.ruleTile;
+                UnitTilemap.SetTile((Vector3Int)pos, tile);
+            }
+            
         }
 	}
 }
