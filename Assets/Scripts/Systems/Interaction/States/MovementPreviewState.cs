@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
-using Data.Runtime.Events.UI;
 using Systems.PathFinding;
 using UnityEngine;
 

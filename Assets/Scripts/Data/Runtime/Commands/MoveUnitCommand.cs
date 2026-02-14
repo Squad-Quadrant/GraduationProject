@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Map;
 using Data.Runtime.Events.View;
 using Systems.Map;
 using Systems.Unit;
@@ -22,7 +24,7 @@ namespace Data.Runtime.Commands
 		private readonly IMapService _mapService;
 		private readonly IEventBus _eventBus;
 
-		public bool WaitForAnimation { get; set; } = true;
+		public bool WaitForAnimation { get; set; } = false;
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
@@ -69,14 +71,18 @@ namespace Data.Runtime.Commands
 				_toPosition,
 				_path
 			));
-
+            
 			if (WaitForAnimation)
 			{
 				_onPresentationComplete = OnPresentationComplete;
 				_eventBus.Subscribe(_onPresentationComplete);
 			}
 			else
-				CompleteExecution();
+            {
+                var units = _unitService.GetAllAliveUnits().ToList();
+                _eventBus.Publish(new MapViewRenderUnitEvent(units));
+                CompleteExecution();
+            }
 		}
 
 		protected override void OnUndoAsync()
@@ -116,6 +122,9 @@ namespace Data.Runtime.Commands
 				return;
 
 			this.Log($"Animation complete for {_unitId}");
+            
+            var units = _unitService.GetAllAliveUnits().ToList();
+            _eventBus.Publish(new MapViewRenderUnitEvent(units));
 
 			Cleanup();
 			CompleteExecution();

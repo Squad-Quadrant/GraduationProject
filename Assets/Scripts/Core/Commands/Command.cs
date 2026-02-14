@@ -48,7 +48,7 @@ namespace Core.Commands
 
 		private Action _onExecuteComplete;
 		private Action _onUndoComplete;
-
+        
 		public void Execute(Action onComplete = null)
 		{
 			if (IsExecuting)
@@ -110,6 +110,7 @@ namespace Core.Commands
 			_onUndoComplete?.Invoke();
 			_onUndoComplete = null;
 		}
+
 	}
 
 	public class LambdaCommand : SyncCommand
