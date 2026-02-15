@@ -205,9 +205,10 @@ namespace Systems.Interaction.States
 				Context.MapService,
 				Context.EventBus
 			);
-
+            
+            // todo: 尝试放在换状态下面来解决事件订阅时序问题，遇到空引用，遂放弃
 			Context.CommandQueue.EnqueueAndExecute(moveCommand);
-
+            
 			// Transition to executing state
 			Context.StateMachine.ChangeState<ExecutingState>();
 		}

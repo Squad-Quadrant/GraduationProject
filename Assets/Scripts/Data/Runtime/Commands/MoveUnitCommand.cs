@@ -7,6 +7,7 @@ using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Data.Runtime.Events.View;
+using PurpleFlowerCore.Utility;
 using Systems.Map;
 using Systems.Unit;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace Data.Runtime.Commands
 		private readonly IMapService _mapService;
 		private readonly IEventBus _eventBus;
 
-		public bool WaitForAnimation { get; set; } = false;
+		public bool WaitForAnimation { get; set; } = true;
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
@@ -76,6 +77,12 @@ namespace Data.Runtime.Commands
 			{
 				_onPresentationComplete = OnPresentationComplete;
 				_eventBus.Subscribe(_onPresentationComplete);
+                
+                // 注意到由于事件订阅的时序问题，这里必须延时
+                DelayUtility.DelayFrame(2, () =>
+                {
+                    _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Animation, PresentationType.Animation.Move, _unitId));
+                });
 			}
 			else
             {
