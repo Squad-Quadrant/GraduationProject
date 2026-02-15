@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Core.Events;
-using Data.Runtime;
 using Data.Runtime.Events.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
-using Systems.Unit;
 
 namespace Presentation.UI.Presenter
 {
