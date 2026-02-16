@@ -43,9 +43,6 @@ namespace Data.Config
 		public UIPanelConfig GetConfig<T>() where T : UIPanel
 			=> panelConfigs.FirstOrDefault(config => config?.Prefab && config.Prefab.GetType() == typeof(T));
 
-		public IEnumerable<UIPanelConfig> GetPreloadConfigs()
-			=> panelConfigs.Where(config => config && config.preload);
-
 		private void OnValidate() => _lookup = null;
 
 		[TitleGroup("Debug")]

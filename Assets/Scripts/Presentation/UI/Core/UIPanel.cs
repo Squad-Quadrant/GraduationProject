@@ -20,30 +20,14 @@ namespace Presentation.UI.Core
 
 		[TitleGroup("Runtime State")]
 		[ShowInInspector, ReadOnly]
-		[GUIColor("@HasFocus ? new Color(0.3f, 0.8f, 1f) : new Color(0.5f, 0.5f, 0.5f)")]
-		public bool HasFocus { get; private set; }
-
-		[TitleGroup("Runtime State")]
-		[ShowInInspector, ReadOnly]
-		[GUIColor("@IsVisible ? new Color(0.3f, 0.8f, 1f) : new Color(0.5f, 0.5f, 0.5f)")]
-		public bool IsVisible { get; private set; }
-
-		[TitleGroup("Runtime State")]
-		[ShowInInspector, ReadOnly]
 		[GUIColor("@IsAnimating ? new Color(0.3f, 0.8f, 1f) : new Color(0.5f, 0.5f, 0.5f)")]
 		public bool IsAnimating => _animation?.IsAnimating ?? false;
 
-		public string PanelId => _config?.PanelId ?? gameObject.name;
+		public UIPanelConfig Config { get; private set; }
 
 		#endregion
 
-		private UIPanelConfig _config;
 		private IUIAnimation _animation;
-
-		public bool ManagedByStack => _config?.ManagedByStack ?? true;
-		public bool HideWhenCovered => _config?.HideWhenCovered ?? false;
-		public bool BlockInput => _config?.BlockInput ?? true;
-
 		private CanvasGroup _canvasGroup;
 		public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
 
@@ -52,30 +36,23 @@ namespace Presentation.UI.Core
 
 		internal void Initialize(UIPanelConfig config)
 		{
-			_config = config;
+			if (!config)
+			{
+				this.LogError("Cannot initialize panel: config is null");
+				return;
+			}
+
+			Config = config;
 			_animation = GetComponent<IUIAnimation>();
 
-			SetVisibleImmediate(false);
+			SetVisible(false);
 			IsOpen = false;
-			HasFocus = false;
 
 			OnInitialize();
-			this.Log($"Initialized: {PanelId}");
+			this.Log($"Initialized: {Config.PanelId}");
 		}
 
-		protected virtual void OnDestroy()
-		{
-			_animation?.CompleteImmediately();
-			this.Log($"Destroyed: {PanelId}");
-		}
-
-		protected virtual void OnInitialize() { }
-		protected virtual void OnOpen() { }
-		protected virtual void OnClose() { }
-		protected virtual void OnFocus() { }
-		protected virtual void OnUnfocus() { }
-
-		internal void DoOpen(Action onComplete = null)
+		internal void Open(Action onComplete = null)
 		{
 			if (IsOpen)
 			{
@@ -88,25 +65,26 @@ namespace Presentation.UI.Core
 
 			if (_animation != null)
 			{
-				SetVisibleImmediate(true);
+				SetVisible(true);
 				CanvasGroup.interactable = false;
 				_animation.PlayOpen(() =>
 				{
-					this.Log($"Opened: {PanelId}");
+					CanvasGroup.interactable = true;
 					OnOpen();
 					onComplete?.Invoke();
+					this.Log($"Opened (animated): {Config.PanelId}");
 				});
 			}
 			else
 			{
-				SetVisibleImmediate(true);
-				this.Log($"Opened: {PanelId}");
+				SetVisible(true);
 				OnOpen();
 				onComplete?.Invoke();
+				this.Log($"Opened: {Config.PanelId}");
 			}
 		}
 
-		internal void DoClose(Action onComplete = null)
+		internal void Close(Action onComplete = null)
 		{
 			if (!IsOpen)
 			{
@@ -114,120 +92,55 @@ namespace Presentation.UI.Core
 				return;
 			}
 
-			HasFocus = false;
 			CanvasGroup.interactable = false;
 
 			if (_animation != null)
-				_animation.PlayClose(CompleteClose);
-			else
-				CompleteClose();
-			return;
-
-			void CompleteClose()
 			{
-				IsOpen = false;
-				SetVisibleImmediate(false);
-				this.Log($"Closed: {PanelId}");
-				OnClose();
-				onComplete?.Invoke();
-			}
-		}
-
-		internal void DoCloseImmediate()
-		{
-			_animation?.CompleteImmediately();
-			IsOpen = false;
-			HasFocus = false;
-			SetVisibleImmediate(false);
-			OnClose();
-		}
-
-		internal void DoFocus()
-		{
-			if (HasFocus) return;
-
-			HasFocus = true;
-			CanvasGroup.interactable = true;
-			CanvasGroup.blocksRaycasts = BlockInput;
-
-			this.Log($"Focused: {PanelId}");
-			OnFocus();
-		}
-
-		internal void DoUnfocus()
-		{
-			if (!HasFocus) return;
-
-			HasFocus = false;
-			CanvasGroup.interactable = false;
-
-			this.Log($"Unfocused: {PanelId}");
-			OnUnfocus();
-		}
-
-		internal void DoShow(Action onComplete = null)
-		{
-			if (IsVisible)
-			{
-				onComplete?.Invoke();
-				return;
-			}
-
-			SetVisibleImmediate(true);
-
-			if (_animation != null)
-				_animation.PlayShow(onComplete);
-			else
-				onComplete?.Invoke();
-		}
-
-		internal void DoHide(Action onComplete = null)
-		{
-			if (!IsVisible)
-			{
-				onComplete?.Invoke();
-				return;
-			}
-
-			if (_animation != null)
-			{
-				_animation.PlayHide(() =>
+				_animation.PlayClose(() =>
 				{
-					SetVisibleImmediate(false);
+					IsOpen = false;
+					SetVisible(false);
+					OnClose();
 					onComplete?.Invoke();
+					this.Log($"Closed (animated): {Config.PanelId}");
 				});
 			}
 			else
 			{
-				SetVisibleImmediate(false);
+				IsOpen = false;
+				SetVisible(false);
+				OnClose();
 				onComplete?.Invoke();
+				this.Log($"Closed: {Config.PanelId}");
 			}
 		}
 
-		private void SetVisibleImmediate(bool visible)
+		internal void CloseImmediate()
 		{
-			IsVisible = visible;
+			if (!IsOpen) return;
+
+			_animation?.CompleteImmediately();
+			IsOpen = false;
+			SetVisible(false);
+			OnClose();
+			this.Log($"Closed immediately: {Config.PanelId}");
+		}
+
+		protected virtual void OnDestroy()
+		{
+			_animation?.CompleteImmediately();
+			this.Log($"Destroyed: {Config.PanelId}");
+		}
+
+		protected virtual void OnInitialize() { }
+		protected virtual void OnOpen() { }
+		protected virtual void OnClose() { }
+
+		private void SetVisible(bool visible)
+		{
 			CanvasGroup.alpha = visible ? 1f : 0f;
-			CanvasGroup.interactable = visible && HasFocus;
-			CanvasGroup.blocksRaycasts = visible && BlockInput;
-		}
-
-		public void SetVisible(bool visible, bool animate = true)
-		{
-			if (visible)
-			{
-				if (animate)
-					DoShow();
-				else
-					SetVisibleImmediate(true);
-			}
-			else
-			{
-				if (animate)
-					DoHide();
-				else
-					SetVisibleImmediate(false);
-			}
+			CanvasGroup.interactable = visible;
+			CanvasGroup.blocksRaycasts = visible;
 		}
 	}
 }

@@ -15,9 +15,5 @@ MonoBehaviour:
   panelId: TurnPanel
   prefab: {fileID: 7808052950843720337, guid: 87d83cea6979a6e48b9c5c958464d97e, type: 3}
   layer: 1
-  managedByStack: 1
-  hideWhenCovered: 0
-  closeOnBack: 1
-  blockInput: 1
   preload: 0
   cacheOnClose: 1

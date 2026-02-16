@@ -13,6 +13,6 @@ namespace Data.Runtime.Events.UI
 		}
 
 		public override string ToString()
-			=> $"[PanelOpened] Id:{Panel.PanelId}";
+			=> $"[PanelOpened] Id: {Panel.Config.PanelId}";
 	}
 }

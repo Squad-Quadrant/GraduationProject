@@ -10,7 +10,7 @@ namespace Data.Runtime.Events.UI
 		public PanelClosedEvent(UIPanel panel) => Panel = panel;
 
 		public override string ToString()
-			=> $"[PanelClosed] Id:{Panel.PanelId}";
+			=> $"[PanelClosed] Id: {Panel.Config.PanelId}";
 	}
 
 	/// <summary>

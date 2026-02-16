@@ -8,10 +8,6 @@ namespace Presentation.UI.Core
 
 		void PlayClose(Action onComplete);
 
-		void PlayHide(Action onComplete);
-
-		void PlayShow(Action onComplete);
-
 		void CompleteImmediately();
 
 		bool IsAnimating { get; }

@@ -26,51 +26,15 @@ namespace Data.Config
                  "• World: 3D space UI (health bars, etc.)")]
         private EUICanvasLayer layer = EUICanvasLayer.Screen;
 
-        [TitleGroup("Behavior")]
-        [SerializeField]
-        [LabelText("Managed By Stack")]
-        [Tooltip("If true, this panel participates in navigation stack and ESC handling.\n" +
-                 "If false, this panel has independent lifecycle (for HUD elements).")]
-        private bool managedByStack = true;
-
-        [TitleGroup("Behavior")]
-        [SerializeField]
-        [LabelText("Hide When Covered")]
-        [Tooltip("If true, this panel becomes invisible when another panel is pushed on top.")]
-        private bool hideWhenCovered;
-
-        [TitleGroup("Behavior")]
-        [SerializeField]
-        [LabelText("Close On Back")]
-        [Tooltip("If true, pressing ESC/Back will close this panel (unless OnBackPressed returns true).")]
-        public bool closeOnBack = true;
-
-        [TitleGroup("Behavior")]
-        [SerializeField]
-        [LabelText("Block Input")]
-        [Tooltip("If true, blocks raycasts to UI elements behind this panel.")]
-        private bool blockInput = true;
-
-        [TitleGroup("Lifecycle")]
-        [SerializeField]
-        [LabelText("Preload")]
-        [Tooltip("If true, instantiate this panel during initialization (hidden). Reduces open latency.")]
-        public bool preload;
-
         [TitleGroup("Lifecycle")]
         [SerializeField]
         [LabelText("Cache On Close")]
         [Tooltip("If true, hide instead of destroy when closed. Reuses instance on next open.")]
-        public bool cacheOnClose;
+        private bool cacheOnClose;
 
         public string PanelId => string.IsNullOrEmpty(panelId) ? name : panelId;
         public UIPanel Prefab => prefab;
         public EUICanvasLayer Layer => layer;
-        public bool ManagedByStack => managedByStack;
-        public bool HideWhenCovered => managedByStack && hideWhenCovered;
-        public bool CloseOnBack => managedByStack && closeOnBack;
-        public bool BlockInput => managedByStack && blockInput;
-        public bool Preload => preload;
         public bool CacheOnClose => cacheOnClose;
 
         private void OnValidate()

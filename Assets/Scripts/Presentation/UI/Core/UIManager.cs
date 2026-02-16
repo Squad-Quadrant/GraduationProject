@@ -22,37 +22,35 @@ namespace Presentation.UI.Core
 		[Tooltip("The overlay canvas that persists across scenes (DDOL).")]
 		private Canvas overlayCanvas;
 
-		private UINavigator _navigator;
-		private UIFactory _factory;
 		private IEventBus _eventBus;
 
 		// Scene-owned canvas references (registered by LevelCanvasProvider)
 		private Canvas _screenCanvas;
 		private Canvas _worldCanvas;
 
-		private readonly List<UIPanel> _independentPanels = new();
+		private readonly Dictionary<string, UIPanel> _openPanels = new();
+		private readonly Dictionary<string, UIPanel> _cache = new(); // closed but not destroyed panels
 
-		public bool HasOpenPanels => _navigator?.Count > 0;
-		public UIPanel TopPanel => _navigator?.TopPanel;
+		public bool HasOpenPanels => _openPanels.Count > 0;
+
+		public bool IsOpen<T>() where T : UIPanel
+		{
+			var config = settings.GetConfig<T>();
+			return config && _openPanels.ContainsKey(config.PanelId);
+		}
+
+		public T GetPanel<T>() where T : UIPanel
+		{
+			var config = settings.GetConfig<T>();
+			if (config && _openPanels.TryGetValue(config.PanelId, out var panel))
+				return panel as T;
+			return null;
+		}
 
 		public void Initialize(IEventBus eventBus)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_navigator = new UINavigator();
-			_factory = new UIFactory(settings, layer =>
-			{
-				return layer switch
-				{
-					EUICanvasLayer.Overlay => overlayCanvas ? overlayCanvas.transform : null,
-					EUICanvasLayer.Screen  => _screenCanvas ? _screenCanvas.transform : null,
-					EUICanvasLayer.World   => _worldCanvas  ? _worldCanvas.transform  : null,
-					_ => null
-				};
-			});
-
 			SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-			_factory.PreloadPanels();
 			DontDestroyOnLoad(gameObject);
 			this.Log("Initialized");
 		}
@@ -60,38 +58,38 @@ namespace Presentation.UI.Core
 		private void OnDestroy()
 		{
 			SceneManager.sceneUnloaded -= OnSceneUnloaded;
-			_navigator?.Clear();
-			_factory?.ClearCache();
-			ClearIndependentPanels();
+			CloseAll();
+			ClearCache();
 			this.Log("Destroyed");
 		}
 
-		#region Callbacks
-
 		private void OnSceneUnloaded(Scene scene)
 		{
-			// Clean up null references from destroyed scene objects
-			_navigator.CleanupDestroyedPanels();
-			_factory.CleanupDestroyedPanels();
-			_independentPanels.RemoveAll(p => !p);
-			this.Log($"Cleaned up after: {scene.name}");
+			CleanupNullEntries(_openPanels, "open");
+			CleanupNullEntries(_cache, "cached");
+			this.Log($"Cleaned up after scene: {scene.name}");
 		}
 
-		#endregion
-
-		#region Open
-
-		public T Open<T>() where T : UIPanel
+		public TPanel Open<TPanel>() where TPanel : UIPanel
 		{
-			var config = settings.GetConfig<T>();
+			var config = settings.GetConfig<TPanel>();
 			if (!config)
 			{
-				this.LogError($"No config for: {typeof(T).Name}");
+				this.LogError($"No config for: {typeof(TPanel).Name}");
 				return null;
 			}
 
-			var panel = _factory.Acquire(config);
-			return OpenInternal(panel, config) as T;
+			if (_openPanels.TryGetValue(config.PanelId, out var existing) && existing)
+			{
+				this.Log($"Already open, returning existing: {config.PanelId}");
+				return existing as TPanel;
+			}
+
+			var panel = GetPanelInstance(config);
+			if (!panel) return null;
+
+			RegisterAndOpen(panel);
+			return panel as TPanel;
 		}
 
 		public TPanel Open<TPanel, TData>(TData data) where TPanel : UIPanel, IInitializable<TData>
@@ -103,113 +101,35 @@ namespace Presentation.UI.Core
 				return null;
 			}
 
-			var panel = _factory.Acquire<TPanel, TData>(data);
-			return OpenInternal(panel, config) as TPanel;
-		}
-
-		private UIPanel OpenInternal(UIPanel panel, UIPanelConfig config)
-		{
-			if (!panel) return null;
-
-			panel.gameObject.SetActive(true);
-
-			if (config.ManagedByStack)
+			if (_openPanels.TryGetValue(config.PanelId, out var existing) && existing is TPanel typedExisting)
 			{
-				// Stack-managed: handle focus transitions
-				if (_navigator.Contains(panel))
-				{
-					this.LogWarning($"Already in stack: {panel.PanelId}");
-					return panel;
-				}
-
-				// Previous top loses focus
-				var previousTop = _navigator.TopPanel;
-				if (previousTop)
-				{
-					previousTop.DoUnfocus();
-					if (previousTop.HideWhenCovered)
-						previousTop.DoHide();
-				}
-
-				_navigator.Push(panel);
-				panel.DoOpen(panel.DoFocus);
-			}
-			else
-			{
-				// Independent: just open, no stack
-				if (!_independentPanels.Contains(panel))
-					_independentPanels.Add(panel);
-				panel.DoOpen();
+				typedExisting.Initialize(data);
+				this.Log($"Already open, updated data: {config.PanelId}");
+				return typedExisting;
 			}
 
-			_eventBus?.Publish(new PanelOpenedEvent(panel));
-			return panel;
+			var panel = GetPanelInstance(config);
+			if (panel is not TPanel typedPanel) return null;
+
+			typedPanel.Initialize(data);
+			RegisterAndOpen(panel);
+			return typedPanel;
 		}
-
-		#endregion
-
-		#region Close
 
 		public void Close(UIPanel panel)
 		{
 			if (!panel) return;
 
-			var config = settings.GetConfig(panel.PanelId);
+			_openPanels.Remove(panel.Config.PanelId);
 
-			if (panel.ManagedByStack && _navigator.Contains(panel))
+			panel.Close(() =>
 			{
-				bool wasTop = _navigator.TopPanel == panel;
-				_navigator.Remove(panel);
+				ReleasePanel(panel);
+				_eventBus?.Publish(new PanelClosedEvent(panel));
 
-				panel.DoClose(() =>
-				{
-					_factory.Release(panel, config);
-					_eventBus?.Publish(new PanelClosedEvent(panel));
-
-					if (_navigator.IsEmpty)
-						_eventBus?.Publish(new AllPanelsClosedEvent());
-				});
-
-				// Restore focus to new top
-				if (!wasTop || !_navigator.TopPanel) return;
-
-				var newTop = _navigator.TopPanel;
-				if (newTop.HideWhenCovered)
-					newTop.DoShow(() => newTop.DoFocus());
-				else
-					newTop.DoFocus();
-			}
-			else
-			{
-				// Independent panel
-				_independentPanels.Remove(panel);
-				panel.DoClose(() =>
-				{
-					_factory.Release(panel, config);
-					_eventBus?.Publish(new PanelClosedEvent(panel));
-				});
-			}
-		}
-
-		public void CloseTop()
-		{
-			if (_navigator.TopPanel) Close(_navigator.TopPanel);
-		}
-
-		public void CloseAll()
-		{
-			while (_navigator.Count > 0)
-			{
-				var panel = _navigator.TopPanel;
-				if (!panel) continue;
-
-				_navigator.Remove(panel);
-				panel.DoCloseImmediate();
-				var config = settings.GetConfig(panel.PanelId);
-				_factory.Release(panel, config);
-			}
-			_eventBus?.Publish(new AllPanelsClosedEvent());
-			this.Log("Closed all stack panels");
+				if (_openPanels.Count == 0)
+					_eventBus?.Publish(new AllPanelsClosedEvent());
+			});
 		}
 
 		public void Close<T>() where T : UIPanel
@@ -218,32 +138,111 @@ namespace Presentation.UI.Core
 			if (panel) Close(panel);
 		}
 
-		private void ClearIndependentPanels()
+		public void CloseAll()
 		{
-			foreach (var panel in _independentPanels.Where(panel => panel))
+			var panelIds = _openPanels.Keys.ToList();
+
+			foreach (var id in panelIds)
+			{
+				if (!_openPanels.TryGetValue(id, out var panel) || !panel) continue;
+
+				_openPanels.Remove(id);
+				panel.CloseImmediate();
+				ReleasePanel(panel);
+			}
+
+			_openPanels.Clear();
+			_eventBus?.Publish(new AllPanelsClosedEvent());
+			this.Log("Closed all panels");
+		}
+
+		private UIPanel GetPanelInstance(UIPanelConfig config)
+		{
+			if (_cache.TryGetValue(config.PanelId, out var cached) && cached)
+			{
+				_cache.Remove(config.PanelId);
+				this.Log($"Cache hit: {config.PanelId}");
+				return cached;
+			}
+
+			_cache.Remove(config.PanelId);
+			return InstantiatePanel(config);
+		}
+
+		private void ReleasePanel(UIPanel panel)
+		{
+			if (!panel) return;
+
+			if (panel.Config && panel.Config.CacheOnClose)
+			{
+				_cache[panel.Config.PanelId] = panel;
+				panel.gameObject.SetActive(false);
+				this.Log($"Cached: {panel.Config.PanelId}");
+			}
+			else
+			{
+				_cache.Remove(panel.Config.PanelId);
 				Destroy(panel.gameObject);
-			_independentPanels.Clear();
+				this.Log($"Destroyed: {panel.Config.PanelId}");
+			}
 		}
 
-		#endregion
-
-		public T GetPanel<T>() where T : UIPanel
+		private void RegisterAndOpen(UIPanel panel)
 		{
-			// Search stack first
-			var stackPanel = _navigator.Find<T>();
-			if (stackPanel) return stackPanel;
-
-			// Search independent panels
-			foreach (var p in _independentPanels)
-				if (p is T typed)
-					return typed;
-
-			return null;
+			_openPanels[panel.Config.PanelId] = panel;
+			panel.gameObject.SetActive(true);
+			panel.Open(() => _eventBus.Publish(new PanelOpenedEvent(panel)));
+			this.Log($"Opened: {panel.Config.PanelId}");
 		}
 
-		public bool IsOpen<T>() where T : UIPanel => GetPanel<T>();
+		private UIPanel InstantiatePanel(UIPanelConfig config)
+		{
+			if (!config.Prefab)
+			{
+				this.LogError($"Cannot instantiate panel: prefab is null ({config.PanelId})");
+				return null;
+			}
 
-		public bool IsOpen(UIPanel panel) => _navigator.Contains(panel) || _independentPanels.Contains(panel);
+			var parent = GetCanvasRoot(config.Layer);
+			if (!parent)
+			{
+				this.LogError($"Cannot instantiate panel: no canvas for layer {config.Layer} ({config.PanelId})");
+				return null;
+			}
+
+			var panel = Instantiate(config.Prefab, parent);
+			panel.name = config.PanelId;
+			panel.Initialize(config);
+			this.Log($"Instantiated: {config.PanelId}");
+			return panel;
+		}
+
+		private void ClearCache()
+		{
+			foreach (var panel in _cache.Values.Where(p => p))
+				Destroy(panel.gameObject);
+			_cache.Clear();
+		}
+
+		private void CleanupNullEntries(Dictionary<string, UIPanel> dict, string label)
+		{
+			var staleKeys = dict.Where(kvp => !kvp.Value).Select(kvp => kvp.Key).ToList();
+			foreach (var key in staleKeys)
+				dict.Remove(key);
+
+			if (staleKeys.Count > 0)
+				this.Log($"Cleaned {staleKeys.Count} destroyed {label} panel(s)");
+		}
+
+		#region Canvas Management
+
+		private Transform GetCanvasRoot(EUICanvasLayer layer) => layer switch
+		{
+			EUICanvasLayer.Overlay => overlayCanvas ? overlayCanvas.transform : null,
+			EUICanvasLayer.Screen  => _screenCanvas ? _screenCanvas.transform : null,
+			EUICanvasLayer.World   => _worldCanvas  ? _worldCanvas.transform  : null,
+			_ => null
+		};
 
 		public void RegisterCanvas(EUICanvasLayer layer, Canvas canvas)
 		{
@@ -275,78 +274,49 @@ namespace Presentation.UI.Core
 			}
 		}
 
+		#endregion
+
 		#region Debug
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("Panel Stack Size")]
-        private int PanelCount => _navigator?.Count ?? 0;
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Open Panels")]
+		private int OpenPanelCount => _openPanels.Count;
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("Top Panel")]
-        private string TopPanelName => _navigator?.TopPanel?.PanelId ?? "None";
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Cached Panels")]
+		private int CachedPanelCount => _cache.Count;
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("Cached Panels")]
-        private int CachedPanelCount => _factory?.CachedCount ?? 0;
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Screen Canvas")]
+		private string ScreenCanvasName => _screenCanvas ? _screenCanvas.name : "Not registered";
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("Screen Canvas")]
-        private string ScreenCanvasName => _screenCanvas != null ? _screenCanvas.name : "Not registered";
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("World Canvas")]
+		private string WorldCanvasName => _worldCanvas ? _worldCanvas.name : "Not registered";
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("World Canvas")]
-        private string WorldCanvasName => _worldCanvas != null ? _worldCanvas.name : "Not registered";
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Open Panel List")]
+		private List<string> OpenPanelDisplay
+		{
+			get
+			{
+				if (_openPanels.Count == 0) return new List<string> { "(none)" };
+				return _openPanels.Select(kvp =>
+					$"{kvp.Key} {(kvp.Value ? "✓" : "✗ null")}").ToList();
+			}
+		}
 
-        [TitleGroup("Runtime Status")]
-        [ShowInInspector, ReadOnly]
-        [LabelText("Panel Stack")]
-        private List<string> PanelStackDisplay
-        {
-            get
-            {
-                if (_navigator == null) return new List<string> { "Not initialized" };
-                var panels = _navigator.GetAllPanels();
-                var names = new List<string>();
-                for (int i = 0; i < panels.Count; i++)
-                {
-                    var prefix = i == panels.Count - 1 ? "▶ " : "  ";
-                    names.Add($"{prefix}{panels[i]?.PanelId ?? "null"}");
-                }
-                return names.Count > 0 ? names : new List<string> { "Empty" };
-            }
-        }
+		[TitleGroup("Debug Actions")]
+		[HorizontalGroup("Debug Actions/Row")]
+		[Button("Close All"), GUIColor(1f, 0.4f, 0.3f)]
+		[EnableIf("@UnityEngine.Application.isPlaying && _openPanels.Count > 0")]
+		private void DebugCloseAll() => CloseAll();
 
-        [TitleGroup("Debug Actions")]
-        [HorizontalGroup("Debug Actions/Row1")]
-        [Button("Close Top"), GUIColor(1f, 0.7f, 0.3f)]
-        [EnableIf("@UnityEngine.Application.isPlaying && PanelCount > 0")]
-        private void DebugCloseTop() => CloseTop();
+		[HorizontalGroup("Debug Actions/Row")]
+		[Button("Clear Cache"), GUIColor(0.8f, 0.8f, 0.4f)]
+		[EnableIf("@UnityEngine.Application.isPlaying")]
+		private void DebugClearCache() => ClearCache();
 
-        [HorizontalGroup("Debug Actions/Row1")]
-        [Button("Close All"), GUIColor(1f, 0.4f, 0.3f)]
-        [EnableIf("@UnityEngine.Application.isPlaying && PanelCount > 0")]
-        private void DebugCloseAll() => CloseAll();
-
-        [TitleGroup("Debug Actions")]
-        [HorizontalGroup("Debug Actions/Row2")]
-        [Button("Clear Cache"), GUIColor(0.8f, 0.8f, 0.4f)]
-        [EnableIf("@UnityEngine.Application.isPlaying")]
-        private void DebugClearCache() => _factory?.ClearCache();
-
-        [HorizontalGroup("Debug Actions/Row2")]
-        [Button("Cleanup Null Refs"), GUIColor(0.7f, 0.9f, 0.7f)]
-        [EnableIf("@UnityEngine.Application.isPlaying")]
-        private void DebugCleanup()
-        {
-            _navigator?.CleanupDestroyedPanels();
-            _factory?.CleanupDestroyedPanels();
-        }
-
-        #endregion
+		#endregion
 	}
 }
