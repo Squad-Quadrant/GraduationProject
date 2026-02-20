@@ -182,7 +182,7 @@ namespace Presentation.Bootstrap
 				this.LogWarning("No units to spawn!");
 				yield break;
 			}
-            List<Unit> unitsToRender = new List<Unit>();
+            List<Systems.Unit.Unit> unitsToRender = new List<Systems.Unit.Unit>();
 			foreach (var placement in levelConfig.unitPlacements)
 			{
 				try

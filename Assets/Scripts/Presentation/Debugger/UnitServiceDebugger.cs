@@ -309,7 +309,7 @@ namespace Presentation.Debugger
 		/// Safely gets the currently selected unit.
 		/// Returns null if service is unavailable or unit not found.
 		/// </summary>
-		private Unit GetSelectedUnit()
+		private Systems.Unit.Unit GetSelectedUnit()
 		{
 			if (_unitService == null)
 				return null;

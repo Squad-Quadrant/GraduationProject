@@ -1,0 +1,202 @@
+
+character.png
+size: 212,749
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: true
+  xy: 2, 238
+  size: 57, 107
+  orig: 57, 108
+  offset: 0, 1
+  index: -1
+empty
+  rotate: false
+  xy: 2, 136
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+flash
+  rotate: false
+  xy: 2, 419
+  size: 114, 78
+  orig: 200, 200
+  offset: 41, 59
+  index: -1
+head
+  rotate: true
+  xy: 140, 10
+  size: 55, 56
+  orig: 59, 60
+  offset: 2, 2
+  index: -1
+left
+  rotate: true
+  xy: 182, 243
+  size: 24, 26
+  orig: 27, 29
+  offset: 2, 1
+  index: -1
+right
+  rotate: true
+  xy: 182, 243
+  size: 24, 26
+  orig: 27, 29
+  offset: 2, 1
+  index: -1
+pcb1b/body
+  rotate: true
+  xy: 2, 297
+  size: 58, 110
+  orig: 60, 112
+  offset: 1, 1
+  index: -1
+pcb1b/head
+  rotate: false
+  xy: 104, 125
+  size: 68, 64
+  orig: 70, 66
+  offset: 1, 1
+  index: -1
+pcb1b/left
+  rotate: false
+  xy: 182, 217
+  size: 24, 24
+  orig: 26, 26
+  offset: 1, 1
+  index: -1
+pcb1f/left
+  rotate: false
+  xy: 182, 217
+  size: 24, 24
+  orig: 26, 26
+  offset: 1, 1
+  index: -1
+pcb1b/right
+  rotate: true
+  xy: 182, 269
+  size: 24, 27
+  orig: 26, 29
+  offset: 1, 1
+  index: -1
+pcb1f/right
+  rotate: true
+  xy: 182, 269
+  size: 24, 27
+  orig: 26, 29
+  offset: 1, 1
+  index: -1
+pcb1f/body
+  rotate: true
+  xy: 2, 357
+  size: 60, 112
+  orig: 60, 112
+  offset: 0, 0
+  index: -1
+pcb1f/head
+  rotate: false
+  xy: 71, 59
+  size: 67, 64
+  orig: 69, 66
+  offset: 1, 1
+  index: -1
+pcb2b
+  rotate: false
+  xy: 147, 683
+  size: 63, 64
+  orig: 66, 66
+  offset: 1, 1
+  index: -1
+pcb2f
+  rotate: false
+  xy: 147, 618
+  size: 63, 63
+  orig: 68, 66
+  offset: 1, 2
+  index: -1
+pcb3b
+  rotate: false
+  xy: 2, 2
+  size: 66, 64
+  orig: 69, 66
+  offset: 1, 1
+  index: -1
+pcb3f
+  rotate: false
+  xy: 2, 68
+  size: 67, 66
+  orig: 69, 69
+  offset: 1, 2
+  index: -1
+weapon/a1
+  rotate: false
+  xy: 2, 574
+  size: 125, 81
+  orig: 127, 83
+  offset: 1, 1
+  index: -1
+weapon/a1car
+  rotate: true
+  xy: 111, 191
+  size: 102, 69
+  orig: 104, 71
+  offset: 1, 1
+  index: -1
+weapon/a1spr
+  rotate: false
+  xy: 2, 657
+  size: 143, 90
+  orig: 145, 92
+  offset: 1, 1
+  index: -1
+weapon/a2
+  rotate: true
+  xy: 129, 491
+  size: 125, 80
+  orig: 127, 82
+  offset: 1, 1
+  index: -1
+weapon/m177
+  rotate: false
+  xy: 2, 499
+  size: 115, 73
+  orig: 117, 75
+  offset: 1, 1
+  index: -1
+weapon/m1911
+  rotate: true
+  xy: 70, 12
+  size: 45, 51
+  orig: 47, 53
+  offset: 1, 1
+  index: -1
+weapon/m1911ct
+  rotate: false
+  xy: 140, 67
+  size: 57, 56
+  orig: 60, 58
+  offset: 1, 1
+  index: -1
+weapon/mk22
+  rotate: false
+  xy: 118, 357
+  size: 84, 70
+  orig: 86, 72
+  offset: 1, 1
+  index: -1
+weapon/mp5
+  rotate: false
+  xy: 114, 295
+  size: 80, 60
+  orig: 83, 63
+  offset: 1, 2
+  index: -1
+weapon/mp5sd
+  rotate: false
+  xy: 118, 429
+  size: 88, 60
+  orig: 90, 63
+  offset: 1, 2
+  index: -1
