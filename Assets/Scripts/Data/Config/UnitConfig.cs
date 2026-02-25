@@ -1,5 +1,6 @@
 ﻿using System;
 using Sirenix.OdinInspector;
+using Spine.Unity;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,8 +10,6 @@ namespace Data.Config
 	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit Config")]
 	public class UnitConfig : ScriptableObject
 	{
-		#region Basic Info
-
 		[Title("基础信息", bold: true)]
 		[LabelText("配置ID")]
 		[InfoBox("单位的唯一标识符", InfoMessageType.None)]
@@ -26,24 +25,20 @@ namespace Data.Config
 		[TextArea(2, 4)]
 		public string description = "This is a new unit.";
 
-		#endregion
-
-
-		#region Visuals
-
 		[Title("视觉表现", bold: true)]
 		[LabelText("单位图标")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]
 		public Sprite icon;
 
 		[Space]
-		[LabelText("单位预制体")]
-		public RuleTile ruleTile; // todo: 考虑单一的单位预制体,在生成单位时为该预制体做装饰，而不是为每个单位配置一个预制体
+		[LabelText("动画配置")]
+		public UnitAnimationConfig animationConfig;
 
-		#endregion
-
-
-		#region Stats
+		[Space]
+		public SkeletonDataAsset skeletonDataAsset;
+		public string frontBodySkin = "pcb1_front";
+		public string backBodySkin = "pcb1_back";
+		public string defaultWeaponSkin = "";
 
 		[Title("单位属性", bold: true)]
 		[LabelText("属性配置")]
@@ -55,8 +50,6 @@ namespace Data.Config
 			actionPoints = 2,
 			faction = UnitFaction.Neutral
 		};
-
-		#endregion
 
 
 		#region Validation
@@ -72,14 +65,27 @@ namespace Data.Config
 				isValid = false;
 			}
 
-			if (!ruleTile)
-			{
-				Debug.LogWarning($"[UnitConfig] [{unitName}] No prefab assigned!");
-			}
-
 			if (!icon)
 			{
 				Debug.LogWarning($"[UnitConfig] [{unitName}] No icon assigned!");
+			}
+
+			if (!animationConfig)
+			{
+				Debug.LogError($"[UnitConfig] [{unitName}] No animation config assigned!");
+				isValid = false;
+			}
+
+			if (!skeletonDataAsset)
+			{
+				Debug.LogError($"[UnitConfig] [{unitName}] No skeleton data asset assigned!");
+				isValid = false;
+			}
+
+			if (string.IsNullOrEmpty(frontBodySkin) || string.IsNullOrEmpty(backBodySkin))
+			{
+				Debug.LogError($"[UnitConfig] [{unitName}] Front and back body skins must be assigned!");
+				isValid = false;
 			}
 
 			if (isValid)

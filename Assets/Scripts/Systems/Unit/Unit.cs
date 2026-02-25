@@ -1,26 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Mono;
 using Data.Config;
 using Data.Runtime;
-using PurpleFlowerCore;
 using Sirenix.OdinInspector;
+using Spine.Unity;
 using Systems.Equipment;
 using Systems.Turn;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Systems.Unit
 {
 	[Serializable]
 	public class Unit : ITurnUnit, IEquipable
 	{
-		[ReadOnly] public string id;
-		[ReadOnly] public string configId;
+		[ReadOnly] public string id;		// id for runtime instance
+		[ReadOnly] public string configId;	// id for config so
 		[ReadOnly] public string name;
 		[ReadOnly] public UnitStats stats = new();
 		[ReadOnly] public UnitRuntime runtime = new();
-        [ReadOnly] public RuleTile ruleTile;
+
+		[ReadOnly] public UnitAnimationConfig animationConfig;
+		[ReadOnly] public SkeletonDataAsset skeletonDataAsset;
+		[ReadOnly] public string frontBodySkin;
+		[ReadOnly] public string backBodySkin;
+		[ReadOnly] public string defaultWeaponSkin;
 
         public Vector2Int Position
         {
@@ -45,7 +48,11 @@ namespace Systems.Unit
 				configId = config.configId,
 				name = config.unitName,
 				stats = config.stats.Clone(),
-                ruleTile = config.ruleTile,
+				animationConfig = config.animationConfig,
+				skeletonDataAsset = config.skeletonDataAsset,
+				frontBodySkin = config.frontBodySkin,
+				backBodySkin = config.backBodySkin,
+				defaultWeaponSkin = config.defaultWeaponSkin
 			};
 			unit.runtime.Initialize(unit.stats.maxHp, startPosition, unit);
 			return unit;

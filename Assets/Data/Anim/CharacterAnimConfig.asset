@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12acb804f9c94a1eb54f55fb74a06bd7, type: 3}
+  m_Name: CharacterAnimConfig
+  m_EditorClassIdentifier: 
+  defaultStance: 0
+  defaultGrip: 0
+  animations:
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: shoot/fire 3burst
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: shoot/fire 5burst
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: shoot/fire auto
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: shoot/fire auto2
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: shoot/fire semi
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 1
+    clipName: fire semi hg
+    loop: 0
+  - action: idle
+    stance: 1
+    grip: 0
+    clipName: idle/idle bend
+    loop: 1
+  - action: idle
+    stance: 1
+    grip: 1
+    clipName: idle/idle bend hg
+    loop: 1
+  - action: idle
+    stance: 0
+    grip: 0
+    clipName: idle/idle stand
+    loop: 1
+  - action: idle
+    stance: 0
+    grip: 1
+    clipName: idle/idle stand hg
+    loop: 1
+  - action: move_loop
+    stance: 0
+    grip: 0
+    clipName: move/move1
+    loop: 1
+  - action: move_end
+    stance: 0
+    grip: 0
+    clipName: move/move end
+    loop: 0
+  - action: move_start
+    stance: 0
+    grip: 0
+    clipName: move/move start
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: reloading m16
+    loop: 0
+  - action: 
+    stance: 0
+    grip: 0
+    clipName: reloading mp5
+    loop: 0
+  transitions:
+  - from: 2
+    to: 0
+    grip: 0
+    clipName: aim to stand
+  - from: 2
+    to: 0
+    grip: 1
+    clipName: aim to stand hg
+  - from: 1
+    to: 0
+    grip: 0
+    clipName: bend to stand
+  - from: 1
+    to: 0
+    grip: 1
+    clipName: bend to stand hg
+  - from: 0
+    to: 2
+    grip: 0
+    clipName: stand to aim
+  - from: 0
+    to: 2
+    grip: 1
+    clipName: stand to aim hg
+  - from: 0
+    to: 1
+    grip: 0
+    clipName: stand to bend
+  - from: 0
+    to: 1
+    grip: 1
+    clipName: stand to bend hg

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace Presentation.Unit
 {
+	/// <summary>
+	/// 对于Spine动画播放的封装
+	/// </summary>
 	[RequireComponent(typeof(SpineAnimation))]
 	public class UnitAnimator : MonoBehaviour
 	{
@@ -26,9 +29,22 @@ namespace Presentation.Unit
 
 		public string CurrentAnimationName => _currentEntry?.Animation?.Name;
 
-		public void Initialize(string bodySkin, string weaponSkin = null)
+		public void Initialize(SkeletonDataAsset dataAsset, string bodySkin, string weaponSkin = null)
 		{
 			_skeletonAnimation = GetComponent<SkeletonAnimation>();
+
+			if (_skeletonAnimation.SkeletonDataAsset != dataAsset)
+			{
+				_skeletonAnimation.skeletonDataAsset = dataAsset;
+				_skeletonAnimation.Initialize(true);
+			}
+			else
+			{
+				// already has the correct data asset, just ensure it's initialized
+				if (!_skeletonAnimation.valid)
+					_skeletonAnimation.Initialize(false);
+			}
+
 			_skeleton = _skeletonAnimation.Skeleton;
 			_animState = _skeletonAnimation.AnimationState;
 

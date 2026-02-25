@@ -67,7 +67,7 @@ namespace Data.Runtime.Commands
 			unit.Position = _toPosition;
 
 			_eventBus.Publish(new UnitMovedEvent(
-				_unitId,
+				unit,
 				_fromPosition,
 				_toPosition,
 				_path
@@ -77,17 +77,10 @@ namespace Data.Runtime.Commands
 			{
 				_onPresentationComplete = OnPresentationComplete;
 				_eventBus.Subscribe(_onPresentationComplete);
-                
-                // 注意到由于事件订阅的时序问题，这里必须延时
-                DelayUtility.DelayFrame(2, () =>
-                {
-                    _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Animation, PresentationType.Animation.Move, _unitId));
-                });
 			}
 			else
             {
                 var units = _unitService.GetAllAliveUnits().ToList();
-                _eventBus.Publish(new MapViewRenderUnitEvent(units));
                 CompleteExecution();
             }
 		}
@@ -113,7 +106,7 @@ namespace Data.Runtime.Commands
 			reversePath.Reverse();
 
 			_eventBus.Publish(new UnitMovedEvent(
-				_unitId,
+				unit,
 				_toPosition,
 				_fromPosition,
 				reversePath
@@ -131,7 +124,6 @@ namespace Data.Runtime.Commands
 			this.Log($"Animation complete for {_unitId}");
             
             var units = _unitService.GetAllAliveUnits().ToList();
-            _eventBus.Publish(new MapViewRenderUnitEvent(units));
 
 			Cleanup();
 			CompleteExecution();

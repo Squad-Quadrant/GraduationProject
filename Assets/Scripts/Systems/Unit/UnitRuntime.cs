@@ -17,13 +17,13 @@ namespace Systems.Unit
 
         public Vector2Int position;
         
-        public Unit Owner { get; set; }
+        [field: NonSerialized] public Unit Owner { get; set; }
 
-		public void Initialize(int maxHp, Vector2Int position, Unit owner)
+		public void Initialize(int maxHp, Vector2Int pos, Unit owner)
 		{
 			currentHp = maxHp;
 			isStunned = false;
-            this.position = position;
+            position = pos;
             Owner = owner;
 		}
 	}

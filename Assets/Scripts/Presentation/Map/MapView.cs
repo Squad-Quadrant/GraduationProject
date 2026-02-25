@@ -14,13 +14,12 @@ namespace Presentation.Map
 	public class MapView : MonoBehaviour
 	{
 		[Title("References")]
-		[SerializeField] private Tilemap GroundTilemap;
-        [SerializeField] private Tilemap LeftWallTilemap;
-        [SerializeField] private Tilemap RightTilemap;
-        [SerializeField] private Tilemap SceneActorTilemap;
-        [SerializeField] private Tilemap HighlightTilemap;
-        [SerializeField] private Tilemap UnitTilemap;
-        [SerializeField] private Tile HighlightTile; // just a simple highlight tile for demonstration
+		[SerializeField] private Tilemap groundTilemap;
+        [SerializeField] private Tilemap leftWallTilemap;
+        [SerializeField] private Tilemap rightTilemap;
+        [SerializeField] private Tilemap sceneActorTilemap;
+        [SerializeField] private Tilemap highlightTilemap;
+        [SerializeField] private Tile highlightTile; // just a simple highlight tile for demonstration
         
         private IEventBus _eventBus;
         
@@ -39,7 +38,6 @@ namespace Presentation.Map
 #endif
             _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
             _eventBus.Subscribe<RangeDisplayEvent>(DisplayHighlight);
-            _eventBus.Subscribe<MapViewRenderUnitEvent>(RenderUnit);
         }
 
         private void OnDisable()
@@ -49,7 +47,6 @@ namespace Presentation.Map
 #endif
             _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
             _eventBus.Unsubscribe<RangeDisplayEvent>(DisplayHighlight);
-            _eventBus.Unsubscribe<MapViewRenderUnitEvent>(RenderUnit);
         }
 
 		public void ClearHighlights()
@@ -70,15 +67,15 @@ namespace Presentation.Map
 		private void RenderTerrain(MapViewInitEvent mapViewInitEvent)
 		{
             var mapData = mapViewInitEvent.MapData;
-            GroundTilemap.ClearAllTiles();
+            groundTilemap.ClearAllTiles();
 
 			foreach (var cell in mapData.Cells.Values)
             {
 				if (cell.Tile)
-                    GroundTilemap.SetTile((Vector3Int)cell.Position, cell.Tile);
+                    groundTilemap.SetTile((Vector3Int)cell.Position, cell.Tile);
                 if (cell.SceneActor != null && cell.SceneActor.BaseCell == cell)
                 {
-                    SceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
+                    sceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
                 }
 			}
 
@@ -89,11 +86,11 @@ namespace Presentation.Map
                     (Vector2Int pos, bool isLeft) wallKey = wall.Key.ToPositionAndIsLeft();
                     if (wallKey.isLeft)
                     {
-                        LeftWallTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
+                        leftWallTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
                     }
                     else
                     {
-                        RightTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
+                        rightTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
                     }
                 }
             }
@@ -103,34 +100,12 @@ namespace Presentation.Map
 		{
 			if (e.Cells.Count == 0)
 			{
-				HighlightTilemap.ClearAllTiles();
+				highlightTilemap.ClearAllTiles();
 				return;
 			}
 
 			foreach (var cellPos in e.Cells)
-				HighlightTilemap.SetTile((Vector3Int)cellPos, HighlightTile);
+				highlightTilemap.SetTile((Vector3Int)cellPos, highlightTile);
 		}
-
-        private void RenderUnit(MapViewRenderUnitEvent e)
-        {
-            var units = e.UnitsToRender;
-            UnitTilemap.ClearAllTiles();
-
-            // todo: 考虑到某些没有UnitServer上下文的情况,也需要能够渲染单位, 因此提供一个AutoGetUnits的选项, 让MapView自己去UnitServer里拿需要渲染的单位列表
-            // todo: 获得UnitServer里Unit的办法
-            
-            // if (e.AutoGetUnits)
-            // {
-            //     units = 
-            // }
-            
-            foreach (var unit in units)
-            {
-                var pos = unit.Position;
-                RuleTile tile = unit.ruleTile;
-                UnitTilemap.SetTile((Vector3Int)pos, tile);
-            }
-            
-        }
 	}
 }

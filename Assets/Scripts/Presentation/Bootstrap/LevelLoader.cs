@@ -12,6 +12,7 @@ using Presentation.Interaction;
 using Presentation.Map;
 using Presentation.UI.Core;
 using Presentation.UI.Presenter;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Systems.GamePlay;
 using Systems.Interfaces;
@@ -35,6 +36,7 @@ namespace Presentation.Bootstrap
 		[SerializeField] private Grid grid;
 		[SerializeField] private InputService inputService;
 		[SerializeField] private InteractionController interactionController;
+		[SerializeField] private UnitViewManager unitViewManager;
 
 		[Title("Configuration")]
 		[SerializeField] private LevelConfig levelConfig;
@@ -96,6 +98,7 @@ namespace Presentation.Bootstrap
 			yield return InitializeUIPresenter();
 			yield return InitializeInteractionController();
 			yield return InitializeInputService();
+			yield return InitializeUnitViewManager();
 
 			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
 			this.Log("====================================", false);
@@ -170,7 +173,7 @@ namespace Presentation.Bootstrap
 			yield return null;
 		}
 
-		private IEnumerator CreateUnits()
+		private IEnumerator CreateUnits() // unit initialization in unit service, just logic, spawning and view creation are in UnitViewManager, triggered by UnitCreatedEvent
 		{
 			this.Log("Spawning units...");
 
@@ -182,7 +185,7 @@ namespace Presentation.Bootstrap
 				this.LogWarning("No units to spawn!");
 				yield break;
 			}
-            List<Systems.Unit.Unit> unitsToRender = new List<Systems.Unit.Unit>();
+
 			foreach (var placement in levelConfig.unitPlacements)
 			{
 				try
@@ -207,7 +210,6 @@ namespace Presentation.Bootstrap
 						placement.unitConfig,
 						placement.startPosition
 					);
-                    unitsToRender.Add(unit);
 					// Occupy cell on map
 					mapService.OccupyCell(placement.startPosition, placement.unitId);
 
@@ -220,7 +222,7 @@ namespace Presentation.Bootstrap
 
 				yield return null;
 			}
-            _eventBus.Publish(new MapViewRenderUnitEvent(unitsToRender));
+
 			this.Log($"✓ Spawned {levelConfig.unitPlacements.Count} units.");
 		}
 
@@ -296,12 +298,34 @@ namespace Presentation.Bootstrap
 			}
 
 			inputService.Initialize(
-				_eventBus,
-				_levelContainer.Resolve<ICoordinateConverter>(),
-				_levelContainer.Resolve<IMapService>(),
-				_levelContainer.Resolve<IUnitService>()
-			);
+				eventBus: _eventBus,
+				coordinateConverter: _levelContainer.Resolve<ICoordinateConverter>(),
+				mapService: _levelContainer.Resolve<IMapService>(),
+				unitService: _levelContainer.Resolve<IUnitService>());
+
 			this.Log("✓ InputService initialized.");
+			yield return null;
+		}
+
+		private IEnumerator InitializeUnitViewManager()
+		{
+			this.Log("Initializing UnitViewManager...");
+
+			if (!unitViewManager)
+			{
+				unitViewManager = FindObjectOfType<UnitViewManager>();
+				if (!unitViewManager)
+				{
+					this.LogWarning("No UnitViewManager found in scene!");
+					yield break;
+				}
+			}
+
+			unitViewManager.Initialize(
+				eventBus: _eventBus,
+				coordConverter: _levelContainer.Resolve<ICoordinateConverter>());
+
+			this.Log("✓ UnitViewManager initialized.");
 			yield return null;
 		}
 	}
