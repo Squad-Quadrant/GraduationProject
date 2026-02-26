@@ -29,19 +29,19 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
-  - name: WZHTest_0_Menu
+  - name: CommonTest_0_Menu
     commandType: 0
     color: {r: 1, g: 1, b: 1, a: 1}
     lineBreak: 1
-    commandParam: Assets/Scenes/Dev/WZHTest_0_Menu.unity
+    commandParam: Assets/Scenes/Dev/CommonTest_0_Menu.unity
     command:
       m_PersistentCalls:
         m_Calls: []
-  - name: WZHTest_1_Level
+  - name: CommonTest_1_Level
     commandType: 0
     color: {r: 1, g: 1, b: 1, a: 1}
     lineBreak: 0
-    commandParam: Assets/Scenes/Dev/WZHTest_1_Level.unity
+    commandParam: Assets/Scenes/Dev/CommonTest_1_Level.unity
     command:
       m_PersistentCalls:
         m_Calls: []

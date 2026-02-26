@@ -216,11 +216,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d1da5165344d9d9fc16cb9e303d07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundTilemap: {fileID: 0}
-  leftWallTilemap: {fileID: 0}
-  rightTilemap: {fileID: 0}
-  sceneActorTilemap: {fileID: 0}
-  highlightTilemap: {fileID: 0}
+  groundTilemap: {fileID: 6591262835958832931}
+  leftWallTilemap: {fileID: 2152741864862552225}
+  rightTilemap: {fileID: 1268669112688259591}
+  sceneActorTilemap: {fileID: 1606180752552795436}
+  highlightTilemap: {fileID: 3724194626626383369}
   highlightTile: {fileID: 11400000, guid: ffe90171ba360844491f79ae7a7f56c2, type: 2}
   enableGenerate: 1
 --- !u!1 &5780918916674935639
