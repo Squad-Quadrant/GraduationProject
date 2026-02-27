@@ -143,8 +143,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 975103653
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -216,11 +216,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d1da5165344d9d9fc16cb9e303d07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundTilemap: {fileID: 0}
-  leftWallTilemap: {fileID: 0}
-  rightTilemap: {fileID: 0}
-  sceneActorTilemap: {fileID: 0}
-  highlightTilemap: {fileID: 0}
+  groundTilemap: {fileID: 6591262835958832931}
+  leftWallTilemap: {fileID: 2152741864862552225}
+  rightTilemap: {fileID: 1268669112688259591}
+  sceneActorTilemap: {fileID: 1606180752552795436}
+  highlightTilemap: {fileID: 3724194626626383369}
   highlightTile: {fileID: 11400000, guid: ffe90171ba360844491f79ae7a7f56c2, type: 2}
   enableGenerate: 1
 --- !u!1 &5780918916674935639
@@ -457,7 +457,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -5, y: -11, z: 0}
   m_Size: {x: 14, y: 11, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileAnchor: {x: 1, y: 1.01, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -522,7 +522,7 @@ TilemapRenderer:
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
-  m_Mode: 0
+  m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
 --- !u!1 &7820239074725254396
@@ -609,7 +609,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -5, y: -11, z: 0}
   m_Size: {x: 14, y: 11, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileAnchor: {x: 1.01, y: 0.99, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -674,7 +674,7 @@ TilemapRenderer:
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
-  m_Mode: 0
+  m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
 --- !u!1 &8745040031069635986
@@ -828,6 +828,6 @@ TilemapRenderer:
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 3
-  m_Mode: 0
+  m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0

@@ -48,12 +48,6 @@ namespace Presentation.Debugger
 		protected abstract string PreviousStateName { get; }
 
 		[BoxGroup("Info/Split/State")]
-		[LabelText("IsTransitioning"), LabelWidth(90)]
-		[DisplayAsString, ShowInInspector]
-		[GUIColor("@IsTransitioning ? new Color(1f, 0.5f, 0f) : new Color(0.5f, 0.5f, 0.5f)")]
-		protected abstract bool IsTransitioning { get; }
-
-		[BoxGroup("Info/Split/State")]
 		[LabelText("AutoTransition"), LabelWidth(90)]
 		[DisplayAsString, ShowInInspector]
 		[GUIColor("@EnableAutoTransitions ? new Color(0.3f, 1f, 0.3f) : new Color(1f, 0.3f, 0.3f)")]
@@ -194,7 +188,6 @@ namespace Presentation.Debugger
 		protected override string StateMachineName => StateMachine?.Name ?? "Not Connected";
 		protected override string CurrentStateName => StateMachine?.CurrentState?.Name ?? "None";
 		protected override string PreviousStateName => StateMachine?.PreviousState?.Name ?? "None";
-		protected override bool IsTransitioning => StateMachine?.IsTransitioning ?? false;
 		protected override bool EnableAutoTransitions => StateMachine?.EnableAutoTransitions ?? false;
 
 

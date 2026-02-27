@@ -47,7 +47,6 @@ namespace Systems.Interaction.States
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
-
 			_onActionSelected = null;
 			_onUnitClicked = null;
 			_onBack = null;

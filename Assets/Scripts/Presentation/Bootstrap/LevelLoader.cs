@@ -94,11 +94,11 @@ namespace Presentation.Bootstrap
 			yield return CreateLevelContainer();
 			yield return RegisterServices();
 			yield return InitializeMap();
-			yield return CreateUnits();
 			yield return InitializeUIPresenter();
 			yield return InitializeInteractionController();
 			yield return InitializeInputService();
 			yield return InitializeUnitViewManager();
+			yield return CreateUnits();
 
 			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
 			this.Log("====================================", false);

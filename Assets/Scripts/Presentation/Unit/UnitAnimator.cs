@@ -10,7 +10,7 @@ namespace Presentation.Unit
 	/// <summary>
 	/// 对于Spine动画播放的封装
 	/// </summary>
-	[RequireComponent(typeof(SpineAnimation))]
+	[RequireComponent(typeof(SkeletonAnimation))]
 	public class UnitAnimator : MonoBehaviour
 	{
 		private const int MainTrack = 0;

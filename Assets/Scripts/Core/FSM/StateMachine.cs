@@ -21,8 +21,6 @@ namespace Core.FSM
 
 		public TContext Context { get; } // Context associated with this state machine
 
-		public bool IsTransitioning { get; private set; }
-
 		/// <summary>
 		/// If true, the state machine will automatically evaluate and perform transitions during the Update call.
 		/// </summary>
@@ -77,14 +75,12 @@ namespace Core.FSM
 		/// </summary>
 		/// <param name="newState">New state instance</param>
 		/// <param name="forceTransition">If true, IsTransitioning flag will be ignored</param>
-		public void ChangeState(IState<TContext> newState, bool forceTransition = false)
+		public void ChangeState(IState<TContext> newState)
 		{
+			this.Log("---------- State Changing ----------");
 			if (newState == null)
-				throw new ArgumentNullException(nameof(newState));
-
-			if (!forceTransition && IsTransitioning)
 			{
-				this.LogWarning($"[{Name}] Cannot change state while transitioning. Current: {CurrentState?.Name}, Requested: {newState.Name}");
+				this.LogError($"[{Name}] Cannot change to null state.");
 				return;
 			}
 
@@ -94,37 +90,24 @@ namespace Core.FSM
 				return;
 			}
 
-			IsTransitioning = true;
-
-			try
+			if (CurrentState != null)
 			{
-				if (CurrentState != null)
-				{
-					this.Log($"[{Name}] Exiting state: {CurrentState.Name}");
-					CurrentState.OnExit(Context);
-				}
-
-				PreviousState = CurrentState;
-				CurrentState = newState;
-
-				AddToHistory(CurrentState.Name);
-
-				this.Log($"[{Name}] Entering state: {CurrentState.Name}");
-				CurrentState.OnEnter(Context);
-
-				PublishStateChangedEvent();
-
-				this.Log($"[{Name}] State changed: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
+				this.Log($"[{Name}] Exiting state: {CurrentState.Name}");
+				CurrentState.OnExit(Context);
 			}
-			catch (Exception ex)
-			{
-				this.LogError($"[{Name}] Error during state change: {ex.Message}\n{ex.StackTrace}");
-				throw;
-			}
-			finally
-			{
-				IsTransitioning = false;
-			}
+
+			PreviousState = CurrentState;
+			CurrentState = newState;
+
+			AddToHistory(CurrentState.Name);
+
+			this.Log($"[{Name}] Entering state: {CurrentState.Name}");
+			CurrentState.OnEnter(Context);
+
+			PublishStateChangedEvent();
+
+			 this.Log($"[{Name}] successfully: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
+			 this.Log("----------------------------------");
 		}
 
 		/// <summary>
@@ -141,6 +124,7 @@ namespace Core.FSM
 				_stateCache[stateType] = state;
 				this.Log($"[{Name}] Created new state instance: {state.Name}");
 			}
+
 			ChangeState(state);
 		}
 
@@ -155,8 +139,6 @@ namespace Core.FSM
 				return;
 			}
 
-			if (IsTransitioning) return;
-
 			try
 			{
 				CurrentState.OnUpdate(Context, deltaTime);
@@ -166,7 +148,8 @@ namespace Core.FSM
 			}
 			catch (Exception ex)
 			{
-				this.LogError($"[{Name}] Error during state update ({CurrentState.Name}): {ex.Message}\n{ex.StackTrace}");
+				this.LogError(
+					$"[{Name}] Error during state update ({CurrentState.Name}): {ex.Message}\n{ex.StackTrace}");
 				throw;
 			}
 		}
@@ -191,6 +174,7 @@ namespace Core.FSM
 				CurrentState.OnExit(Context);
 				CurrentState = null;
 			}
+
 			PreviousState = null;
 			_stateCache.Clear();
 			_transitions.Clear();
@@ -198,7 +182,9 @@ namespace Core.FSM
 			this.Log($"[{Name}] Cleared.");
 		}
 
-		public bool IsInState<TState>() where TState : IState<TContext> => CurrentState != null && CurrentState.GetType() == typeof(TState);
+		public bool IsInState<TState>() where TState : IState<TContext> =>
+			CurrentState != null && CurrentState.GetType() == typeof(TState);
+
 		public bool IsInState(IState<TContext> state) => CurrentState == state;
 
 		#endregion
@@ -256,7 +242,8 @@ namespace Core.FSM
 				}
 				catch (Exception ex)
 				{
-					this.LogError($"[{Name}] Error during transition ({transition.Name}): {ex.Message}\n{ex.StackTrace}");
+					this.LogError(
+						$"[{Name}] Error during transition ({transition.Name}): {ex.Message}\n{ex.StackTrace}");
 					throw;
 				}
 			}

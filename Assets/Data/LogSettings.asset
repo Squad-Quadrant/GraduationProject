@@ -15,76 +15,16 @@ MonoBehaviour:
   globalLogLevel: 0
   enableAllLogs: 1
   rules:
-  - typeName: Core.Events.EventBus
+  - typeName: Core.Commands.CommandQueue
     enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Core.Events.EventBus
+    enabled: 0
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Core.FSM.StateMachine`1[[Systems.Interaction.InteractionContext, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Bootstrap.LevelLoader
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Input.InputService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Interaction.InteractionController
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UIFactory
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UIManager
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UINavigator
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.ActionMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.GameServer
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.IdleState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.MovementPreviewState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.UnitSelectedState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Map.MapService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.PathFinding.PathFindingService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.UnitService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Core.Commands.CommandQueue
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -92,11 +32,83 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
-  - typeName: Systems.Interaction.States.ExecutingState
+  - typeName: Presentation.Bootstrap.LevelLoader
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Input.InputService
+    enabled: 0
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Interaction.InteractionController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIFactory
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UINavigator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenuPanel
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.UI.Panel.TurnPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitAnimator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitViewManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.GameServer
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.ExecutingState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.IdleState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.MovementPreviewState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.UnitSelectedState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.PathFinding.PathFindingService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Unit.UnitService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1

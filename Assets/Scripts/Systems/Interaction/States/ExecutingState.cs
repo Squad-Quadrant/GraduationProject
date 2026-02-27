@@ -62,6 +62,8 @@ namespace Systems.Interaction.States
 				return;
 			}
 
+
+
 			var unit = Context.selectedUnit;
 			var currentTurnUnit = Context.TurnService.GetCurrentUnit();
 

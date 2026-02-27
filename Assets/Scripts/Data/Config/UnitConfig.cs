@@ -36,8 +36,8 @@ namespace Data.Config
 
 		[Space]
 		public SkeletonDataAsset skeletonDataAsset;
-		public string frontBodySkin = "pcb1_front";
-		public string backBodySkin = "pcb1_back";
+		public string frontBodySkin = "pcb1 front";
+		public string backBodySkin = "pcb1 back";
 		public string defaultWeaponSkin = "";
 
 		[Title("单位属性", bold: true)]

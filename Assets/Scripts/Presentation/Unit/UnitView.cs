@@ -14,13 +14,15 @@ namespace Presentation.Unit
 	/// <summary>
 	/// Unit在场景中的实体
 	/// </summary>
-	[RequireComponent(typeof(UnitAnimator), typeof(Collider2D))]
 	public class UnitView : MonoBehaviour, IClickableUnit
 	{
 		[TitleGroup("Settings")]
 		[SerializeField] private float moveSpeed = 3f;
 
-		private UnitAnimator _animator;
+		[TitleGroup("References")]
+		[SerializeField, Required, ChildGameObjectsOnly]
+		private UnitAnimator animator;
+
 		private UnitAnimationConfig _config;
 		private ICoordinateConverter _coordConverter;
 
@@ -55,14 +57,14 @@ namespace Presentation.Unit
 			_frontBodySkinName = frontBodySkinName;
 			_backBodySkinName = backBodySkinName;
 
-			_animator = GetComponent<UnitAnimator>();
-			_animator.Initialize(skeletonDataAsset, frontBodySkinName, weaponSkinName);
+			animator.Initialize(skeletonDataAsset, frontBodySkinName, weaponSkinName);
 
 			_stance = config.DefaultStance;
 			_grip = config.DefaultGrip;
 			_facingRight = true;
 
 			transform.position = _coordConverter.CellToWorld(initialGridPos);
+			transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // ensure z=0 for correct sorting
 
 			PlayAction("idle");
 
@@ -87,7 +89,7 @@ namespace Presentation.Unit
 				return;
 			}
 
-			_animator.Play(result.ClipName, result.Loop, onComplete);
+			animator.Play(result.ClipName, result.Loop, onComplete);
 		}
 
 		// If a transition animation exists in config, plays it first
@@ -102,7 +104,7 @@ namespace Presentation.Unit
 			var transition = _config.GetTransition(_stance, newStance, _grip);
 			if (!string.IsNullOrEmpty(transition))
 			{
-				_animator.Play(transition, false, () =>
+				animator.Play(transition, false, () =>
 				{
 					_stance = newStance;
 					PlayAction("idle");
@@ -129,20 +131,17 @@ namespace Presentation.Unit
 		{
 			if (direction == Vector2Int.zero) return;
 
-			if (direction.x != 0)
-			{
-				_facingRight = direction.x > 0;
-				_animator.SetFaceRight(_facingRight);
-			}
-
 			if (direction.y != 0)
 			{
 				var targetSkin = direction.y < 0 ? _frontBodySkinName : _backBodySkinName;
-				_animator.SetBodySkin(targetSkin);
+				animator.SetBodySkin(targetSkin);
 			}
+
+			_facingRight = direction.x > 0;
+			animator.SetFaceRight(_facingRight);
 		}
 
-		public void SetWeaponSkin(string skinName) => _animator.SetWeaponSkin(skinName);
+		public void SetWeaponSkin(string skinName) => animator.SetWeaponSkin(skinName);
 
 		public void Move(IReadOnlyList<Vector2Int> path, Action onComplete = null)
 		{
@@ -173,8 +172,8 @@ namespace Presentation.Unit
 			this.Log("Movement cancelled.");
 		}
 
-		public void Pause() => _animator.Pause();
-		public void Resume() => _animator.Resume();
+		public void Pause() => animator.Pause();
+		public void Resume() => animator.Resume();
 
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action onComplete)
 		{

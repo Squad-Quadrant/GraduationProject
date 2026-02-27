@@ -156,8 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonAnimation: {fileID: 173098837}
-  characterSkinName: pcb front
-  weaponSkinName: weapon_a1
+  facingRight: 1
 --- !u!114 &173098837
 MonoBehaviour:
   m_ObjectHideFlags: 0

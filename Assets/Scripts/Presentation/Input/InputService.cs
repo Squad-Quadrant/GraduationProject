@@ -195,7 +195,7 @@ namespace Presentation.Input
 
 			if (!collider2d) return null;
 
-			var clickableUnit = collider2d.GetComponent<IClickableUnit>();
+			var clickableUnit = collider2d.GetComponentInParent<IClickableUnit>();
 			return clickableUnit?.UnitId;
 		}
 

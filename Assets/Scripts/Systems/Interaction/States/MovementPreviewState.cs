@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
@@ -73,7 +74,7 @@ namespace Systems.Interaction.States
 
 		private void OnCellClicked(CellClickedEvent e)
 		{
-			if (!Context.validTargetCells.Contains(e.CellPosition))
+			if (!Context.CachedReachableArea.CanStopAt(e.CellPosition))
 			{
 				this.Log($"Invalid target: {e.CellPosition}");
 				// todo: Could play error sound or show feedback
@@ -85,36 +86,36 @@ namespace Systems.Interaction.States
 
 		private void OnPointerHover(PointerHoverEvent e)
 		{
-			// if (!e.CellPosition.HasValue)
-			// {
-			// 	// Pointer outside map - hide path
-			// 	Publish(Context, PathPreviewEvent.Hide());
-			// 	Context.currentPath.Clear();
-			// 	return;
-			// }
-			//
-			// var targetCell = e.CellPosition.Value;
-			//
-			// // Calculate path to hovered cell
-			// var pathResult = GetPathFromCache(targetCell);
-			// var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
-			//
-			// // Update context
-			// Context.currentPath.Clear();
-			// if (pathResult.Found)
-			// {
-			// 	Context.currentPath.AddRange(pathResult.Path);
-			// 	Context.currentPathCost = pathResult.TotalCost;
-			// }
-			// else
-			// 	Context.currentPathCost = 0;
-			//
-			// Publish(Context, new PathPreviewEvent(
-			// 	pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
-			// 	pathResult.TotalCost,
-			// 	isValid,
-			// 	Context.selectedUnit.id
-			// ));
+			if (!e.CellPosition.HasValue)
+			{
+				// Pointer outside map - hide path
+				Publish(Context, PathPreviewEvent.Hide());
+				Context.currentPath.Clear();
+				return;
+			}
+
+			var targetCell = e.CellPosition.Value;
+
+			// Calculate path to hovered cell
+			var pathResult = GetPathFromCache(targetCell);
+			var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
+
+			// Update context
+			Context.currentPath.Clear();
+			if (pathResult.Found)
+			{
+				Context.currentPath.AddRange(pathResult.Path);
+				Context.currentPathCost = pathResult.TotalCost;
+			}
+			else
+				Context.currentPathCost = 0;
+
+			Publish(Context, new PathPreviewEvent(
+				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
+				pathResult.TotalCost,
+				isValid,
+				Context.selectedUnit.id
+			));
 		}
 
 		private void OnBack(BackInputEvent e)
@@ -128,7 +129,6 @@ namespace Systems.Interaction.States
 		{
 			this.Log("ESC input → resetting to Idle");
 			CancelPreview();
-			Publish(Context, new UnitDeselectedEvent(Context.selectedUnit?.id));
 			Context.StateMachine.ChangeState<IdleState>();
 		}
 
@@ -200,13 +200,12 @@ namespace Systems.Interaction.States
 				Context.selectedUnit.id,
 				Context.selectedUnit.Position,
 				targetCell,
-				new List<Vector2Int>(Context.currentPath),
+				GetPathFromCache(targetCell).Path,
 				Context.UnitService,
 				Context.MapService,
 				Context.EventBus
 			);
-            
-            // todo: 尝试放在换状态下面来解决事件订阅时序问题，遇到空引用，遂放弃
+
 			Context.CommandQueue.EnqueueAndExecute(moveCommand);
             
 			// Transition to executing state

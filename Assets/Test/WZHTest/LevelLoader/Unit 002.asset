@@ -16,7 +16,11 @@ MonoBehaviour:
   unitName: Unit 002
   description: This is a new unit.
   icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
-  ruleTile: {fileID: 11400000, guid: 3565166c1c2a8464e98cd7a49a06745e, type: 2}
+  animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
+  frontBodySkin: pcb2 front
+  backBodySkin: pcb2 back
+  defaultWeaponSkin: 
   stats:
     maxHp: 100
     speed: 10
