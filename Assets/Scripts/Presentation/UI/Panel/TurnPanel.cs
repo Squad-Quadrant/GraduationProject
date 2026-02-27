@@ -1,3 +1,4 @@
+using System;
 using Data.Runtime.Events.Turn;
 using Presentation.UI.Core;
 using UnityEngine;
@@ -10,15 +11,12 @@ namespace Presentation.UI.Panel
     {
         [SerializeField] private Button nextUnitButton;
         [SerializeField] private Button nextTurnButton;
-        
-        public void NextUnit()
+
+        protected override void OnInitialize()
         {
             nextUnitButton.onClick.AddListener(() => EventBus.Publish(new UnitTurnEndedEvent()));
-        }
-
-        public void NextTurn()
-        {
             nextTurnButton.onClick.AddListener(() => EventBus.Publish(new TurnEndedEvent()));
+
         }
     }
 }
