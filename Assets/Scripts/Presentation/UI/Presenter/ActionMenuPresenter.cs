@@ -1,8 +1,9 @@
 ﻿using System;
 using Core.Events;
-using Data.Runtime.Events.Interaction;
+using Core.FSM;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Systems.Interaction;
 
 namespace Presentation.UI.Presenter
 {
@@ -17,21 +18,30 @@ namespace Presentation.UI.Presenter
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
-			_eventBus.Subscribe<UnitSelectedEvent>(ShowActionMenu);
-			_eventBus.Subscribe<UnitDeselectedEvent>(CloseActionMenu);
+			_eventBus.Subscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 		}
 
 		public void Dispose()
 		{
-			_eventBus.Unsubscribe<UnitSelectedEvent>(ShowActionMenu);
-			_eventBus.Unsubscribe<UnitDeselectedEvent>(CloseActionMenu);
+			_eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 		}
 
-		private void ShowActionMenu(UnitSelectedEvent e) => _panel = _uiManager.Open<ActionMenuPanel, UnitSelectedEvent>(e);
-
-		private void CloseActionMenu(UnitDeselectedEvent e)
+		private void OnStateChanged(StateChangedEvent<InteractionContext> e)
 		{
-			if (_panel) _uiManager.Close(_panel);
+			var current = e.CurrentState?.Name;
+			var previous = e.PreviousState?.Name;
+
+			if (current == InteractionStates.UnitSelected)
+			{
+				_panel = _uiManager.Open<ActionMenuPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
+				return;
+			}
+
+			if (previous == InteractionStates.UnitSelected && _panel)
+			{
+				_uiManager.Close<ActionMenuPanel>();
+				_panel = null;
+			}
 		}
 	}
 }

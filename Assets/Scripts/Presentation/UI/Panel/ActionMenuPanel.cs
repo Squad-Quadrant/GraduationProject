@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Presentation.UI.Panel
 {
-	public class ActionMenuPanel : UIPanel, IInitializable<UnitSelectedEvent>
+	public class ActionMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[SerializeField] private Button moveButton;
 
@@ -16,9 +16,9 @@ namespace Presentation.UI.Panel
 			moveButton?.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Move)));
 		}
 
-		public void Initialize(UnitSelectedEvent data)
+		public void DataInitialize(Systems.Unit.Unit selectedUnit)
 		{
-			// Set up the action menu based on the selected unit
+			// todo: use data to populate the menu with available actions for the selected unit
 		}
 	}
 }

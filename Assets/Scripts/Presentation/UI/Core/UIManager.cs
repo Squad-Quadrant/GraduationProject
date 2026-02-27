@@ -103,7 +103,7 @@ namespace Presentation.UI.Core
 
 			if (_openPanels.TryGetValue(config.PanelId, out var existing) && existing is TPanel typedExisting)
 			{
-				typedExisting.Initialize(data);
+				typedExisting.DataInitialize(data);
 				this.Log($"Already open, updated data: {config.PanelId}");
 				return typedExisting;
 			}
@@ -111,7 +111,7 @@ namespace Presentation.UI.Core
 			var panel = GetPanelInstance(config);
 			if (panel is not TPanel typedPanel) return null;
 
-			typedPanel.Initialize(data);
+			typedPanel.DataInitialize(data);
 			RegisterAndOpen(panel);
 			return typedPanel;
 		}
