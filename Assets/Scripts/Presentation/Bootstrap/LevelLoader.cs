@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
-using Data.Runtime.Events.Map;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;
