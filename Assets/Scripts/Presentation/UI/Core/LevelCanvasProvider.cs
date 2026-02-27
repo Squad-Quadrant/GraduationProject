@@ -29,12 +29,6 @@ namespace Presentation.UI.Core
 		{
 			if (_registered || layer == EUICanvasLayer.Overlay) return;
 
-            if (!RootContainer.Instance)
-            {
-                this.LogError("RootContainer instance not found. Ensure that the RootContainer is initialized before enabling LevelCanvasProvider.");
-                return;
-            }
-
 			var uiManager = RootContainer.Instance.TryResolve<UIManager>();
 			if (uiManager)
 			{
