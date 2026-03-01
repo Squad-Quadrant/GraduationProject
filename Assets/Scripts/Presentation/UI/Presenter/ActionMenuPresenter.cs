@@ -27,7 +27,14 @@ namespace Presentation.UI.Presenter
 			_eventBus.Unsubscribe<UnitDeselectedEvent>(CloseActionMenu);
 		}
 
-		private void ShowActionMenu(UnitSelectedEvent e) => _panel = _uiManager.Open<ActionMenuPanel, UnitSelectedEvent>(e);
+		private void ShowActionMenu(UnitSelectedEvent e)
+        {
+            _panel = _uiManager.Open<ActionMenuPanel, UnitSelectedEvent>(e);
+            if (_panel)
+            {
+                _panel.SetUnit(e.UnitId);
+            }
+        }
 
 		private void CloseActionMenu(UnitDeselectedEvent e)
 		{
