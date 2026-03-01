@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelId: TurnBanner
   prefab: {fileID: 3357772539825526840, guid: 87d83cea6979a6e48b9c5c958464d97e, type: 3}
-  layer: 1
+  layer: 0
   cacheOnClose: 1

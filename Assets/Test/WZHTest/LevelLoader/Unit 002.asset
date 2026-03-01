@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Unit 002
   m_EditorClassIdentifier: 
   configId: unit_002
-  unitName: Unit 002
+  unitName: Test Enemy
   description: This is a new unit.
   icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}

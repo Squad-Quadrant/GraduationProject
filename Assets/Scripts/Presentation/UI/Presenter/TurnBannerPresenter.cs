@@ -33,7 +33,7 @@ namespace Presentation.UI.Presenter
         {
             _turnBanner = _uiManager.Open<TurnBanner>();
             _turnBanner.Show($"下一回合: {e.TurnNumber}");
-            DelayUtility.Delay(3f, () =>
+            DelayUtility.Delay(2f, () =>
             {
                 _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
                 _uiManager.Close(_turnBanner);
@@ -44,7 +44,7 @@ namespace Presentation.UI.Presenter
         {
             _turnBanner = _uiManager.Open<TurnBanner>();
                 _turnBanner.Show($"下一单位: {e.UnitId}");
-            DelayUtility.Delay(3f, () =>
+            DelayUtility.Delay(2f, () =>
             {
                 _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
                 _uiManager.Close(_turnBanner);

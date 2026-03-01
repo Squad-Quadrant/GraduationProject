@@ -26,11 +26,7 @@ namespace Presentation.UI.Panel
 		public void DataInitialize(Systems.Unit.Unit selectedUnit)
 		{
 			// todo: use data to populate the menu with available actions for the selected unit
-		}
-
-        public void SetUnit(string id)
-        {
-            currentUnit.text = id;
+            currentUnit.text = selectedUnit.name;
         }
 	}
 }
