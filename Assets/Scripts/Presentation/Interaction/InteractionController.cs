@@ -2,6 +2,7 @@
 using Core.Events;
 using Core.FSM;
 using Core.Log;
+using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interaction;
 using Systems.Interaction.States;
@@ -13,7 +14,7 @@ using UnityEngine;
 
 namespace Presentation.Interaction
 {
-	public class InteractionController : MonoBehaviour
+	public class InteractionController : MonoBehaviour, ILevelInitializable
 	{
 		[Title("Settings")]
 		[SerializeField] private bool autoStart = true;
@@ -29,13 +30,7 @@ namespace Presentation.Interaction
 		public bool IsRunning => _isRunning;
 		public string CurrentStateName => StateMachine?.CurrentState?.Name ?? "Not Initialized";
 
-		public void Initialize(
-			IEventBus eventBus,
-			IUnitService unitService,
-			IMapService mapService,
-			ITurnService turnService,
-			ICommandQueue commandQueue,
-			IPathFindingService pathFinding)
+		public void Initialize(ServiceContainer services)
 		{
 			if (_isInitialized)
 			{
@@ -44,16 +39,16 @@ namespace Presentation.Interaction
 			}
 
 			_context = new InteractionContext(
-				eventBus,
-				unitService,
-				mapService,
-				turnService,
-				commandQueue,
-				pathFinding);
+				services.Resolve<IEventBus>(),
+				services.Resolve<IUnitService>(),
+				services.Resolve<IMapService>(),
+				services.Resolve<ITurnService>(),
+				services.Resolve<ICommandQueue>(),
+				services.Resolve<IPathFindingService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,
-				eventBus,
+				services.Resolve<IEventBus>(),
 				"InteractionStateMachine");
 
 			_context.StateMachine = StateMachine;

@@ -6,13 +6,14 @@ using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
+using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using UnityEngine;
 
 namespace Presentation.Unit
 {
-	public class UnitViewManager : MonoBehaviour
+	public class UnitViewManager : MonoBehaviour, ILevelInitializable
 	{
 		[Title("References")]
 		[SerializeField, Required] private UnitView unitViewPrefab;
@@ -22,31 +23,17 @@ namespace Presentation.Unit
 		private ICoordinateConverter _coordConverter;
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
-		private bool _isInitialized;
 
-		public void Initialize(IEventBus eventBus, ICoordinateConverter coordConverter)
+		public void Initialize(ServiceContainer services)
 		{
-			if (_isInitialized)
-			{
-				this.LogWarning("Already initialized");
-				return;
-			}
-
-			if (!unitViewPrefab)
-			{
-				this.LogError("Shared prefab reference is missing");
-				return;
-			}
-
-			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_coordConverter = coordConverter ?? throw new ArgumentNullException(nameof(coordConverter));
+			_eventBus = services.Resolve<IEventBus>();
+			_coordConverter = services.Resolve<ICoordinateConverter>();
 
 			if (!unitContainer) unitContainer = transform;
 
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
-			_isInitialized = true;
 
 			this.Log("Initialized");
 		}
@@ -186,11 +173,6 @@ namespace Presentation.Unit
 		}
 
 		#region Odin Debug
-
-		[TitleGroup("Debug")]
-		[ShowInInspector, ReadOnly, LabelText("Initialized")]
-		[GUIColor("@_isInitialized ? new Color(0.3f, 1f, 0.3f) : new Color(1f, 0.4f, 0.4f)")]
-		private bool DbgInitialized => _isInitialized;
 
 		[TitleGroup("Debug")]
 		[ShowInInspector, ReadOnly, LabelText("Active Views")]

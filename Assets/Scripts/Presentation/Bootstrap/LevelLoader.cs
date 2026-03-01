@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
@@ -29,19 +30,26 @@ namespace Presentation.Bootstrap
 	/// </summary>
 	public class LevelLoader : MonoBehaviour
 	{
+		private struct LoadStepEntry
+		{
+			public string Desc;
+			public Action Execute;
+		}
+
 		[Title("References")]
-		[SerializeField] private MapView mapView;
-		[SerializeField] private Grid grid;
-		[SerializeField] private InputService inputService;
-		[SerializeField] private InteractionController interactionController;
-		[SerializeField] private UnitViewManager unitViewManager;
+		[SerializeField, Required] private Grid grid;
+		[SerializeField, Required] private InputService inputService;
+		[SerializeField, Required] private InteractionController interactionController;
+		[SerializeField, Required] private UnitViewManager unitViewManager;
 
 		[Title("Configuration")]
-		[SerializeField] private LevelConfig levelConfig;
-		[SerializeField] private bool autoLoadLevel = false;
+		[SerializeField, Required] private LevelConfig levelConfig;
+		[SerializeField] private bool autoLoadLevel;
 
 		private LevelContainer _levelContainer;
 		private IEventBus _eventBus;
+
+		private readonly List<LoadStepEntry> _steps = new();
 
 		private void Start()
 		{
@@ -60,80 +68,84 @@ namespace Presentation.Bootstrap
 			}
 
 			levelConfig = config;
-			StartCoroutine(LoadLevelCoroutine());
+			BuildSteps();
+			RunAllSteps();
 		}
 
 		public void UnloadLevel()
 		{
+			if (!_levelContainer) return;
+
 			this.Log("====================================", false);
 			this.Log("Unloading level...");
 
-			// Clear all services
-			_levelContainer.Resolve<ITurnService>()?.Clear();
-			_levelContainer.Resolve<IUnitService>()?.Clear();
+			_levelContainer.TryResolve<ITurnService>()?.Clear();
+			_levelContainer.TryResolve<IUnitService>()?.Clear();
 
-			// Destroy level container
-			if (_levelContainer)
+			_levelContainer.Clear();
+			Destroy(_levelContainer.gameObject);
+			_levelContainer = null;
+
+			_loadStatus = "Idle";
+			this.Log("Level unloaded.");
+			this.Log("====================================", false);
+		}
+
+		private void BuildSteps()
+		{
+			_steps.Clear();
+			AddStep("SetupLevelContainer", SetupLevelContainer);
+			AddStep("RegisterServices", RegisterServices);
+			AddStep("RegisterPresenter", RegisterPresenter);
+			AddStep("InitializeComponents", InitializeComponents);
+			AddStep("LoadMap", LoadMap);
+			AddStep("LoadUnits", LoadUnits);
+			AddStep("StartGame", StartGame);
+		}
+
+		private void AddStep(string desc, Action execute) => _steps.Add(new LoadStepEntry { Desc = desc, Execute = execute });
+
+		private void RunAllSteps()
+		{
+			_stepResults.Clear();
+			_loadStatus = "Loading...";
+			this.Log("============ Level Loading ============", false);
+			for (int i = 0; i < _steps.Count; i++)
 			{
-				_levelContainer.Clear();
-				Destroy(_levelContainer.gameObject);
-				_levelContainer = null;
+				var step = _steps[i];
+				try
+				{
+					step.Execute();
+					var result = $"SUCCESS: {step.Desc}";
+					_stepResults.Add(result);
+					this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", false);
+				}
+				catch (Exception ex)
+				{
+					var result = $"x {step.Desc}: {ex.Message}";
+					_stepResults.Add(result);
+					this.LogError(result);
+					this.LogError(ex.StackTrace);
+
+					_loadStatus = $"Failed at step {i + 1}/{_steps.Count}: {step.Desc}";
+					this.LogError("============ Loading Aborted ============", false);
+					return;
+				}
 			}
-
-			this.Log("Level unloaded successfully.");
-			this.Log("====================================", false);
+			_loadStatus = "Loaded";
+			this.Log($"============ Level Loaded ============", false);
 		}
 
-		private IEnumerator LoadLevelCoroutine()
+		private void SetupLevelContainer()
 		{
-			this.Log("====================================", false);
-			this.Log("Loading level...");
-
-			yield return CreateLevelContainer();
-			yield return RegisterServices();
-			yield return InitializeMap();
-			yield return InitializeUIPresenter();
-			yield return InitializeInteractionController();
-			yield return InitializeInputService();
-			yield return InitializeUnitViewManager();
-			yield return CreateUnits();
-
-			this.Log($"Level '{levelConfig.levelName}' loaded successfully!");
-			this.Log("====================================", false);
-
-			_levelContainer.Resolve<IGameServer>().StartGame();
-			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
-		}
-
-		private IEnumerator CreateLevelContainer()
-		{
-			this.Log("Creating LevelContainer...");
-
-			// Create level container GameObject
 			var containerObj = new GameObject("LevelContainer");
 			_levelContainer = containerObj.AddComponent<LevelContainer>();
 			_levelContainer.Initialize();
-
-			this.Log("✓ LevelContainer created.");
-			yield return null;
 		}
 
-		private IEnumerator RegisterServices()
+		private void RegisterServices()
 		{
-			this.Log("Registering services...");
-
-			// Get EventBus from RootContainer (global service)
 			_eventBus = RootContainer.Instance.Resolve<IEventBus>();
-
-			// Register coordinate converter (uses scene's Grid component)
-			if (!grid)
-				grid = FindObjectOfType<Grid>();
-
-			if (!grid)
-			{
-				this.LogError("No Grid found in scene! Please add a Grid component.");
-				yield break;
-			}
 
 			var coordinateConverter = new CoordinateConverter(grid);
 			_levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
@@ -149,182 +161,85 @@ namespace Presentation.Bootstrap
 				var traversalRule = new DefaultTraversalRule(unitService);
 				return new PathFindingService(mapService, traversalRule);
 			});
-
-			this.Log("✓ Services registered and resolved.");
-			yield return null;
 		}
 
-		private IEnumerator InitializeMap()
+		private void RegisterPresenter()
 		{
-			this.Log("Initializing map...");
+			var uiManager = RootContainer.Instance.Resolve<UIManager>();
+			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
+			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
+		}
 
+		private void InitializeComponents()
+		{
+			inputService.Initialize(_levelContainer.Services);
+			interactionController.Initialize(_levelContainer.Services);
+			unitViewManager.Initialize(_levelContainer.Services);
+		}
+
+		private void LoadMap()
+		{
 			if (!levelConfig.mapConfig)
-			{
-				this.LogError("No MapConfig assigned to LevelConfig!");
-				yield break;
-			}
+				throw new InvalidOperationException("LevelConfig has no MapConfig assigned!");
 
-			// Load map from config
 			_levelContainer.Resolve<IMapService>().LoadFromConfig(levelConfig.mapConfig);
-            
-			this.Log($"✓ Map initialized: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
-			yield return null;
+			this.Log($"Map: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 		}
 
-		private IEnumerator CreateUnits() // unit initialization in unit service, just logic, spawning and view creation are in UnitViewManager, triggered by UnitCreatedEvent
+		private void LoadUnits()
 		{
-			this.Log("Spawning units...");
-
 			var mapService = _levelContainer.Resolve<IMapService>();
 			var unitService = _levelContainer.Resolve<IUnitService>();
 
 			if (levelConfig.unitPlacements.Count == 0)
 			{
-				this.LogWarning("No units to spawn!");
-				yield break;
+				this.LogWarning("No unit placements defined in LevelConfig.");
+				return;
 			}
 
+			int spawned = 0;
 			foreach (var placement in levelConfig.unitPlacements)
 			{
-				try
+				if (!placement.unitConfig)
 				{
-					// Validate placement
-					if (!placement.unitConfig)
-					{
-						this.LogError($"Unit '{placement.unitId}' has no config!");
-						continue;
-					}
-
-					// Check if position is valid
-					if (!mapService.Data.IsInBounds(placement.startPosition))
-					{
-						this.LogError($"Unit '{placement.unitId}' spawn position {placement.startPosition} is out of bounds!");
-						continue;
-					}
-
-					// Create unit through UnitService
-					var unit = unitService.CreateUnit(
-						placement.unitId,
-						placement.unitConfig,
-						placement.startPosition
-					);
-					// Occupy cell on map
-					mapService.OccupyCell(placement.startPosition, placement.unitId);
-
-					this.Log($"✓ Spawned {unit.name} at {placement.startPosition}");
-				}
-				catch (Exception ex)
-				{
-					this.LogError($"Failed to spawn unit '{placement.unitId}': {ex.Message}");
+					this.LogWarning($"Skipping unit '{placement.unitId}': no UnitConfig assigned.");
+					continue;
 				}
 
-				yield return null;
+				if (!mapService.Data.IsInBounds(placement.startPosition))
+				{
+					this.LogWarning($"Skipping unit '{placement.unitId}': position {placement.startPosition} out of bounds.");
+					continue;
+				}
+
+				unitService.CreateUnit(
+					placement.unitId,
+					placement.unitConfig,
+					placement.startPosition);
+
+				mapService.OccupyCell(placement.startPosition, placement.unitId);
+				spawned++;
 			}
 
-			this.Log($"✓ Spawned {levelConfig.unitPlacements.Count} units.");
+			this.Log($"Spawned {spawned}/{levelConfig.unitPlacements.Count} units.");
 		}
 
-		private IEnumerator InitializeUIPresenter()
+		private void StartGame()
 		{
-			this.Log("Initializing UI Presenter...");
-
-			var uiManager = RootContainer.Instance.TryResolve<UIManager>();
-			if (!uiManager)
-			{
-				this.LogWarning("No UIManager found in RootContainer!");
-				yield break;
-			}
-			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
-			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
-
-			this.Log("✓ UI Presenter initialized.");
-			yield return null;
+			_levelContainer.Resolve<IGameServer>().StartGame();
+			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
 		}
 
-		private IEnumerator InitializeInteractionController()
-		{
-			this.Log("Initializing InteractionController...");
+		#region Debug
 
-			if (!interactionController)
-			{
-				interactionController = FindObjectOfType<InteractionController>();
-				if (!interactionController)
-				{
-					this.LogWarning("No InteractionController found in scene!");
-					yield break;
-				}
-			}
+		[TitleGroup("Debug")]
+		[ShowInInspector, ReadOnly, LabelText("Status")]
+		private string _loadStatus = "Idle";
 
-			var commandQueue = RootContainer.Instance.TryResolve<ICommandQueue>();
-			if (commandQueue == null)
-			{
-				this.LogWarning("No ICommandQueue found in RootContainer!");
-				yield break;
-			}
+		[ShowInInspector, ReadOnly, LabelText("Steps")]
+		[ListDrawerSettings(IsReadOnly = true)]
+		private readonly List<string> _stepResults = new();
 
-			var pathfinding = _levelContainer.Resolve<IPathFindingService>();
-			if (pathfinding == null)
-			{
-				this.LogWarning("No IPathFindingService found in LevelContainer!");
-				yield break;
-			}
-
-			interactionController.Initialize(
-				_eventBus,
-				_levelContainer.Resolve<IUnitService>(),
-				_levelContainer.Resolve<IMapService>(),
-				_levelContainer.Resolve<ITurnService>(),
-				commandQueue,
-				pathfinding
-			);
-			this.Log("✓ InteractionController initialized.");
-			yield return null;
-		}
-
-		private IEnumerator InitializeInputService()
-		{
-			this.Log("Initializing InputService...");
-
-			if (!inputService)
-			{
-				inputService = FindObjectOfType<InputService>();
-				if (!inputService)
-				{
-					this.LogError("No InputService found in scene!");
-					yield break;
-				}
-			}
-
-			inputService.Initialize(
-				eventBus: _eventBus,
-				coordinateConverter: _levelContainer.Resolve<ICoordinateConverter>(),
-				mapService: _levelContainer.Resolve<IMapService>(),
-				unitService: _levelContainer.Resolve<IUnitService>());
-
-			this.Log("✓ InputService initialized.");
-			yield return null;
-		}
-
-		private IEnumerator InitializeUnitViewManager()
-		{
-			this.Log("Initializing UnitViewManager...");
-
-			if (!unitViewManager)
-			{
-				unitViewManager = FindObjectOfType<UnitViewManager>();
-				if (!unitViewManager)
-				{
-					this.LogWarning("No UnitViewManager found in scene!");
-					yield break;
-				}
-			}
-
-			unitViewManager.Initialize(
-				eventBus: _eventBus,
-				coordConverter: _levelContainer.Resolve<ICoordinateConverter>());
-
-			this.Log("✓ UnitViewManager initialized.");
-			yield return null;
-		}
+		#endregion
 	}
 }

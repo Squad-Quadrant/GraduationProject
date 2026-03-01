@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.UI;
+using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map;
@@ -13,7 +14,7 @@ using UnityEngine.InputSystem;
 
 namespace Presentation.Input
 {
-	public class InputService : MonoBehaviour
+	public class InputService : MonoBehaviour, ILevelInitializable
 	{
 		[Title("Dependencies")]
 		[SerializeField] private Camera mainCamera;
@@ -34,12 +35,12 @@ namespace Presentation.Input
 		private Vector2Int? _lastHoveredCell;
 		private string _lastHoveredUnitId;
 
-		public void Initialize(IEventBus eventBus, ICoordinateConverter coordinateConverter, IMapService mapService, IUnitService unitService)
+		public void Initialize(ServiceContainer services)
 		{
-			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
-			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
-			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+			_eventBus = services.Resolve<IEventBus>();
+			_coordinateConverter = services.Resolve<ICoordinateConverter>();
+			_mapService = services.Resolve<IMapService>();
+			_unitService = services.Resolve<IUnitService>();
 
 			if (!mainCamera) mainCamera = Camera.main;
 

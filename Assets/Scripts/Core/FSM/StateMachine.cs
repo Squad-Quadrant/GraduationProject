@@ -77,7 +77,6 @@ namespace Core.FSM
 		/// <param name="forceTransition">If true, IsTransitioning flag will be ignored</param>
 		public void ChangeState(IState<TContext> newState)
 		{
-			this.Log("---------- State Changing ----------");
 			if (newState == null)
 			{
 				this.LogError($"[{Name}] Cannot change to null state.");
@@ -106,8 +105,7 @@ namespace Core.FSM
 
 			PublishStateChangedEvent();
 
-			 this.Log($"[{Name}] successfully: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
-			 this.Log("----------------------------------");
+			 this.Log($"[{Name}] SUCCESS: {PreviousState?.Name ?? "None"} -> {CurrentState.Name}");
 		}
 
 		/// <summary>
