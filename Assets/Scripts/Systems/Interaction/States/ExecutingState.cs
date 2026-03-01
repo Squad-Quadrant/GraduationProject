@@ -61,9 +61,7 @@ namespace Systems.Interaction.States
 				Context.StateMachine.ChangeState<IdleState>();
 				return;
 			}
-
-
-
+            
 			var unit = Context.selectedUnit;
 			var currentTurnUnit = Context.TurnService.GetCurrentUnit();
 

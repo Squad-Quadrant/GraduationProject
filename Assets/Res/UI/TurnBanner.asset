@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
-  m_Name: TurnPanel
+  m_Name: TurnBanner
   m_EditorClassIdentifier: 
-  panelId: TurnPanel
-  prefab: {fileID: 7808052950843720337, guid: 87d83cea6979a6e48b9c5c958464d97e, type: 3}
+  panelId: TurnBanner
+  prefab: {fileID: 3357772539825526840, guid: 87d83cea6979a6e48b9c5c958464d97e, type: 3}
   layer: 1
-  preload: 0
   cacheOnClose: 1

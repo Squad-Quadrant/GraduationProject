@@ -235,7 +235,7 @@ namespace Presentation.Bootstrap
 				yield break;
 			}
 			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
-			_levelContainer.Services.RegisterInstance(new TurnPresenter(uiManager, _eventBus));
+			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
 
 			this.Log("✓ UI Presenter initialized.");
 			yield return null;

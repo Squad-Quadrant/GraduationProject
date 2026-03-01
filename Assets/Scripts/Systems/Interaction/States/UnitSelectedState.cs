@@ -33,6 +33,7 @@ namespace Systems.Interaction.States
 			_onUnitClicked = OnUnitClicked;
 			_onBack = OnBack;
 			_onEsc = OnEsc;
+            
 			Subscribe(ctx, _onActionSelected);
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onBack);
@@ -125,14 +126,11 @@ namespace Systems.Interaction.States
 		{
 			this.Log($"Switching to unit: {newUnit.name}");
 
-			// Publish deselection of current unit
-			Publish(Context, new UnitDeselectedEvent(Context.selectedUnit?.id));
-
+            UnSelectUnit();
 			// Update selection
 			Context.selectedUnit = newUnit;
-			Context.availableActions.Clear();
 
-			// Calculate new available actions
+            // Calculate new available actions
 			Context.availableActions.AddRange(newUnit.GetAvailableActions());
 
 			// Publish new selection
@@ -145,8 +143,9 @@ namespace Systems.Interaction.States
 
 		private void DeselectAndGoIdle()
 		{
-			var unitId = Context.selectedUnit?.id;
-			Publish(Context, new UnitDeselectedEvent(unitId));
+			// var unitId = Context.selectedUnit?.id;
+			// Publish(Context, new UnitDeselectedEvent(unitId));
+            UnSelectUnit();
 			StateMachine(Context).ChangeState<IdleState>();
 		}
 
@@ -156,6 +155,7 @@ namespace Systems.Interaction.States
 			this.Log("Executing Wait action");
 
 			Context.TurnService.EndUnitTurn();
+            UnSelectUnit();
 
 			// Check if there are more units to act
 			var nextUnit = Context.TurnService.NextUnit();
@@ -177,9 +177,19 @@ namespace Systems.Interaction.States
 		private void ExecuteEndTurn()
 		{
 			this.Log("Executing EndTurn action");
-
+            UnSelectUnit();
 			Context.TurnService.EndTurn();
 			Context.StateMachine.ChangeState(new IdleState());
 		}
+        
+        private void UnSelectUnit()
+        {
+            if (Context.selectedUnit != null)
+            {
+                Publish(Context, new UnitDeselectedEvent(Context.selectedUnit.id));
+                Context.selectedUnit = null;
+                Context.availableActions.Clear();
+            }
+        }
 	}
 }

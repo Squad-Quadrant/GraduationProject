@@ -13,7 +13,7 @@ namespace Systems.GamePlay
 	public class GameServer : IGameServer, IDisposable
 	{
 		public bool IsRunning { get; private set; }
-		public bool WaitForPresentation { get; set; } = true;
+		public bool WaitForPresentation { get; set; } = true; // 是否需要等待表现
 
 		private readonly ITurnService _turnService;
 		private readonly IUnitService _unitService;
