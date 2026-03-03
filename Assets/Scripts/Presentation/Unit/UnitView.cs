@@ -131,13 +131,10 @@ namespace Presentation.Unit
 		{
 			if (direction == Vector2Int.zero) return;
 
-			if (direction.y != 0)
-			{
-				var targetSkin = direction.y < 0 ? _frontBodySkinName : _backBodySkinName;
-				animator.SetBodySkin(targetSkin);
-			}
+			var targetSkin = (direction.x < 0 || direction.y < 0) ? _frontBodySkinName : _backBodySkinName;
+			animator.SetBodySkin(targetSkin);
 
-			_facingRight = direction.x > 0;
+			_facingRight = direction.x > 0 || direction.y < 0;
 			animator.SetFaceRight(_facingRight);
 		}
 
