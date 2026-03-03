@@ -32,69 +32,88 @@ namespace Presentation.Debugger
 		[ShowInInspector, ReadOnly]
 		[LabelText("Turn"), LabelWidth(80)]
 		[GUIColor(0.3f, 0.8f, 1f)]
-		private int CurrentTurnNumber => _turnService?.GetCurrentTurnNumber() ?? 0;
+		private int TurnNumber => _turnService?.TurnNumber ?? 0;
 
 		[BoxGroup("Turn Info/Row1/Numbers")]
 		[ShowInInspector, ReadOnly]
-		[LabelText("Remaining"), LabelWidth(80)]
-		[GUIColor("@RemainingUnits > 0 ? new Color(0.3f, 1f, 0.6f) : new Color(0.7f, 0.7f, 0.7f)")]
-		private int RemainingUnits => _turnService?.GetRemainingUnitsCount() ?? 0;
+		[LabelText("Upcoming"), LabelWidth(80)]
+		[GUIColor("@UpcomingCount > 0 ? new Color(0.3f, 1f, 0.6f) : new Color(0.7f, 0.7f, 0.7f)")]
+		private int UpcomingCount => _turnService?.GetUpcoming().Count ?? 0;
 
 		[BoxGroup("Turn Info/Row1/Status")]
 		[ShowInInspector, ReadOnly]
-		[LabelText("Active"), LabelWidth(80)]
+		[LabelText("Turn Active"), LabelWidth(80)]
 		[GUIColor("@IsTurnActive ? new Color(0.3f, 1f, 0.3f) : new Color(0.7f, 0.7f, 0.7f)")]
-		private bool IsTurnActive => _turnService?.IsTurnActive() ?? false;
+		private bool IsTurnActive => _turnService?.IsTurnActive ?? false;
+
+		[BoxGroup("Turn Info/Row1/Status")]
+		[ShowInInspector, ReadOnly]
+		[LabelText("Unit Acting"), LabelWidth(80)]
+		[GUIColor("@IsUnitActing ? new Color(1f, 0.9f, 0.3f) : new Color(0.7f, 0.7f, 0.7f)")]
+		private bool IsUnitActing => _turnService?.IsUnitActing ?? false;
 
 		[BoxGroup("Turn Info/Row1/Status")]
 		[ShowInInspector, ReadOnly]
 		[LabelText("Complete"), LabelWidth(80)]
 		[GUIColor("@IsTurnComplete ? new Color(1f, 0.8f, 0.3f) : new Color(0.7f, 0.7f, 0.7f)")]
-		private bool IsTurnComplete => _turnService?.IsCurrentTurnComplete() ?? false;
+		private bool IsTurnComplete => _turnService?.IsTurnComplete ?? false;
 
 		#endregion
 
-		#region Current Acting Unit
+		#region Active Unit
 
-		[TitleGroup("Current Acting Unit", boldTitle: true)]
+		[TitleGroup("Active Unit", boldTitle: true)]
 		[ShowInInspector, ReadOnly]
-		[InfoBox("No unit currently acting", InfoMessageType.None, VisibleIf = "@!HasCurrentUnit")]
-		[HideIf("@!HasCurrentUnit")]
+		[InfoBox("No unit currently acting", InfoMessageType.None, VisibleIf = "@!IsUnitActing")]
+		[HideIf("@!IsUnitActing")]
 		[InlineProperty, HideLabel]
-		private UnitDisplayInfo CurrentUnitInfo => GetCurrentUnitInfo();
-
-		private bool HasCurrentUnit => _turnService?.HasCurrentUnit() ?? false;
+		private UnitDisplayInfo ActiveUnitInfo => GetActiveUnitInfo();
 
 		#endregion
 
-		#region Action Queue
+		#region Full Turn Order
 
-		[TitleGroup("Action Queue", "Units waiting to act (ordered by Speed → Priority)")]
+		[TitleGroup("Turn Order", "Complete queue: acted → current → upcoming")]
 		[ShowInInspector, ReadOnly]
-		[TableList(
-			AlwaysExpanded = true,
-			IsReadOnly = true,
-			ShowIndexLabels = true
-		)]
-		[InfoBox("Queue is empty", InfoMessageType.None, VisibleIf = "@ActionQueue.Count == 0")]
-		private List<UnitQueueEntry> ActionQueue
+		[TableList(AlwaysExpanded = true, IsReadOnly = true, ShowIndexLabels = false)]
+		[InfoBox("Queue is empty", InfoMessageType.None, VisibleIf = "@FullOrder.Count == 0")]
+		private List<QueueEntry> FullOrder
 		{
 			get
 			{
-				if (_turnService == null)
-					return new List<UnitQueueEntry>();
+				if (_turnService == null) return new List<QueueEntry>();
 
-				var turnOrder = _turnService.GetTurnOrder();
-				if (turnOrder == null || turnOrder.Count == 0)
-					return new List<UnitQueueEntry>();
+				var fullOrder = _turnService.GetFullOrder();
+				if (fullOrder == null || fullOrder.Count == 0) return new List<QueueEntry>();
 
-				return turnOrder.Select((unit, index) => new UnitQueueEntry
+				var activeUnit = _turnService.ActiveUnit;
+
+				return fullOrder.Select((unit, index) =>
 				{
-					position = index + 1,
-					unitId = unit.Id,
-					speed = unit.Speed,
-					priority = unit.ActionPriority,
-					canAct = unit.CanAct
+					// Determine segment based on relationship to active unit
+					var activeIndex = activeUnit != null
+						? _turnService.IndexOf(activeUnit.Id)
+						: -1;
+
+					EQueueSegment segment;
+					if (activeIndex < 0)
+						segment = EQueueSegment.Upcoming; // No active unit, all are upcoming
+					else if (index < activeIndex)
+						segment = EQueueSegment.Acted;
+					else if (index == activeIndex)
+						segment = EQueueSegment.Current;
+					else
+						segment = EQueueSegment.Upcoming;
+
+					return new QueueEntry
+					{
+						index = index,
+						segment = segment,
+						unitId = unit.Id,
+						speed = unit.Speed,
+						priority = unit.ActionPriority,
+						canAct = unit.CanAct
+					};
 				}).ToList();
 			}
 		}
@@ -124,7 +143,7 @@ namespace Presentation.Debugger
 
 		[HorizontalGroup("Control Panel/Row2")]
 		[Button("Next Unit", ButtonSizes.Medium), GUIColor(0.3f, 0.8f, 1f)]
-		[EnableIf("@IsConnected && IsTurnActive && !HasCurrentUnit && RemainingUnits > 0")]
+		[EnableIf("@IsConnected && IsTurnActive && !IsUnitActing")]
 		private void NextUnit()
 		{
 			var unit = _turnService?.NextUnit();
@@ -133,7 +152,7 @@ namespace Presentation.Debugger
 
 		[HorizontalGroup("Control Panel/Row2")]
 		[Button("End Unit Turn", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.3f)]
-		[EnableIf("@IsConnected && HasCurrentUnit")]
+		[EnableIf("@IsConnected && IsUnitActing")]
 		private void EndUnitTurn()
 		{
 			_turnService?.EndUnitTurn();
@@ -146,52 +165,59 @@ namespace Presentation.Debugger
 		private void Clear()
 		{
 			_turnService?.Clear();
-			Debug.Log("[TurnServiceDebugger] Turn service cleared");
+			Debug.Log("[TurnServiceDebugger] Cleared");
 		}
 
 		#endregion
 
-		#region Advanced Operations
+		#region Queue Manipulation
 
-		[TitleGroup("Advanced Operations", "Unit manipulation")]
-		[HorizontalGroup("Advanced Operations/Row1")]
-		[SerializeField]
-		[LabelText("Unit ID"), LabelWidth(60)]
+		[TitleGroup("Queue Manipulation", "Modify turn order mid-turn")]
+		[HorizontalGroup("Queue Manipulation/Row1")]
+		[SerializeField, LabelText("Unit ID"), LabelWidth(60)]
 		private string targetUnitId = "";
 
-		[HorizontalGroup("Advanced Operations/Row1")]
-		[SerializeField]
-		[LabelText("Priority"), LabelWidth(50)]
-		private int insertPriority = 999;
+		[HorizontalGroup("Queue Manipulation/Row1")]
+		[SerializeField, LabelText("Priority"), LabelWidth(50)]
+		private int targetPriority = 0;
 
-		[HorizontalGroup("Advanced Operations/Row2")]
-		[Button("Force Insert", ButtonSizes.Medium), GUIColor(0.8f, 0.5f, 1f)]
-		[EnableIf("@IsConnected && !string.IsNullOrEmpty(targetUnitId)")]
-		private void ForceInsertUnit()
+		[HorizontalGroup("Queue Manipulation/Row2")]
+		[Button("Set Priority", ButtonSizes.Medium), GUIColor(0.8f, 0.5f, 1f)]
+		[EnableIf("@IsConnected && IsTurnActive && !string.IsNullOrEmpty(targetUnitId)")]
+		private void SetPriority()
 		{
 			if (string.IsNullOrEmpty(targetUnitId)) return;
-			_turnService?.ForceInsertUnit(targetUnitId, insertPriority);
-			Debug.Log($"[TurnServiceDebugger] Force inserted unit '{targetUnitId}' with priority {insertPriority}");
+			_turnService?.SetUnitPriority(targetUnitId, targetPriority);
+			Debug.Log($"[TurnServiceDebugger] Set priority of '{targetUnitId}' to {targetPriority}");
 		}
 
-		[HorizontalGroup("Advanced Operations/Row2")]
-		[Button("Update Speed", ButtonSizes.Medium), GUIColor(0.5f, 0.8f, 1f)]
-		[EnableIf("@IsConnected && !string.IsNullOrEmpty(targetUnitId)")]
-		private void UpdateUnitSpeed()
+		[HorizontalGroup("Queue Manipulation/Row2")]
+		[Button("Move To Next", ButtonSizes.Medium), GUIColor(0.5f, 0.8f, 1f)]
+		[EnableIf("@IsConnected && IsTurnActive && !string.IsNullOrEmpty(targetUnitId)")]
+		private void MoveToNext()
 		{
 			if (string.IsNullOrEmpty(targetUnitId)) return;
-			_turnService?.UpdateUnitSpeed(targetUnitId);
-			Debug.Log($"[TurnServiceDebugger] Updated speed for unit '{targetUnitId}'");
+			_turnService?.MoveUnitToNext(targetUnitId);
+			Debug.Log($"[TurnServiceDebugger] Moved '{targetUnitId}' to next");
 		}
 
-		[HorizontalGroup("Advanced Operations/Row2")]
-		[Button("Unregister", ButtonSizes.Medium), GUIColor(1f, 0.4f, 0.4f)]
+		[HorizontalGroup("Queue Manipulation/Row2")]
+		[Button("Resort Queue", ButtonSizes.Medium), GUIColor(0.6f, 0.8f, 0.6f)]
+		[EnableIf("@IsConnected && IsTurnActive")]
+		private void ResortQueue()
+		{
+			_turnService?.ResortQueue();
+			Debug.Log("[TurnServiceDebugger] Queue re-sorted");
+		}
+
+		[HorizontalGroup("Queue Manipulation/Row3")]
+		[Button("Remove Unit", ButtonSizes.Medium), GUIColor(1f, 0.4f, 0.4f)]
 		[EnableIf("@IsConnected && !string.IsNullOrEmpty(targetUnitId)")]
-		private void UnregisterUnit()
+		private void RemoveUnit()
 		{
 			if (string.IsNullOrEmpty(targetUnitId)) return;
-			_turnService?.UnregisterUnit(targetUnitId);
-			Debug.Log($"[TurnServiceDebugger] Unregistered unit '{targetUnitId}'");
+			_turnService?.RemoveUnit(targetUnitId);
+			Debug.Log($"[TurnServiceDebugger] Removed '{targetUnitId}'");
 		}
 
 		#endregion
@@ -224,10 +250,7 @@ namespace Presentation.Debugger
 
 		private void TryConnect()
 		{
-			// TurnService is registered in LevelContainer
-			if (!LevelContainer.Instance)
-				return;
-
+			if (!LevelContainer.Instance) return;
 			_turnService = LevelContainer.Instance.TryResolve<ITurnService>();
 		}
 
@@ -235,9 +258,9 @@ namespace Presentation.Debugger
 
 		#region Helper Methods
 
-		private UnitDisplayInfo GetCurrentUnitInfo()
+		private UnitDisplayInfo GetActiveUnitInfo()
 		{
-			var unit = _turnService?.GetCurrentUnit();
+			var unit = _turnService?.ActiveUnit;
 			if (unit == null)
 				return new UnitDisplayInfo { unitId = "None" };
 
@@ -247,7 +270,7 @@ namespace Presentation.Debugger
 				speed = unit.Speed,
 				priority = unit.ActionPriority,
 				canAct = unit.CanAct,
-				queuePosition = _turnService?.GetUnitPositionInQueue(unit.Id) ?? -1
+				queuePosition = _turnService?.IndexOf(unit.Id) ?? -1
 			};
 		}
 
@@ -255,9 +278,8 @@ namespace Presentation.Debugger
 
 		#region Display Data Structures
 
-		/// <summary>
-		/// Display structure for the current acting unit.
-		/// </summary>
+		private enum EQueueSegment { Acted, Current, Upcoming }
+
 		[System.Serializable]
 		private struct UnitDisplayInfo
 		{
@@ -279,28 +301,32 @@ namespace Presentation.Debugger
 			public int queuePosition;
 		}
 
-		/// <summary>
-		/// Display structure for units in the action queue.
-		/// </summary>
 		[System.Serializable]
-		private struct UnitQueueEntry
+		private struct QueueEntry
 		{
-			[TableColumnWidth(40, Resizable = false)]
+			[TableColumnWidth(30, Resizable = false)]
 			[LabelText("#")]
-			public int position;
+			public int index;
+
+			[TableColumnWidth(70, Resizable = false)]
+			[GUIColor("@segment == EQueueSegment.Current ? new Color(1f, 0.9f, 0.3f) " +
+			          ": segment == EQueueSegment.Acted ? new Color(0.5f, 0.5f, 0.5f) " +
+			          ": new Color(0.7f, 1f, 0.7f)")]
+			public EQueueSegment segment;
 
 			[TableColumnWidth(120)]
 			[LabelText("Unit ID")]
 			public string unitId;
 
-			[TableColumnWidth(60, Resizable = false)]
+			[TableColumnWidth(50, Resizable = false)]
 			public int speed;
 
-			[TableColumnWidth(60, Resizable = false)]
+			[TableColumnWidth(50, Resizable = false)]
+			[LabelText("P")]
 			public int priority;
 
-			[TableColumnWidth(60, Resizable = false)]
-			[LabelText("Can Act")]
+			[TableColumnWidth(50, Resizable = false)]
+			[LabelText("Act")]
 			public bool canAct;
 		}
 

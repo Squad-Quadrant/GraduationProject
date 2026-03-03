@@ -7,11 +7,12 @@ namespace Data.Runtime.Events.Turn
 	/// </summary>
 	public enum TurnOrderChangeReason
 	{
-		SpeedModified,	// e.g., buff/debuff affecting unit speed
-		UnitInserted,	// e.g., skill "act immediately"
-		UnitAdded,		// e.g., summon or new unit joins battle
-		UnitRemoved,	// e.g., unit defeated or leaves battle
-		TurnReset		// e.g., end of round resetting turn order
+		TurnReset,       // New turn started, queue rebuilt from scratch
+		UnitAdvanced,    // Cursor advanced to next unit (NextUnit called)
+		UnitAdded,       // Mid-turn addition (summon, reinforcement)
+		UnitRemoved,     // Unit removed from queue (death, retreat)
+		PriorityChanged, // Unit's action priority was modified
+		SpeedChanged,    // Unit's speed changed externally, queue re-sorted
 	}
 
 	public readonly struct TurnOrderChangedEvent : IEvent

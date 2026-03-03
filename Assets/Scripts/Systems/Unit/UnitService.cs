@@ -4,7 +4,6 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Config;
-using Data.Runtime.Events;
 using Data.Runtime.Events.Unit;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ namespace Systems.Unit
 
 		public UnitService(IEventBus eventBus)
 		{
-			_eventBus = eventBus ?? throw new System.ArgumentNullException(nameof(eventBus));
+			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			this.Log("Initialized");
 		}
 

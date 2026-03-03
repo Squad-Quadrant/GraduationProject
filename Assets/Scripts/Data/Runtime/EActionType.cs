@@ -6,7 +6,6 @@
 	public enum EActionType
 	{
 		None = 0,
-		EndTurn,
 		Move,
 		Wait,
 		Interact,

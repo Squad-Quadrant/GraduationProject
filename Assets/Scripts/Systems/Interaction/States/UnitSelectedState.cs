@@ -76,10 +76,6 @@ namespace Systems.Interaction.States
 					ExecuteWait();
 					break;
 
-				case EActionType.EndTurn:
-					ExecuteEndTurn();
-					break;
-
 				case EActionType.None:
 				case EActionType.Interact:
 				case EActionType.UseItem:
@@ -113,13 +109,15 @@ namespace Systems.Interaction.States
 		private void OnBack(BackInputEvent e)
 		{
 			this.Log("Back input received - Deselecting unit and going idle");
-			DeselectAndGoIdle();
+			UnSelectUnit();
+			StateMachine(Context).ChangeState<IdleState>();
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
 			this.Log("Esc input received - Deselecting unit and going idle");
-			DeselectAndGoIdle();
+			UnSelectUnit();
+			StateMachine(Context).ChangeState<IdleState>();
 		}
 
 		private void SwitchToUnit(Unit.Unit newUnit)
@@ -127,6 +125,7 @@ namespace Systems.Interaction.States
 			this.Log($"Switching to unit: {newUnit.name}");
 
             UnSelectUnit();
+
 			// Update selection
 			Context.selectedUnit = newUnit;
 
@@ -141,45 +140,13 @@ namespace Systems.Interaction.States
 			));
 		}
 
-		private void DeselectAndGoIdle()
-		{
-			// var unitId = Context.selectedUnit?.id;
-			// Publish(Context, new UnitDeselectedEvent(unitId));
-            UnSelectUnit();
-			StateMachine(Context).ChangeState<IdleState>();
-		}
-
 		private void ExecuteWait()
 		{
-			// todo: need more logic here
 			this.Log("Executing Wait action");
-
-			Context.TurnService.EndUnitTurn();
-            UnSelectUnit();
-
-			// Check if there are more units to act
-			var nextUnit = Context.TurnService.NextUnit();
-			if (nextUnit != null)
-			{
-				// Auto-select next unit if it's controllable
-				if (Context.UnitService.TryGetUnit(nextUnit.Id, out var unit) &&
-				    Context.CanControlUnit(unit))
-					SwitchToUnit(unit);
-				else
-					// Next unit is AI-controlled
-					Context.StateMachine.ChangeState<IdleState>();
-			}
-			else
-				// No more units - turn might be ending
-				Context.StateMachine.ChangeState<IdleState>();
-		}
-
-		private void ExecuteEndTurn()
-		{
-			this.Log("Executing EndTurn action");
-            UnSelectUnit();
-			Context.TurnService.EndTurn();
-			Context.StateMachine.ChangeState(new IdleState());
+			UnSelectUnit();
+            Context.TurnService.EndUnitTurn(); // => 发出 UnitTurnEndedEvent
+            // GameServer 监听 UnitTurnEndedEvent 会接管后续逻辑
+			Context.StateMachine.ChangeState<IdleState>();
 		}
         
         private void UnSelectUnit()

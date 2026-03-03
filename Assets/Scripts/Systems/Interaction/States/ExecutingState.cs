@@ -63,7 +63,7 @@ namespace Systems.Interaction.States
 			}
             
 			var unit = Context.selectedUnit;
-			var currentTurnUnit = Context.TurnService.GetCurrentUnit();
+			var currentTurnUnit = Context.TurnService.ActiveUnit;
 
 			// todo: should check action points
 			if (currentTurnUnit != null && currentTurnUnit.Id == unit.id && currentTurnUnit.CanAct)
@@ -84,9 +84,7 @@ namespace Systems.Interaction.States
 			{
 				// Unit's turn is over
 				this.Log($"Unit {unit.name} turn complete, going to Idle");
-
 				Context.TurnService.EndUnitTurn();
-
 				Context.StateMachine.ChangeState<IdleState>();
 			}
 		}

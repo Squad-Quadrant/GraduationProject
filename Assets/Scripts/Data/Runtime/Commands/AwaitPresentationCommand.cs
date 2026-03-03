@@ -5,6 +5,7 @@ using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.View;
+using Presentation.Bootstrap;
 
 namespace Data.Runtime.Commands
 {
@@ -26,9 +27,9 @@ namespace Data.Runtime.Commands
 
 		public override bool CanUndo => false;
 
-		public AwaitPresentationCommand(IEventBus eventBus, Action onComplete = null)
+		public AwaitPresentationCommand(Action onComplete = null)
 		{
-			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+			_eventBus = RootContainer.Instance.Resolve<IEventBus>();
 			_onComplete = onComplete;
 		}
 

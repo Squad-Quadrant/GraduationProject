@@ -31,24 +31,24 @@ namespace Presentation.UI.Presenter
 
         private void ShowActionMenu(TurnStartedEvent e)
         {
-            _turnBanner = _uiManager.Open<TurnBanner>();
-            _turnBanner.Show($"下一回合: {e.TurnNumber}");
-            DelayUtility.Delay(2f, () =>
-            {
-                _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
-                _uiManager.Close(_turnBanner);
-            });
+            // _turnBanner = _uiManager.Open<TurnBanner>();
+            // _turnBanner.Show($"下一回合: {e.TurnNumber}");
+            // DelayUtility.Delay(2f, () =>
+            // {
+            //     _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
+            //     _uiManager.Close(_turnBanner);
+            // });
         }
         
         private void ShowActionMenu(UnitTurnStartedEvent e)
         {
-            _turnBanner = _uiManager.Open<TurnBanner>();
-                _turnBanner.Show($"下一单位: {e.UnitId}");
-            DelayUtility.Delay(2f, () =>
-            {
-                _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
-                _uiManager.Close(_turnBanner);
-            });
+            // _turnBanner = _uiManager.Open<TurnBanner>();
+            //     _turnBanner.Show($"下一单位: {e.UnitId}");
+            // DelayUtility.Delay(2f, () =>
+            // {
+            //     _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, PresentationType.UI.TurnBanner));
+            //     _uiManager.Close(_turnBanner);
+            // });
         }
     }
 }

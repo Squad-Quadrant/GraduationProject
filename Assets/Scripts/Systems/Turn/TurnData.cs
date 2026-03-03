@@ -5,29 +5,29 @@ namespace Systems.Turn
 	[Serializable]
 	public class TurnData
 	{
-		public int CurrentTurnNumber { get; set; } = 0;
+		public int TurnNumber { get; set; }
 
 		public bool IsTurnActive { get; set; } = false;
 
-		public ITurnUnit CurrentActingUnit { get; set; } = null;
+		public bool IsUnitActing { get; set; }
 
-		public bool HasActingUnit => CurrentActingUnit != null;
+		public TurnQueue Queue { get; } = new();
 
-		public TurnQueue ActionQueue { get; private set; } = new();
+		public ITurnUnit ActiveUnit => IsUnitActing ? Queue.CurrentUnit : null;
 
 		public void Reset()
 		{
-			CurrentTurnNumber = 0;
+			TurnNumber = 0;
 			IsTurnActive = false;
-			CurrentActingUnit = null;
-			ActionQueue.Clear();
+			IsUnitActing = false;
+			Queue.Clear();
 		}
 
 		public override string ToString()
 		{
-			var actingUnit = CurrentActingUnit != null ? CurrentActingUnit.Id : "None";
-			return $"[TurnData] Turn:{CurrentTurnNumber}, Active:{IsTurnActive}, " +
-			       $"Acting:{actingUnit}, QueueSize:{ActionQueue.Count}";
+			var acting = ActiveUnit?.Id ?? "None";
+			return $"[TurnData] Turn:{TurnNumber}, Active:{IsTurnActive}, " +
+			       $"Acting:{acting}, Queue:{Queue}";
 		}
 	}
 }

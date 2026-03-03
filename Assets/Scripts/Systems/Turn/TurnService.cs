@@ -6,242 +6,256 @@ using Core.Log;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Systems.Unit;
+using Unity.VisualScripting;
 
 namespace Systems.Turn
 {
-	public class TurnService : ITurnService
+	public class TurnService : ITurnService, IDisposable
 	{
 		private readonly IUnitService _unitService;
 		private readonly IEventBus _eventBus;
-		private readonly TurnData _data;
+		private readonly TurnData _data = new();
 
 		public TurnService(IUnitService unitService, IEventBus eventBus)
 		{
 			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_data = new TurnData();
+
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+
 			this.Log("Initialized");
+		}
+
+		public void Dispose()
+		{
+			_eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
+			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 		}
 
 		private void OnUnitCreated(UnitCreatedEvent e)
 		{
-			ITurnUnit unit = e.Unit;
-			if (unit == null) return; // Not a turn unit
-			RegisterUnit(unit);
+			if (e.Unit is ITurnUnit turnUnit)
+				AddUnit(turnUnit);
 		}
 
-		private void OnUnitDestroyed(UnitDestroyedEvent e) => UnregisterUnit(e.Unit.id);
+		private void OnUnitDestroyed(UnitDestroyedEvent e) => RemoveUnit(e.Unit.id);
+
+		#region Turn Lifecycle
+
+		public int TurnNumber => _data.TurnNumber;
+
+		public bool IsTurnActive => _data.IsTurnActive;
 
 		public void StartTurn()
 		{
 			if (_data.IsTurnActive)
 			{
-				this.LogWarning("Cannot start turn: A turn is already active!");
+				this.LogWarning("Cannot start turn: already active");
 				return;
 			}
 
-			if (_unitService.GetAllAliveUnits().Count == 0)
-			{
-				this.LogWarning("Cannot start turn: No alive units!");
-				return;
-			}
-
-			_data.CurrentTurnNumber++;
-			_data.IsTurnActive = true;
-
-			this.Log($"Turn {_data.CurrentTurnNumber} Started");
-
-			RebuildQueue();
-
-			_eventBus.Publish(new TurnStartedEvent(_data.CurrentTurnNumber));
-
-			NextUnit();
-		}
-
-		private void RebuildQueue()
-		{
-			_data.ActionQueue.Clear();
-
-			var aliveUnits = _unitService.GetAllAliveUnits();
-			var actionableUnits = aliveUnits
-				.Where(u => (u as ITurnUnit).CanAct)
-				.Cast<ITurnUnit>()
+			var activeUnits = _unitService.GetAllAliveUnits()
+				.OfType<ITurnUnit>()
+				.Where(u => u.CanAct)
 				.ToList();
 
-			if (actionableUnits.Count == 0)
+			if (activeUnits.Count == 0)
 			{
-				this.LogWarning("No actionable units to build queue!");
+				this.LogWarning("Cannot start turn: no actionable units");
 				return;
 			}
 
-			foreach (var unit in actionableUnits)
+			_data.TurnNumber++;
+			_data.IsTurnActive = true;
+
+			foreach (var unit in activeUnits)
 				unit.ActionPriority = 0;
 
-			_data.ActionQueue.EnqueueRange(actionableUnits);
+			_data.Queue.Build(activeUnits);
 
-			this.Log($"Queue built with {actionableUnits.Count} units: {_data.ActionQueue}");
+			this.Log($"Turn {_data.TurnNumber} started, {activeUnits.Count} units queued");
 
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.TurnReset));
+			_eventBus.Publish(new TurnStartedEvent(_data.TurnNumber));
 		}
 
 		public void EndTurn()
 		{
 			if (!_data.IsTurnActive)
 			{
-				this.LogWarning("Cannot end turn: No active turn!");
+				this.LogWarning("Cannot end turn: no active turn");
 				return;
 			}
 
-			if (_data.HasActingUnit) EndUnitTurn(); // End current unit's turn if active
+			if (_data.IsUnitActing) // 强制结束当前单位回合
+				EndUnitTurn();
 
-			this.Log($"Turn {_data.CurrentTurnNumber} Ended");
-
-			_eventBus.Publish(new TurnEndedEvent(_data.CurrentTurnNumber));
-
-			_data.ActionQueue.Clear();
+			_data.Queue.Clear();
 			_data.IsTurnActive = false;
+
+			this.Log($"Turn {_data.TurnNumber} ended");
+
+			_eventBus.Publish(new TurnEndedEvent(_data.TurnNumber));
 		}
 
-		public int GetCurrentTurnNumber() => _data.CurrentTurnNumber;
+		#endregion
 
-		public bool IsTurnActive() => _data.IsTurnActive;
+		#region UnitTurn Lifecycle
+
+		public ITurnUnit ActiveUnit => _data.ActiveUnit;
+
+		public bool IsUnitActing => _data.IsUnitActing;
+
+		public bool IsTurnComplete => _data.IsTurnActive && _data.Queue.IsExhausted && !_data.IsUnitActing;
 
 		public ITurnUnit NextUnit()
 		{
 			if (!_data.IsTurnActive)
 			{
-				this.LogWarning("Cannot get next unit: No active turn!");
+				this.LogWarning("Cannot advance: no active turn");
 				return null;
 			}
 
-			// check if the queue is empty
-			if (_data.ActionQueue.IsEmpty)
+			if (_data.IsUnitActing)
 			{
-				this.Log("No more units in queue, turn should end");
+				this.LogWarning($"Cannot advance: unit '{_data.ActiveUnit.Id}' is still acting. Call EndUnitTurn() first.");
 				return null;
 			}
 
-			var nextUnit = _data.ActionQueue.Dequeue(); // Get the next unit and remove it from the queue
-
-			if (!_unitService.HasUnit(nextUnit.Id))
+			while (true)
 			{
-				this.LogWarning($"Next unit '{nextUnit.Id}' not found in UnitService, skipping turn");
-				return NextUnit(); // Skip to the next unit
-			}
+				var next = _data.Queue.Advance();
 
-			if (!nextUnit.CanAct)
-			{
-				this.Log($"Next unit '{nextUnit.Id}' cannot act, skipping turn");
-				return NextUnit(); // Skip to the next unit
-			}
+				if (next == null) // queue exhausted
+				{
+					this.Log("No more units to act this turn");
+					return null;
+				}
 
-			_data.CurrentActingUnit = nextUnit;
-			this.Log($"Unit '{nextUnit.Id}' turn started (Speed: {nextUnit.Speed})");
-			_eventBus.Publish(new UnitTurnStartedEvent(nextUnit.Id, _data.CurrentTurnNumber));
-			return nextUnit;
+				if (!_unitService.HasUnit(next.Id))
+				{
+					this.LogWarning($"Unit '{next.Id}' no longer exists, skipping");
+					continue;
+				}
+
+				if (!next.CanAct)
+				{
+					this.Log($"Unit '{next.Id}' cannot act, skipping");
+					continue;
+				}
+
+				_data.IsUnitActing = true; // 找到了一个可行动的单位，开始它的回合
+
+				this.Log($"Unit '{next.Id}' turn started (Speed:{next.Speed})");
+
+				_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdvanced, next.Id));
+				_eventBus.Publish(new UnitTurnStartedEvent(next.Id, _data.TurnNumber));
+
+				return next;
+			}
 		}
 
-		public void EndUnitTurn()
+		public void EndUnitTurn() // 实际上只是把IsUnitActing设为false并发出事件，下一次调用NextUnit()时会自动前进到下一个单位
 		{
-			if (!_data.HasActingUnit)
+			if (!_data.IsUnitActing)
 			{
-				this.LogWarning("Cannot end unit turn: No active unit!");
+				this.LogWarning("Cannot end unit turn: no unit is acting");
 				return;
 			}
 
-			var unitId = _data.CurrentActingUnit.Id;
-			_data.CurrentActingUnit = null;
+			var unitId = _data.ActiveUnit.Id;
+			_data.IsUnitActing = false;
+
 			this.Log($"Unit '{unitId}' turn ended");
-			_eventBus.Publish(new UnitTurnEndedEvent(unitId, _data.CurrentTurnNumber));
+
+			_eventBus.Publish(new UnitTurnEndedEvent(unitId, _data.TurnNumber));
 		}
 
-		public ITurnUnit GetCurrentUnit() => _data.CurrentActingUnit;
+		#endregion
 
-		public bool HasCurrentUnit() => _data.HasActingUnit;
+		#region Unit Order Management
 
-		public void RegisterUnit(ITurnUnit unit)
+		// 添加一个单位到队列中，并重新排序可行动单位
+		public void AddUnit(ITurnUnit unit)
 		{
 			if (unit == null)
-				throw new ArgumentNullException(nameof(unit));
-
-			if (!unit.CanAct)
 			{
-				this.LogWarning($"Cannot register unit '{unit.Id}': Unit cannot act.");
+				this.LogError("Cannot add null unit");
 				return;
 			}
 
-			if (_data.IsTurnActive)
+			if (!_data.IsTurnActive)
 			{
-				_data.ActionQueue.Enqueue(unit);
-				this.Log($"Registered unit '{unit.Id}' into active turn queue.");
-				_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdded, unit.Id));
+				this.Log($"Unit '{unit.Id}' will join queue on next turn start");
+				return;
 			}
-			else
-			{
-				// todo: ?
-				this.Log($"Unit '{unit.Id}' registered, will join queue on next StartTurn()");
-			}
+
+			_data.Queue.Add(unit);
+			this.Log($"Added unit '{unit.Id}' to upcoming queue");
+			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdded, unit.Id));
 		}
 
-		public void UnregisterUnit(string unitId)
+		public void RemoveUnit(string unitId)
 		{
-			bool removed = _data.ActionQueue.Remove(unitId);
-
-			if (_data.HasActingUnit && _data.CurrentActingUnit.Id == unitId)
+			if (_data.IsUnitActing && _data.ActiveUnit?.Id == unitId)
 			{
-				this.Log($"Current acting unit '{unitId}' was unregistered, clearing reference");
-				_data.CurrentActingUnit = null;
+				this.Log($"Removing currently acting unit '{unitId}', ending their turn");
+				_data.IsUnitActing = false;
 			}
 
-			if (!removed) return;
-			this.Log($"Unit '{unitId}' unregistered");
+			if (!_data.Queue.Remove(unitId))
+				return;
+
+			this.Log($"Removed unit '{unitId}' from queue");
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitRemoved, unitId));
 		}
 
-		public bool IsUnitRegistered(string unitId) => _data.ActionQueue.Contains(unitId);
-
-		public void UpdateUnitSpeed(string unitId)
+		// 设置一个单位的优先级，即刻重新排序可行动单位，但不会影响已经行动过的单位
+		public void SetUnitPriority(string unitId, int priority)
 		{
-			if (!_data.ActionQueue.Contains(unitId))
-			{
-				this.LogWarning($"Unit '{unitId}' not in queue, cannot update speed");
+			if (!_data.Queue.SetPriority(unitId, priority))
 				return;
-			}
 
-			_data.ActionQueue.Reorder();
-			this.Log($"Unit '{unitId}' updated speed, queue reordered");
-			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.SpeedModified, unitId));
+			this.Log($"Set unit '{unitId}' priority to {priority}");
+			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.PriorityChanged, unitId));
 		}
 
-		public void ForceInsertUnit(string unitId, int priority = int.MaxValue)
+		// 强制让一个单位在下一回合立刻行动，和SetPriority不同的是其会完全忽略Speed的影响
+		// 实际上就是把它的ActionPriority设置成当前所有单位中最高的那个+1
+		public void MoveUnitToNext(string unitId)
 		{
-			if (!_data.ActionQueue.Contains(unitId))
-			{
-				this.LogWarning($"Unit '{unitId}' not in queue, cannot force insert");
+			if (!_data.Queue.MoveToNext(unitId))
 				return;
-			}
 
-			_data.ActionQueue.InsertWithPriority(unitId, priority);
-
-			this.Log($"Unit '{unitId}' force inserted with priority {priority}");
-			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitInserted, unitId));
+			this.Log($"Moved unit '{unitId}' to act next");
+			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.PriorityChanged, unitId));
 		}
 
-		public IReadOnlyList<ITurnUnit> GetTurnOrder() => _data.ActionQueue.GetQueue();
+		public void ResortQueue()
+		{
+			_data.Queue.ResortUpcoming();
 
-		public int GetUnitPositionInQueue(string unitId) => _data.ActionQueue.GetPositionInQueue(unitId);
-
-		public int GetRemainingUnitsCount() => _data.ActionQueue.Count;
-
-		public bool IsCurrentTurnComplete() => _data.IsTurnActive && _data.ActionQueue.IsEmpty && !_data.HasActingUnit;
+			this.Log("Queue re-sorted after speed changes");
+			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.SpeedChanged));
+		}
 
 		public void Clear()
 		{
-			this.Log("Clearing...");
+			this.Log("Clearing all turn state");
 			_data.Reset();
-			this.Log("Cleared");
 		}
+
+		#endregion
+
+		#region Query
+
+		public IReadOnlyList<ITurnUnit> GetFullOrder() => _data.Queue.GetFullOrder();
+
+		public IReadOnlyList<ITurnUnit> GetUpcoming() => _data.Queue.GetUpcoming();
+
+		public int IndexOf(string unitId) => _data.Queue.IndexOf(unitId);
+
+		#endregion
 	}
 }

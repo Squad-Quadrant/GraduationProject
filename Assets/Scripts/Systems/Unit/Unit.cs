@@ -65,8 +65,7 @@ namespace Systems.Unit
 			{
 				EActionType.Move,
 				EActionType.Attack,
-				EActionType.Wait,
-				EActionType.EndTurn
+				EActionType.Wait
 			};
 
 			return actions;

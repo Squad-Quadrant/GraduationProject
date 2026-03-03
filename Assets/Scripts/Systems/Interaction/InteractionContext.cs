@@ -102,9 +102,8 @@ namespace Systems.Interaction
 		/// </summary>
 		public Unit.Unit GetCurrentTurnUnit()
 		{
-			var turnUnit = TurnService.GetCurrentUnit();
+			var turnUnit = TurnService.ActiveUnit;
 			if (turnUnit == null) return null;
-
 			return UnitService.TryGetUnit(turnUnit.Id, out var unit) ? unit : null;
 		}
 
@@ -115,13 +114,10 @@ namespace Systems.Interaction
 		{
 			if (unit == null) return false;
 
-			// Check if it's this unit's turn
-			var currentTurnUnit = TurnService.GetCurrentUnit();
+			var currentTurnUnit = TurnService.ActiveUnit;
 			if (currentTurnUnit == null || currentTurnUnit.Id != unit.id)
 				return false;
 
-			// todo: may dont need to check CanAct
-			// Check if unit can act
 			return currentTurnUnit.CanAct;
 		}
 	}

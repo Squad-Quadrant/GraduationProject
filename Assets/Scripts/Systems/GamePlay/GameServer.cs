@@ -6,34 +6,36 @@ using Data.Runtime.Commands;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
 using Systems.Turn;
-using Systems.Unit;
 
 namespace Systems.GamePlay
 {
 	public class GameServer : IGameServer, IDisposable
 	{
 		public bool IsRunning { get; private set; }
-		public bool WaitForPresentation { get; set; } = true; // 是否需要等待表现
+		public bool WaitForPresentation { get; set; } = true;
 
 		private readonly ITurnService _turnService;
-		private readonly IUnitService _unitService;
 		private readonly IEventBus _eventBus;
 		private readonly ICommandQueue _commandQueue;
 
 		public GameServer(
 			ITurnService turnService,
-			IUnitService unitService,
 			IEventBus eventBus,
 			ICommandQueue commandQueue)
 		{
-			_turnService = turnService ?? throw new ArgumentNullException(nameof(turnService));
-			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
-			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_commandQueue = commandQueue ?? throw new ArgumentNullException(nameof(commandQueue));
+			_turnService = turnService;
+			_eventBus = eventBus;
+			_commandQueue = commandQueue;
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
-			_eventBus.Subscribe<TurnEndedEvent>(OnTurnEnded);
+
 			this.Log("Initialized");
+		}
+
+		public void Dispose()
+		{
+			_eventBus.Unsubscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
+			IsRunning = false;
 		}
 
 		public void StartGame()
@@ -47,64 +49,83 @@ namespace Systems.GamePlay
 			IsRunning = true;
 			this.Log("Starting game...");
 
+			StartNewTurn();
+		}
+
+		private void StartNewTurn()
+		{
 			_turnService.StartTurn();
+
+			this.Log($"Turn {_turnService.TurnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} started");
+
+			AwaitThen(AdvanceToNextUnit, cmd => cmd
+				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnStart)
+			);
+		}
+
+		private void AdvanceToNextUnit()
+		{
+			var unit = _turnService.NextUnit();
+
+			if (unit != null) // Found next unit to act
+			{
+				this.Log($"Unit '{unit.Id}' is now acting");
+				return;
+			}
+
+			// Queue exhausted — end the turn
+			this.Log("No more actionable units, ending turn");
+			EndCurrentTurn();
 		}
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
-			this.Log($"Unit '{e.UnitId}' finished. Processing transition...");
+			this.Log($"Unit '{e.UnitId}' finished acting");
 
-			if (WaitForPresentation)
-			{
-				_commandQueue.EnqueueAndExecute(
-					new AwaitPresentationCommand(_eventBus, onComplete: ProcessNextUnit)
-						.Expect(EPresentationCategory.UI, PresentationType.UI.TurnBanner) // todo: Need specific type
-					);
-			}
-			else
-				ProcessNextUnit();
+			AwaitThen(ProcessAfterUnitTurn, cmd => cmd
+				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
+			);
 		}
 
-		private void ProcessNextUnit()
+		private void ProcessAfterUnitTurn()
 		{
-			if (_turnService.IsCurrentTurnComplete())
+			if (_turnService.IsTurnComplete)
 			{
-				this.Log("Queue empty, ending turn");
-				_turnService.EndTurn();
+				this.Log("All units have acted, ending turn");
+				EndCurrentTurn();
 			}
 			else
 			{
-				this.Log("Proceeding to next unit");
-				_turnService.NextUnit();
+				this.Log("Advancing to next unit");
+				AdvanceToNextUnit();
 			}
 		}
 
-		private void OnTurnEnded(TurnEndedEvent e)
+		private void EndCurrentTurn()
 		{
-			this.Log($"Turn {e.TurnNumber} ended");
+			var turnNumber = _turnService.TurnNumber;
+			_turnService.EndTurn();
 
-			// Check win/lose conditions
+			this.Log($"Turn {turnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} ended");
+
+			// TODO: check win/lose conditions here before starting next turn
 			// if (CheckGameOver()) return;
 
-			// Auto-start next turn
-			this.Log("Starting next turn...");
-
-			if (WaitForPresentation)
-			{
-				_commandQueue.EnqueueAndExecute(
-					new AwaitPresentationCommand(_eventBus, onComplete: () => _turnService.StartTurn())
-						.Expect(EPresentationCategory.UI, PresentationType.UI.TurnBanner) // todo: Need specific type
-					);
-			}
-			else
-				_turnService.StartTurn();
+			AwaitThen(StartNewTurn, cmd => cmd
+				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
+			);
 		}
 
-		public void Dispose()
+		private void AwaitThen(Action onComplete, Action<AwaitPresentationCommand> configure)
 		{
-			_eventBus.Unsubscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
-			_eventBus.Unsubscribe<TurnEndedEvent>(OnTurnEnded);
-			IsRunning = false;
+			if (WaitForPresentation)
+			{
+				var cmd = new AwaitPresentationCommand(onComplete);
+				configure?.Invoke(cmd);
+				_commandQueue.EnqueueAndExecute(cmd);
+			}
+			else
+				onComplete();
 		}
 	}
 }

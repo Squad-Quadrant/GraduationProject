@@ -4,44 +4,30 @@ namespace Systems.Turn
 {
 	public interface ITurnService
 	{
+		// Turn Lifecycle（一个Turn指所有单位全部行动一次的一个大回合）
+		int TurnNumber { get; }
+		bool IsTurnActive { get; }
 		void StartTurn();
-
 		void EndTurn();
 
-		int GetCurrentTurnNumber();
-
-		bool IsTurnActive();
-
-		/// <summary>
-		/// Switches to the next unit in the turn order and returns it.
-		/// </summary>
-		/// <returns></returns>
+		// UnitTurn Lifecycle
+		ITurnUnit ActiveUnit { get; }
+		bool IsUnitActing { get; }
+		bool IsTurnComplete { get; } // 当目前没有可行动的单位时
 		ITurnUnit NextUnit();
-
 		void EndUnitTurn();
 
-		ITurnUnit GetCurrentUnit();
-
-		bool HasCurrentUnit();
-
-		void RegisterUnit(ITurnUnit unit);
-
-		void UnregisterUnit(string unitId);
-
-		bool IsUnitRegistered(string unitId);
-
-		void UpdateUnitSpeed(string unitId);
-
-		void ForceInsertUnit(string unitId, int priority = 999);
-
-		IReadOnlyList<ITurnUnit> GetTurnOrder();
-
-		int GetUnitPositionInQueue(string unitId);
-
-		int GetRemainingUnitsCount();
-
-		bool IsCurrentTurnComplete();
-
+		// Unit Order Management
+		void AddUnit(ITurnUnit unit);
+		void RemoveUnit(string unitId);
+		void SetUnitPriority(string unitId, int priority);
+		void MoveUnitToNext(string unitId);
+		void ResortQueue();
 		void Clear();
+
+		// Query
+		IReadOnlyList<ITurnUnit> GetFullOrder();
+		IReadOnlyList<ITurnUnit> GetUpcoming();
+		int IndexOf(string unitId);
 	}
 }

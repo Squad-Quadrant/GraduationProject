@@ -67,7 +67,10 @@ namespace Data.Runtime.Events.View
 
 		public static class UI
 		{
-			public const string TurnBanner = "TurnBanner";
+			public const string TurnStart = "TurnStart";           // "Round N begins" splash
+			public const string UnitTransition = "UnitTransition"; // Banner slides to next unit
+			public const string TurnEnd = "TurnEnd";               // "Round N complete" splash
+
 			public const string DamageNumber = "DamageNumber";
 			public const string ActionMenu = "ActionMenu";
 			public const string DialogBox = "DialogBox";
