@@ -19,7 +19,7 @@ namespace Systems.Unit
 		void Clear();
 
 		/// <summary>
-		/// Get unit by ID. Throws exception if not found.
+		/// Get unit by ID. Returns null if not found.
 		/// </summary>
 		Unit GetUnit(string unitId);
 

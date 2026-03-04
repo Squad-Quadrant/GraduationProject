@@ -166,11 +166,12 @@ namespace Presentation.Bootstrap
 		private void RegisterPresenter()
 		{
 			var uiManager = RootContainer.Instance.Resolve<UIManager>();
+			var turnService = _levelContainer.Services.Resolve<ITurnService>();
+			var unitService = _levelContainer.Services.Resolve<IUnitService>();
+
 			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
-			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
-			_levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus,
-				_levelContainer.Services.Resolve<ITurnService>(),
-				_levelContainer.Services.Resolve<IUnitService>()));
+			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
+			_levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
 		}
 
 		private void InitializeComponents()

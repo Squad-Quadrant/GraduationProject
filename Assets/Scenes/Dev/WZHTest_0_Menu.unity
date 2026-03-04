@@ -426,7 +426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetUnitId: 
-  insertPriority: 999
+  targetPriority: 0
 --- !u!1 &757589917
 GameObject:
   m_ObjectHideFlags: 0

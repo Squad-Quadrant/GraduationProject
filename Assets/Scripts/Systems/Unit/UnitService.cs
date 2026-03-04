@@ -66,8 +66,7 @@ namespace Systems.Unit
 		{
 			if (_units.TryGetValue(unitId, out var unit))
 				return unit;
-			this.LogWarning($"No unit found with ID '{unitId}'.");
-			return null;
+			throw new KeyNotFoundException($"No unit found with ID: {unitId}");
 		}
 
 		public bool TryGetUnit(string unitId, out Unit unit) => _units.TryGetValue(unitId, out unit);

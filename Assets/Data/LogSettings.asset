@@ -120,3 +120,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.ActionMenuPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnBannerPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnOrderPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnQueue
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnOrder.TurnOrderPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

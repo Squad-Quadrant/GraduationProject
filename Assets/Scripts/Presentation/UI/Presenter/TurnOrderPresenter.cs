@@ -89,13 +89,16 @@ namespace Presentation.UI.Presenter
 			if (order == null || order.Count == 0)
 				return Array.Empty<SlotData>();
 
-			var activeUnit = _turnService.ActiveUnit;
 			int activeIndex = -1;
-			for (int i = 0; i < order.Count; i++)
+			var activeUnit = _turnService.ActiveUnit;
+			if (activeUnit != null)
 			{
-				if (order[i].Id != activeUnit.Id) continue;
-				activeIndex = i;
-				break;
+				for (int i = 0; i < order.Count; i++)
+				{
+					if (order[i].Id != activeUnit.Id) continue;
+					activeIndex = i;
+					break;
+				}
 			}
 
 			var result = new SlotData[order.Count];

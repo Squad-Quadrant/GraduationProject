@@ -104,7 +104,7 @@ MonoBehaviour:
   slotPrefab: {fileID: 297302063329902229, guid: a678e3c160c697649b9d39ebd100bc74, type: 3}
   slotContainer: {fileID: 5323630922501975695}
   slotSize: 64
-  spacing: 8
+  spacing: 15
   maxVisibleSlots: 15
   highlightScale: 1.25
   actedAlpha: 0.4

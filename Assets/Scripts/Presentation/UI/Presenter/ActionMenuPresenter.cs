@@ -1,6 +1,7 @@
 ﻿using System;
 using Core.Events;
 using Core.FSM;
+using Core.Log;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
 using Systems.Interaction;
@@ -19,6 +20,8 @@ namespace Presentation.UI.Presenter
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
 			_eventBus.Subscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
+
+			this.Log("Initialized");
 		}
 
 		public void Dispose()
