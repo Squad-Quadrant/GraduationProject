@@ -24,6 +24,7 @@ namespace Systems.Unit
 		[ReadOnly] public string frontBodySkin;
 		[ReadOnly] public string backBodySkin;
 		[ReadOnly] public string defaultWeaponSkin;
+		[ReadOnly] public Sprite icon;
 
         public Vector2Int Position
         {
@@ -52,7 +53,8 @@ namespace Systems.Unit
 				skeletonDataAsset = config.skeletonDataAsset,
 				frontBodySkin = config.frontBodySkin,
 				backBodySkin = config.backBodySkin,
-				defaultWeaponSkin = config.defaultWeaponSkin
+				defaultWeaponSkin = config.defaultWeaponSkin,
+				icon = config.icon
 			};
 			unit.runtime.Initialize(unit.stats.maxHp, startPosition, unit);
 			return unit;
