@@ -125,9 +125,6 @@ namespace Core.Events
 
 			subscriptions.RemoveAll(s => s.Handler.Equals(handler));
 			this.Log("Unsubscribed from event: " + eventType.Name);
-
-			if (subscriptions.Count == 0)
-				_subscriptionDic.Remove(eventType);
 		}
 
 		#endregion
@@ -163,9 +160,6 @@ namespace Core.Events
 
 				foreach (var subscription in _onceToRemove)
 					subscriptions.Remove(subscription);
-
-				if (subscriptions.Count == 0)
-					_subscriptionDic.Remove(eventType);
 			}
 
 			if (RecordHistory)
