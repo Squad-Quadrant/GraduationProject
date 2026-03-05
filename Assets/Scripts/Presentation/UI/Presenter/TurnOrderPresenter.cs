@@ -108,7 +108,7 @@ namespace Presentation.UI.Presenter
 				var turnUnit = order[i];
 				var state = ClassifyState(i, activeIndex);
 				Sprite icon = null;
-				var factionColor = _panel.GetFactionColor(UnitFaction.Neutral);
+				var factionColor = _panel.GetFactionColor(EUnitFaction.Neutral);
 
 				if (_unitService.TryGetUnit(turnUnit.Id, out var unit))
 				{

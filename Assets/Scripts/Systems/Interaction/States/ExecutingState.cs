@@ -57,8 +57,8 @@ namespace Systems.Interaction.States
 			// Check if we still have a selected unit
 			if (Context.selectedUnit == null)
 			{
-				this.Log("No selected unit, going to Idle");
-				Context.StateMachine.ChangeState<IdleState>();
+				this.Log("No selected unit");
+				Context.TurnService.EndUnitTurn();
 				return;
 			}
             
@@ -81,9 +81,8 @@ namespace Systems.Interaction.States
 			else
 			{
 				// Unit's turn is over
-				this.Log($"Unit {unit.name} turn complete, going to Idle");
+				this.Log($"Unit {unit.name} turn complete");
 				Context.TurnService.EndUnitTurn();
-				Context.StateMachine.ChangeState<IdleState>();
 			}
 		}
 	}

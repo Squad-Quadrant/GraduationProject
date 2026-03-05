@@ -67,7 +67,7 @@ namespace Systems.PathFinding.TraversalRule
 			if (!string.IsNullOrEmpty(options.MovingUnitId) && occupant.id == options.MovingUnitId)
 				return OccupationType.Self;
 
-			if (options.MovingUnitFaction == UnitFaction.None)
+			if (options.MovingUnitFaction == EUnitFaction.None)
 				return OccupationType.Enemy;
 
 			bool isAlly = occupant.faction == options.MovingUnitFaction;

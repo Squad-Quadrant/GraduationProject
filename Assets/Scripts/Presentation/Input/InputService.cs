@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 
 namespace Presentation.Input
 {
-	public class InputService : MonoBehaviour, ILevelInitializable
+	public class InputService : MonoBehaviour
 	{
 		[Title("Dependencies")]
 		[SerializeField] private Camera mainCamera;

@@ -3,9 +3,13 @@ using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Commands;
+using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
+using Presentation.Interaction;
+using Systems.Interaction.States;
 using Systems.Turn;
+using Systems.Unit;
 
 namespace Systems.GamePlay
 {
@@ -14,18 +18,24 @@ namespace Systems.GamePlay
 		public bool IsRunning { get; private set; }
 		public bool WaitForPresentation { get; set; } = true;
 
-		private readonly ITurnService _turnService;
 		private readonly IEventBus _eventBus;
 		private readonly ICommandQueue _commandQueue;
+		private readonly ITurnService _turnService;
+		private readonly IUnitService _unitService;
+		private readonly InteractionController _fsm;
 
 		public GameServer(
-			ITurnService turnService,
 			IEventBus eventBus,
-			ICommandQueue commandQueue)
+			ICommandQueue commandQueue,
+			ITurnService turnService,
+			IUnitService unitService,
+			InteractionController interactionController)
 		{
 			_turnService = turnService;
 			_eventBus = eventBus;
 			_commandQueue = commandQueue;
+			_unitService = unitService;
+			_fsm = interactionController;
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
 
@@ -49,6 +59,7 @@ namespace Systems.GamePlay
 			IsRunning = true;
 			this.Log("Starting game...");
 
+			_fsm.StartInteraction();
 			StartNewTurn();
 		}
 
@@ -66,29 +77,50 @@ namespace Systems.GamePlay
 		private void AdvanceToNextUnit()
 		{
 			var unit = _turnService.NextUnit();
-
-			if (unit != null) // Found next unit to act
+			if (unit == null)
 			{
-				this.Log($"Unit '{unit.Id}' is now acting");
+				this.Log("No more actionable units, ending turn");
+				EndCurrentTurn();
 				return;
 			}
 
-			// Queue exhausted — end the turn
-			this.Log("No more actionable units, ending turn");
-			EndCurrentTurn();
+			this.Log($"Unit '{unit.Id}' turn starting");
+			_eventBus.Publish(new UnitTurnStartedEvent(unit.Id, _turnService.TurnNumber));
+
+			// AwaitThen(OnUnitReady, cmd => cmd
+			// 	.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
+			// );
+			OnUnitReady();
+		}
+
+		private void OnUnitReady()
+		{
+			var activeTurnUnit = _turnService.ActiveUnit;
+			var unit = _unitService.GetUnit(activeTurnUnit.Id);
+			this.Log($"Unit '{unit.id}' is now acting");
+
+			// Control transfers to InteractionFSM (player) or AI system (enemy)
+			switch (unit.faction)
+			{
+				case EUnitFaction.Player: // 直接切换到 UnitSelectedState 让玩家操作
+				case EUnitFaction.Enemy:
+				case EUnitFaction.Neutral:
+				case EUnitFaction.None:
+					_fsm.Context.selectedUnit = unit;
+					_eventBus.Publish(new UnitSelectedEvent(unit.id, unit.position));
+					_fsm.StateMachine.ChangeState<UnitSelectedState>();
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
 			this.Log($"Unit '{e.UnitId}' finished acting");
 
-			AwaitThen(ProcessAfterUnitTurn, cmd => cmd
-				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
-			);
-		}
+			_fsm.StateMachine.ChangeState<WaitingForSystemState>();
 
-		private void ProcessAfterUnitTurn()
-		{
 			if (_turnService.IsTurnComplete)
 			{
 				this.Log("All units have acted, ending turn");

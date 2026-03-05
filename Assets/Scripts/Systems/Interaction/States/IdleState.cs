@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Core.Log;
-using Data.Runtime;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 
@@ -21,9 +19,6 @@ namespace Systems.Interaction.States
 			base.OnEnter(ctx);
 
 			this.Log("Entered Idle State");
-
-			ctx.ClearSelection(); // Clear any selected units or UI elements
-			Publish(ctx, new UnitDeselectedEvent(null));
 
 			_onUnitClicked = OnUnitClicked;
 			_onCellClicked = OnCellClicked;

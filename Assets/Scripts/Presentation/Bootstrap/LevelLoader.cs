@@ -161,6 +161,8 @@ namespace Presentation.Bootstrap
 				var traversalRule = new DefaultTraversalRule(unitService);
 				return new PathFindingService(mapService, traversalRule);
 			});
+
+			_levelContainer.Services.RegisterInstance(interactionController);
 		}
 
 		private void RegisterPresenter()

@@ -146,11 +146,11 @@ namespace Systems.Turn
 				}
 
 				_data.IsUnitActing = true; // 找到了一个可行动的单位，开始它的回合
+				next.OnTurnStart();
 
 				this.Log($"Unit '{next.Id}' turn started (Speed:{next.Speed})");
 
 				_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdvanced, next.Id));
-				_eventBus.Publish(new UnitTurnStartedEvent(next.Id, _data.TurnNumber));
 
 				return next;
 			}

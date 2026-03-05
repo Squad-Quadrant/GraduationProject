@@ -179,11 +179,11 @@ namespace Presentation.UI.Panel.TurnOrder
 			this.Log($"Removing slot for '{unitId}', {_activeSlots.Count} remaining");
 		}
 
-		public Color GetFactionColor(UnitFaction faction) => faction switch
+		public Color GetFactionColor(EUnitFaction faction) => faction switch
 		{
-			UnitFaction.Player  => playerColor,
-			UnitFaction.Enemy   => enemyColor,
-			UnitFaction.Neutral => neutralColor,
+			EUnitFaction.Player  => playerColor,
+			EUnitFaction.Enemy   => enemyColor,
+			EUnitFaction.Neutral => neutralColor,
 			_                   => neutralColor
 		};
 

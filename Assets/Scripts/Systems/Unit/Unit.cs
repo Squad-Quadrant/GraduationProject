@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Systems.Unit
 {
-	public enum UnitFaction
+	public enum EUnitFaction
 	{
 		Player, Enemy, Neutral,
 		None, // 用于占位或特殊情况
@@ -30,7 +30,7 @@ namespace Systems.Unit
 		public int speed;
 		public int moveRange;
 		public int maxAp;
-		public UnitFaction faction;
+		public EUnitFaction faction;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;

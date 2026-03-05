@@ -105,10 +105,7 @@ namespace Systems.Interaction.States
 			if (pathResult.Found)
 			{
 				Context.currentPath.AddRange(pathResult.Path);
-				Context.currentPathCost = pathResult.TotalCost;
 			}
-			else
-				Context.currentPathCost = 0;
 
 			Publish(Context, new PathPreviewEvent(
 				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),

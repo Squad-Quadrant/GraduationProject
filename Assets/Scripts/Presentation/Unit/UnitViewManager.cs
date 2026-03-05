@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Presentation.Unit
 {
-	public class UnitViewManager : MonoBehaviour, ILevelInitializable
+	public class UnitViewManager : MonoBehaviour
 	{
 		[Title("References")]
 		[SerializeField, Required] private UnitView unitViewPrefab;

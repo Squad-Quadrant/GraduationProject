@@ -4,7 +4,6 @@ using Core.Commands;
 using Core.Events;
 using Core.FSM;
 using Data.Runtime;
-using Systems.Interaction.States;
 using Systems.Map;
 using Systems.PathFinding;
 using Systems.Turn;
@@ -40,13 +39,9 @@ namespace Systems.Interaction
 
 		public EActionType currentAction;
 
-		public List<EActionType> availableActions = new();
-
 		public List<Vector2Int> validTargetCells = new();
 
 		public List<Vector2Int> currentPath = new();
-
-		public int currentPathCost;
 
 		public ReachableAreaResult CachedReachableArea;
 
@@ -75,11 +70,8 @@ namespace Systems.Interaction
 			selectedUnit = null;
 			targetCell = InvalidCell;
 			targetUnit = null;
-			currentAction = EActionType.None;
-			availableActions.Clear();
 			validTargetCells.Clear();
 			currentPath.Clear();
-			currentPathCost = 0;
 		}
 
 		/// <summary>
@@ -91,7 +83,6 @@ namespace Systems.Interaction
 			targetCell = InvalidCell;
 			targetUnit = null;
 			currentPath.Clear();
-			currentPathCost = 0;
 		}
 
 		public bool HasTarget => targetCell != InvalidCell || targetUnit != null;

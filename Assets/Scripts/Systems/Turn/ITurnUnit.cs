@@ -1,4 +1,6 @@
-﻿namespace Systems.Turn
+﻿using Systems.Unit;
+
+namespace Systems.Turn
 {
 	public interface ITurnUnit
 	{

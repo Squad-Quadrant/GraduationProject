@@ -20,11 +20,15 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Core.Events.EventBus
-    enabled: 0
+    enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Core.FSM.StateMachine`1[[Systems.Interaction.InteractionContext, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.AwaitPresentationCommand
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -37,7 +41,7 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.Input.InputService
-    enabled: 0
+    enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Interaction.InteractionController
@@ -60,7 +64,39 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnBanner
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnBannerPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnOrder.TurnOrderPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.TurnPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.UnitInfoPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.ActionMenuPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnBannerPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnOrderPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.UnitInfoPresenter
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -96,6 +132,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.WaitingForSystemState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.Map.MapService
     enabled: 1
     minLogLevel: 0
@@ -104,51 +144,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Turn.TurnQueue
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.Turn.TurnService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Systems.Unit.UnitService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.AwaitPresentationCommand
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnBanner
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.ActionMenuPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TurnBannerPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TurnOrderPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnQueue
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnOrder.TurnOrderPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnBannerPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.UnitInfoPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.UnitInfoPanel
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1

@@ -66,7 +66,7 @@ namespace Presentation.Debugger
             var options = new PathFindingOptions(
                 canPassThroughAllies: testPassAllies,
                 enemiesBlockMovement: testBlockEnemies,
-                movingUnitFaction: UnitFaction.None,
+                movingUnitFaction: EUnitFaction.None,
                 movingUnitId: null,
                 canCrossLowWalls: false,
                 canCrossHighWalls: false,
@@ -86,7 +86,7 @@ namespace Presentation.Debugger
             var options = new PathFindingOptions(
                 canPassThroughAllies: testPassAllies,
                 enemiesBlockMovement: testBlockEnemies,
-                movingUnitFaction: UnitFaction.None,
+                movingUnitFaction: EUnitFaction.None,
                 movingUnitId: null,
                 canCrossLowWalls: false,
                 canCrossHighWalls: false,

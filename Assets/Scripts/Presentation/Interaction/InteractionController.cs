@@ -14,11 +14,8 @@ using UnityEngine;
 
 namespace Presentation.Interaction
 {
-	public class InteractionController : MonoBehaviour, ILevelInitializable
+	public class InteractionController : MonoBehaviour
 	{
-		[Title("Settings")]
-		[SerializeField] private bool autoStart = true;
-
 		[Title("Info")]
 		[ShowInInspector, ReadOnly] private InteractionContext _context;
 		[ShowInInspector, ReadOnly] private bool _isInitialized;
@@ -55,8 +52,6 @@ namespace Presentation.Interaction
 
 			_isInitialized = true;
 			this.Log("Initialized");
-
-			if (autoStart) StartInteraction();
 		}
 
 		private void Update()
@@ -90,7 +85,7 @@ namespace Presentation.Interaction
 				return;
 			}
 
-			StateMachine.ChangeState<IdleState>();
+			StateMachine.ChangeState<WaitingForSystemState>();
 			_isRunning = true;
 			this.Log("Interaction started");
 		}

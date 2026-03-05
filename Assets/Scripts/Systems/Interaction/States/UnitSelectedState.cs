@@ -48,6 +48,7 @@ namespace Systems.Interaction.States
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
+
 			_onActionSelected = null;
 			_onUnitClicked = null;
 			_onBack = null;
@@ -109,14 +110,14 @@ namespace Systems.Interaction.States
 		private void OnBack(BackInputEvent e)
 		{
 			this.Log("Back input received - Deselecting unit and going idle");
-			UnSelectUnit();
+			DeselectUnit();
 			StateMachine(Context).ChangeState<IdleState>();
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
 			this.Log("Esc input received - Deselecting unit and going idle");
-			UnSelectUnit();
+			DeselectUnit();
 			StateMachine(Context).ChangeState<IdleState>();
 		}
 
@@ -124,13 +125,10 @@ namespace Systems.Interaction.States
 		{
 			this.Log($"Switching to unit: {newUnit.name}");
 
-            UnSelectUnit();
+            DeselectUnit();
 
 			// Update selection
 			Context.selectedUnit = newUnit;
-
-            Context.availableActions.Clear();
-			Context.availableActions.AddRange(newUnit.GetAvailableActions());
 
 			// Publish new selection
 			Publish(Context, new UnitSelectedEvent(
@@ -142,17 +140,14 @@ namespace Systems.Interaction.States
 		private void ExecuteWait()
 		{
 			this.Log("Executing Wait action");
-			UnSelectUnit();
-            Context.TurnService.EndUnitTurn(); // => 发出 UnitTurnEndedEvent
-            // GameServer 监听 UnitTurnEndedEvent 会接管后续逻辑
-			Context.StateMachine.ChangeState<IdleState>();
+			DeselectUnit();
+			Context.TurnService.EndUnitTurn(); // => 发出 UnitTurnEndedEvent,GameServer 监听 UnitTurnEndedEvent 会接管后续逻辑
 		}
         
-        private void UnSelectUnit()
+        private void DeselectUnit()
         {
-	        if (Context.selectedUnit == null) return;
 	        Publish(Context, new UnitDeselectedEvent(Context.selectedUnit.id));
-	        Context.selectedUnit = null;
+	        Context.ClearSelection();
         }
 	}
 }

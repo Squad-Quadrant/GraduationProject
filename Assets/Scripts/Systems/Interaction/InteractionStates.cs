@@ -11,5 +11,6 @@
 		public const string EnemyTurn = "EnemyTurn";
 		public const string Paused = "Paused";
 		public const string GameOver = "GameOver";
+		public const string WaitingForSystem = "WaitingForSystem";
 	}
 }

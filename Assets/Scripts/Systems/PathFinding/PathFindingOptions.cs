@@ -16,7 +16,7 @@ namespace Systems.PathFinding
         /// Used to determine which units are allies vs enemies.
         /// Null means ignore unit blocking entirely.
         /// </summary>
-        [ShowInInspector, ReadOnly] public readonly UnitFaction MovingUnitFaction;
+        [ShowInInspector, ReadOnly] public readonly EUnitFaction MovingUnitFaction;
 
         [ShowInInspector, ReadOnly] public readonly string MovingUnitId;
 
@@ -29,7 +29,7 @@ namespace Systems.PathFinding
         public PathFindingOptions(
             bool canPassThroughAllies,
             bool enemiesBlockMovement,
-            UnitFaction movingUnitFaction,
+            EUnitFaction movingUnitFaction,
             string movingUnitId,
             bool canCrossLowWalls,
             bool canCrossHighWalls,
@@ -47,7 +47,7 @@ namespace Systems.PathFinding
         public static PathFindingOptions Default => new(
             canPassThroughAllies: true,
             enemiesBlockMovement: true,
-            movingUnitFaction: UnitFaction.None,
+            movingUnitFaction: EUnitFaction.None,
             movingUnitId: null,
             canCrossLowWalls: false,
             canCrossHighWalls: false,
@@ -55,7 +55,7 @@ namespace Systems.PathFinding
         );
 
         // Builder-style methods for easy customization
-        public PathFindingOptions WithMovingUnit(string unitId, UnitFaction faction) => new(
+        public PathFindingOptions WithMovingUnit(string unitId, EUnitFaction faction) => new(
 	        CanPassThroughAllies,
 	        EnemiesBlockMovement,
 	        faction,

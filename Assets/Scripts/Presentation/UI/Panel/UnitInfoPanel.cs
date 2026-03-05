@@ -40,13 +40,13 @@ namespace Presentation.UI.Panel
 			speedText.text = $"Speed: {unit.speed}";
 		}
 
-		private static string FormatFaction(Systems.Unit.UnitFaction? faction)
+		private static string FormatFaction(Systems.Unit.EUnitFaction? faction)
 		{
 			return faction switch
 			{
-				Systems.Unit.UnitFaction.Player  => "Player",
-				Systems.Unit.UnitFaction.Enemy   => "Enemy",
-				Systems.Unit.UnitFaction.Neutral => "Neutral",
+				Systems.Unit.EUnitFaction.Player  => "Player",
+				Systems.Unit.EUnitFaction.Enemy   => "Enemy",
+				Systems.Unit.EUnitFaction.Neutral => "Neutral",
 				_ => "Unknown"
 			};
 		}
