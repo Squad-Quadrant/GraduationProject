@@ -79,14 +79,9 @@ namespace Systems.Interaction.States
 
 			Context.selectedUnit = unit;
 
-			Context.availableActions.Clear();
-			Context.availableActions.AddRange(unit.GetAvailableActions());
-
 			Publish(Context, new UnitSelectedEvent(
 				unit.id,
-				unit.Position,
-				Context.availableActions
-				));
+				unit.position));
 
 			StateMachine(Context).ChangeState<UnitSelectedState>();
 		}

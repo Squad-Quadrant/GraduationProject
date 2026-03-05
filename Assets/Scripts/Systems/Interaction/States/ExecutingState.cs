@@ -65,17 +65,15 @@ namespace Systems.Interaction.States
 			var unit = Context.selectedUnit;
 			var currentTurnUnit = Context.TurnService.ActiveUnit;
 
-			// todo: should check action points
 			if (currentTurnUnit != null && currentTurnUnit.Id == unit.id && currentTurnUnit.CanAct)
 			{
 				// Unit can still act - return to unit selected
-				this.Log($"Unit {unit.name} can still act, returning to UnitSelected");
+				this.Log($"Unit {unit.name} still acting (AP:{unit.currentAp}), returning to UnitSelected");
 
 				// Re-publish selection event (UI might need to refresh)
 				Publish(Context, new UnitSelectedEvent(
 					unit.id,
-					unit.Position,
-					Context.availableActions
+					unit.position
 				));
 
 				Context.StateMachine.ChangeState<UnitSelectedState>();

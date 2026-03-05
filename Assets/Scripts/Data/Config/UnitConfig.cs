@@ -10,47 +10,27 @@ namespace Data.Config
 	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit Config")]
 	public class UnitConfig : ScriptableObject
 	{
-		[Title("基础信息", bold: true)]
-		[LabelText("配置ID")]
-		[InfoBox("单位的唯一标识符", InfoMessageType.None)]
+		[TitleGroup("基础信息")]
 		public string configId = "unit_001";
-
-		[Space]
-		[LabelText("单位名称")]
-		[InfoBox("单位的显示名称", InfoMessageType.None)]
 		public string unitName = "New Unit";
-
-		[Space]
-		[LabelText("单位描述")]
 		[TextArea(2, 4)]
 		public string description = "This is a new unit.";
 
-		[Title("视觉表现", bold: true)]
-		[LabelText("单位图标")]
+		[TitleGroup("视觉表现")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]
 		public Sprite icon;
-
-		[Space]
-		[LabelText("动画配置")]
-		public UnitAnimationConfig animationConfig;
-
-		[Space]
-		public SkeletonDataAsset skeletonDataAsset;
+		[Required] public UnitAnimationConfig animationConfig;
+		[Required] public SkeletonDataAsset skeletonDataAsset;
 		public string frontBodySkin = "pcb1 front";
 		public string backBodySkin = "pcb1 back";
 		public string defaultWeaponSkin = "";
 
-		[Title("单位属性", bold: true)]
-		[LabelText("属性配置")]
-		public UnitStats stats = new()
-		{
-			maxHp = 100,
-			speed = 10,
-			moveRange = 2,
-			actionPoints = 2,
-			faction = UnitFaction.Neutral
-		};
-
+		[TitleGroup("单位属性")]
+		public int maxHp = 100;
+		public int speed = 10;
+		public int moveRange = 2; // 每消耗一个行动点可以移动的格子数量
+		public int actionPoints = 2; // 每回合可用的行动点数
+		public UnitFaction faction = UnitFaction.Neutral;
 
 		#region Validation
 
@@ -65,10 +45,7 @@ namespace Data.Config
 				isValid = false;
 			}
 
-			if (!icon)
-			{
-				Debug.LogWarning($"[UnitConfig] [{unitName}] No icon assigned!");
-			}
+			if (!icon) Debug.LogWarning($"[UnitConfig] [{unitName}] No icon assigned!");
 
 			if (!animationConfig)
 			{

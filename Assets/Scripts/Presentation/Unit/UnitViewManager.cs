@@ -166,7 +166,7 @@ namespace Presentation.Unit
 				skeletonDataAsset: unit.skeletonDataAsset,
 				frontBodySkinName: unit.frontBodySkin,
 				backBodySkinName: unit.backBodySkin,
-				initialGridPos: unit.Position,
+				initialGridPos: unit.position,
 				weaponSkinName: unit.defaultWeaponSkin);
 
 			return view;

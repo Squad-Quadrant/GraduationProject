@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Unit 001
   m_EditorClassIdentifier: 
   configId: unit_001
-  unitName: Test Player
+  unitName: Test Player 1
   description: This is a new unit.
   icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
@@ -21,9 +21,8 @@ MonoBehaviour:
   frontBodySkin: pcb1 front
   backBodySkin: pcb1 back
   defaultWeaponSkin: 
-  stats:
-    maxHp: 100
-    speed: 10
-    moveRange: 1
-    actionPoints: 3
-    faction: 0
+  maxHp: 100
+  speed: 10
+  moveRange: 2
+  actionPoints: 2
+  faction: 0

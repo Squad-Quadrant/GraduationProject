@@ -20,6 +20,7 @@ namespace Data.Runtime.Commands
 		private readonly Vector2Int _fromPosition;
 		private readonly Vector2Int _toPosition;
 		private readonly IReadOnlyList<Vector2Int> _path;
+		private readonly int _apCost;
 
 		private readonly IUnitService _unitService;
 		private readonly IMapService _mapService;
@@ -38,6 +39,7 @@ namespace Data.Runtime.Commands
 			Vector2Int fromPosition,
 			Vector2Int toPosition,
 			IReadOnlyList<Vector2Int> path,
+			int apCost,
 			IUnitService unitService,
 			IMapService mapService,
 			IEventBus eventBus)
@@ -46,6 +48,7 @@ namespace Data.Runtime.Commands
 			_fromPosition = fromPosition;
 			_toPosition = toPosition;
 			_path = path;
+			_apCost = apCost;
 			_unitService = unitService;
 			_mapService = mapService;
 			_eventBus = eventBus;
@@ -64,7 +67,8 @@ namespace Data.Runtime.Commands
 
 			_mapService.ReleaseCell(_fromPosition);
 			_mapService.OccupyCell(_toPosition, _unitId);
-			unit.Position = _toPosition;
+			unit.position = _toPosition;
+			unit.currentAp -= _apCost;
 
 			_eventBus.Publish(new UnitMovedEvent(
 				unit,
@@ -99,7 +103,8 @@ namespace Data.Runtime.Commands
 			// Reverse the move
 			_mapService.ReleaseCell(_toPosition);
 			_mapService.OccupyCell(_fromPosition, _unitId);
-			unit.Position = _fromPosition;
+			unit.position = _fromPosition;
+			unit.currentAp += _apCost;
 
 			// Publish reverse movement event
 			var reversePath = new List<Vector2Int>(_path);
@@ -122,8 +127,6 @@ namespace Data.Runtime.Commands
 				return;
 
 			this.Log($"Animation complete for {_unitId}");
-            
-            var units = _unitService.GetAllAliveUnits().ToList();
 
 			Cleanup();
 			CompleteExecution();

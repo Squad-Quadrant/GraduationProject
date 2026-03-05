@@ -58,7 +58,7 @@ namespace Systems.PathFinding.TraversalRule
 			if (_unitService == null)
 				return OccupationType.Empty;
 
-			var units = _unitService.GetUnitsWhere(u => u.Position == position);
+			var units = _unitService.GetUnitsWhere(u => u.position == position);
 			if (units.Count == 0)
 				return OccupationType.Empty;
 
@@ -70,7 +70,7 @@ namespace Systems.PathFinding.TraversalRule
 			if (options.MovingUnitFaction == UnitFaction.None)
 				return OccupationType.Enemy;
 
-			bool isAlly = occupant.stats.faction == options.MovingUnitFaction;
+			bool isAlly = occupant.faction == options.MovingUnitFaction;
 
 			if (isAlly)
 				return options.CanPassThroughAllies ? OccupationType.Ally : OccupationType.Enemy;

@@ -13,19 +13,12 @@ namespace Data.Runtime.Events.Interaction
 
 		public Vector2Int Position { get; }
 
-		/// <summary>
-		/// Actions available to this unit.
-		/// UI uses this to show/hide action buttons.
-		/// </summary>
-		public IReadOnlyList<EActionType> AvailableActions { get; }
-
-		public UnitSelectedEvent(string unitId, Vector2Int position, IReadOnlyList<EActionType> availableActions)
+		public UnitSelectedEvent(string unitId, Vector2Int position)
 		{
 			UnitId = unitId;
 			Position = position;
-			AvailableActions = availableActions;
 		}
 
-		public override string ToString() => $"[UnitSelected] {UnitId} at {Position}, Actions: {AvailableActions?.Count ?? 0}";
+		public override string ToString() => $"[UnitSelected] {UnitId} at {Position}";
 	}
 }

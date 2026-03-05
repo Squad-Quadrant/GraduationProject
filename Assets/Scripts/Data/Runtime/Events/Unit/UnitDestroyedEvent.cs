@@ -15,7 +15,7 @@ namespace Data.Runtime.Events.Unit
 		public UnitDestroyedEvent(Systems.Unit.Unit unit, string killerUnitId = null)
 		{
 			Unit = unit;
-			DeathPosition = unit.Position;
+			DeathPosition = unit.position;
 			KillerUnitId = killerUnitId;
 		}
 

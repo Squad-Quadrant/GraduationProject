@@ -15,7 +15,7 @@ namespace Presentation.UI.Presenter
         private readonly UIManager _uiManager;
         private readonly IEventBus _eventBus;
         private readonly IUnitService _unitService;
-        private TurnBanner _banner;
+        private TurnBannerPanel _bannerPanel;
 
         public TurnBannerPresenter(UIManager uiManager, IEventBus eventBus, IUnitService unitService)
         {
@@ -72,19 +72,19 @@ namespace Presentation.UI.Presenter
 
         private void ShowBanner(string title, string subtitle, string presentationType)
         {
-	        _banner = _uiManager.Open<TurnBanner>();
+	        _bannerPanel = _uiManager.Open<TurnBannerPanel>();
 
-	        if (!_banner)
+	        if (!_bannerPanel)
 	        {
 		        this.LogWarning("Failed to open TurnBanner — completing immediately");
 		        _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, presentationType));
 		        return;
 	        }
 
-	        _banner.Show(title, subtitle, () =>
+	        _bannerPanel.Show(title, subtitle, () =>
 	        {
-		        _uiManager.Close(_banner);
-		        _banner = null;
+		        _uiManager.Close(_bannerPanel);
+		        _bannerPanel = null;
 		        _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, presentationType));
 	        });
         }

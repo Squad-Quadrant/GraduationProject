@@ -43,7 +43,7 @@ namespace Systems.Buff
             }
         }
         
-        public void Init(UnitRuntime player1, UnitRuntime player2)
+        public void Init(Unit.Unit player1, Unit.Unit player2)
         {
             // OnReset += player1.ResetProperty;
             // OnReset += player2.ResetProperty;

@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
-  m_Name: ActionMenuPanel
+  m_Name: UnitInfo
   m_EditorClassIdentifier: 
-  panelId: ActionMenuPanel
-  prefab: {fileID: 6552741338846052319, guid: 136e8d1f3120aec4e963893212f7ff3a, type: 3}
+  panelId: UnitInfo
+  prefab: {fileID: 1581058548187276017, guid: c0a80b5b5c206a54d82d7a9df27d692c, type: 3}
   layer: 1
-  preload: 0
   cacheOnClose: 1

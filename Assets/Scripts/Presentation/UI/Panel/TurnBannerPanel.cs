@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Presentation.UI.Panel
 {
-    public class TurnBanner : UIPanel
+    public class TurnBannerPanel : UIPanel
     {
 	    [TitleGroup("References")]
 	    [SerializeField, Required] private TextMeshProUGUI titleText;

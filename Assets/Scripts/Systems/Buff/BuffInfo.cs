@@ -10,12 +10,12 @@ namespace Systems.Buff
     {
         public BuffData buffData;
         public GameObject creator;
-        public UnitRuntime target;
+        public Unit.Unit target;
         public float durationCounter;
         public float tickCounter;
         public int currentStack;
 
-        public BuffInfo(BuffData buffData, GameObject creator, UnitRuntime target)
+        public BuffInfo(BuffData buffData, GameObject creator, Unit.Unit target)
         {
             this.buffData = buffData;
             this.creator = creator;

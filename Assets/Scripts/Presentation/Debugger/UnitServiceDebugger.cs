@@ -58,12 +58,7 @@ namespace Presentation.Debugger
 
 		[TitleGroup("Unit List", "All registered units")]
 		[ShowInInspector, ReadOnly]
-		[TableList(
-			AlwaysExpanded = true,
-			IsReadOnly = true,
-			ShowIndexLabels = false,
-			NumberOfItemsPerPage = 12
-		)]
+		[TableList(AlwaysExpanded = true, IsReadOnly = true, ShowIndexLabels = false, NumberOfItemsPerPage = 12)]
 		[InfoBox("No units registered", InfoMessageType.None, VisibleIf = "@UnitList.Count == 0")]
 		private List<UnitListEntry> UnitList
 		{
@@ -76,16 +71,17 @@ namespace Presentation.Debugger
 				if (units == null || units.Count == 0)
 					return new List<UnitListEntry>();
 
+				// All fields now accessed directly on unit — no stats/runtime indirection
 				return units.Select(u => new UnitListEntry
 				{
 					Id = u.id ?? "null",
 					Name = u.name ?? "null",
-					Position = u.Position,
-					CurrentHp = u.runtime?.currentHp ?? 0,
-					MaxHp = u.stats?.maxHp ?? 0,
-					Speed = u.stats?.speed ?? 0,
-					IsAlive = u.runtime?.StillAlive ?? false,
-					IsStunned = u.runtime?.isStunned ?? false
+					Position = u.position,
+					CurrentHp = u.currentHp,
+					MaxHp = u.maxHp,
+					Speed = u.speed,
+					IsAlive = u.IsAlive,
+					IsStunned = u.isStunned
 				}).ToList();
 			}
 		}
@@ -104,14 +100,11 @@ namespace Presentation.Debugger
 		private IEnumerable<string> GetUnitIdOptions()
 		{
 			var options = new List<string> { "" };
-
-			if (_unitService == null)
-				return options;
+			if (_unitService == null) return options;
 
 			var units = _unitService.GetAllUnits();
 			if (units != null)
 				options.AddRange(units.Select(u => u.id));
-
 			return options;
 		}
 
@@ -130,33 +123,21 @@ namespace Presentation.Debugger
 		{
 			get
 			{
-				if (string.IsNullOrEmpty(_selectedUnitId))
-					return false;
-				if (_unitService == null)
-					return false;
+				if (string.IsNullOrEmpty(_selectedUnitId)) return false;
+				if (_unitService == null) return false;
 				return _unitService.HasUnit(_selectedUnitId);
 			}
 		}
 
 		#endregion
 
-		#region Unit Stats (Selected)
+		#region Selected Unit State (merged stats + runtime)
 
-		[TitleGroup("Selected Unit Stats")]
+		[TitleGroup("Selected Unit State")]
 		[ShowIf("HasSelectedUnit")]
 		[ShowInInspector, ReadOnly]
 		[InlineProperty, HideLabel]
-		private UnitStatsInfo SelectedUnitStats => GetSelectedUnitStats();
-
-		#endregion
-
-		#region Unit Runtime (Selected)
-
-		[TitleGroup("Selected Unit Runtime")]
-		[ShowIf("HasSelectedUnit")]
-		[ShowInInspector, ReadOnly]
-		[InlineProperty, HideLabel]
-		private UnitRuntimeInfo SelectedUnitRuntime => GetSelectedUnitRuntime();
+		private UnitStateInfo SelectedUnitState => GetSelectedUnitState();
 
 		#endregion
 
@@ -205,16 +186,11 @@ namespace Presentation.Debugger
 		private void ApplyHpChange()
 		{
 			var unit = GetSelectedUnit();
-			if (unit?.runtime == null || unit.stats == null)
-				return;
+			if (unit == null) return;
 
-			var oldHp = unit.runtime.currentHp;
-			unit.runtime.currentHp = Mathf.Clamp(
-				unit.runtime.currentHp + _hpChange,
-				0,
-				unit.stats.maxHp
-			);
-			Debug.Log($"[UnitServiceDebugger] {unit.name} HP: {oldHp} -> {unit.runtime.currentHp}");
+			var oldHp = unit.currentHp;
+			unit.currentHp = Mathf.Clamp(unit.currentHp + _hpChange, 0, unit.maxHp);
+			Debug.Log($"[UnitServiceDebugger] {unit.name} HP: {oldHp} -> {unit.currentHp}");
 		}
 
 		[HorizontalGroup("Debug Actions/Status")]
@@ -223,11 +199,10 @@ namespace Presentation.Debugger
 		private void ToggleStun()
 		{
 			var unit = GetSelectedUnit();
-			if (unit?.runtime == null)
-				return;
+			if (unit == null) return;
 
-			unit.runtime.isStunned = !unit.runtime.isStunned;
-			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.runtime.isStunned}");
+			unit.isStunned = !unit.isStunned;
+			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.isStunned}");
 		}
 
 		[HorizontalGroup("Debug Actions/Status")]
@@ -236,10 +211,9 @@ namespace Presentation.Debugger
 		private void KillUnit()
 		{
 			var unit = GetSelectedUnit();
-			if (unit?.runtime == null)
-				return;
+			if (unit == null) return;
 
-			unit.runtime.currentHp = 0;
+			unit.currentHp = 0;
 			Debug.Log($"[UnitServiceDebugger] {unit.name} killed (HP set to 0)");
 		}
 
@@ -249,10 +223,9 @@ namespace Presentation.Debugger
 		private void ReviveUnit()
 		{
 			var unit = GetSelectedUnit();
-			if (unit?.runtime == null || unit.stats == null)
-				return;
+			if (unit == null) return;
 
-			unit.runtime.currentHp = unit.stats.maxHp;
+			unit.currentHp = unit.maxHp;
 			Debug.Log($"[UnitServiceDebugger] {unit.name} revived (HP set to max)");
 		}
 
@@ -261,7 +234,7 @@ namespace Presentation.Debugger
 			get
 			{
 				var unit = GetSelectedUnit();
-				return unit?.runtime?.StillAlive ?? false;
+				return unit?.IsAlive ?? false;
 			}
 		}
 
@@ -295,9 +268,7 @@ namespace Presentation.Debugger
 
 		private void TryConnect()
 		{
-			if (LevelContainer.Instance == null)
-				return;
-
+			if (LevelContainer.Instance == null) return;
 			_unitService = LevelContainer.Instance.TryResolve<IUnitService>();
 		}
 
@@ -305,18 +276,10 @@ namespace Presentation.Debugger
 
 		#region Helper Methods
 
-		/// <summary>
-		/// Safely gets the currently selected unit.
-		/// Returns null if service is unavailable or unit not found.
-		/// </summary>
 		private Systems.Unit.Unit GetSelectedUnit()
 		{
-			if (_unitService == null)
+			if (_unitService == null || string.IsNullOrEmpty(_selectedUnitId))
 				return null;
-
-			if (string.IsNullOrEmpty(_selectedUnitId))
-				return null;
-
 			_unitService.TryGetUnit(_selectedUnitId, out var unit);
 			return unit;
 		}
@@ -332,49 +295,30 @@ namespace Presentation.Debugger
 				Id = unit.id ?? "null",
 				ConfigId = unit.configId ?? "null",
 				Name = unit.name ?? "null",
-				Position = unit.Position
+				Position = unit.position
 			};
 		}
 
-		private UnitStatsInfo GetSelectedUnitStats()
+		/// <summary>
+		/// Merged view of what was previously split across UnitStatsInfo + UnitRuntimeInfo.
+		/// All data comes from a single Unit object now.
+		/// </summary>
+		private UnitStateInfo GetSelectedUnitState()
 		{
 			var unit = GetSelectedUnit();
-			if (unit?.stats == null)
-				return default;
+			if (unit == null) return default;
 
-			return new UnitStatsInfo
+			var hpPercent = unit.maxHp > 0 ? (float)unit.currentHp / unit.maxHp : 0f;
+			return new UnitStateInfo
 			{
-				MaxHp = unit.stats.maxHp,
-				Speed = unit.stats.speed,
-				MoveRange = unit.stats.moveRange,
-				ActionPoints = unit.stats.actionPoints
-			};
-		}
-
-		private UnitRuntimeInfo GetSelectedUnitRuntime()
-		{
-			var unit = GetSelectedUnit();
-			if (unit == null)
-				return default;
-
-			var runtime = unit.runtime;
-			var stats = unit.stats;
-
-			// Handle null runtime or stats
-			if (runtime == null || stats == null)
-				return default;
-
-			var maxHp = stats.maxHp;
-			var currentHp = runtime.currentHp;
-			var hpPercent = maxHp > 0 ? (float)currentHp / maxHp : 0f;
-
-			return new UnitRuntimeInfo
-			{
-				CurrentHp = currentHp,
-				MaxHp = maxHp,
+				CurrentHp = unit.currentHp,
+				MaxHp = unit.maxHp,
 				HpPercent = hpPercent,
-				IsAlive = runtime.StillAlive,
-				IsStunned = runtime.isStunned
+				Speed = unit.speed,
+				MoveRange = unit.moveRange,
+				ActionPoints = unit.maxAp,
+				IsAlive = unit.IsAlive,
+				IsStunned = unit.isStunned
 			};
 		}
 
@@ -382,9 +326,6 @@ namespace Presentation.Debugger
 
 		#region Display Data Structures
 
-		/// <summary>
-		/// Display structure for unit list table.
-		/// </summary>
 		[Serializable]
 		private struct UnitListEntry
 		{
@@ -431,9 +372,6 @@ namespace Presentation.Debugger
 			}
 		}
 
-		/// <summary>
-		/// Display structure for selected unit basic info.
-		/// </summary>
 		[Serializable]
 		private struct UnitDetailInfo
 		{
@@ -457,33 +395,10 @@ namespace Presentation.Debugger
 		}
 
 		/// <summary>
-		/// Display structure for selected unit stats.
+		/// Unified display struct — replaces the old UnitStatsInfo + UnitRuntimeInfo pair.
 		/// </summary>
 		[Serializable]
-		private struct UnitStatsInfo
-		{
-			[HorizontalGroup("Row1")]
-			[LabelText("Max HP"), LabelWidth(60)]
-			public int MaxHp;
-
-			[HorizontalGroup("Row1")]
-			[LabelText("Speed"), LabelWidth(50)]
-			public int Speed;
-
-			[HorizontalGroup("Row2")]
-			[LabelText("Move"), LabelWidth(60)]
-			public int MoveRange;
-
-			[HorizontalGroup("Row2")]
-			[LabelText("AP"), LabelWidth(50)]
-			public int ActionPoints;
-		}
-
-		/// <summary>
-		/// Display structure for selected unit runtime state.
-		/// </summary>
-		[Serializable]
-		private struct UnitRuntimeInfo
+		private struct UnitStateInfo
 		{
 			[HorizontalGroup("HP")]
 			[LabelText("Current HP"), LabelWidth(80)]
@@ -498,6 +413,18 @@ namespace Presentation.Debugger
 			[LabelText(""), LabelWidth(0)]
 			[ProgressBar(0, 1, ColorGetter = "GetHpBarColor")]
 			public float HpPercent;
+
+			[HorizontalGroup("Stats")]
+			[LabelText("Speed"), LabelWidth(50)]
+			public int Speed;
+
+			[HorizontalGroup("Stats")]
+			[LabelText("Move"), LabelWidth(50)]
+			public int MoveRange;
+
+			[HorizontalGroup("Stats")]
+			[LabelText("AP"), LabelWidth(30)]
+			public int ActionPoints;
 
 			[HorizontalGroup("Status")]
 			[LabelText("Alive"), LabelWidth(50)]

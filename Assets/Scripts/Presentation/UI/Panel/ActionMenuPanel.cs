@@ -12,7 +12,6 @@ namespace Presentation.UI.Panel
 		[SerializeField] private Button moveButton;
 		[SerializeField] private Button attackButton;
 		[SerializeField] private Button waitButton;
-        [SerializeField] private Text currentUnit;
 
 		protected override void OnInitialize()
 		{
@@ -21,10 +20,13 @@ namespace Presentation.UI.Panel
             waitButton?.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Wait)));
 		}
 
-		public void DataInitialize(Systems.Unit.Unit selectedUnit)
+		public void DataInitialize(Systems.Unit.Unit unit)
 		{
-			// todo: use data to populate the menu with available actions for the selected unit
-            currentUnit.text = selectedUnit.name;
+            var availableActions = unit.GetAvailableActions();
+
+            moveButton.interactable = availableActions.Contains(EActionType.Move);
+			attackButton.interactable = availableActions.Contains(EActionType.Attack);
+			waitButton.interactable = availableActions.Contains(EActionType.Wait);
         }
 	}
 }

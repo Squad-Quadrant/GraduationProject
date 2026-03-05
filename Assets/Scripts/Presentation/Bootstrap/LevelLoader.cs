@@ -172,6 +172,7 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
 			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
 			_levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
+			_levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
 		}
 
 		private void InitializeComponents()

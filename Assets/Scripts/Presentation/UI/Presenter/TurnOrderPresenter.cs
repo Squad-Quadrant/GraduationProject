@@ -113,7 +113,7 @@ namespace Presentation.UI.Presenter
 				if (_unitService.TryGetUnit(turnUnit.Id, out var unit))
 				{
 					icon = unit.icon;
-					factionColor = _panel.GetFactionColor(unit.stats.faction);
+					factionColor = _panel.GetFactionColor(unit.faction);
 				}
 
 				result[i] = new SlotData(turnUnit.Id, icon, factionColor, state);

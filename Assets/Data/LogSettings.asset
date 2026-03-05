@@ -140,3 +140,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnBannerPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.UnitInfoPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.UnitInfoPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

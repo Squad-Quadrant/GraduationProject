@@ -77,7 +77,7 @@ namespace Systems.Unit
 			_units.Values.ToList();
 
 		public IReadOnlyList<Unit> GetAllAliveUnits() =>
-			_units.Values.Where(u => u.runtime.StillAlive).ToList();
+			_units.Values.Where(u => u.IsAlive).ToList();
 
 		public IReadOnlyList<Unit> GetUnitsInRange(Vector2Int center, int range, bool includeCenter = true)
 		{
@@ -87,7 +87,7 @@ namespace Systems.Unit
 			return _units.Values
 				.Where(u =>
 				{
-					int distance = Math.Abs(u.Position.x - center.x) + Math.Abs(u.Position.y - center.y);
+					int distance = Math.Abs(u.position.x - center.x) + Math.Abs(u.position.y - center.y);
 					if (!includeCenter && distance == 0)
 						return false;
 					return distance <= range;

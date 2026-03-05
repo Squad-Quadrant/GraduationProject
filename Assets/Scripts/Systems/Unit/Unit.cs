@@ -10,72 +10,107 @@ using UnityEngine;
 
 namespace Systems.Unit
 {
+	public enum UnitFaction
+	{
+		Player, Enemy, Neutral,
+		None, // 用于占位或特殊情况
+	}
+
 	[Serializable]
 	public class Unit : ITurnUnit, IEquipable
 	{
-		[ReadOnly] public string id;		// id for runtime instance
-		[ReadOnly] public string configId;	// id for config so
-		[ReadOnly] public string name;
-		[ReadOnly] public UnitStats stats = new();
-		[ReadOnly] public UnitRuntime runtime = new();
+		[TitleGroup("Identity")]
+		public string id;		// id for runtime instance
+		public string configId;	// id for config so
+		public string name;
+		public string description;
 
-		[ReadOnly] public UnitAnimationConfig animationConfig;
-		[ReadOnly] public SkeletonDataAsset skeletonDataAsset;
-		[ReadOnly] public string frontBodySkin;
-		[ReadOnly] public string backBodySkin;
-		[ReadOnly] public string defaultWeaponSkin;
-		[ReadOnly] public Sprite icon;
+		[TitleGroup("Config")]
+		public int maxHp;
+		public int speed;
+		public int moveRange;
+		public int maxAp;
+		public UnitFaction faction;
 
-        public Vector2Int Position
-        {
-            get => runtime.position;
-            set => runtime.position = value;
-        }
-        
-		#region ITurnUnit
+		[TitleGroup("Presentation")]
+		public UnitAnimationConfig animationConfig;
+		public SkeletonDataAsset skeletonDataAsset;
+		public string frontBodySkin;
+		public string backBodySkin;
+		public string defaultWeaponSkin;
+		public Sprite icon;
 
-		string ITurnUnit.Id => id;
-		int ITurnUnit.Speed => stats?.speed ?? 0;
-		bool ITurnUnit.CanAct => runtime is { StillAlive: true, isStunned: false };
-		public int ActionPriority { get; set; }
+		[TitleGroup("Runtime")]
+		public int currentHp;
+		public Vector2Int position;
+		public bool isStunned;
+		public int currentAp;
 
-		#endregion
+		public bool IsAlive => currentHp > 0;
+		public bool CanAct => IsAlive && !isStunned;
+		public bool HasAp => currentAp > 0;
 		
 		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
 		{
-			var unit = new Unit()
+			return new Unit
 			{
 				id = unitId,
 				configId = config.configId,
 				name = config.unitName,
-				stats = config.stats.Clone(),
+				description = config.description,
+
+				maxHp = config.maxHp,
+				speed = config.speed,
+				moveRange = config.moveRange,
+				maxAp = config.actionPoints,
+				faction = config.faction,
+
 				animationConfig = config.animationConfig,
 				skeletonDataAsset = config.skeletonDataAsset,
 				frontBodySkin = config.frontBodySkin,
 				backBodySkin = config.backBodySkin,
 				defaultWeaponSkin = config.defaultWeaponSkin,
-				icon = config.icon
+				icon = config.icon,
+
+				currentHp = config.maxHp,
+				position = startPosition,
+				isStunned = false,
+				currentAp = config.actionPoints
 			};
-			unit.runtime.Initialize(unit.stats.maxHp, startPosition, unit);
-			return unit;
 		}
 
 		public List<EActionType> GetAvailableActions()
 		{
-			// todo: need to calculate based on unit state, abilities, etc.
-			var actions = new List<EActionType>
+			var actions = new List<EActionType>();
+			if (HasAp)
 			{
-				EActionType.Move,
-				EActionType.Attack,
-				EActionType.Wait
-			};
-
+				actions.Add(EActionType.Move);
+				actions.Add(EActionType.Attack);
+			}
+			actions.Add(EActionType.Wait);
 			return actions;
 		}
 
+		public int CalculateMovementApCost(int pathCost)
+		{
+			return moveRange <= 0
+				? pathCost
+				: Mathf.CeilToInt((float)pathCost / moveRange);
+		}
+
 		public override string ToString() =>
-			$"[Unit] {name}({id}) HP:{runtime?.currentHp}/{stats?.maxHp} Pos:{Position}";
-        
+			$"[Unit] {name}({id}) HP:{currentHp}/{maxHp} AP:{currentAp}/{maxAp} Pos:{position}";
+
+		#region ITurnUnit
+
+		string ITurnUnit.Id => id;
+		int ITurnUnit.Speed => speed;
+		bool ITurnUnit.CanAct => CanAct;
+		public int ActionPriority { get; set; }
+		void ITurnUnit.OnTurnStart() => currentAp = maxAp;
+
+		#endregion
+
         #region IEquipable
 
         // todo:武器道具初始化

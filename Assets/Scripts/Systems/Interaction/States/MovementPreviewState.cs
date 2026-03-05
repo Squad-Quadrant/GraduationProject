@@ -39,7 +39,7 @@ namespace Systems.Interaction.States
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
 				ctx.validTargetCells,
-				ctx.selectedUnit.Position,
+				ctx.selectedUnit.position,
 				ctx.selectedUnit.id));
 
 			_onCellClicked = OnCellClicked;
@@ -148,17 +148,17 @@ namespace Systems.Interaction.States
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
 				enemiesBlockMovement: true,
-				movingUnitFaction: unit.stats.faction,
+				movingUnitFaction: unit.faction,
 				movingUnitId: unit.id,
 				canCrossLowWalls: false,  // TODO: could be unit-specific
 				canCrossHighWalls: false,
 				ignoreTerrainWalkability: false
 			);
 
-			var maxMovementPoints = unit.stats.moveRange * unit.stats.actionPoints;
+			var maxMovementPoints = unit.moveRange * unit.currentAp;
 
 			var reachableArea = pathfinding.GetReachableArea(
-				unit.Position,
+				unit.position,
 				maxMovementPoints,
 				options);
 
@@ -195,20 +195,23 @@ namespace Systems.Interaction.States
 
 			Context.targetCell = targetCell;
 
+			var pathResult = GetPathFromCache(targetCell);
+			var unit = Context.selectedUnit;
+			int apCost = unit.CalculateMovementApCost(pathResult.TotalCost);
+
 			// Create and queue move command
 			var moveCommand = new MoveUnitCommand(
-				Context.selectedUnit.id,
-				Context.selectedUnit.Position,
+				unit.id,
+				unit.position,
 				targetCell,
-				GetPathFromCache(targetCell).Path,
+				pathResult.Path,
+				apCost,
 				Context.UnitService,
 				Context.MapService,
 				Context.EventBus
 			);
 
 			Context.CommandQueue.EnqueueAndExecute(moveCommand);
-            
-			// Transition to executing state
 			Context.StateMachine.ChangeState<ExecutingState>();
 		}
 	}

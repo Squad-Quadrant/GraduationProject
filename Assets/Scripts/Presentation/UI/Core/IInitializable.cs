@@ -6,6 +6,6 @@
 	/// </summary>
 	public interface IInitializable<in TData>
 	{
-		void DataInitialize(TData data);
+		void DataInitialize(TData unit);
 	}
 }

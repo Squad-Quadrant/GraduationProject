@@ -129,14 +129,13 @@ namespace Systems.Interaction.States
 			// Update selection
 			Context.selectedUnit = newUnit;
 
-            // Calculate new available actions
+            Context.availableActions.Clear();
 			Context.availableActions.AddRange(newUnit.GetAvailableActions());
 
 			// Publish new selection
 			Publish(Context, new UnitSelectedEvent(
 				newUnit.id,
-				newUnit.Position,
-				Context.availableActions
+				newUnit.position
 			));
 		}
 
@@ -151,12 +150,9 @@ namespace Systems.Interaction.States
         
         private void UnSelectUnit()
         {
-            if (Context.selectedUnit != null)
-            {
-                Publish(Context, new UnitDeselectedEvent(Context.selectedUnit.id));
-                Context.selectedUnit = null;
-                Context.availableActions.Clear();
-            }
+	        if (Context.selectedUnit == null) return;
+	        Publish(Context, new UnitDeselectedEvent(Context.selectedUnit.id));
+	        Context.selectedUnit = null;
         }
 	}
 }
