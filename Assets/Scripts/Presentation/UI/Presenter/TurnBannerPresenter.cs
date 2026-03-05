@@ -24,7 +24,7 @@ namespace Presentation.UI.Presenter
             _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 
             _eventBus.Subscribe<TurnStartedEvent>(OnTurnStarted);
-            _eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
+            _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
             _eventBus.Subscribe<TurnEndedEvent>(OnTurnEnded);
 
             this.Log("Initialized");
@@ -33,7 +33,7 @@ namespace Presentation.UI.Presenter
         public void Dispose()
         {
 	        _eventBus.Unsubscribe<TurnStartedEvent>(OnTurnStarted);
-	        _eventBus.Unsubscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
+	        _eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 	        _eventBus.Unsubscribe<TurnEndedEvent>(OnTurnEnded);
         }
 
@@ -48,9 +48,9 @@ namespace Presentation.UI.Presenter
 	        );
         }
 
-        private void OnUnitTurnEnded(UnitTurnEndedEvent e)
+        private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-	        this.Log($"Unit '{e.UnitId}' turn ended — showing transition");
+	        this.Log($"Unit '{e.UnitId}' turn started — showing transition");
 
 	        ShowBanner(
 		        title: "Next Unit",
@@ -83,9 +83,9 @@ namespace Presentation.UI.Presenter
 
 	        _banner.Show(title, subtitle, () =>
 	        {
-		        _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, presentationType));
 		        _uiManager.Close(_banner);
 		        _banner = null;
+		        _eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.UI, presentationType));
 	        });
         }
     }
