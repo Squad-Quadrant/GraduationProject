@@ -41,7 +41,7 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.Input.InputService
-    enabled: 1
+    enabled: 0
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Interaction.InteractionController

@@ -74,7 +74,7 @@ namespace Systems.GamePlay
 			);
 		}
 
-		private void AdvanceToNextUnit()
+		private void AdvanceToNextUnit() // 控制Turn系统推进
 		{
 			var unit = _turnService.NextUnit();
 			if (unit == null)
@@ -87,13 +87,12 @@ namespace Systems.GamePlay
 			this.Log($"Unit '{unit.Id}' turn starting");
 			_eventBus.Publish(new UnitTurnStartedEvent(unit.Id, _turnService.TurnNumber));
 
-			// AwaitThen(OnUnitReady, cmd => cmd
-			// 	.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
-			// );
-			OnUnitReady();
+			AwaitThen(StartNewUnitTurn, cmd => cmd
+				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
+			);
 		}
 
-		private void OnUnitReady()
+		private void StartNewUnitTurn() // 实际开始一个新的单位回合，控制状态机推进
 		{
 			var activeTurnUnit = _turnService.ActiveUnit;
 			var unit = _unitService.GetUnit(activeTurnUnit.Id);

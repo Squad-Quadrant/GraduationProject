@@ -1,113 +1,68 @@
-﻿关卡流程目前主要由 GameServer、TurnService与InteractionFSM三者通过事件穿插配合完成
+﻿# 关卡游戏流程
 
-- TurnService — 纯逻辑，管理回合状态和行动队列，不主动推进流程，通过事件通知外界
-- GameServer — 唯一的流程驱动者，决定"什么时候做下一步"，监听UnitTurnEnded事件，插入 UI 等待，然后调用 TurnService 推进；
-- InteractionFSM — 交互层。处理玩家输入，执行具体的单位操作（移动、攻击等）。 
-  - 唯一允许调用的 TurnService 方法是 EndUnitTurn()（大回合Turn的推进会由GameServer在UnitTurnEnded的回调中自己判断）
+三个核心角色：
 
-## 完整流程追踪
+- **GameServer** — 唯一的流程驱动者，监听 `UnitTurnEndedEvent`，插入 UI 等待点，调用 TurnService 推进
+- **TurnService** — 纯逻辑，管理回合状态和行动队列，通过事件通知外界
+- **InteractionFSM** — 交互层，处理玩家输入，唯一允许调用的 TurnService 方法是 `EndUnitTurn()`
 
-### Phase 1: 游戏开始 & 回合启动
 
 ```
+启动：
+LevelLoader: 初始化一堆东西，然后触发GameServer.StartGame()
+
 GameServer.StartGame()
-│
-▼
-GameServer.BeginNewTurn()
-│
-├── TurnService.StartTurn()
-│       ├── TurnNumber++, IsTurnActive = true
-│       ├── Queue.Build(actionableUnits)
-│       ├── publish TurnOrderChangedEvent(TurnReset)      ←─ UI 可据此初始化行动条
-│       └── publish TurnStartedEvent                      ←─ UI 播放"Round N"动画
-│
-└── AwaitThen(TurnStart, AdvanceToNextUnit)
-│
-│  ... UI 播放 "Round N begins" 动画 ...
-│  ... UI 完成后发布 PresentationCompleteEvent(UI.TurnStart) ...
-│
-▼
-```
-
-### Phase 2: 推进到单位
-
-```
-GameServer.AdvanceToNextUnit()
-│
+├── 启动 FSM → 初始状态是 WaitingForSystemState （空状态）
+└── 开始一个新的大回合 - StartNewTurn()
+    ├── TurnService.StartTurn()
+    │       ├── Queue.Build(actionableUnits)
+    │       ├── publish TurnOrderChangedEvent(TurnReset) - 触发回合条UI
+    │       └── publish TurnStartedEvent - 触发 TurnBanner 显示“第几回合”
+    └── 等待 TurnBanner 消失，之后触发 AdvanceToNextUnit() - AwaitThen(AdvanceToNextUnit, Expect: TurnStart)
+    
+GameServer.AdvanceToNextUnit() - 控制 TurnService 推进
 ├── TurnService.NextUnit()
-│       ├── Queue.Advance()  (cursor 前移)
-│       ├── skip dead/unable units (while loop)
-│       ├── IsUnitActing = true
-│       ├── publish TurnOrderChangedEvent(UnitAdvanced)   ←─ UI 更新行动条高亮
-│       └── publish UnitTurnStartedEvent                  ←─ UI 播放单位登场/聚焦
-│
-└── return unit  (控制权转交给 InteractionFSM)
-```
+│       ├── Queue.Advance(), 跳过死亡/无法行动单位
+│       └── publish TurnOrderChangedEvent(UnitAdvanced)
+├── publish UnitTurnStartedEvent - 触发 TurnBanner 显示“哪个单位”
+└── 等待 TurnBanner 消失，之后触发 StartNewUnitTurn() - AwaitThen(StartNewUnitTurn, Expect: UnitTransition)
 
-### Phase 3: 玩家操作单位 (InteractionFSM)
+GameServer.StartNewUnitTurn() - 要进入玩家操作回合了，判断当前的Unit是什么阵营（目前全都可操作），控制状态机开始干活
 
-```
-UnitTurnStartedEvent
-│
-▼
-IdleState: 玩家点击当前行动单位
-│  CanControlUnit() → 检查 TurnService.ActiveUnit
-▼
-UnitSelectedState: 显示行动菜单 (Move/Attack/Wait/EndTurn)
-│
-├── [Move] → MovementPreviewState → ConfirmState → ExecutingState
-│                                                       │
-│               MoveUnitCommand 执行，等待动画完成         │
-│                                                       ▼
-│                                               DetermineNextState()
-│                                                  ├── CanAct? → UnitSelectedState (继续操作)
-│                                                  └── Done?   → EndUnitTurn() → IdleState
-│
-├── [Wait] → ExecuteWait()
-│       ├── TurnService.EndUnitTurn()     ←── 唯一允许的调用
-│       └── → IdleState
-│
-└── [EndTurn] → ExecuteEndTurn()
-├── TurnService.EndUnitTurn()     ←── 同上，不调用 EndTurn()
-└── → IdleState
-```
 
-### Phase 4: 单位回合结束 → GameServer 接管
+下面玩家可以开始操作：（目前默认先进入UnitSelected状态，按右键或者esc可以返回到idle）
+UnitSelectedState - 显示行动菜单，等玩家选择
+│
+├── [Move] → MovementPreviewState - 显示可移动范围和路径预览
+│       ├── [点击有效格子] → 创建 MoveUnitCommand → ExecutingState - 等命令执行完
+│       │                                           └── DetermineNextState()
+│       │                                               ├── 还有AP → 回到 UnitSelectedState 继续操作
+│       │                                               └── AP耗尽 → EndUnitTurn() (见"单位回合结束")
+│       ├── [Back] → 回到 UnitSelectedState
+│       └── [Esc]  → IdleState
+│
+├── [Wait] → ExecuteWait() - 主动结束这个单位的回合
+│       ├── DeselectUnit()
+│       └── EndUnitTurn() (见"单位回合结束")
+│
+├── [点击其他友方单位] → SwitchToUnit() - 切换选中，留在 UnitSelectedState
+├── [Back] → IdleState - 取消选中，等玩家重新点击单位
+└── [Esc]  → IdleState
 
-```
-TurnService.EndUnitTurn()
-├── IsUnitActing = false
-└── publish UnitTurnEndedEvent            ←── GameServer 监听此事件
-│
-▼
-GameServer.OnUnitTurnEnded()
-│
-└── AwaitThen(UnitTransition, ProcessAfterUnitTurn)
-│
-│  ... UI 播放过渡动画 (行动条滚动/切换) ...
-│  ... UI 完成后发布 PresentationCompleteEvent(UI.UnitTransition) ...
-│
-▼
-GameServer.ProcessAfterUnitTurn()
-│
-├── if IsTurnComplete → EndCurrentTurn()     (进入 Phase 5)
-└── else              → AdvanceToNextUnit()  (回到 Phase 2)
-```
 
-### Phase 5: 大回合结束 → 新回合
-
-```
+单位回合结束：
+TurnService.EndUnitTurn() - 由 InteractionFSM 调用（Wait 或 AP 耗尽）
+└── publish UnitTurnEndedEvent - GameServer 监听这个事件接管后续
+    └── GameServer.OnUnitTurnEnded()
+        ├── FSM → WaitingForSystemState - 锁住交互，玩家不能操作了
+        ├── 还有单位没行动 → AdvanceToNextUnit() (见"推进到下一个单位")
+        └── 全都行动完了 → EndCurrentTurn() (见"大回合结束")
+        
+        
+大回合结束：
 GameServer.EndCurrentTurn()
-│
 ├── TurnService.EndTurn()
-│       ├── Queue.Clear(), IsTurnActive = false
-│       └── publish TurnEndedEvent            ←─ UI 播放"回合结束"动画
-│
-└── AwaitThen(TurnEnd, BeginNewTurn)
-│
-│  ... UI 播放 "Round N complete" 动画 ...
-│  ... UI 完成后发布 PresentationCompleteEvent(UI.TurnEnd) ...
-│
-▼
-GameServer.BeginNewTurn()   ←── 回到 Phase 1，循环开始
+│       └── publish TurnEndedEvent - 触发 TurnBanner 显示"回合结束"
+└── 等待 TurnBanner 消失，之后触发 StartNewTurn() - AwaitThen(StartNewTurn, Expect: TurnEnd)
+    └── 回到"启动流程"的 StartNewTurn()，新的大回合开始
 ```
