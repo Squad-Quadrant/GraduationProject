@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelId: TurnOrder
   prefab: {fileID: 7602274337007928540, guid: eb5789d3b9b594748bccaf566f300096, type: 3}
-  layer: 1
+  layer: 0
   cacheOnClose: 0
