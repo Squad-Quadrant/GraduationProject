@@ -17,4 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dev/CommonTest_1_Level.unity
     guid: 8709f51b041420e4081dd22af2ff6586
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 460c21dd23cf3884f974c69599f4d147, type: 2}

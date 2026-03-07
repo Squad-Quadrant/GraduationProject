@@ -69,12 +69,10 @@ namespace Data.Config
 		[SerializeField] private EGripType defaultGrip = EGripType.Default;
 
 		[TitleGroup("Animations")]
-		[TableList]
-		[SerializeField] private List<AnimationEntry> animations = new();
+		[SerializeField, TableList] private List<AnimationEntry> animations = new();
 
 		[TitleGroup("Transitions")]
-		[TableList]
-		[SerializeField] private List<TransitionEntry> transitions = new();
+		[SerializeField, TableList] private List<TransitionEntry> transitions = new();
 
 		public EUnitStance DefaultStance => defaultStance;
 		public EGripType DefaultGrip => defaultGrip;

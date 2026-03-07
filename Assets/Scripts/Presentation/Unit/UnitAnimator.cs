@@ -21,6 +21,7 @@ namespace Presentation.Unit
 
 		private TrackEntry _currentEntry;
 		private Spine.AnimationState.TrackEntryDelegate _pendingCallback;
+		private Spine.AnimationState.TrackEntryEventDelegate _pendingCallbackEvent;
 
 		public bool IsInitialized { get; private set; }
 
@@ -68,6 +69,7 @@ namespace Presentation.Unit
 			if (!ValidateReady()) return;
 
 			ClearPendingCallback();
+			ClearPendingCallbackEvent();
 
 			var anim = _skeleton.Data.FindAnimation(animName);
 			if (anim == null)
@@ -138,15 +140,39 @@ namespace Presentation.Unit
 			_skeletonAnimation.timeScale = 1f;
 		}
 
+		public void ListenForSpineEvent(string eventName, Action callback)
+		{
+			if (!ValidateReady()) return;
+
+			ClearPendingCallbackEvent();
+
+			_pendingCallbackEvent = (entry, e) =>
+			{
+				if (entry.TrackIndex != MainTrack) return;
+				if (e.Data.Name != eventName) return;
+
+				ClearPendingCallbackEvent();
+				callback?.Invoke();
+			};
+
+			_animState.Event += _pendingCallbackEvent;
+		}
+
 		private void ClearPendingCallback()
 		{
-			// clear pending callback
 			if (_pendingCallback != null && _currentEntry != null)
 				_currentEntry.Complete -= _pendingCallback;
 			_pendingCallback = null;
 		}
 
-		private bool ValidateReady()
+		private void ClearPendingCallbackEvent()
+		{
+			if (_pendingCallbackEvent != null && _animState != null)
+				_animState.Event -= _pendingCallbackEvent;
+			_pendingCallbackEvent = null;
+		}
+
+	private bool ValidateReady()
 		{
 			if (IsInitialized) return true;
 			this.LogWarning("Not initialized. Call Initialize() first.");

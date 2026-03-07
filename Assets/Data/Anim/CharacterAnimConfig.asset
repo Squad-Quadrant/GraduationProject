@@ -22,6 +22,11 @@ MonoBehaviour:
     loop: 0
   - action: 
     stance: 0
+    grip: 1
+    clipName: shoot/fire 3burst hg
+    loop: 0
+  - action: 
+    stance: 0
     grip: 0
     clipName: shoot/fire 5burst
     loop: 0
@@ -43,7 +48,7 @@ MonoBehaviour:
   - action: 
     stance: 0
     grip: 1
-    clipName: fire semi hg
+    clipName: shoot/fire semi hg
     loop: 0
   - action: idle
     stance: 1
@@ -70,56 +75,61 @@ MonoBehaviour:
     grip: 0
     clipName: move/move1
     loop: 1
-  - action: move_end
+  - action: move_loop
     stance: 0
-    grip: 0
-    clipName: move/move end
-    loop: 0
+    grip: 1
+    clipName: move/move hg
+    loop: 1
   - action: move_start
     stance: 0
     grip: 0
     clipName: move/move start
     loop: 0
-  - action: 
+  - action: move_start
     stance: 0
-    grip: 0
-    clipName: reloading m16
+    grip: 1
+    clipName: move/move start hg
     loop: 0
-  - action: 
+  - action: move_end
     stance: 0
     grip: 0
-    clipName: reloading mp5
+    clipName: move/move end
+    loop: 0
+  - action: move_end
+    stance: 0
+    grip: 1
+    clipName: move/move end hg
     loop: 0
   transitions:
   - from: 2
     to: 0
     grip: 0
-    clipName: aim to stand
+    clipName: trans/aim to stand
   - from: 2
     to: 0
     grip: 1
-    clipName: aim to stand hg
+    clipName: trans/aim to stand hg
   - from: 1
     to: 0
     grip: 0
-    clipName: bend to stand
+    clipName: trans/bend to stand
   - from: 1
     to: 0
     grip: 1
-    clipName: bend to stand hg
+    clipName: trans/bend to stand hg
   - from: 0
     to: 2
     grip: 0
-    clipName: stand to aim
+    clipName: trans/stand to aim
   - from: 0
     to: 2
     grip: 1
-    clipName: stand to aim hg
+    clipName: trans/stand to aim hg
   - from: 0
     to: 1
     grip: 0
-    clipName: stand to bend
+    clipName: trans/stand to bend
   - from: 0
     to: 1
     grip: 1
-    clipName: stand to bend hg
+    clipName: trans/stand to bend hg

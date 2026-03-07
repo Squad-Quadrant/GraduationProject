@@ -181,48 +181,91 @@ namespace Presentation.Unit
 				yield break;
 			}
 
-			var firstDir = path[1] - path[0];
-			SetFacing(firstDir);
+			SetFacing(path[1] - path[0]);
 
-			bool done = false;
-			PlayAction("move_start", () => done = true);
-			while (!done) yield return null;
-
-			PlayAction("move_loop");
-			for (int i = 1; i < path.Count; i++)
+			bool startDone = false;
+			bool moveSignal = false;
+			PlayAction("move_start", () =>
 			{
-				var fromCell = path[i - 1];
-				var toCell = path[i];
-				var dir = toCell - fromCell;
+				startDone = true;
+				moveSignal = true;
+			});
+			animator.ListenForSpineEvent("move_start", () => moveSignal = true);
+			while (!moveSignal) yield return null;
 
-				SetFacing(dir);
+			int lastIdx = path.Count - 1;
+			bool switchedToLoop = false;
 
-				var fromWorld = _coordConverter.CellToWorld(fromCell);
-				var toWorld = _coordConverter.CellToWorld(toCell);
-				var distance = Vector3.Distance(fromWorld, toWorld);
-				var duration = distance > 0.001f ? distance / moveSpeed : 0f;
-				var elapsed = 0f;
-
-				while (elapsed < duration)
+			for (int i = 1; i < lastIdx; i++)
+			{
+				if (startDone && !switchedToLoop)
 				{
-					elapsed += Time.deltaTime;
-					var t = Mathf.Clamp01(elapsed / duration);
-					transform.position = Vector3.Lerp(fromWorld, toWorld, t);
-					yield return null;
+					PlayAction("move_loop");
+					switchedToLoop = true;
 				}
 
-				transform.position = toWorld;
+				SetFacing(path[i] - path[i - 1]);
+				yield return LerpSegment(path[i - 1], path[i]);
 			}
 
-			done = false;
-			PlayAction("move_end", () => done = true);
-			while (!done) yield return null;
+			SetFacing(path[lastIdx] - path[lastIdx - 1]);
+
+			bool stopSignal = false;
+			bool endDone = false;
+
+			PlayAction("move_end", () =>
+			{
+				endDone = true;
+				stopSignal = true;
+			});
+			animator.ListenForSpineEvent("move_stop", () => stopSignal = true);
+
+			// Lerp the final segment — stop early if move_stop event fires
+			var fromWorld = _coordConverter.CellToWorld(path[lastIdx - 1]);
+			var toWorld = _coordConverter.CellToWorld(path[lastIdx]);
+			var dist = Vector3.Distance(fromWorld, toWorld);
+			var duration = dist > 0.001f ? dist / moveSpeed : 0f;
+			var elapsed = 0f;
+
+			while (elapsed < duration && !stopSignal)
+			{
+				elapsed += Time.deltaTime;
+				var t = Mathf.Clamp01(elapsed / duration);
+				transform.position = Vector3.Lerp(fromWorld, toWorld, t);
+				yield return null;
+			}
+
+			// Snap to exact final position
+			transform.position = toWorld;
+
+			// Wait for move_end animation to finish
+			while (!endDone) yield return null;
+
+			// ── Cleanup ──
 
 			PlayAction("idle");
 			_moveCoroutine = null;
 			onComplete?.Invoke();
 
-			this.Log($"Move complete {path[0]} → {path[^1]}");
+			this.Log($"Move complete → {path[lastIdx]}");
+		}
+
+		private IEnumerator LerpSegment(Vector2Int fromCell, Vector2Int toCell)
+		{
+			var fromWorld = _coordConverter.CellToWorld(fromCell);
+			var toWorld = _coordConverter.CellToWorld(toCell);
+			var distance = Vector3.Distance(fromWorld, toWorld);
+			var duration = distance > 0.001f ? distance / moveSpeed : 0f;
+			var elapsed = 0f;
+
+			while (elapsed < duration)
+			{
+				elapsed += Time.deltaTime;
+				var t = Mathf.Clamp01(elapsed / duration);
+				transform.position = Vector3.Lerp(fromWorld, toWorld, t);
+				yield return null;
+			}
+			transform.position = toWorld;
 		}
 
 		#region Debug

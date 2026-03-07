@@ -1,18 +1,19 @@
 ﻿using Sirenix.OdinInspector;
 using Spine.Unity;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Test.WZHTest
 {
 	public class Test : MonoBehaviour
 	{
-		[SerializeField] private SkeletonAnimation skeletonAnimation;
-		[SerializeField] private bool facingRight = true;
-
+		[SerializeField] private Tilemap tilemap;
 		[Button]
-		private void Foo()
+		private void Foo(int x, int y, Color color)
 		{
-			skeletonAnimation.Skeleton.ScaleX = facingRight ? 1 : -1;
+			Vector3Int pos = new Vector3Int(x, y, 0);
+			tilemap.SetTileFlags(pos, TileFlags.None);
+			tilemap.SetColor(pos, color);
 		}
 	}
 }
