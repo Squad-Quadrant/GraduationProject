@@ -1,8 +1,12 @@
-﻿using Core.Events;
+﻿using System.Collections.Generic;
+using Core.Events;
+using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
+using Data.Runtime.Events.View;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,22 +26,24 @@ namespace Presentation.Map
         [SerializeField] private Tile highlightTile; // just a simple highlight tile for demonstration
         
         private IEventBus _eventBus;
+        private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
+
+        private IMapService _mapService;
+        private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
         
 #if UNITY_EDITOR
         public bool enableGenerate = true;
 #endif
-        private void Awake()
-        {
-            _eventBus = RootContainer.Instance.Resolve<IEventBus>();
-        }
 
         private void OnEnable()
         {
 #if UNITY_EDITOR
             if (enableGenerate)
 #endif
-            _eventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
-            _eventBus.Subscribe<RangeDisplayEvent>(DisplayHighlight);
+            EventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+            EventBus.Subscribe<RangeDisplayEvent>(DisplayHighlight);
+            EventBus.Subscribe<MapCellChangedEvent>(OnMapCellChanged);
+            EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
         }
 
         private void OnDisable()
@@ -45,26 +51,13 @@ namespace Presentation.Map
 #if UNITY_EDITOR
             if (enableGenerate)
 #endif
-            _eventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
-            _eventBus.Unsubscribe<RangeDisplayEvent>(DisplayHighlight);
+            EventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
+            EventBus.Unsubscribe<RangeDisplayEvent>(DisplayHighlight);
+            EventBus.Unsubscribe<MapCellChangedEvent>(OnMapCellChanged);
+            EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
         }
 
-		public void ClearHighlights()
-		{
-            
-		}
-
-		public void ShowCellIndicator(Vector2Int position, EIndicatorType type)
-		{
-            
-		}
-
-		public void HideCellIndicator()
-		{
-            
-		}
-
-		private void RenderTerrain(MapViewInitEvent mapViewInitEvent)
+        private void RenderTerrain(MapViewInitEvent mapViewInitEvent)
 		{
             var mapData = mapViewInitEvent.MapData;
             groundTilemap.ClearAllTiles();
@@ -106,6 +99,40 @@ namespace Presentation.Map
 
 			foreach (var cellPos in e.Cells)
 				highlightTilemap.SetTile((Vector3Int)cellPos, highlightTile);
+		}
+
+		private Vector2Int? _previousHoverCellPos;
+
+		private void OnPointerHover(PointerHoverEvent e)
+		{
+			if (!e.CellPosition.HasValue) return;
+
+			List<MapWall> walls;
+			if (_previousHoverCellPos.HasValue)
+			{
+				walls = MapService.GetWallsWhichHideCell(_previousHoverCellPos.Value);
+				foreach (var wall in walls) SetWallColor(wall, Color.white);
+			}
+
+			walls = MapService.GetWallsWhichHideCell(e.CellPosition.Value);
+			foreach (var wall in walls) SetWallColor(wall, new Color(1, 1, 1, 0.5f));
+
+			_previousHoverCellPos = e.CellPosition;
+		}
+
+		private void OnMapCellChanged(MapCellChangedEvent e)
+		{
+			var targetColor = e.Cell.IsOccupied ? new Color(1, 1, 1, 0.5f) : Color.white;
+			foreach (var wall in e.Walls) SetWallColor(wall, targetColor);
+		}
+
+		private void SetWallColor(MapWall wall, Color color)
+		{
+			if (wall == null) return;
+
+			var targetTilemap = wall.Key.IsLeft() ? leftWallTilemap : rightTilemap;
+			targetTilemap.SetTileFlags((Vector3Int)wall.Key.Position, TileFlags.None);
+			targetTilemap.SetColor((Vector3Int)wall.Key.Position, color);
 		}
 	}
 }

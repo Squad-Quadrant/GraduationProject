@@ -18,20 +18,10 @@ namespace Systems.Map
         
         [CanBeNull] public TileBase Tile { get; set; }
 
-        public bool IsOccupied
-        {
-            get
-            {
-                if (SceneActor != null)
-                {
-                    return true;
-                }
-                return false;
-            }
-        } // Indicates if an entity is currently occupying the cell
-        
-		// public string OccupantId { get; set; }
+        public bool IsOccupied => !string.IsNullOrEmpty(UnitId) || SceneActor != null;
         public SceneActorBase SceneActor { get; set; }
+
+        public string UnitId { get; set; }
 
 		public MapCell(Vector2Int position) => Position = position;
 	}

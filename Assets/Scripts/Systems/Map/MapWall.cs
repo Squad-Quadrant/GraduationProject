@@ -34,6 +34,8 @@ namespace Systems.Map
 		    }
 	    }
 
+	    public Vector2Int Position => _position1;
+
 	    public (Vector2Int, bool) ToPositionAndIsLeft()
 	    {
 		    if (_position1.y == _position2.y)

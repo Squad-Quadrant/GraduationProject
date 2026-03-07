@@ -29,7 +29,7 @@ namespace Data.Runtime.Commands
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
 		public override string Name => $"Move({_unitId}: {_fromPosition} → {_toPosition})";
-		public override bool CanUndo => true;
+		public override bool CanUndo => false;
 
 
 		public MoveUnitCommand(
@@ -63,7 +63,6 @@ namespace Data.Runtime.Commands
 				return;
 			}
 
-			_mapService.ReleaseCell(_fromPosition);
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.position = _toPosition;
 			unit.currentAp -= _apCost;
@@ -87,36 +86,36 @@ namespace Data.Runtime.Commands
             }
 		}
 
-		protected override void OnUndoAsync()
-		{
-			this.Log($"Undoing: {Name}");
-
-			if (!_unitService.TryGetUnit(_unitId, out var unit))
-			{
-				this.LogError($"Unit '{_unitId}' not found!");
-				CompleteUndo();
-				return;
-			}
-
-			// Reverse the move
-			_mapService.ReleaseCell(_toPosition);
-			_mapService.OccupyCell(_fromPosition, _unitId);
-			unit.position = _fromPosition;
-			unit.currentAp += _apCost;
-
-			// Publish reverse movement event
-			var reversePath = new List<Vector2Int>(_path);
-			reversePath.Reverse();
-
-			_eventBus.Publish(new UnitMovedEvent(
-				unit,
-				_toPosition,
-				_fromPosition,
-				reversePath
-			));
-
-			CompleteUndo();
-		}
+		// protected override void OnUndoAsync()
+		// {
+		// 	this.Log($"Undoing: {Name}");
+		//
+		// 	if (!_unitService.TryGetUnit(_unitId, out var unit))
+		// 	{
+		// 		this.LogError($"Unit '{_unitId}' not found!");
+		// 		CompleteUndo();
+		// 		return;
+		// 	}
+		//
+		// 	// Reverse the move
+		// 	_mapService.ReleaseCell(_toPosition);
+		// 	_mapService.OccupyCell(_fromPosition, _unitId);
+		// 	unit.position = _fromPosition;
+		// 	unit.currentAp += _apCost;
+		//
+		// 	// Publish reverse movement event
+		// 	var reversePath = new List<Vector2Int>(_path);
+		// 	reversePath.Reverse();
+		//
+		// 	_eventBus.Publish(new UnitMovedEvent(
+		// 		unit,
+		// 		_toPosition,
+		// 		_fromPosition,
+		// 		reversePath
+		// 	));
+		//
+		// 	CompleteUndo();
+		// }
 
 		private void OnPresentationComplete(PresentationCompleteEvent e)
 		{
@@ -125,6 +124,8 @@ namespace Data.Runtime.Commands
 				return;
 
 			this.Log($"Animation complete for {_unitId}");
+
+			_mapService.ReleaseCell(_fromPosition); // 保证移动移动期间的墙壁透明性
 
 			Cleanup();
 			CompleteExecution();

@@ -1,4 +1,5 @@
-﻿using Core.Events;
+﻿using System.Collections.Generic;
+using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events.Map;
@@ -40,7 +41,7 @@ namespace Systems.Map
                 wall.Tile = wallConfig.WallKey.IsLeft() ? wallConfig.wall?.leftTile : wallConfig.wall?.rightTile;
             }
             
-            var SceneActorFactory = new SceneActorFactory();
+            var sceneActorFactory = new SceneActorFactory();
             // 场景物体的初始化逻辑需要滞后于地图单元格的初始化
             foreach (var cellConfig in config.cells)
             {
@@ -49,7 +50,7 @@ namespace Systems.Map
                 
                 if (!cellConfig.sceneActor) continue;
                 
-                cell.SceneActor = SceneActorFactory.CreateSceneActor(cellConfig.sceneActor, Data, cell);
+                cell.SceneActor = sceneActorFactory.CreateSceneActor(cellConfig.sceneActor, Data, cell);
                 foreach (var extraCell in cell.SceneActor.ExtraCells)
                 {
                     extraCell.SceneActor = cell.SceneActor;
@@ -71,16 +72,31 @@ namespace Systems.Map
 		{
 			var cell = Data.GetCell(position);
 			if (cell == null) return;
-			// cell.IsOccupied = true;
-			// cell.OccupantId = unitId;
+			cell.UnitId = unitId;
+			var pos = cell.Position;
+			var walls = GetWallsWhichHideCell(pos);
+			_eventBus.Publish(new MapCellChangedEvent(cell, walls));
 		}
 
 		public void ReleaseCell(Vector2Int position)
 		{
 			var cell = Data.GetCell(position);
 			if (cell == null) return;
-			// cell.IsOccupied = false;
-			// cell.OccupantId = null;
+			cell.UnitId = null;
+			var pos = cell.Position;
+			var walls = GetWallsWhichHideCell(pos);
+			_eventBus.Publish(new MapCellChangedEvent(cell, walls));
+		}
+
+		public List<MapWall> GetWallsWhichHideCell(Vector2Int cellPos) // 得到可能会影响给定格子视觉效果的墙，用于墙的半透效果
+		{
+			return new List<MapWall>
+			{
+				Data.GetWall(new WallKey(cellPos, new Vector2Int(cellPos.x - 1, cellPos.y))),
+				Data.GetWall(new WallKey(cellPos, new Vector2Int(cellPos.x    , cellPos.y - 1))),
+				Data.GetWall(new WallKey(new Vector2Int(cellPos.x - 1, cellPos.y),     new Vector2Int(cellPos.x - 1, cellPos.y - 1))),
+				Data.GetWall(new WallKey(new Vector2Int(cellPos.x    , cellPos.y - 1), new Vector2Int(cellPos.x - 1, cellPos.y - 1)))
+			};
 		}
 	}
 }

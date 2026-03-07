@@ -2,12 +2,10 @@ using Core.Events;
 using Systems.Map;
 namespace Data.Runtime.Events.Map
 {
-    public class MapViewInitEvent : IEvent
+    public readonly struct MapViewInitEvent : IEvent
     {
-        public MapData MapData { get; set; }
-        public MapViewInitEvent(MapData mapData)
-        {
-            MapData = mapData;
-        }
+        public MapData MapData { get; }
+
+        public MapViewInitEvent(MapData mapData) => MapData = mapData;
     }
 }

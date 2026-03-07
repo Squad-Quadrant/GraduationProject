@@ -17,8 +17,6 @@ namespace Data.Runtime.Events.Input
 
 		public string HoveredUnitId { get; }
 
-		public bool IsOverMap => CellPosition.HasValue;
-
 		public PointerHoverEvent(Vector2Int? cellPosition, Vector3 worldPosition, string hoveredUnitId = null)
 		{
 			CellPosition = cellPosition;
