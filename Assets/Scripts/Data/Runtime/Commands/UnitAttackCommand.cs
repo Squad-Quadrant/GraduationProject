@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Core.Commands;
 using Core.Events;
@@ -8,17 +7,15 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
 using Systems.Map;
 using Systems.Unit;
-using UnityEngine;
 
 namespace Data.Runtime.Commands
 {
-	public class MoveUnitCommand : AsyncCommand
+	public class UnitAttackCommand : AsyncCommand
 	{
 		private readonly string _unitId;
-		private readonly Vector2Int _fromPosition;
-		private readonly Vector2Int _toPosition;
-		private readonly IReadOnlyList<Vector2Int> _path;
-		private readonly int _apCost;
+        private readonly string _targetUnitId;
+        private readonly int _apCost;
+        private readonly int _damage;
 
 		private readonly IUnitService _unitService;
 		private readonly IMapService _mapService;
@@ -28,25 +25,21 @@ namespace Data.Runtime.Commands
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
-		public override string Name => $"Move({_unitId}: {_fromPosition} → {_toPosition})";
+		public override string Name => $"Attack({_unitId} → {_targetUnitId})";
 		public override bool CanUndo => true;
-
-
-		public MoveUnitCommand(
+        
+		public UnitAttackCommand(
 			string unitId,
-			Vector2Int fromPosition,
-			Vector2Int toPosition,
-			IReadOnlyList<Vector2Int> path,
-			int apCost,
+            string targetUnitId,
+            int apCost,
 			IUnitService unitService,
 			IMapService mapService,
 			IEventBus eventBus)
 		{
 			_unitId = unitId;
-			_fromPosition = fromPosition;
-			_toPosition = toPosition;
-			_path = path;
-			_apCost = apCost;
+            _targetUnitId = targetUnitId;
+            _apCost = apCost;
+            
 			_unitService = unitService;
 			_mapService = mapService;
 			_eventBus = eventBus;
@@ -62,18 +55,21 @@ namespace Data.Runtime.Commands
 				CompleteExecution();
 				return;
 			}
+            
+            if (!_unitService.TryGetUnit(_targetUnitId, out var targetUnit))
+            {
+                this.LogError($"Target unit '{_targetUnitId}' not found!");
+                CompleteExecution();
+                return;
+            }
 
-			_mapService.ReleaseCell(_fromPosition);
-			_mapService.OccupyCell(_toPosition, _unitId);
-			unit.position = _toPosition;
-			unit.currentAp -= _apCost;
-
-			_eventBus.Publish(new UnitMovedEvent(
-				unit,
-				_fromPosition,
-				_toPosition,
-				_path
-			));
+            _eventBus.Publish(new UnitAttackedEvent(unit));
+            // todo: 命中判定
+            _eventBus.Publish(new UnitBeHitEvent(unit));
+            
+            _eventBus.Publish(new UnitDealDamageEvent(unit, targetUnit));
+            
+            unit.currentAp -= _apCost;
             
 			if (WaitForAnimation)
 			{
@@ -88,40 +84,16 @@ namespace Data.Runtime.Commands
 		}
 
 		protected override void OnUndoAsync()
-		{
-			this.Log($"Undoing: {Name}");
-
-			if (!_unitService.TryGetUnit(_unitId, out var unit))
-			{
-				this.LogError($"Unit '{_unitId}' not found!");
-				CompleteUndo();
-				return;
-			}
-
-			// Reverse the move
-			_mapService.ReleaseCell(_toPosition);
-			_mapService.OccupyCell(_fromPosition, _unitId);
-			unit.position = _fromPosition;
-			unit.currentAp += _apCost;
-
-			// Publish reverse movement event
-			var reversePath = new List<Vector2Int>(_path);
-			reversePath.Reverse();
-
-			_eventBus.Publish(new UnitMovedEvent(
-				unit,
-				_toPosition,
-				_fromPosition,
-				reversePath
-			));
-
+        {
+            // todo:
 			CompleteUndo();
 		}
 
+        // todo: 保证攻击和受击动画都播完
 		private void OnPresentationComplete(PresentationCompleteEvent e)
 		{
 			// Check if this is our animation
-			if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Move, _unitId))
+			if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Attack, _unitId))
 				return;
 
 			this.Log($"Animation complete for {_unitId}");

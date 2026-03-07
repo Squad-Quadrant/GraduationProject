@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
-  m_Name: TurnOrder
+  m_Script: {fileID: 11500000, guid: 14225d549e4a45c6b417dfb99d544ba2, type: 3}
+  m_Name: Level 0
   m_EditorClassIdentifier: 
-  panelId: TurnOrder
-  prefab: {fileID: 7602274337007928540, guid: eb5789d3b9b594748bccaf566f300096, type: 3}
-  layer: 0
-  cacheOnClose: 0
+  levelId: level_001
+  levelName: New Level
+  description: This is a new level.
+  mapConfig: {fileID: 11400000, guid: 734c8ad97d9f2a24fbe1a839f9ef7fdb, type: 2}
+  unitPlacements: []

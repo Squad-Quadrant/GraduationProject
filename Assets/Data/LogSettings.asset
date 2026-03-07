@@ -156,3 +156,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AttackPreviewState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.UnitAttackCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

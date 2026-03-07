@@ -40,6 +40,8 @@ namespace Systems.Interaction
 		public EActionType currentAction;
 
 		public List<Vector2Int> validTargetCells = new();
+        
+        // public List<Unit.Unit> validTargetUnits = new();
 
 		public List<Vector2Int> currentPath = new();
 

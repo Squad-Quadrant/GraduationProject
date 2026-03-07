@@ -70,7 +70,7 @@ namespace Systems.Interaction.States
 					break;
 
 				case EActionType.Attack:
-					//todo: To be implemented
+                    StateMachine(Context).ChangeState<AttackPreviewState>();
 					break;
 
 				case EActionType.Wait:

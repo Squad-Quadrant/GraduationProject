@@ -2,11 +2,10 @@
 
 namespace Data.Runtime.Events.Interaction
 {
-	public readonly struct UnitAttackedEvent : IEvent
+	public readonly struct UnitBeHitEvent : IEvent
 	{
         public Systems.Unit.Unit Unit { get; }
-        
-        public UnitAttackedEvent(Systems.Unit.Unit unit)
+        public UnitBeHitEvent(Systems.Unit.Unit unit)
         {
             Unit = unit;
         }

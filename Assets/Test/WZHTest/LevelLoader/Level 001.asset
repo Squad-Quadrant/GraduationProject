@@ -26,3 +26,6 @@ MonoBehaviour:
   - unitId: 003
     unitConfig: {fileID: 11400000, guid: 3952814547b0e524c868cbefd175d5a5, type: 2}
     startPosition: {x: 0, y: 1}
+  - unitId: 004
+    unitConfig: {fileID: 11400000, guid: 88ef7785933f1a748a00ee65290160d8, type: 2}
+    startPosition: {x: 1, y: 2}

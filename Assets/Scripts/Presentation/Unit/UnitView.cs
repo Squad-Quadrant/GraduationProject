@@ -84,7 +84,7 @@ namespace Presentation.Unit
 			var result = _config.GetAnimation(action, _stance, _grip);
 			if (!result.IsValid)
 			{
-				this.LogWarning($"No animation found for action '{action}' with stance '{_stance}' and grip '{_grip}'");
+				this.LogError($"No animation found for action '{action}' with stance '{_stance}' and grip '{_grip}'");
 				onComplete?.Invoke();
 				return;
 			}
