@@ -40,5 +40,7 @@ namespace Systems.Unit
 		IReadOnlyList<Unit> GetUnitsInRange(Vector2Int center, int range, bool includeCenter = true);
 
 		IReadOnlyList<Unit> GetUnitsWhere(Func<Unit, bool> predicate);
+        
+        Unit GetUnitAtPosition(Vector2Int position);
 	}
 }

@@ -99,5 +99,10 @@ namespace Systems.Unit
 			predicate == null ?
 				throw new ArgumentNullException(nameof(predicate)) :
 				_units.Values.Where(predicate).ToList();
-	}
+
+        public Unit GetUnitAtPosition(Vector2Int position)
+        {
+            return _units.Values.FirstOrDefault(u => u.position == position);
+        }
+    }
 }

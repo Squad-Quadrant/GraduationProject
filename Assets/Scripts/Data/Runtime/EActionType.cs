@@ -12,6 +12,7 @@
 		UseItem,
 		Attack,
 		Defend,
-		// ...
+        //...
+		Count,
 	}
 }

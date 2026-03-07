@@ -34,6 +34,8 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
+            _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Subscribe<UnitBeHitEvent>(OnUnitBeHit);
 
 			this.Log("Initialized");
 		}
@@ -43,6 +45,8 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
+            _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Unsubscribe<UnitBeHitEvent>(OnUnitBeHit);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -171,6 +175,54 @@ namespace Presentation.Unit
 
 			return view;
 		}
+        
+        private void OnUnitAttacked(UnitAttackedEvent e)
+        {
+            if (e.Unit == null)
+            {
+                this.LogError("UnitAttackedEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(e.Unit.id, out var view))
+            {
+                this.LogWarning($"No view found for attacked unit '{e.Unit.id}'.");
+                return;
+            }
+
+            view.PlayAction("shoot", () =>
+            {
+                _eventBus.Publish(new PresentationCompleteEvent(
+                    category: EPresentationCategory.Animation,
+                    type: PresentationType.Animation.Attack,
+                    entityId: e.Unit.id
+                ));
+            });
+        }
+        
+        private void OnUnitBeHit(UnitBeHitEvent e)
+        {
+            if (e.Unit == null)
+            {
+                this.LogError("UnitBeHitEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(e.Unit.id, out var view))
+            {
+                this.LogWarning($"No view found for hit unit '{e.Unit.id}'.");
+                return;
+            }
+
+            view.PlayAction("beHit", () =>
+            {
+                _eventBus.Publish(new PresentationCompleteEvent(
+                    category: EPresentationCategory.Animation,
+                    type: PresentationType.Animation.BeHit,
+                    entityId: e.Unit.id
+                ));
+            });
+        }
 
 		#region Odin Debug
 

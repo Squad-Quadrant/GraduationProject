@@ -59,7 +59,7 @@ namespace Data.Runtime.Events.View
 			public const string Move = "Move";
 			public const string Attack = "Attack";
 			public const string Skill = "Skill";
-			public const string Hit = "Hit";
+			public const string BeHit = "BeHit";
 			public const string Death = "Death";
 			public const string Spawn = "Spawn";
 			public const string Idle = "Idle";
