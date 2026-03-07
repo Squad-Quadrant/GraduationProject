@@ -98,5 +98,21 @@ namespace Systems.Map
 				Data.GetWall(new WallKey(new Vector2Int(cellPos.x    , cellPos.y - 1), new Vector2Int(cellPos.x - 1, cellPos.y - 1)))
 			};
 		}
+
+		public bool CheckWallTransparency(MapWall wall)
+		{
+			if (wall == null) return false;
+
+			var wallPos = wall.Key.Position;
+
+			var cell = Data.GetCell(new Vector2Int(wallPos.x + 1, wallPos.y + 1));
+			if (cell is { IsOccupied: true }) return true;
+
+			cell = wall.Key.IsLeft()
+				? Data.GetCell(new Vector2Int(wallPos.x + 1, wallPos.y))
+				: Data.GetCell(new Vector2Int(wallPos.x, wallPos.y + 1));
+
+			return cell is { IsOccupied: true };
+		}
 	}
 }

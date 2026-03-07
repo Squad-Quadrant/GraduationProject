@@ -110,27 +110,12 @@ namespace Presentation.Bootstrap
 			_stepResults.Clear();
 			_loadStatus = "Loading...";
 			this.Log("============ Level Loading ============", false);
-			for (int i = 0; i < _steps.Count; i++)
+			foreach (var step in _steps)
 			{
-				var step = _steps[i];
-				try
-				{
-					step.Execute();
-					var result = $"SUCCESS: {step.Desc}";
-					_stepResults.Add(result);
-					this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", false);
-				}
-				catch (Exception ex)
-				{
-					var result = $"x {step.Desc}: {ex.Message}";
-					_stepResults.Add(result);
-					this.LogError(result);
-					this.LogError(ex.StackTrace);
-
-					_loadStatus = $"Failed at step {i + 1}/{_steps.Count}: {step.Desc}";
-					this.LogError("============ Loading Aborted ============", false);
-					return;
-				}
+				step.Execute();
+				var result = $"SUCCESS: {step.Desc}";
+				_stepResults.Add(result);
+				this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", false);
 			}
 			_loadStatus = "Loaded";
 			this.Log($"============ Level Loaded ============", false);

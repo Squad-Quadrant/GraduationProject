@@ -16,6 +16,8 @@ namespace Systems.Map
 
 		void ReleaseCell(Vector2Int position);
 
-		List<MapWall> GetWallsWhichHideCell(Vector2Int cellPos);
+		List<MapWall> GetWallsWhichHideCell(Vector2Int cellPos); // 得到可能会遮挡该格子的墙
+
+		bool CheckWallTransparency(MapWall wall); // 检查墙应不应该半透
 	}
 }

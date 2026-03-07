@@ -111,7 +111,14 @@ namespace Presentation.Map
 			if (_previousHoverCellPos.HasValue)
 			{
 				walls = MapService.GetWallsWhichHideCell(_previousHoverCellPos.Value);
-				foreach (var wall in walls) SetWallColor(wall, Color.white);
+				foreach (var wall in walls)
+				{
+					if (wall == null) continue;
+					var targetColor = MapService.CheckWallTransparency(wall)
+						? new Color(1, 1, 1, 0.5f)
+						: Color.white;
+					SetWallColor(wall, targetColor);
+				}
 			}
 
 			walls = MapService.GetWallsWhichHideCell(e.CellPosition.Value);
@@ -122,14 +129,19 @@ namespace Presentation.Map
 
 		private void OnMapCellChanged(MapCellChangedEvent e)
 		{
-			var targetColor = e.Cell.IsOccupied ? new Color(1, 1, 1, 0.5f) : Color.white;
-			foreach (var wall in e.Walls) SetWallColor(wall, targetColor);
+			foreach (var wall in e.Walls)
+			{
+				if (wall == null) continue;
+				var targetColor = MapService.CheckWallTransparency(wall)
+					? new Color(1, 1, 1, 0.5f)
+					: Color.white;
+				SetWallColor(wall, targetColor);
+			}
 		}
 
 		private void SetWallColor(MapWall wall, Color color)
 		{
 			if (wall == null) return;
-
 			var targetTilemap = wall.Key.IsLeft() ? leftWallTilemap : rightTilemap;
 			targetTilemap.SetTileFlags((Vector3Int)wall.Key.Position, TileFlags.None);
 			targetTilemap.SetColor((Vector3Int)wall.Key.Position, color);
