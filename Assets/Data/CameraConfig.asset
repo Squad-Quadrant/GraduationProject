@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5fc238223f74345bd9853b1ec435ecb, type: 3}
+  m_Name: CameraConfig
+  m_EditorClassIdentifier: 
+  focusDuration: 0.4
+  focusEase: 9
+  dragSpeed: 10
+  panSpeed: 3
+  panSmoothing: 8
+  zoomRange: {x: 1, y: 5}
+  zoomSensitivity: 0.5
+  zoomSmoothSpeed: 10
+  boundaryPadding: 1
+  shakeDuration: 0.2
+  shakeStrength: 0.15

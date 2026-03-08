@@ -6,6 +6,7 @@ using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
+using Presentation.CameraControl;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;
@@ -41,6 +42,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private InputService inputService;
 		[SerializeField, Required] private InteractionController interactionController;
 		[SerializeField, Required] private UnitViewManager unitViewManager;
+		[SerializeField, Required] private CameraController cameraController;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -99,6 +101,7 @@ namespace Presentation.Bootstrap
 			AddStep("RegisterPresenter", RegisterPresenter);
 			AddStep("InitializeComponents", InitializeComponents);
 			AddStep("LoadMap", LoadMap);
+			AddStep("InitializeCameraController", InitializeCameraController);
 			AddStep("LoadUnits", LoadUnits);
 			AddStep("StartGame", StartGame);
 		}
@@ -176,6 +179,11 @@ namespace Presentation.Bootstrap
 
 			_levelContainer.Resolve<IMapService>().LoadFromConfig(levelConfig.mapConfig);
 			this.Log($"Map: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
+		}
+
+		private void InitializeCameraController() // 需要在LoadMao之后
+		{
+			cameraController.Initialize(_levelContainer.Services);
 		}
 
 		private void LoadUnits()
