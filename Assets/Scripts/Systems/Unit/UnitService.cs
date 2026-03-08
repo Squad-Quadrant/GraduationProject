@@ -117,9 +117,20 @@ namespace Systems.Unit
         private void DealDamage(UnitDealDamageEvent e)
         {
             // todo: 伤害计算
-            
+            e.Target.currentHp -= 50;
+
             // todo: 如果有单位死亡,考虑到反甲等情况,不一定是target死亡
-            // DestroyUnit();
+            CheckUnitDeath();
+        }
+        
+        private void CheckUnitDeath()
+        {
+            var deadUnits = _units.Values.Where(u => u.IsAlive == false).ToList();
+            foreach (var unit in deadUnits)
+            {
+                DestroyUnit(unit.id);
+                this.Log($"Unit '{unit.name}'({unit.id}) has died.");
+            }
         }
     }
 }

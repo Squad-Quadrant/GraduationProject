@@ -68,7 +68,7 @@ namespace Systems.GamePlay
 
         private void CheckGameOver(UnitDestroyedEvent e)
         {
-            // todo: 
+            // if (_unitService.GetAllAliveUnits())
         }
 
         private void StartNewTurn()
