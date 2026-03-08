@@ -5,6 +5,7 @@ using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
+using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
 using Presentation.Interaction;
 using Systems.Interaction.States;
@@ -38,6 +39,7 @@ namespace Systems.GamePlay
 			_fsm = interactionController;
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
+            _eventBus.Subscribe<UnitDestroyedEvent>(CheckGameOver);
 
 			this.Log("Initialized");
 		}
@@ -45,6 +47,7 @@ namespace Systems.GamePlay
 		public void Dispose()
 		{
 			_eventBus.Unsubscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
+            _eventBus.Unsubscribe<UnitDestroyedEvent>(CheckGameOver);
 			IsRunning = false;
 		}
 
@@ -63,7 +66,12 @@ namespace Systems.GamePlay
 			StartNewTurn();
 		}
 
-		private void StartNewTurn()
+        private void CheckGameOver(UnitDestroyedEvent e)
+        {
+            // if (_unitService.GetAllAliveUnits())
+        }
+
+        private void StartNewTurn()
 		{
 			_turnService.StartTurn();
 
