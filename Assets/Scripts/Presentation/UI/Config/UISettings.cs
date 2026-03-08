@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Core.Log;
+using Data.Config;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Data.Config
+namespace Presentation.UI.Config
 {
+	// 应该全局唯一，UI Panel的目录索引
 	[CreateAssetMenu(fileName = "UISettings", menuName = "Game/UI/UI Settings")]
 	public class UISettings : ScriptableObject
 	{

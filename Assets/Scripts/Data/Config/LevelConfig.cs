@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Systems.Map.Config;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Data.Config

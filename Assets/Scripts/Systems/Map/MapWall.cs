@@ -1,6 +1,6 @@
 using System;
-using Data.Config.Map;
 using JetBrains.Annotations;
+using Systems.Map.Config;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

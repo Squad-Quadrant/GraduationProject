@@ -5,6 +5,7 @@ using Core.Events;
 using Core.Log;
 using Data.Config;
 using Data.Runtime.Events.UI;
+using Presentation.UI.Config;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;

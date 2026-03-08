@@ -1,5 +1,5 @@
-﻿using Data.Config.Map;
-using Systems.Map;
+﻿using Systems.Map;
+using Systems.Map.Config;
 using Systems.Unit;
 using UnityEngine;
 

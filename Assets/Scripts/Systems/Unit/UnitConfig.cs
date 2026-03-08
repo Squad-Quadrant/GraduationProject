@@ -1,9 +1,9 @@
-﻿using Sirenix.OdinInspector;
+﻿using Presentation.Unit;
+using Sirenix.OdinInspector;
 using Spine.Unity;
-using Systems.Unit;
 using UnityEngine;
 
-namespace Data.Config
+namespace Systems.Unit
 {
 	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit Config")]
 	public class UnitConfig : ScriptableObject

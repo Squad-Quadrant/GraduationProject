@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Data.Config;
+using Systems.Map.Config;
 using UnityEngine;
 
 namespace Systems.Map

@@ -1,5 +1,5 @@
 ﻿using System;
-using Data.Config.Buff;
+using Systems.Buff.Config;
 using Systems.Unit;
 using UnityEngine;
 

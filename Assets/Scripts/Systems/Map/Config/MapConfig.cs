@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data.Config.Map;
+using Data.Config;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using Systems.Map;
 using UnityEngine;
 
-namespace Data.Config
+namespace Systems.Map.Config
 {
 	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map Config")]
 	public class MapConfig : ScriptableObject

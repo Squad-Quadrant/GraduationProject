@@ -1,7 +1,6 @@
-using Systems.Buff;
 using UnityEngine;
 
-namespace Data.Config.Buff
+namespace Systems.Buff.Config
 {
     public abstract class BuffEvent : ScriptableObject
     {

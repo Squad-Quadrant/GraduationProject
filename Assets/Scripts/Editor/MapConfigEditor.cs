@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Data.Config;
-using Data.Config.Map;
+using Systems.Map.Config;
 using UnityEditor;
 using UnityEngine;
 

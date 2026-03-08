@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Presentation.UI.Core;
+﻿using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Data.Config
+namespace Presentation.UI.Config
 {
 	[CreateAssetMenu(fileName = "NewPanelConfig", menuName = "Game/UI/Panel Config")]
 	public class UIPanelConfig : ScriptableObject

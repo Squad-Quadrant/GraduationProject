@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.Config.Buff;
 using Sirenix.OdinInspector;
+using Systems.Buff.Config;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.Events;

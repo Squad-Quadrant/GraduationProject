@@ -3,6 +3,7 @@ using Core.Events;
 using Core.Log;
 using Data.Config;
 using Presentation.Bootstrap;
+using Presentation.UI.Config;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

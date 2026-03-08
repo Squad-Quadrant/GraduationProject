@@ -4,7 +4,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Data.Config
+namespace Presentation.Unit
 {
 	public enum EUnitStance
 	{

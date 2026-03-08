@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data.Config;
 using Data.Runtime;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.Equipment;

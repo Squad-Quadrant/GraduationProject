@@ -2,7 +2,7 @@ using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Data.Config.Buff
+namespace Systems.Buff.Config
 {
     /// <summary>
     /// Buff增加时的更新方式

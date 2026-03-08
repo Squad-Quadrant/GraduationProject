@@ -78,3 +78,4 @@ crashlytics-build.properties
 .claudeignore
 .claude/
 .claudesync/
+CLAUDE.md

@@ -1,9 +1,8 @@
 using PurpleFlowerCore;
-using Systems.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Data.Config
+namespace Systems.Map.Config
 {
     [Configurable("Map/Cell")]
     [CreateAssetMenu(fileName = "CellConfig", menuName = "Game/Map/CellConfig")]

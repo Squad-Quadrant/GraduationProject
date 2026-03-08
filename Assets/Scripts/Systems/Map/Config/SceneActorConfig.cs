@@ -3,7 +3,7 @@ using Systems.Map.SceneActor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Data.Config
+namespace Systems.Map.Config
 {
     [CreateAssetMenu(fileName = "SceneActorConfig", menuName = "Game/SceneActorConfig")]
     public class SceneActorConfig : ScriptableObject
