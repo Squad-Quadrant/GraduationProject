@@ -4,20 +4,29 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Config;
+using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
 using UnityEngine;
 
 namespace Systems.Unit
 {
-	public class UnitService : IUnitService
+	public class UnitService : IUnitService, IDisposable
 	{
 		private readonly IEventBus _eventBus;
 
 		public UnitService(IEventBus eventBus)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            
+            _eventBus.Subscribe<UnitDealDamageEvent>(DealDamage);
 			this.Log("Initialized");
 		}
+
+        public void Dispose()
+        {
+            _eventBus.Unsubscribe<UnitDealDamageEvent>(DealDamage);
+            this.Log("Disposed");
+        }
 
 		private readonly Dictionary<string, Unit> _units = new();
 
@@ -103,6 +112,14 @@ namespace Systems.Unit
         public Unit GetUnitAtPosition(Vector2Int position)
         {
             return _units.Values.FirstOrDefault(u => u.position == position);
+        }
+
+        private void DealDamage(UnitDealDamageEvent e)
+        {
+            // todo: 伤害计算
+            
+            // todo: 如果有单位死亡,考虑到反甲等情况,不一定是target死亡
+            // DestroyUnit();
         }
     }
 }
