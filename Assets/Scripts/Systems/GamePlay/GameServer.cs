@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
@@ -68,7 +69,20 @@ namespace Systems.GamePlay
 
         private void CheckGameOver(UnitDestroyedEvent e)
         {
-            // if (_unitService.GetAllAliveUnits())
+            var aliveUnits = _unitService.GetAllAliveUnits();
+            if (aliveUnits.All(u => u.faction == EUnitFaction.Player))
+            {
+                this.Log("All enemies defeated! You win!");
+                _fsm.StateMachine.ChangeState<WaitingForSystemState>();
+                return;
+            }
+            
+            if (aliveUnits.All(u => u.faction == EUnitFaction.Enemy))
+            {
+                this.Log("All player units defeated! You lose!");
+                _fsm.StateMachine.ChangeState<WaitingForSystemState>();
+                return;
+            }
         }
 
         private void StartNewTurn()

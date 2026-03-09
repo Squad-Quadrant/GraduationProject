@@ -15,37 +15,37 @@ MonoBehaviour:
   defaultStance: 0
   defaultGrip: 0
   animations:
-  - action: 
+  - action: shoot
     stance: 0
     grip: 0
     clipName: shoot/fire 3burst
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 1
     clipName: shoot/fire 3burst hg
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 0
     clipName: shoot/fire 5burst
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 0
     clipName: shoot/fire auto
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 0
     clipName: shoot/fire auto2
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 0
     clipName: shoot/fire semi
     loop: 0
-  - action: 
+  - action: shoot
     stance: 0
     grip: 1
     clipName: shoot/fire semi hg

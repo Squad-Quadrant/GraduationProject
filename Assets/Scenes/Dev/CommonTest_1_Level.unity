@@ -167,7 +167,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455bdc0e4fe844c18184185ec7a5bfa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 1
+--- !u!1 &419261188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 419261190}
+  - component: {fileID: 419261189}
+  m_Layer: 0
+  m_Name: CameraController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &419261189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419261188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a51e3969317488c81caff9444c3373f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 2112800855}
+  config: {fileID: 11400000, guid: 8334533a45c321f4880d48ba630ec7da, type: 2}
+--- !u!4 &419261190
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419261188}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &614972708
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,17 +386,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb098f4952a097c4b89edce9f2e7420c, type: 3}
---- !u!114 &625750540 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8113960242886681935, guid: bb098f4952a097c4b89edce9f2e7420c, type: 3}
-  m_PrefabInstance: {fileID: 625750539}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7d1da5165344d9d9fc16cb9e303d07d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!156049354 &625750541 stripped
 Grid:
   m_CorrespondingSourceObject: {fileID: 2970457760337099386, guid: bb098f4952a097c4b89edce9f2e7420c, type: 3}
@@ -432,11 +466,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fafe039fb524ccab241a9d4f253243c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapView: {fileID: 625750540}
   grid: {fileID: 625750541}
   inputService: {fileID: 1868383104}
   interactionController: {fileID: 300474405}
   unitViewManager: {fileID: 1069617573}
+  cameraController: {fileID: 419261189}
   levelConfig: {fileID: 11400000, guid: dfb71d7da9329884f83e6d0513381b72, type: 2}
   autoLoadLevel: 1
 --- !u!4 &1138979030
@@ -646,6 +680,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2112800856}
+  - {fileID: 419261190}
   - {fileID: 1138979030}
   - {fileID: 614972712}
   - {fileID: 625750539}
