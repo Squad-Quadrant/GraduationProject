@@ -1,6 +1,7 @@
-using System;
+using PurpleFlowerCore;
+using UnityEngine;
 
-namespace Systems.Equipment
+namespace Systems.Equipment.Config
 {
     // 武器装备相关数值：
     // · 伤害：使用该武器攻击时能造成的基础伤害。
@@ -21,8 +22,7 @@ namespace Systems.Equipment
     // · 射速：武器的射速，代表单位使用该武器进行攻击时，每消耗一点AP所能造成伤害的次数（发射子弹的数量）。
     // · 精确射击模式：部分自动武器在攻击时可以转换射击模式为精确射击模式。精确射击模式将降低射速，但是大幅度提高命中率。
 
-    [Obsolete("使用Json配置")]
-    public class EquipmentData
+    public class EquipmentConfig : ScriptableObject
     {
         public int Id;
         public string Name;
@@ -31,17 +31,5 @@ namespace Systems.Equipment
         // public List<List<>> DamageRange;
         // public List<List<>> NoiseRange;
         public float Weight;
-    }
-    
-    [Obsolete("Obsolete")]
-    public class WeaponData : EquipmentData
-    {
-        public int AmmoCapacity;
-    }
-    
-    [Obsolete("Obsolete")]
-    public class TacticalItemData : EquipmentData
-    {
-        
     }
 }

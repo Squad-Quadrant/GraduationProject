@@ -70,14 +70,14 @@ namespace Systems.GamePlay
         private void CheckGameOver(UnitDestroyedEvent e)
         {
             var aliveUnits = _unitService.GetAllAliveUnits();
-            if (aliveUnits.All(u => u.faction == EUnitFaction.Player))
+            if (aliveUnits.All(u => u.faction == EUnitFaction.Player || u.faction == EUnitFaction.Neutral))
             {
                 this.Log("All enemies defeated! You win!");
                 _fsm.StateMachine.ChangeState<WaitingForSystemState>();
                 return;
             }
             
-            if (aliveUnits.All(u => u.faction == EUnitFaction.Enemy))
+            if (aliveUnits.All(u => u.faction == EUnitFaction.Enemy || u.faction == EUnitFaction.Neutral))
             {
                 this.Log("All player units defeated! You lose!");
                 _fsm.StateMachine.ChangeState<WaitingForSystemState>();

@@ -1,3 +1,5 @@
+using Systems.Equipment.Config;
+
 namespace Systems.Equipment
 {
     // 装备系统：
@@ -9,13 +11,13 @@ namespace Systems.Equipment
         
     }
     
-    public abstract class WeaponInfo : EquipmentInfo
+    public class WeaponInfo : EquipmentInfo
     {
-        
+        private WeaponConfig config;
     }
     
-    public abstract class TacticalItemInfo : EquipmentInfo
+    public class TacticalItemInfo : EquipmentInfo
     {
-        
+        private TacticalItemConfig config;
     }
 }
