@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Systems.Equipment.Config;
 
 namespace Systems.Equipment
 {
-    [Obsolete("Obsolete")]
     public class EquipmentService : IEquipmentService
     {
-        private readonly Dictionary<int, EquipmentData> _data = new();
+        private readonly Dictionary<int, EquipmentConfig> _data = new();
 
-        public EquipmentData Get(int id)
+        public EquipmentConfig Get(int id)
         {
             return _data.GetValueOrDefault(id);
         }
 
-        public EquipmentData Get(string name)
+        public EquipmentConfig Get(string name)
         {
             return _data.Values.FirstOrDefault(equipment => equipment.Name == name);
         }
