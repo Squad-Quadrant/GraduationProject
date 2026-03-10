@@ -131,7 +131,12 @@ namespace Systems.Interaction.States
 			);
 
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
-			Context.StateMachine.ChangeState<ExecutingState>();
+            
+            // 此处Context有可能为空，是因为在attackCommand的执行链上已经切换了状态并清空了Context，导致此处无法访问到Context。
+            if (Context != null)
+            {
+			    Context.StateMachine.ChangeState<ExecutingState>();
+            }
 		}
 	}
 }

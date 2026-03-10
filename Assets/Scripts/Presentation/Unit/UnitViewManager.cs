@@ -197,6 +197,7 @@ namespace Presentation.Unit
                     type: PresentationType.Animation.Attack,
                     entityId: e.Unit.id
                 ));
+                view.PlayAction("idle");
             });
         }
         
