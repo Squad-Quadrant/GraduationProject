@@ -7,6 +7,9 @@ namespace Systems.Equipment.Config
     [CreateAssetMenu(fileName = "NewTacticalItemData", menuName = "Game/Equipment/TacticalItem")]
     public class TacticalItemConfig : EquipmentConfig
     {
-        
+        public override EquipmentType GetEquipmentType()
+        {
+            return EquipmentType.TacticalItem;
+        }
     }
 }

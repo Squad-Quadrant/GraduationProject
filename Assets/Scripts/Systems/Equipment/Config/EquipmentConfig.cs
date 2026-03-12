@@ -22,7 +22,7 @@ namespace Systems.Equipment.Config
     // · 射速：武器的射速，代表单位使用该武器进行攻击时，每消耗一点AP所能造成伤害的次数（发射子弹的数量）。
     // · 精确射击模式：部分自动武器在攻击时可以转换射击模式为精确射击模式。精确射击模式将降低射速，但是大幅度提高命中率。
 
-    public class EquipmentConfig : ScriptableObject
+    public abstract class EquipmentConfig : ScriptableObject
     {
         public int Id;
         public string Name;
@@ -31,5 +31,13 @@ namespace Systems.Equipment.Config
         // public List<List<>> DamageRange;
         // public List<List<>> NoiseRange;
         public float Weight;
+
+        public abstract EquipmentType GetEquipmentType();
+    }
+
+    public enum EquipmentType
+    {
+        Weapon,
+        TacticalItem
     }
 }

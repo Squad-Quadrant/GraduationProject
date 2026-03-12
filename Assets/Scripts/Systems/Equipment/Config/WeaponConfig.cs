@@ -8,5 +8,9 @@ namespace Systems.Equipment.Config
     public class WeaponConfig : EquipmentConfig
     {
         public int AmmoCapacity;
+        public override EquipmentType GetEquipmentType()
+        {
+            return EquipmentType.Weapon;
+        }
     }
 }
