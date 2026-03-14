@@ -878,12 +878,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1435007541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 531e0aa256ab4d1dad928d86365e471b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a7c8ff8d6a14e55b52530a9cab5bab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponConfigList:
-  - {fileID: 0}
-  tacticalItemConfig: []
+  _equipmentConfigs:
+  - {fileID: 11400000, guid: e54057a764aefd9439824c5f172c4703, type: 2}
+  - {fileID: 11400000, guid: d3c075c9fa71266459f7fe277c5a3b5b, type: 2}
+  - {fileID: 11400000, guid: a787d6c0d429c294d92db4790eedda9e, type: 2}
 --- !u!1 &1468208944
 GameObject:
   m_ObjectHideFlags: 0

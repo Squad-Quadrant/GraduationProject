@@ -5,6 +5,7 @@ using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.Equipment;
+using Systems.Equipment.Config;
 using Systems.Turn;
 using UnityEngine;
 
@@ -115,19 +116,33 @@ namespace Systems.Unit
 
         #region IEquipable
 
-        // todo:武器道具初始化
-        public WeaponInfo MainWeapon { get; set; }
-        public WeaponInfo SecondaryWeapon { get; set; }
-        public TacticalItemInfo TacticalItemInfo0 { get; set; }
-        public TacticalItemInfo TacticalItemInfo1 { get; set; }
-        public TacticalItemInfo TacticalItemInfo2 { get; set; }
-        public List<TacticalItemInfo> TacticalItemInfos => new()
+        public EquipmentContainer MainWeapon { get; set; }
+        public EquipmentContainer SecondaryWeapon { get; set; }
+        public EquipmentContainer TacticalItemInfo0 { get; set; }
+        public EquipmentContainer TacticalItemInfo1 { get; set; }
+        public EquipmentContainer TacticalItemInfo2 { get; set; }
+        public List<EquipmentContainer> TacticalItemInfos => new()
         {
             TacticalItemInfo0,
             TacticalItemInfo1,
             TacticalItemInfo2
         };
 
+        public void InitEquipment(List<EquipmentConfig> equipmentConfigs)
+        {
+            MainWeapon = new EquipmentContainer();
+            SecondaryWeapon = new EquipmentContainer();
+            TacticalItemInfo0 = new EquipmentContainer();
+            TacticalItemInfo1 = new EquipmentContainer();
+            TacticalItemInfo2 = new EquipmentContainer();
+            
+            MainWeapon.Init(equipmentConfigs[0]);
+            SecondaryWeapon.Init(equipmentConfigs[1]);
+            TacticalItemInfo0.Init(equipmentConfigs[2]);
+            TacticalItemInfo1.Init(equipmentConfigs[3]);
+            TacticalItemInfo2.Init(equipmentConfigs[4]);
+        }
+        
         #endregion
 	}
 }

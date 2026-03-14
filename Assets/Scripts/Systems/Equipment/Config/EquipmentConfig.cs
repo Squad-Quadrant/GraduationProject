@@ -21,23 +21,37 @@ namespace Systems.Equipment.Config
     // · 穿透率：武器造成伤害时，穿透护甲造成伤害的能力。
     // · 射速：武器的射速，代表单位使用该武器进行攻击时，每消耗一点AP所能造成伤害的次数（发射子弹的数量）。
     // · 精确射击模式：部分自动武器在攻击时可以转换射击模式为精确射击模式。精确射击模式将降低射速，但是大幅度提高命中率。
+    [Configurable("Equipment")]
+    [CreateAssetMenu(fileName = "EquipmentConfig", menuName = "Configs/EquipmentConfig", order = 0)]
 
-    public abstract class EquipmentConfig : ScriptableObject
+    public class EquipmentConfig : ScriptableObject
     {
         public int Id;
         public string Name;
         public int Damage;
         public int MentalDamage;
-        // public List<List<>> DamageRange;
-        // public List<List<>> NoiseRange;
         public float Weight;
+        public EquipmentType Type;
 
-        public abstract EquipmentType GetEquipmentType();
+        #region Weapon-specific properties
+
+        public int AmmoCapacity;
+
+        #endregion
+
+        #region Equipment-specific properties
+
+        #endregion
+
     }
 
     public enum EquipmentType
     {
+        [InspectorName("请选择装备类型")]
+        None = 0,
         Weapon,
-        TacticalItem
+        TacticalItem,
+        [InspectorName(null)]
+        Count
     }
 }

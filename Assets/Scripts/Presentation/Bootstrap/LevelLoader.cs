@@ -7,6 +7,7 @@ using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.CameraControl;
+using Presentation.Data;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;
@@ -96,6 +97,7 @@ namespace Presentation.Bootstrap
 		private void BuildSteps()
 		{
 			_steps.Clear();
+            
 			AddStep("SetupLevelContainer", SetupLevelContainer);
 			AddStep("RegisterServices", RegisterServices);
 			AddStep("RegisterPresenter", RegisterPresenter);
@@ -137,7 +139,6 @@ namespace Presentation.Bootstrap
 
 			var coordinateConverter = new CoordinateConverter(grid);
 			_levelContainer.Services.RegisterInstance<ICoordinateConverter>(coordinateConverter);
-
 			_levelContainer.Services.Register<IMapService, MapService>();
 			_levelContainer.Services.Register<IUnitService, UnitService>();
 			_levelContainer.Services.Register<ITurnService, TurnService>();

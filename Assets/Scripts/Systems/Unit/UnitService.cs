@@ -6,6 +6,7 @@ using Core.Log;
 using Data.Config;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
+using Presentation.Data;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -44,6 +45,9 @@ namespace Systems.Unit
 				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
 			var unit = Unit.LoadFromConfig(unitId, config, position);
+            // todo: 这样破坏了当前的系统设计规则，预期改成局外使用传统的开发模式，局内使用DataServer接收事件收集局外DDOL单例的数据
+            var equipmentConig = DataManager.Instance.GetEquipmentConfigList(unitId);
+            unit.InitEquipment(equipmentConig);
 			_units[unitId] = unit;
 			this.Log($"Created unit: {unit}");
 			_eventBus.Publish(new UnitCreatedEvent(unit));
@@ -116,8 +120,10 @@ namespace Systems.Unit
 
         private void DealDamage(UnitDealDamageEvent e)
         {
-            // todo: 伤害计算
-            e.Target.currentHp -= 50;
+            // todo: 伤害计算, 逻辑移动到EquipmentServer
+            e.Target.currentHp -= e.Attacker.MainWeapon.Logic.GetDamage();
+            this.LogDebug($"Unit '{e.Attacker.name}'({e.Attacker.id}) dealt {e.Attacker.MainWeapon.Logic.GetDamage()} damage to '{e.Target.name}'({e.Target.id}). " +
+                          $"Target HP: {e.Target.currentHp}/{e.Target.maxHp}");
 
             // todo: 如果有单位死亡,考虑到反甲等情况,不一定是target死亡
             CheckUnitDeath();
