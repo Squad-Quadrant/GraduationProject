@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e24145c9258f4549a71c1fb5403a3c24, type: 3}
-  m_Name: DesertEagle
+  m_Script: {fileID: 11500000, guid: a11e29997ea04c6286efca7f321653c9, type: 3}
+  m_Name: SmokeGrenade
   m_EditorClassIdentifier: 
-  Id: 1
-  Name: "\u6C99\u6F20\u4E4B\u9E70"
-  Damage: 30
+  Id: 3
+  Name: "\u70DF\u96FE\u5F39"
+  Damage: 0
   MentalDamage: 0
   Weight: 0
-  AmmoCapacity: 7
+  Type: 2
+  AmmoCapacity: 0
