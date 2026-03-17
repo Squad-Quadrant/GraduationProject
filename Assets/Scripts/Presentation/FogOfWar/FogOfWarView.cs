@@ -14,6 +14,7 @@ namespace Presentation.FogOfWar
 	{
 		[Title("Shader")]
 		[SerializeField, Required] private Shader fogShader;
+		[PreviewField(ObjectFieldAlignment.Center, Height = 100)]
 		[SerializeField, Required] private Texture2D noiseTex;
 
 		[Title("Fog Settings")]
