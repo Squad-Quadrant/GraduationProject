@@ -29,6 +29,7 @@ namespace Systems.Unit
 		public int moveRange = 2; // 每消耗一个行动点可以移动的格子数量
 		public int actionPoints = 2; // 每回合可用的行动点数
         public int attackRange = 3; // 攻击范围，表示以单位为中心，东西南北延伸的最大格数，以形成一个平行四边形范围
+        public int visionRange = 4;
 		public EUnitFaction faction = EUnitFaction.Neutral;
 
 		#region Validation

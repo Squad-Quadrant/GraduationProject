@@ -8,10 +8,13 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
+using Data.Runtime.Events.Vision;
 using Presentation.Interaction;
 using Systems.Interaction.States;
 using Systems.Turn;
 using Systems.Unit;
+using Systems.Vision;
+using UnityEngine;
 
 namespace Systems.GamePlay
 {
@@ -25,19 +28,22 @@ namespace Systems.GamePlay
 		private readonly ITurnService _turnService;
 		private readonly IUnitService _unitService;
 		private readonly InteractionController _fsm;
+		private readonly IVisionService _visionService;
 
 		public GameServer(
 			IEventBus eventBus,
 			ICommandQueue commandQueue,
 			ITurnService turnService,
 			IUnitService unitService,
-			InteractionController interactionController)
+			InteractionController interactionController,
+			IVisionService visionService)
 		{
 			_turnService = turnService;
 			_eventBus = eventBus;
 			_commandQueue = commandQueue;
 			_unitService = unitService;
 			_fsm = interactionController;
+			_visionService = visionService;
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
             _eventBus.Subscribe<UnitDestroyedEvent>(CheckGameOver);
@@ -98,26 +104,34 @@ namespace Systems.GamePlay
 
 		private void AdvanceToNextUnit() // 控制Turn系统推进
 		{
-			var unit = _turnService.NextUnit();
-			if (unit == null)
+			var turnUnit = _turnService.NextUnit();
+			if (turnUnit == null)
 			{
 				this.Log("No more actionable units, ending turn");
 				EndCurrentTurn();
 				return;
 			}
 
-			this.Log($"Unit '{unit.Id}' turn starting");
-			_eventBus.Publish(new UnitTurnStartedEvent(unit.Id, _turnService.TurnNumber));
+			var unit = _unitService.GetUnit(turnUnit.Id);
+			this.Log($"Unit '{unit.id}' turn starting");
 
-			AwaitThen(StartNewUnitTurn, cmd => cmd
+			// todo: 这里或许需要根据unit的阵营决定行为
+			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber));
+
+			var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
+			foreach (var pos in visible)
+			{
+				this.Log($"{pos.x} {pos.y}");
+			}
+			_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
+
+			AwaitThen(() => StartNewUnitTurn(unit), cmd => cmd
 				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
 			);
 		}
 
-		private void StartNewUnitTurn() // 实际开始一个新的单位回合，控制状态机推进
+		private void StartNewUnitTurn(Systems.Unit.Unit unit) // 实际开始一个新的单位回合，控制状态机推进
 		{
-			var activeTurnUnit = _turnService.ActiveUnit;
-			var unit = _unitService.GetUnit(activeTurnUnit.Id);
 			this.Log($"Unit '{unit.id}' is now acting");
 
 			// Control transfers to InteractionFSM (player) or AI system (enemy)

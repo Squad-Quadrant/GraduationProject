@@ -190,6 +190,7 @@ Transform:
   - {fileID: 4127302338576116248}
   - {fileID: 175860917837315795}
   - {fileID: 4712710382329903385}
+  - {fileID: 1945878203429015378}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2970457760337099386
@@ -377,6 +378,63 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &6511421100036269025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1945878203429015378}
+  - component: {fileID: 2330306044948344000}
+  m_Layer: 0
+  m_Name: FogOfWar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1945878203429015378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6511421100036269025}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6600589940686590176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2330306044948344000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6511421100036269025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f46efb2d5554b55b720dac0c004f9cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogShader: {fileID: 4800000, guid: efe7a100f16e4329b29aa41b06fa4b78, type: 3}
+  noiseTex: {fileID: 2800000, guid: a6b589df600c95d46b00d2adc0780d0e, type: 3}
+  fogColor: {r: 0, g: 0, b: 0, a: 0.9137255}
+  noiseIntensity: 0.15
+  noiseScale: 0.5
+  edgeSoftness: 0.35
+  paddingRange: 1
+  paddingStrength: 0.2
+  transitionSpeed: 8
+  sortingLayerName: OnGround
+  sortingOrder: 1000
+  padding: 5
+  grid: {fileID: 2970457760337099386}
 --- !u!1 &7674225976180968588
 GameObject:
   m_ObjectHideFlags: 0

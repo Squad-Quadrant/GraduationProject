@@ -6,9 +6,12 @@ using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
+using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
+using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Presentation.Unit
@@ -21,6 +24,8 @@ namespace Presentation.Unit
 
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordConverter;
+		private IUnitService _unitService;
+		private IVisionService _visionService;
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
 
@@ -28,6 +33,8 @@ namespace Presentation.Unit
 		{
 			_eventBus = services.Resolve<IEventBus>();
 			_coordConverter = services.Resolve<ICoordinateConverter>();
+			_unitService = services.Resolve<IUnitService>();
+			_visionService = services.Resolve<IVisionService>();
 
 			if (!unitContainer) unitContainer = transform;
 
@@ -36,6 +43,7 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
             _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
             _eventBus.Subscribe<UnitBeHitEvent>(OnUnitBeHit);
+            _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
 
 			this.Log("Initialized");
 		}
@@ -47,6 +55,7 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
             _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
             _eventBus.Unsubscribe<UnitBeHitEvent>(OnUnitBeHit);
+            _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -90,6 +99,7 @@ namespace Presentation.Unit
 
 			var viewInstance = CreateUnitViewInstance(unit);
 			_views[unit.id] = viewInstance;
+			viewInstance.gameObject.SetActive(false);
 
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -147,14 +157,22 @@ namespace Presentation.Unit
 				return;
 			}
 
-			view.Move(e.Path, () =>
-			{
-				_eventBus.Publish(new PresentationCompleteEvent(
-					category: EPresentationCategory.Animation,
-					type: PresentationType.Animation.Move,
-					entityId: e.Unit.id
-				));
-			});
+			var movingUnit = e.Unit;
+			view.Move(
+				e.Path,
+				onStep: cell =>
+				{
+					var visible = _visionService.CalculateVisibleCells(cell, movingUnit.visionRange);
+					_eventBus.Publish(new VisionChangedEvent(visible, movingUnit.id));
+				},
+				onComplete: () =>
+				{
+					_eventBus.Publish(new PresentationCompleteEvent(
+						category: EPresentationCategory.Animation,
+						type: PresentationType.Animation.Move,
+						entityId: e.Unit.id
+					));
+				});
 		}
 
 		private UnitView CreateUnitViewInstance(Systems.Unit.Unit unit)
@@ -223,6 +241,28 @@ namespace Presentation.Unit
                     entityId: e.Unit.id
                 ));
             });
+        }
+
+        private void OnVisionChanged(VisionChangedEvent e)
+        {
+	        foreach (var (unitId, view) in _views)
+	        {
+		        if (!view) continue;
+
+		        if (unitId == e.UnitId)
+		        {
+			        view.gameObject.SetActive(true);
+			        continue;
+		        }
+
+		        if (!_unitService.TryGetUnit(unitId, out var unit))
+		        {
+			        view.gameObject.SetActive(false);
+			        continue;
+		        }
+
+		        view.gameObject.SetActive(e.VisibleCells.Contains(unit.position));
+	        }
         }
 
 		#region Odin Debug

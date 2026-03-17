@@ -18,8 +18,8 @@ MonoBehaviour:
   panSpeed: 3
   panSmoothing: 8
   zoomRange: {x: 1, y: 5}
-  zoomSensitivity: 0.5
-  zoomSmoothSpeed: 10
+  zoomSensitivity: 1
+  zoomSmoothSpeed: 8
   boundaryPadding: 1
   shakeDuration: 0.2
   shakeStrength: 0.15

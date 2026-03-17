@@ -22,6 +22,7 @@ using Systems.PathFinding;
 using Systems.PathFinding.TraversalRule;
 using Systems.Turn;
 using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -150,6 +151,7 @@ namespace Presentation.Bootstrap
 				var traversalRule = new DefaultTraversalRule(unitService);
 				return new PathFindingService(mapService, traversalRule);
 			});
+			_levelContainer.Services.Register<IVisionService, VisionService>();
 
 			_levelContainer.Services.RegisterInstance(interactionController);
 		}

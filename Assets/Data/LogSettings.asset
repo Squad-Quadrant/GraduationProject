@@ -168,3 +168,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.FogOfWar.FogOfWarView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Vision.VisionService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

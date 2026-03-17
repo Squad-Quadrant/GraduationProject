@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
 using Data.Config;
+using Data.Runtime.Events.Vision;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -140,7 +141,7 @@ namespace Presentation.Unit
 
 		public void SetWeaponSkin(string skinName) => animator.SetWeaponSkin(skinName);
 
-		public void Move(IReadOnlyList<Vector2Int> path, Action onComplete = null)
+		public void Move(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep = null, Action onComplete = null)
 		{
 			if (path == null || path.Count < 2)
 			{
@@ -156,7 +157,7 @@ namespace Presentation.Unit
 				this.LogWarning("Interrupted ongoing movement.");
 			}
 
-			_moveCoroutine = StartCoroutine(MoveCoroutine(path, onComplete));
+			_moveCoroutine = StartCoroutine(MoveCoroutine(path, onStep, onComplete));
 		}
 
 		public void CancelMovement()
@@ -172,7 +173,7 @@ namespace Presentation.Unit
 		public void Pause() => animator.Pause();
 		public void Resume() => animator.Resume();
 
-		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action onComplete)
+		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)
 		{
 			if (path == null || path.Count < 2)
 			{
@@ -206,6 +207,7 @@ namespace Presentation.Unit
 
 				SetFacing(path[i] - path[i - 1]);
 				yield return LerpSegment(path[i - 1], path[i]);
+				onStep?.Invoke(path[i]);
 			}
 
 			SetFacing(path[lastIdx] - path[lastIdx - 1]);
@@ -237,11 +239,9 @@ namespace Presentation.Unit
 
 			// Snap to exact final position
 			transform.position = toWorld;
+			onStep?.Invoke(path[lastIdx]);
 
-			// Wait for move_end animation to finish
-			while (!endDone) yield return null;
-
-			// ── Cleanup ──
+			while (!endDone) yield return null; // Wait for move_end animation to finish
 
 			PlayAction("idle");
 			_moveCoroutine = null;

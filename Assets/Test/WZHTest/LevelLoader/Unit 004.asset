@@ -26,4 +26,5 @@ MonoBehaviour:
   moveRange: 2
   actionPoints: 2
   attackRange: 3
+  visionRange: 2
   faction: 1

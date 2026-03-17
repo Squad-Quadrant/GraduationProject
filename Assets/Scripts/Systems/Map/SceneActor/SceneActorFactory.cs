@@ -32,6 +32,7 @@ namespace Systems.Map.SceneActor
                         }
                     }
                     var sceneActor = new GeneralSceneActor(config.Type, uid, tile, baseCell, extraCells);
+                    sceneActor.BlocksVision = config.blockVision;
                     return sceneActor;
                 default:
                     throw  new NotImplementedException();

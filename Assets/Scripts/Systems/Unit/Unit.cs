@@ -32,6 +32,7 @@ namespace Systems.Unit
 		public int moveRange;
 		public int maxAp;
         public int attackRange;
+        public int visionRange;
 		public EUnitFaction faction;
 
 		[TitleGroup("Presentation")]
@@ -66,6 +67,7 @@ namespace Systems.Unit
 				moveRange = config.moveRange,
 				maxAp = config.actionPoints,
                 attackRange = config.attackRange,
+                visionRange = config.visionRange,
 				faction = config.faction,
 
 				animationConfig = config.animationConfig,

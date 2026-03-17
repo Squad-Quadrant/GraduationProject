@@ -15,7 +15,9 @@ namespace Systems.Map.SceneActor
 
         public List<MapCell> ExtraCells { get; set; } = new();
         
-        public Tile Tile { get; set; } 
+        public Tile Tile { get; set; }
+
+        public bool BlocksVision { get; set; }
         
         public SceneActorBase(SceneActorType type, uint uid)
         {
