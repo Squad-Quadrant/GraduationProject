@@ -10,7 +10,8 @@ namespace Presentation.Unit
 	{
 		Stand,
 		Bend,
-		Aim
+		Aim,
+		Hit
 	}
 
 	public enum EGripType
