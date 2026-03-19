@@ -108,15 +108,15 @@ namespace Presentation.UI.Presenter
 				var turnUnit = order[i];
 				var state = ClassifyState(i, activeIndex);
 				Sprite icon = null;
-				var factionColor = _panel.GetFactionColor(EUnitFaction.Neutral);
+				var factionBg = _panel.GetFactionBg(EUnitFaction.Neutral);
 
 				if (_unitService.TryGetUnit(turnUnit.Id, out var unit))
 				{
 					icon = unit.icon;
-					factionColor = _panel.GetFactionColor(unit.faction);
+					factionBg = _panel.GetFactionBg(unit.faction);
 				}
 
-				result[i] = new SlotData(turnUnit.Id, icon, factionColor, state);
+				result[i] = new SlotData(turnUnit.Id, icon, factionBg, state);
 			}
 
 			return result;

@@ -42,12 +42,12 @@ namespace Presentation.UI.Panel.TurnOrder
 		private Tween _scaleTween;
 		private Tween _fadeTween;
 
-		public void Setup(string unitId, Sprite icon, Color factionColor)
+		public void Setup(string unitId, Sprite icon, Sprite factionBg)
 		{
 			UnitId = unitId;
 			iconImage.sprite = icon;
 			iconImage.enabled = icon;
-			borderImage.color = factionColor;
+			borderImage.sprite = factionBg;
 		}
 
 		private void OnDestroy() => KillAllTweens();

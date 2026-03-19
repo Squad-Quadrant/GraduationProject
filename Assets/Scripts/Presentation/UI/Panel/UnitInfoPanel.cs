@@ -9,15 +9,11 @@ namespace Presentation.UI.Panel
 	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[TitleGroup("References")]
-		[SerializeField, Required] private Image iconImage;
+		[SerializeField, Required] private Image portraitImage;
 		[SerializeField, Required] private TextMeshProUGUI nameText;
-		[SerializeField, Required] private TextMeshProUGUI factionText;
-
-		[SerializeField, Required] private Slider hpSlider;
-		[SerializeField, Required] private TextMeshProUGUI hpText;
-
-		[SerializeField, Required] private TextMeshProUGUI actionPointsText;
-		[SerializeField, Required] private TextMeshProUGUI speedText;
+		[SerializeField, Required] private Image hpImage;
+		[SerializeField, Required] private RectTransform actionPointsParent;
+		[SerializeField, Required] private GameObject actionPointsPrefab;
 
 		public void DataInitialize(Systems.Unit.Unit unit)
 		{
@@ -27,28 +23,17 @@ namespace Presentation.UI.Panel
 
 		public void Refresh(Systems.Unit.Unit unit)
 		{
-			iconImage.sprite = unit.icon;
+			portraitImage.sprite = unit.icon;
 			nameText.text = unit.name;
-			factionText.text = FormatFaction(unit.faction);
 
 			var currentHp = unit.currentHp;
 			var maxHp = unit.maxHp;
-			hpSlider.value = maxHp > 0 ? (float)currentHp / maxHp : 0f;
-			hpText.text = $"{currentHp} / {maxHp}";
+			hpImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
 
-			actionPointsText.text = $"AP: {unit.currentAp}/{unit.maxAp}";
-			speedText.text = $"Speed: {unit.speed}";
-		}
-
-		private static string FormatFaction(Systems.Unit.EUnitFaction? faction)
-		{
-			return faction switch
-			{
-				Systems.Unit.EUnitFaction.Player  => "Player",
-				Systems.Unit.EUnitFaction.Enemy   => "Enemy",
-				Systems.Unit.EUnitFaction.Neutral => "Neutral",
-				_ => "Unknown"
-			};
+			foreach (Transform child in actionPointsParent)
+				Destroy(child.gameObject);
+			for (int i = 0; i < unit.currentAp; i++)
+				Instantiate(actionPointsPrefab, actionPointsParent);
 		}
 	}
 }

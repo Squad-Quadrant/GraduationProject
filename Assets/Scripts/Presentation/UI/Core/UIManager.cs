@@ -20,14 +20,13 @@ namespace Presentation.UI.Core
 
 		[TitleGroup("Configuration")]
 		[SerializeField, Required]
-		[Tooltip("The overlay canvas that persists across scenes (DDOL).")]
-		private Canvas overlayCanvas;
+		private Canvas ddolCanvas;
 
 		private IEventBus _eventBus;
 
 		// Scene-owned canvas references (registered by LevelCanvasProvider)
 		private Canvas _screenCanvas;
-		private Canvas _worldCanvas;
+		private Canvas _overlayCanvas;
 
 		private readonly Dictionary<string, UIPanel> _openPanels = new();
 		private readonly Dictionary<string, UIPanel> _cache = new(); // closed but not destroyed panels
@@ -239,9 +238,9 @@ namespace Presentation.UI.Core
 
 		private Transform GetCanvasRoot(EUICanvasLayer layer) => layer switch
 		{
-			EUICanvasLayer.Overlay => overlayCanvas ? overlayCanvas.transform : null,
+			EUICanvasLayer.Ddol => ddolCanvas ? ddolCanvas.transform : null,
 			EUICanvasLayer.Screen  => _screenCanvas ? _screenCanvas.transform : null,
-			EUICanvasLayer.World   => _worldCanvas  ? _worldCanvas.transform  : null,
+			EUICanvasLayer.Overlay   => _overlayCanvas  ? _overlayCanvas.transform  : null,
 			_ => null
 		};
 
@@ -253,8 +252,8 @@ namespace Presentation.UI.Core
 					_screenCanvas = canvas;
 					this.Log($"Registered Screen canvas: {canvas.name}");
 					break;
-				case EUICanvasLayer.World:
-					_worldCanvas = canvas;
+				case EUICanvasLayer.Overlay:
+					_overlayCanvas = canvas;
 					this.Log($"Registered World canvas: {canvas.name}");
 					break;
 			}
@@ -268,8 +267,8 @@ namespace Presentation.UI.Core
 					_screenCanvas = null;
 					this.Log("Unregistered Screen canvas");
 					break;
-				case EUICanvasLayer.World:
-					_worldCanvas = null;
+				case EUICanvasLayer.Overlay:
+					_overlayCanvas = null;
 					this.Log("Unregistered World canvas");
 					break;
 			}
@@ -293,7 +292,7 @@ namespace Presentation.UI.Core
 
 		[TitleGroup("Runtime Status")]
 		[ShowInInspector, ReadOnly, LabelText("World Canvas")]
-		private string WorldCanvasName => _worldCanvas ? _worldCanvas.name : "Not registered";
+		private string WorldCanvasName => _overlayCanvas ? _overlayCanvas.name : "Not registered";
 
 		[TitleGroup("Runtime Status")]
 		[ShowInInspector, ReadOnly, LabelText("Open Panel List")]

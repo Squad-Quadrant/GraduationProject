@@ -15,7 +15,7 @@ namespace Presentation.FogOfWar
 		[Title("Shader")]
 		[SerializeField, Required] private Shader fogShader;
 		[PreviewField(ObjectFieldAlignment.Center, Height = 100)]
-		[SerializeField, Required] private Texture2D noiseTex;
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Required] private Texture2D noiseTex;
 
 		[Title("Fog Settings")]
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private Color fogColor = new(0, 0, 0, 0.75f);
@@ -153,6 +153,7 @@ namespace Presentation.FogOfWar
 
 		private void UpdateMaterial()
 		{
+			if (!_initialized) return;
 			if (!_material) _material = new Material(fogShader);
 			_material.SetTexture(PropVisibilityTex, _visibilityTex);
 			_material.SetTexture(PropNoiseTex, noiseTex);
@@ -288,6 +289,8 @@ namespace Presentation.FogOfWar
 
 		private void OnPaddingParmChange()
 		{
+			if (!_initialized) return;
+
 			for (int y = 0; y < _mapSize.y; y++)
 			{
 				for (int x = 0; x < _mapSize.x; x++)

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelId: UnitInfo
   prefab: {fileID: 1581058548187276017, guid: c0a80b5b5c206a54d82d7a9df27d692c, type: 3}
-  layer: 1
+  layer: 2
   cacheOnClose: 1

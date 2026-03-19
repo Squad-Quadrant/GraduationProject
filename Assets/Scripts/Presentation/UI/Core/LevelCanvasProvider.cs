@@ -27,7 +27,7 @@ namespace Presentation.UI.Core
 
 		private void OnEnable()
 		{
-			if (_registered || layer == EUICanvasLayer.Overlay) return;
+			if (_registered || layer == EUICanvasLayer.Ddol) return;
 
 			var uiManager = RootContainer.Instance.TryResolve<UIManager>();
 			if (uiManager)

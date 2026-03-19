@@ -2,8 +2,8 @@
 {
 	public enum EUICanvasLayer
 	{
-		Overlay = 0,
+		Ddol = 0,
 		Screen = 1,
-		World = 2,
+		Overlay = 2,
 	}
 }

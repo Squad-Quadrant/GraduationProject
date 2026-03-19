@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelId: ActionMenuPanel
   prefab: {fileID: 6552741338846052319, guid: 136e8d1f3120aec4e963893212f7ff3a, type: 3}
-  layer: 1
+  layer: 2
   cacheOnClose: 0

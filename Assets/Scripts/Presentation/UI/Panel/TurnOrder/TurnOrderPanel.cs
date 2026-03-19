@@ -17,14 +17,14 @@ namespace Presentation.UI.Panel.TurnOrder
 	{
 		public readonly string UnitId;
 		public readonly Sprite Icon;
-		public readonly Color FactionColor;
+		public readonly Sprite FactionBg;
 		public readonly ESlotState State;
 
-		public SlotData(string unitId, Sprite icon, Color factionColor, ESlotState state)
+		public SlotData(string unitId, Sprite icon, Sprite factionBg, ESlotState state)
 		{
 			UnitId = unitId;
 			Icon = icon;
-			FactionColor = factionColor;
+			FactionBg = factionBg;
 			State = state;
 		}
 	}
@@ -35,47 +35,26 @@ namespace Presentation.UI.Panel.TurnOrder
 
 		[TitleGroup("References")]
 		[SerializeField, Required] private TurnOrderSlot slotPrefab;
-
-		[TitleGroup("References")]
 		[SerializeField, Required] private RectTransform slotContainer;
 
 		[TitleGroup("Layout")]
-		[SerializeField] private float slotSize = 64f; // width/height of each slot in pixels
-
-		[TitleGroup("Layout")]
+		[SerializeField] private float slotWidth = 80f;
 		[SerializeField] private float spacing = 8f; // space between slots in pixels
-
-		[TitleGroup("Layout")]
 		[SerializeField] private int maxVisibleSlots = 15;
 
 		[TitleGroup("Visual States")]
 		[SerializeField] private float highlightScale = 1.25f;
-
-		[TitleGroup("Visual States")]
 		[SerializeField] private float actedAlpha = 0.4f;
 
-		[TitleGroup("Faction Colors")]
-		[SerializeField] private Color playerColor = new(0.2f, 0.6f, 1f);
-
-		[TitleGroup("Faction Colors")]
-		[SerializeField] private Color enemyColor = new(1f, 0.3f, 0.3f);
-
-		[TitleGroup("Faction Colors")]
-		[SerializeField] private Color neutralColor = new(0.7f, 0.7f, 0.7f);
+		[TitleGroup("Faction Bg")]
+		[SerializeField, Required] private Sprite playerBg;
+		[SerializeField, Required] private Sprite enemyBg;
 
 		[TitleGroup("Animation")]
 		[SerializeField, Min(0.01f)] private float stateDuration = 0.25f;
-
-		[TitleGroup("Animation")]
 		[SerializeField, Min(0.01f)] private float slideDuration = 0.3f;
-
-		[TitleGroup("Animation")]
 		[SerializeField, Min(0.01f)] private float entranceDuration = 0.35f;
-
-		[TitleGroup("Animation")]
 		[SerializeField, Min(0f)] private float entranceStagger = 0.05f;
-
-		[TitleGroup("Animation")]
 		[SerializeField, Min(0.01f)] private float exitDuration = 0.25f;
 
 		#endregion
@@ -104,7 +83,7 @@ namespace Presentation.UI.Panel.TurnOrder
 				var data = slots[i];
 
 				var slot = AcquireSlot();
-				slot.Setup(data.UnitId, data.Icon, data.FactionColor);
+				slot.Setup(data.UnitId, data.Icon, data.FactionBg);
 
 				float x = CalculateSlotX(i, count);
 				slot.SetX(x);
@@ -179,12 +158,12 @@ namespace Presentation.UI.Panel.TurnOrder
 			this.Log($"Removing slot for '{unitId}', {_activeSlots.Count} remaining");
 		}
 
-		public Color GetFactionColor(EUnitFaction faction) => faction switch
+		public Sprite GetFactionBg(EUnitFaction faction) => faction switch
 		{
-			EUnitFaction.Player  => playerColor,
-			EUnitFaction.Enemy   => enemyColor,
-			EUnitFaction.Neutral => neutralColor,
-			_                   => neutralColor
+			EUnitFaction.Player  => playerBg,
+			EUnitFaction.Enemy   => enemyBg,
+			EUnitFaction.Neutral => playerBg,
+			_                   => playerBg
 		};
 
 		private (float scale, float alpha) GetStateVisuals(ESlotState state) => state switch
@@ -206,9 +185,9 @@ namespace Presentation.UI.Panel.TurnOrder
 
 		private float CalculateSlotX(int index, int totalCount)
 		{
-			float totalWidth = totalCount * slotSize + (totalCount - 1) * spacing;
-			float startX = -totalWidth / 2f + slotSize / 2f;
-			return startX + index * (slotSize + spacing);
+			float totalWidth = totalCount * slotWidth + (totalCount - 1) * spacing;
+			float startX = -totalWidth / 2f + slotWidth / 2f;
+			return startX + index * (slotWidth + spacing);
 		}
 
 		private void RecalculatePositions(bool animate)
@@ -230,13 +209,7 @@ namespace Presentation.UI.Panel.TurnOrder
 		{
 			TurnOrderSlot slot;
 
-			if (_pool.Count > 0)
-				slot = _pool.Dequeue();
-			else
-			{
-				slot = Instantiate(slotPrefab, slotContainer);
-				slot.RectTransform.sizeDelta = new Vector2(slotSize, slotSize);
-			}
+			slot = _pool.Count > 0 ? _pool.Dequeue() : Instantiate(slotPrefab, slotContainer);
 
 			slot.gameObject.SetActive(true);
 			return slot;
