@@ -12,7 +12,7 @@ namespace Systems.PathFinding
 		private readonly HashSet<Vector2Int> _stoppableCells;
 		private readonly Vector2Int _origin;
 
-		public IReadOnlyDictionary<Vector2Int, int> AllReachableCells => _costMap;
+		public IReadOnlyDictionary<Vector2Int, int> CostMap => _costMap;
 		public IReadOnlyCollection<Vector2Int> StoppableCells => _stoppableCells;
 		public Vector2Int Origin => _origin;
 		public int ReachableCount => _costMap.Count;

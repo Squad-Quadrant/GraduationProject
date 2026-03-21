@@ -36,7 +36,6 @@ namespace Systems.PathFinding
 
 			costMap[origin] = 0;
 			parentMap[origin] = null;
-			stoppableCells.Add(origin);
 
 			while (frontier.Count > 0)
 			{

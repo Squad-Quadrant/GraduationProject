@@ -32,13 +32,16 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			CalculateReachableArea(ctx);
+			var reachableArea = CalculateReachableArea(ctx);
+			var stoppableCells = reachableArea.GetStoppableCellsList();
+			var costMap = reachableArea.CostMap;
 
-			this.LogDebug($"Valid target cells: {string.Join(", ", ctx.validTargetCells)}");
+			this.LogDebug($"Valid target cells: {string.Join(", ", stoppableCells)}");
 
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
-				ctx.validTargetCells,
+				stoppableCells,
+				costMap,
 				ctx.selectedUnit.position,
 				ctx.selectedUnit.id));
 
@@ -129,7 +132,7 @@ namespace Systems.Interaction.States
 			Context.StateMachine.ChangeState<IdleState>();
 		}
 
-		private void CalculateReachableArea(InteractionContext ctx)
+		private ReachableAreaResult CalculateReachableArea(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
 			var pathfinding = ctx.PathFindingService;
@@ -138,7 +141,7 @@ namespace Systems.Interaction.States
 			{
 				this.LogError("PathfindingService not available!");
 				ctx.validTargetCells.Clear();
-				return;
+				return null;
 			}
 
 			// Build pathfinding options based on unit capabilities
@@ -168,6 +171,8 @@ namespace Systems.Interaction.States
 
 			this.Log($"Calculated reachable area: {reachableArea.StoppableCount} stoppable cells, " +
 			         $"{reachableArea.ReachableCount} total reachable");
+
+			return reachableArea;
 		}
 
 		private PathResult GetPathFromCache(Vector2Int target)

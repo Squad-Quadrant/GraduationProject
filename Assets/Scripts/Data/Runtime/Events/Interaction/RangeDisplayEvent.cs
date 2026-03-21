@@ -7,11 +7,8 @@ namespace Data.Runtime.Events.Interaction
 	public enum ERangeType
 	{
 		Movement,
-
 		Attack,
-
 		Skill,
-
 		AreaOfEffect
 	}
 
@@ -24,6 +21,8 @@ namespace Data.Runtime.Events.Interaction
 
 		public IReadOnlyList<Vector2Int> Cells { get; }
 
+		public IReadOnlyDictionary<Vector2Int, int> CellCosts { get; }
+
 		public Vector2Int? Origin { get; }
 
 		public string SourceUnitId { get; }
@@ -31,11 +30,13 @@ namespace Data.Runtime.Events.Interaction
 		public RangeDisplayEvent(
 			ERangeType rangeType,
 			IReadOnlyList<Vector2Int> cells,
+			IReadOnlyDictionary<Vector2Int, int> cellCosts = null,
 			Vector2Int? origin = null,
 			string sourceUnitId = null)
 		{
 			RangeType = rangeType;
 			Cells = cells ?? new List<Vector2Int>();
+			CellCosts = cellCosts;
 			Origin = origin;
 			SourceUnitId = sourceUnitId;
 		}

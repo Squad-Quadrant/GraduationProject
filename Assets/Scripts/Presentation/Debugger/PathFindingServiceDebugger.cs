@@ -141,7 +141,7 @@ namespace Presentation.Debugger
                 if (_lastReachableResult == null)
                     return new List<ReachableCellEntry>();
 
-                return _lastReachableResult.AllReachableCells
+                return _lastReachableResult.CostMap
                     .OrderBy(kvp => kvp.Value)
                     .Select(kvp => new ReachableCellEntry
                     {
@@ -265,7 +265,7 @@ namespace Presentation.Debugger
                 return;
 
             // Draw all reachable cells
-            foreach (var cell in _lastReachableResult.AllReachableCells)
+            foreach (var cell in _lastReachableResult.CostMap)
             {
                 var worldPos = converter.CellToWorld(cell.Key);
                 var color = _lastReachableResult.CanStopAt(cell.Key) ? stoppableColor : reachableColor;

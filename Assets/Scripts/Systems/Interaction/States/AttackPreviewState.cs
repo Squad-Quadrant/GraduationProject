@@ -35,8 +35,8 @@ namespace Systems.Interaction.States
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
 				ctx.validTargetCells,
-				ctx.selectedUnit.position,
-				ctx.selectedUnit.id));
+				origin: ctx.selectedUnit.position,
+				sourceUnitId: ctx.selectedUnit.id));
 
 			_onUnitClicked = OnUnitClicked;
 			_onBack = OnBack;
