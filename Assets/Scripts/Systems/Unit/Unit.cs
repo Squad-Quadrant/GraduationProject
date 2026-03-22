@@ -31,9 +31,11 @@ namespace Systems.Unit
 		public int speed;
 		public int moveRange;
 		public int maxAp;
-        public int attackRange;
         public int visionRange;
 		public EUnitFaction faction;
+        public int defense;
+        public float defenseRate = 0f;
+        public int quickness;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;
@@ -66,9 +68,11 @@ namespace Systems.Unit
 				speed = config.speed,
 				moveRange = config.moveRange,
 				maxAp = config.actionPoints,
-                attackRange = config.attackRange,
                 visionRange = config.visionRange,
 				faction = config.faction,
+                defense = config.defense,
+                defenseRate = config.defenseRate,
+                quickness = config.quickness,
 
 				animationConfig = config.animationConfig,
 				skeletonDataAsset = config.skeletonDataAsset,
@@ -87,10 +91,20 @@ namespace Systems.Unit
 		public List<EActionType> GetAvailableActions()
 		{
 			var actions = new List<EActionType>();
+            // todo: 计算攻击所需的AP
 			if (HasAp)
 			{
 				actions.Add(EActionType.Move);
-				actions.Add(EActionType.Attack);
+                if (!MainWeapon.IsNullOrEmpty())
+                    actions.Add(EActionType.MainWeapon);
+                if (!SecondaryWeapon.IsNullOrEmpty())
+                    actions.Add(EActionType.SecondaryWeapon);
+                if (!TacticalItem0.IsNullOrEmpty())
+                    actions.Add(EActionType.TacticalItem0);
+                if (!TacticalItem1.IsNullOrEmpty())
+                    actions.Add(EActionType.TacticalItem1);
+                if (!TacticalItem2.IsNullOrEmpty())
+                    actions.Add(EActionType.TacticalItem2);
 			}
 			actions.Add(EActionType.Wait);
 			return actions;
@@ -120,29 +134,48 @@ namespace Systems.Unit
 
         public EquipmentContainer MainWeapon { get; set; }
         public EquipmentContainer SecondaryWeapon { get; set; }
-        public EquipmentContainer TacticalItemInfo0 { get; set; }
-        public EquipmentContainer TacticalItemInfo1 { get; set; }
-        public EquipmentContainer TacticalItemInfo2 { get; set; }
+        public EquipmentContainer TacticalItem0 { get; set; }
+        public EquipmentContainer TacticalItem1 { get; set; }
+        public EquipmentContainer TacticalItem2 { get; set; }
         public List<EquipmentContainer> TacticalItemInfos => new()
         {
-            TacticalItemInfo0,
-            TacticalItemInfo1,
-            TacticalItemInfo2
+            TacticalItem0,
+            TacticalItem1,
+            TacticalItem2
         };
 
         public void InitEquipment(List<EquipmentConfig> equipmentConfigs)
         {
             MainWeapon = new EquipmentContainer();
             SecondaryWeapon = new EquipmentContainer();
-            TacticalItemInfo0 = new EquipmentContainer();
-            TacticalItemInfo1 = new EquipmentContainer();
-            TacticalItemInfo2 = new EquipmentContainer();
+            TacticalItem0 = new EquipmentContainer();
+            TacticalItem1 = new EquipmentContainer();
+            TacticalItem2 = new EquipmentContainer();
             
             MainWeapon.Init(equipmentConfigs[0]);
             SecondaryWeapon.Init(equipmentConfigs[1]);
-            TacticalItemInfo0.Init(equipmentConfigs[2]);
-            TacticalItemInfo1.Init(equipmentConfigs[3]);
-            TacticalItemInfo2.Init(equipmentConfigs[4]);
+            TacticalItem0.Init(equipmentConfigs[2]);
+            TacticalItem1.Init(equipmentConfigs[3]);
+            TacticalItem2.Init(equipmentConfigs[4]);
+        }
+
+        public EquipmentContainer GetEquipment(EActionType actionType)
+        {
+            switch (actionType)
+            {
+                case EActionType.MainWeapon:
+                    return MainWeapon;
+                case EActionType.SecondaryWeapon:
+                    return SecondaryWeapon;
+                case EActionType.TacticalItem0:
+                    return TacticalItem0;
+                case EActionType.TacticalItem1:
+                    return TacticalItem0;
+                case EActionType.TacticalItem2:
+                    return TacticalItem0;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
+            }
         }
         
         #endregion

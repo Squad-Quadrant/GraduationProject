@@ -15,6 +15,9 @@ namespace Systems.Equipment
         {
             return Config.Damage;
         }
+
+        // 获取攻击范围
+        public abstract int GetRange();
     }
     
     public class WeaponLogic : EquipmentLogic
@@ -22,12 +25,22 @@ namespace Systems.Equipment
         public WeaponLogic(EquipmentConfig config) : base(config)
         {
         }
+
+        public override int GetRange()
+        {
+            return int.MaxValue;
+        }
     }
     
     public class TacticalItemLogic : EquipmentLogic
     {
         public TacticalItemLogic(EquipmentConfig config) : base(config)
         {
+        }
+
+        public override int GetRange()
+        {
+            return Config.AttackRange;
         }
     }
 }

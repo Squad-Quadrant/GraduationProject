@@ -9,8 +9,11 @@
 		Move,
 		Wait,
 		Interact,
-		UseItem,
-		Attack,
+		MainWeapon,
+        SecondaryWeapon,
+        TacticalItem0,
+        TacticalItem1,
+        TacticalItem2,
 		Defend,
         //...
 		Count,

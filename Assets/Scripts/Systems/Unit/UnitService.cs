@@ -112,6 +112,22 @@ namespace Systems.Unit
 			predicate == null ?
 				throw new ArgumentNullException(nameof(predicate)) :
 				_units.Values.Where(predicate).ToList();
+        
+        public IReadOnlyList<Unit> GetUnitsInDistance(Vector2Int center, int range, bool includeCenter = false)
+        {
+            if (range < 0)
+                throw new ArgumentOutOfRangeException(nameof(range));
+
+            return _units.Values
+                .Where(u =>
+                {
+                    int distance = Math.Abs(u.position.x - center.x) + Math.Abs(u.position.y - center.y);
+                    if (!includeCenter && distance == 0)
+                        return false;
+                    return distance <= range;
+                })
+                .ToList();
+        }
 
         public Unit GetUnitAtPosition(Vector2Int position)
         {
