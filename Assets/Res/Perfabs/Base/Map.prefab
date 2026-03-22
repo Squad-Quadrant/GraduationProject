@@ -386,17 +386,35 @@ MonoBehaviour:
   - {r: 0.5882353, g: 1, b: 0.5882353, a: 0.35}
   - {r: 0.78431374, g: 1, b: 0.78431374, a: 0.25}
   attackRangeColor: {r: 1, g: 0.3, b: 0.3, a: 0.5}
-  pathTiles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  pathTileConfigs:
+  - type: 0
+    tile: {fileID: 11400000, guid: fbe44318879f5524e95b0205b89d7de0, type: 2}
+  - type: 1
+    tile: {fileID: 11400000, guid: 9529f91c21c9c944da645e110b7f3c28, type: 2}
+  - type: 6
+    tile: {fileID: 11400000, guid: 8830362de33d5e440bb219088e09f750, type: 2}
+  - type: 7
+    tile: {fileID: 11400000, guid: efab1425a0dc32346b0d5903932f358d, type: 2}
+  - type: 8
+    tile: {fileID: 11400000, guid: 1f8135222b1cd6e4684792d50cf90bef, type: 2}
+  - type: 9
+    tile: {fileID: 11400000, guid: e963a122c9502f240afb869828ed2c80, type: 2}
+  - type: 10
+    tile: {fileID: 11400000, guid: abeb1ac45e8ec884096b1d50e58a4e33, type: 2}
+  - type: 11
+    tile: {fileID: 11400000, guid: b2f957888f161514da50d27e7adc75ff, type: 2}
+  - type: 12
+    tile: {fileID: 11400000, guid: 5f157a98e4d0f8f40b3871ab95b73421, type: 2}
+  - type: 13
+    tile: {fileID: 11400000, guid: 49937d12f84627944916d4c5b6ef3cb2, type: 2}
+  - type: 2
+    tile: {fileID: 11400000, guid: fabe1383f2c022140a027c6bf9c54e1c, type: 2}
+  - type: 3
+    tile: {fileID: 11400000, guid: c758e3a2b2324144d8af30cf5d7f06fd, type: 2}
+  - type: 4
+    tile: {fileID: 11400000, guid: 68d5069d869a0fd4bbb10f039a12c48b, type: 2}
+  - type: 5
+    tile: {fileID: 11400000, guid: 56233ec0800f0f14d9789259b8f4222e, type: 2}
 --- !u!1 &5780918916674935639
 GameObject:
   m_ObjectHideFlags: 0

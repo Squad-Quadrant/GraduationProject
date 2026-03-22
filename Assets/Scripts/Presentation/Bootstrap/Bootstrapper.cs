@@ -1,7 +1,7 @@
 using Core.Events;
 using Core.Log;
+using Data;
 using Data.Config;
-using Presentation.Data;
 using Presentation.Logger;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;

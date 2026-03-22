@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.Events;
+using Core.Log;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
-using Data.Runtime.Events.View;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Map;
@@ -12,6 +13,13 @@ using UnityEngine.Tilemaps;
 
 namespace Presentation.Map
 {
+	[Serializable]
+	public class PathTileConfig
+	{
+		public EPathSegmentType type;
+		public TileBase tile;
+	}
+
     /// <summary>
     /// MapView 目前，该组件承担渲染所有与地图相关的视觉元素的责任，包括地形、墙壁、单位和高亮显示等，而不只是地图。
     /// </summary>
@@ -29,15 +37,15 @@ namespace Presentation.Map
         [SerializeField, Required] private RuleTile highlightRuleTile;
         [SerializeField] private Color selectionHighlightColor = new(1f, 1f, 0.6f, 0.65f);
         [SerializeField] private Color[] moveApColors = {
-	        new(0.2f, 0.5f, 1.0f, 0.55f),  // AP 1 — deepest blue
+	        new(0.2f, 0.5f, 1.0f, 0.55f),  // AP 1
 	        new(0.35f, 0.6f, 1.0f, 0.45f), // AP 2
 	        new(0.5f, 0.7f, 1.0f, 0.35f),  // AP 3
-	        new(0.65f, 0.8f, 1.0f, 0.25f), // AP 4 — lightest
+	        new(0.65f, 0.8f, 1.0f, 0.25f), // AP 4
         };
         [SerializeField] private Color attackRangeColor = new(1f, 0.3f, 0.3f, 0.5f);
 
         [Title("Path Preview")]
-        [SerializeField] private TileBase[] pathTiles = new TileBase[10];
+        [SerializeField, TableList] private List<PathTileConfig> pathTileConfigs = new();
         
         private IEventBus _eventBus;
         private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -45,23 +53,27 @@ namespace Presentation.Map
         private IMapService _mapService;
         private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
 
-        private Vector2Int? _selectionHighlightPos;
+        private Dictionary<EPathSegmentType, TileBase> _pathTileDic;
 
         private void OnEnable()
         {
             EventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
             EventBus.Subscribe<RangeDisplayEvent>(OnRangeDisplay);
+            EventBus.Subscribe<PathPreviewEvent>(OnPathPreview);
             EventBus.Subscribe<MapCellChangedEvent>(OnMapCellChanged);
             EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
 
             EventBus.Subscribe<UnitSelectedEvent>(OnUnitSelected);
             EventBus.Subscribe<UnitDeselectedEvent>(OnUnitDeselected);
+
+            BuildPathTileDictionary();
         }
 
         private void OnDisable()
         {
             EventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
             EventBus.Unsubscribe<RangeDisplayEvent>(OnRangeDisplay);
+            EventBus.Unsubscribe<PathPreviewEvent>(OnPathPreview);
             EventBus.Unsubscribe<MapCellChangedEvent>(OnMapCellChanged);
             EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
 
@@ -110,12 +122,26 @@ namespace Presentation.Map
 				ShowRangeHighlight(e.Cells, e.RangeType);
 		}
 
-		private void OnUnitSelected(UnitSelectedEvent e)
+		private void OnPathPreview(PathPreviewEvent e)
 		{
-			SetTileWithColor(highlightTilemap, e.Position, highlightRuleTile, selectionHighlightColor);
-			_selectionHighlightPos = e.Position;
+			pathTilemap.ClearAllTiles();
+
+			if (!e.IsValid || e.Path == null || e.Path.Count < 2)
+				return;
+
+			var segments = PathTileResolver.Resolve(e.Path);
+			foreach (var (pos, segmentType) in segments)
+			{
+				if (!_pathTileDic.TryGetValue(segmentType, out var tile) || !tile)
+				{
+					this.LogWarning($"Can not get tile of type: {segmentType}");
+					continue;
+				}
+				pathTilemap.SetTile((Vector3Int)pos, tile);
+			}
 		}
 
+		private void OnUnitSelected(UnitSelectedEvent e) => SetTileWithColor(highlightTilemap, e.Position, highlightRuleTile, selectionHighlightColor);
 		private void OnUnitDeselected(UnitDeselectedEvent e) => highlightTilemap.ClearAllTiles();
 
 		private void ShowRangeHighlight(IReadOnlyList<Vector2Int> cells, ERangeType rangeType)
@@ -154,6 +180,20 @@ namespace Presentation.Map
 				ERangeType.Movement    => moveApColors.Length > 0 ? moveApColors[0] : Color.blue,
 				_ => Color.white
 			};
+		}
+
+		private void BuildPathTileDictionary()
+		{
+			_pathTileDic = new Dictionary<EPathSegmentType, TileBase>();
+			foreach (var config in pathTileConfigs)
+			{
+				if (_pathTileDic.ContainsKey(config.type))
+				{
+					this.LogWarning($"Path tile config type {config.type} dual config");
+					continue;
+				}
+				_pathTileDic[config.type] = config.tile;
+			}
 		}
 
 		private static void SetTileWithColor(Tilemap tilemap, Vector2Int pos, TileBase tile, Color color)
