@@ -1,6 +1,7 @@
 using Core.Events;
 using Core.Log;
 using Data.Config;
+using Presentation.Data;
 using Presentation.Logger;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
@@ -21,6 +22,9 @@ namespace Presentation.Bootstrap
 		[TitleGroup("Configuration")]
 		[SerializeField, Required]
 		private UIManager uiManager;
+        
+        [SerializeField, Required]
+        private DataManager dataManager;
 
 		[TitleGroup("Prefabs")]
 		[SerializeField]
@@ -86,6 +90,9 @@ namespace Presentation.Bootstrap
 
 			_rootContainerInstance.Services.RegisterInstance(uiManager);
 			uiManager.Initialize(_rootContainerInstance.Resolve<IEventBus>());
+            
+            _rootContainerInstance.Services.RegisterInstance(dataManager);
+            
 			Log("[Bootstrapper] Global services registered.");
 		}
 

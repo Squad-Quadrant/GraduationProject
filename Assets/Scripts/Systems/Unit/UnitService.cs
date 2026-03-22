@@ -14,11 +14,12 @@ namespace Systems.Unit
 	public class UnitService : IUnitService, IDisposable
 	{
 		private readonly IEventBus _eventBus;
+        private readonly DataManager _dataManager;
 
-		public UnitService(IEventBus eventBus)
+		public UnitService(IEventBus eventBus, DataManager dataManager)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            
+            _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
             _eventBus.Subscribe<UnitDealDamageEvent>(DealDamage);
 			this.Log("Initialized");
 		}
@@ -45,8 +46,7 @@ namespace Systems.Unit
 				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
 			var unit = Unit.LoadFromConfig(unitId, config, position);
-            // todo: 这样破坏了当前的系统设计规则，预期改成局外使用传统的开发模式，局内使用DataServer接收事件收集局外DDOL单例的数据
-            var equipmentConig = DataManager.Instance.GetEquipmentConfigList(unitId);
+            var equipmentConig = _dataManager.GetEquipmentConfigList(unitId);
             unit.InitEquipment(equipmentConig);
 			_units[unitId] = unit;
 			this.Log($"Created unit: {unit}");

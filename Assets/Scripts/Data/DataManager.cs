@@ -6,11 +6,11 @@ using UnityEngine;
 namespace Presentation.Data
 {
     // 这是用于局内外数据管理和获取配置引用的类
-    public class DataManager : DdolSingletonMono<DataManager>
+    public class DataManager : MonoBehaviour
     {
-        [SerializeField] private List<EquipmentConfig> _equipmentConfigs;
+        [SerializeField] private List<EquipmentConfig> equipmentConfigs;
 
-        private Dictionary<string, int[]> _unitEquipmentData = new(); // 局外调DataManager填充数据
+        private readonly Dictionary<string, int[]> _unitEquipmentData = new(); // 局外调DataManager填充数据
 
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace Presentation.Data
             var res = new List<EquipmentConfig>();
             foreach (var equipId in equipArray)
             {
-                res.Add(_equipmentConfigs.Find(c => c.Id == equipId));
+                res.Add(equipmentConfigs.Find(c => c.Id == equipId));
             }
             return res;
         }
