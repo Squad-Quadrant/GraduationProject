@@ -43,6 +43,7 @@ namespace Presentation.Bootstrap
 		{
 			if (_initialized) return; // Prevent double initialization
 			_initialized = true;
+			DontDestroyOnLoad(gameObject);
 
 			Log("====================================");
 			Log("[Bootstrapper] Initialization started...");
