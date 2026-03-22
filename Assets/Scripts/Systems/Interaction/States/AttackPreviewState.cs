@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
@@ -15,7 +16,7 @@ namespace Systems.Interaction.States
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
 
-		public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
+        public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
 		public override void OnEnter(InteractionContext ctx)
 		{
@@ -92,11 +93,12 @@ namespace Systems.Interaction.States
 		private void CalculateReachableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
-            int attackRange = unit.attackRange;
+            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.GetRange();
             
             // 搜索范围内的敌人
-            var enemyUnits = ctx.UnitService.GetUnitsInRange(unit.position, attackRange)
+            var enemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)
                 .Where(u => u.faction == EUnitFaction.Enemy).ToList();
+            // todo: 确定是否能攻击空格
             
             // todo: 计算遮挡并剔除，枪线判断
             

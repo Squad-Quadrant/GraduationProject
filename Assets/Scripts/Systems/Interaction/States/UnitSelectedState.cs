@@ -69,17 +69,19 @@ namespace Systems.Interaction.States
 					StateMachine(Context).ChangeState<MovementPreviewState>();
 					break;
 
-				case EActionType.Attack:
+				case EActionType.MainWeapon:
+                case EActionType.SecondaryWeapon:
+                case EActionType.TacticalItem0:
+                case EActionType.TacticalItem1:
+                case EActionType.TacticalItem2:
                     StateMachine(Context).ChangeState<AttackPreviewState>();
 					break;
 
 				case EActionType.Wait:
 					ExecuteWait();
 					break;
-
 				case EActionType.None:
 				case EActionType.Interact:
-				case EActionType.UseItem:
 				case EActionType.Defend:
 				default:
 					this.LogWarning($"Unhandled action: {e.ActionType}");

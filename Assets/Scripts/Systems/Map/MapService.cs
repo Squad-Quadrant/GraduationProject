@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
-using Data.Config;
 using Data.Runtime.Events.Map;
 using Systems.Map.Config;
 using Systems.Map.SceneActor;

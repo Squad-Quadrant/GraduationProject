@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using PurpleFlowerCore;
 using UnityEngine;
 
@@ -26,21 +28,42 @@ namespace Systems.Equipment.Config
 
     public class EquipmentConfig : ScriptableObject
     {
+        [Tooltip("唯一ID")]
         public int Id;
+        
+        [Tooltip("名称")]
         public string Name;
+        
+        [Tooltip("伤害")]
         public int Damage;
+
+        [Tooltip("精神伤害")]
         public int MentalDamage;
+        
+        [Tooltip("重量")]
         public float Weight;
+        
+        [Tooltip("武器类型-可精确到具体武器，也可以是更抽象的类别，只要逻辑可以统一")]
         public EquipmentType Type;
 
         #region Weapon-specific properties
-
+        
+        [Tooltip("射击类武器的弹容量")]
         public int AmmoCapacity;
+        
+        [Tooltip("射击类武器的攻击范围和对应的命中率")]
+        public List<RangeHitRate> ShotRange;
+        
+        [Tooltip("伤害衰减")]
+        public List<(int, float)> DamageAttenuation;
 
         #endregion
 
         #region Equipment-specific properties
-
+        
+        [Tooltip("手雷类武器的攻击范围")]
+        public int AttackRange;
+        
         #endregion
 
     }
@@ -49,9 +72,22 @@ namespace Systems.Equipment.Config
     {
         [InspectorName("请选择装备类型")]
         None = 0,
+        [InspectorName("常规射击武器")]
         Weapon,
+        [InspectorName("常规手雷")]
         TacticalItem,
-        [InspectorName(null)]
+        [InspectorName("投掷物发射器")]
+        GrenadeLauncher,
+        [InspectorName("请选择装备类型")]
         Count
     }
+
+    [Serializable]
+    public struct RangeHitRate
+    {
+        public int min;
+        public int max;
+        public float hitRate;
+    }
+    
 }

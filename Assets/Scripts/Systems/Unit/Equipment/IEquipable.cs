@@ -7,9 +7,9 @@ namespace Systems.Equipment
     {
         public EquipmentContainer MainWeapon { get; set; }
         public EquipmentContainer SecondaryWeapon { get; set; }
-        public EquipmentContainer TacticalItemInfo0 { get; set; }
-        public EquipmentContainer TacticalItemInfo1 { get; set; }
-        public EquipmentContainer TacticalItemInfo2 { get; set; }
+        public EquipmentContainer TacticalItem0 { get; set; }
+        public EquipmentContainer TacticalItem1 { get; set; }
+        public EquipmentContainer TacticalItem2 { get; set; }
         
         public List<EquipmentContainer> TacticalItemInfos { get; }
 

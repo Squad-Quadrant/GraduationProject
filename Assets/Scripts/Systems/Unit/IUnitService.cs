@@ -41,6 +41,11 @@ namespace Systems.Unit
 
 		IReadOnlyList<Unit> GetUnitsWhere(Func<Unit, bool> predicate);
         
+        /// <summary>
+        /// 获得一定曼哈顿距离内的所有单位
+        /// </summary>
+        IReadOnlyList<Unit> GetUnitsInDistance(Vector2Int center, int range, bool includeCenter = false);
+        
         Unit GetUnitAtPosition(Vector2Int position);
 	}
 }
