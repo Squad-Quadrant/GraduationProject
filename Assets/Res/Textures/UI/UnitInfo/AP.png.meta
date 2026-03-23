@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fa841e11fb7a4ee4898c4b54d08888ab
+guid: 37267d8a3d95c9845a759a890bcca5c2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -70,7 +70,7 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -110,27 +110,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: AP_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 119
-        width: 19
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ad41070955dde63448eeb5185a01e3a1
-      internalID: 221412662
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: AP_1
       rect:
         serializedVersion: 2
@@ -145,29 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9254cdd0459487148a444a918366ace0
-      internalID: 544215321
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AP_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 19
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 64e206a3e28ba60449ee9745aaee1069
-      internalID: 1006036366
+      spriteID: 48c3e4c4ceb75724bbb5768d2b3cb914
+      internalID: -1096289835
       vertices: []
       indices: 
       edges: []
@@ -183,9 +141,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      AP_0: 221412662
-      AP_1: 544215321
-      AP_2: 1006036366
+      AP_0: 337179120
+      AP_1: -1096289835
+      AP_2: -2112598133
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
