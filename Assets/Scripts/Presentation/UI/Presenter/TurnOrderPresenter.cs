@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Turn;
@@ -49,6 +50,8 @@ namespace Presentation.UI.Presenter
 
 		private void OnTurnOrderChanged(TurnOrderChangedEvent e)
 		{
+			this.Log($"TurnOrderChanged: {e.Reason}, affected='{e.AffectedUnitId}'");
+
 			if (!_panel) _panel = _uiManager.Open<TurnOrderPanel>();
 			if (!_panel)
 			{
@@ -56,31 +59,7 @@ namespace Presentation.UI.Presenter
 				return;
 			}
 
-			switch (e.Reason)
-			{
-				case TurnOrderChangeReason.TurnReset:
-				case TurnOrderChangeReason.UnitAdded:
-				case TurnOrderChangeReason.PriorityChanged:
-				case TurnOrderChangeReason.SpeedChanged:
-					var slots = BuildSlotData();
-					_panel.Rebuild(slots);
-					this.Log($"QueueChanged: Rebuilt with {slots.Length} slots");
-					break;
-
-				case TurnOrderChangeReason.UnitAdvanced:
-					_panel.AdvanceTo(e.AffectedUnitId);
-					this.Log($"UnitAdvanced: '{e.AffectedUnitId}'");
-					break;
-
-				case TurnOrderChangeReason.UnitRemoved:
-					_panel.RemoveSlot(e.AffectedUnitId);
-					this.Log($"UnitRemoved: '{e.AffectedUnitId}'");
-					break;
-
-				default:
-					this.LogWarning($"Unhandled reason: {e.Reason}");
-					break;
-			}
+			_panel.Refresh(BuildSlotData());
 		}
 
 		private SlotData[] BuildSlotData()
@@ -89,24 +68,15 @@ namespace Presentation.UI.Presenter
 			if (order == null || order.Count == 0)
 				return Array.Empty<SlotData>();
 
-			int activeIndex = -1;
-			var activeUnit = _turnService.ActiveUnit;
-			if (activeUnit != null)
-			{
-				for (int i = 0; i < order.Count; i++)
-				{
-					if (order[i].Id != activeUnit.Id) continue;
-					activeIndex = i;
-					break;
-				}
-			}
-
+			// Find the active unit's index for state classification
+			int activeIndex = FindActiveIndex(order);
 			var result = new SlotData[order.Count];
 
 			for (int i = 0; i < order.Count; i++)
 			{
 				var turnUnit = order[i];
 				var state = ClassifyState(i, activeIndex);
+
 				Sprite icon = null;
 				var factionBg = _panel.GetFactionBg(EUnitFaction.Neutral);
 
@@ -120,6 +90,18 @@ namespace Presentation.UI.Presenter
 			}
 
 			return result;
+		}
+
+		private int FindActiveIndex(IReadOnlyList<ITurnUnit> order)
+		{
+			var activeUnit = _turnService.ActiveUnit;
+			if (activeUnit == null) return -1;
+
+			for (int i = 0; i < order.Count; i++)
+				if (order[i].Id == activeUnit.Id)
+					return i;
+
+			return -1;
 		}
 
 		private static ESlotState ClassifyState(int index, int activeIndex)
