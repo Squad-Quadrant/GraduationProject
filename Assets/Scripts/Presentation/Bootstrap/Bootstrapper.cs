@@ -1,7 +1,7 @@
 using Core.Events;
 using Core.Log;
+using Data;
 using Data.Config;
-using Presentation.Data;
 using Presentation.Logger;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
@@ -43,6 +43,7 @@ namespace Presentation.Bootstrap
 		{
 			if (_initialized) return; // Prevent double initialization
 			_initialized = true;
+			DontDestroyOnLoad(gameObject);
 
 			Log("====================================");
 			Log("[Bootstrapper] Initialization started...");

@@ -51,7 +51,6 @@ namespace Presentation.UI.Core
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			SceneManager.sceneUnloaded += OnSceneUnloaded;
-			DontDestroyOnLoad(gameObject);
 			this.Log("Initialized");
 		}
 

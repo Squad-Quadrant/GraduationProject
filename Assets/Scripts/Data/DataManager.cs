@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using PurpleFlowerCore.Utility;
 using Systems.Equipment.Config;
 using UnityEngine;
 
-namespace Presentation.Data
+namespace Data
 {
     // 这是用于局内外数据管理和获取配置引用的类
     public class DataManager : MonoBehaviour

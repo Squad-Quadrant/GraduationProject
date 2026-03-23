@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Core.Log;
+using Data;
 using Data.Config;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
-using Presentation.Data;
 using UnityEngine;
 
 namespace Systems.Unit

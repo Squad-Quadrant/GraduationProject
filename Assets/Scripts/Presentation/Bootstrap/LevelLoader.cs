@@ -7,7 +7,6 @@ using Core.Log;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.CameraControl;
-using Presentation.Data;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;

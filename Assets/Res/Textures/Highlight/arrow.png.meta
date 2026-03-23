@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 284644121124139439a7b6fc78dfb14f
+guid: 2e7f70f3bf9f4b448ba64dc81e5c1b2e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,337 +110,295 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ground_0
+      name: TurnLeftDown
       rect:
         serializedVersion: 2
-        x: 253
-        y: 1001
-        width: 403
-        height: 202
+        x: 210
+        y: 1026
+        width: 400
+        height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3dddd569c64e3f94eb10296ae9fd6c31
-      internalID: -1083292109
+      spriteID: 78be56af6b0ca854f9eb4a2498f3be4e
+      internalID: 582713495
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_1
+      name: TurnRightDown
       rect:
         serializedVersion: 2
-        x: 738
-        y: 1001
-        width: 402
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9e5f5efa50787004fb767cdabea57c52
-      internalID: 72901512
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ground_2
-      rect:
-        serializedVersion: 2
-        x: 1229
-        y: 1001
-        width: 402
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9057a1d2b8553624793473898478fccc
-      internalID: -1058867723
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ground_3
-      rect:
-        serializedVersion: 2
-        x: 1702
-        y: 1000
-        width: 402
+        x: 678
+        y: 1005
+        width: 400
         height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 89568cb2bd0bfa0499cf938c1faa2d1e
-      internalID: -662005385
+      spriteID: 35d01be0e3d0ad049aab9425e137c17b
+      internalID: -106771406
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_4
+      name: StraightY
       rect:
         serializedVersion: 2
-        x: 254
-        y: 742
-        width: 403
-        height: 202
+        x: 1181
+        y: 1005
+        width: 400
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4d392e855f0e20a4896e1fa1d509716b
-      internalID: -546528004
+      spriteID: 1d45142a0b536ac4f8723aefdc9b5c80
+      internalID: 1360721091
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_5
+      name: StraightX
       rect:
         serializedVersion: 2
-        x: 754
-        y: 741
-        width: 402
-        height: 202
+        x: 1649
+        y: 1005
+        width: 400
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b55a9760c7a0ca846b811201017e72dc
-      internalID: -424535059
+      spriteID: b7a8c331e2c24dd41847fa447e3d2dd0
+      internalID: 536790347
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_6
+      name: TurnLeftUp
       rect:
         serializedVersion: 2
-        x: 1228
-        y: 745
-        width: 402
-        height: 202
+        x: 230
+        y: 746
+        width: 400
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b832207f2b587a14795d94987cc06de7
-      internalID: 1539985777
+      spriteID: c29be3ff80438ff4bbb2674f6bd06ac1
+      internalID: -408016987
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_7
+      name: TurnRightUp
       rect:
         serializedVersion: 2
-        x: 1702
-        y: 744
-        width: 402
-        height: 202
+        x: 712
+        y: 746
+        width: 399
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 294d56d53982ae14faa47a2a5cb94076
-      internalID: 1420737479
+      spriteID: 65650d2c2f3c61f4aa5a499f7e50e77c
+      internalID: 637427961
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_8
+      name: StartLeft
       rect:
         serializedVersion: 2
-        x: 252
+        x: 1193
+        y: 746
+        width: 399
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18ba77ce9c7fb434a83726706c90a6e3
+      internalID: -1800968544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StartUp
+      rect:
+        serializedVersion: 2
+        x: 1665
+        y: 746
+        width: 399
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbaefa0ad391ec84cb3a5aa35d15b1a7
+      internalID: 263091869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StartRight
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 488
+        width: 400
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6aecce3e9512c58408e77f5e5f34e242
+      internalID: -1920507846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StartDown
+      rect:
+        serializedVersion: 2
+        x: 712
         y: 485
-        width: 402
-        height: 202
+        width: 399
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 755efc31baa6c6e49aa61360bff93947
-      internalID: 443205806
+      spriteID: 29ce1eaeafce7fa4392acd66d57d4c58
+      internalID: 970795578
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_9
+      name: EndRight
       rect:
         serializedVersion: 2
-        x: 753
+        x: 1193
         y: 485
-        width: 402
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a59547d94452a1649b492850d3d4970a
-      internalID: -1813140858
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ground_10
-      rect:
-        serializedVersion: 2
-        x: 1229
-        y: 483
-        width: 402
+        width: 399
         height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b7ac1779392c6d4d85cd413626f2f38
-      internalID: 1348722567
+      spriteID: d25ba8faec352d944881ba4e07e447eb
+      internalID: -2099174365
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_11
+      name: EndDown
       rect:
         serializedVersion: 2
-        x: 1703
-        y: 484
-        width: 402
+        x: 1673
+        y: 485
+        width: 400
         height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0d28f4b95d51bb241ad9eb4011cff21a
-      internalID: 916581681
+      spriteID: e9f473438beb10c45abf19f1c23ee019
+      internalID: 688514187
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_12
+      name: EndLeft
       rect:
         serializedVersion: 2
-        x: 253
-        y: 214
-        width: 404
-        height: 202
+        x: 191
+        y: 219
+        width: 401
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ede4b315e8840604d95de6a0935c648e
-      internalID: 1592619144
+      spriteID: 4b4d6858d6076a74c82a625584b8803c
+      internalID: -1238584403
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_13
+      name: EndUp
       rect:
         serializedVersion: 2
-        x: 747
-        y: 222
-        width: 402
-        height: 202
+        x: 678
+        y: 226
+        width: 400
+        height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d3fe4a5688096c44f817568a191ac693
-      internalID: 173388347
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ground_14
-      rect:
-        serializedVersion: 2
-        x: 1227
-        y: 222
-        width: 402
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a514768423e7e4148a85a019f66f894f
-      internalID: -27357561
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ground_15
-      rect:
-        serializedVersion: 2
-        x: 1707
-        y: 222
-        width: 402
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 49f3cb8812903b748bdce410841ee0be
-      internalID: 357566029
+      spriteID: 8bf49164c96cca8479d20b3163c55ea2
+      internalID: 767038897
       vertices: []
       indices: 
       edges: []
@@ -456,22 +414,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ground_0: -1083292109
-      ground_1: 72901512
-      ground_10: 1348722567
-      ground_11: 916581681
-      ground_12: 1592619144
-      ground_13: 173388347
-      ground_14: -27357561
-      ground_15: 357566029
-      ground_2: -1058867723
-      ground_3: -662005385
-      ground_4: -546528004
-      ground_5: -424535059
-      ground_6: 1539985777
-      ground_7: 1420737479
-      ground_8: 443205806
-      ground_9: -1813140858
+      EndDown: 688514187
+      EndLeft: -1238584403
+      EndRight: -2099174365
+      EndUp: 767038897
+      StartDown: 970795578
+      StartLeft: -1800968544
+      StartRight: -1920507846
+      StartUp: 263091869
+      StraightX: 536790347
+      StraightY: 536790347
+      TurnLeftDown: -106771406
+      TurnLeftUp: 637427961
+      TurnRightDown: -408016987
+      TurnRightUp: 1360721091
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
