@@ -50,6 +50,7 @@ namespace Systems.Unit
 		public Vector2Int position;
 		public bool isStunned;
 		public int currentAp;
+        public int currentDefense;
 
 		public bool IsAlive => currentHp > 0;
 		public bool CanAct => IsAlive && !isStunned;

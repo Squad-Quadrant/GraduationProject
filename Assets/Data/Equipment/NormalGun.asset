@@ -10,12 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a11e29997ea04c6286efca7f321653c9, type: 3}
-  m_Name: DesertEagle
+  m_Name: NormalGun
   m_EditorClassIdentifier: 
-  Id: 2
-  Name: "\u6C99\u6F20\u4E4B\u9E70"
-  Damage: 30
+  Id: 1
+  Name: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
+  Damage: 38
   MentalDamage: 0
   Weight: 0
   Type: 1
-  AmmoCapacity: 0
+  AmmoCapacity: 30
+  ShotRanges:
+  - min: 0
+    hitRate: 1
+  - min: 15
+    hitRate: 90
+  - min: 30
+    hitRate: 80
+  DamageAttenuation:
+    perGrid: 20
+    multiplier: 0.95
+  PenetrationRate: 0.7
+  AttackRange: 0

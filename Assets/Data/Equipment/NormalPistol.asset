@@ -10,12 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a11e29997ea04c6286efca7f321653c9, type: 3}
-  m_Name: M4A1
+  m_Name: NormalPistol
   m_EditorClassIdentifier: 
-  Id: 1
-  Name: M4A1
-  Damage: 50
+  Id: 2
+  Name: "\u6807\u51C6\u624B\u67AA"
+  Damage: 30
   MentalDamage: 0
   Weight: 0
   Type: 1
   AmmoCapacity: 0
+  penetrationRate: 0
+  AttackRange: 0

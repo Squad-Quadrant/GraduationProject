@@ -47,5 +47,7 @@ namespace Systems.Unit
         IReadOnlyList<Unit> GetUnitsInDistance(Vector2Int center, int range, bool includeCenter = false);
         
         Unit GetUnitAtPosition(Vector2Int position);
-	}
+
+        public void CheckUnitDeath();
+    }
 }

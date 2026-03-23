@@ -14,6 +14,7 @@ using Presentation.UI.Core;
 using Presentation.UI.Presenter;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
+using Systems.Damage;
 using Systems.GamePlay;
 using Systems.Interfaces;
 using Systems.Map;
@@ -143,6 +144,8 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IUnitService, UnitService>();
 			_levelContainer.Services.Register<ITurnService, TurnService>();
 			_levelContainer.Services.Register<IGameServer, GameServer>();
+            _levelContainer.Services.Register<IDamageService, DamageService>();
+            _levelContainer.Services.Resolve<IDamageService>();   // todo: 直接实例化DamageService
 			_levelContainer.Services.Register<IPathFindingService>(container =>
 			{
 				var mapService = container.Resolve<IMapService>();

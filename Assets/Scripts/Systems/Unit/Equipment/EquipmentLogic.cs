@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Systems.Damage;
 using Systems.Equipment.Config;
 
 namespace Systems.Equipment
@@ -16,31 +18,69 @@ namespace Systems.Equipment
             return Config.Damage;
         }
 
-        // 获取攻击范围
-        public abstract int GetRange();
+        public abstract int Range();
     }
     
-    public class WeaponLogic : EquipmentLogic
+    public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
         public WeaponLogic(EquipmentConfig config) : base(config)
         {
         }
+        
+        
+        public virtual int AmmoCapacity()
+        {
+            return Config.AmmoCapacity;
+        }
+        
+        public virtual List<ShotRange> ShotRange()
+        {
+            return Config.ShotRanges;
+        }
+        
+        public virtual DamageAttenuation DamageAttenuation()
+        {
+            return Config.DamageAttenuation;
+        }
 
-        public override int GetRange()
+        public virtual float PenetrationRate()
+        {
+            return Config.PenetrationRate;
+        }
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            if (context.DamageType == DamageType.Bullet)
+            {
+                return new List<DamageInfluence>{
+                    new ShotDamageInfluence(this), 
+                    new ShotHitRateInfluence(this), 
+                    new ShotDefenceDamageInfluence(this) };
+            }
+
+            return null;
+        }
+
+        public override int Range()
         {
             return int.MaxValue;
         }
     }
     
-    public class TacticalItemLogic : EquipmentLogic
+    public class TacticalItemLogic : EquipmentLogic, IDamageInfluencer
     {
         public TacticalItemLogic(EquipmentConfig config) : base(config)
         {
         }
 
-        public override int GetRange()
+        public override int Range()
         {
             return Config.AttackRange;
+        }
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            return null;
         }
     }
 }

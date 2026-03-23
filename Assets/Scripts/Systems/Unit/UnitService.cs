@@ -20,13 +20,11 @@ namespace Systems.Unit
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
-            _eventBus.Subscribe<UnitDealDamageEvent>(DealDamage);
 			this.Log("Initialized");
 		}
 
         public void Dispose()
         {
-            _eventBus.Unsubscribe<UnitDealDamageEvent>(DealDamage);
             this.Log("Disposed");
         }
 
@@ -133,19 +131,8 @@ namespace Systems.Unit
         {
             return _units.Values.FirstOrDefault(u => u.position == position);
         }
-
-        private void DealDamage(UnitDealDamageEvent e)
-        {
-            // todo: 伤害计算, 逻辑移动到EquipmentServer
-            e.Target.currentHp -= e.Attacker.MainWeapon.Logic.GetDamage();
-            this.LogDebug($"Unit '{e.Attacker.name}'({e.Attacker.id}) dealt {e.Attacker.MainWeapon.Logic.GetDamage()} damage to '{e.Target.name}'({e.Target.id}). " +
-                          $"Target HP: {e.Target.currentHp}/{e.Target.maxHp}");
-
-            // todo: 如果有单位死亡,考虑到反甲等情况,不一定是target死亡
-            CheckUnitDeath();
-        }
         
-        private void CheckUnitDeath()
+        public void CheckUnitDeath()
         {
             var deadUnits = _units.Values.Where(u => u.IsAlive == false).ToList();
             foreach (var unit in deadUnits)

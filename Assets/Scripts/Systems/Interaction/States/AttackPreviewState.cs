@@ -34,7 +34,7 @@ namespace Systems.Interaction.States
 			CalculateReachableTarget(ctx);
             
 			Publish(ctx, new RangeDisplayEvent(
-				ERangeType.Movement,
+				ERangeType.Attack,
 				ctx.validTargetCells,
 				origin: ctx.selectedUnit.position,
 				sourceUnitId: ctx.selectedUnit.id));
@@ -93,7 +93,7 @@ namespace Systems.Interaction.States
 		private void CalculateReachableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
-            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.GetRange();
+            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.Range();
             
             // 搜索范围内的敌人
             var enemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)
@@ -127,6 +127,7 @@ namespace Systems.Interaction.States
 				unit.id,
                 Context.targetUnit.id,
 				2, // todo: 计算消耗
+                Context.currentAction,
 				Context.UnitService,
 				Context.MapService,
 				Context.EventBus
