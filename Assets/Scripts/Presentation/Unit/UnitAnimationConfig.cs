@@ -61,6 +61,22 @@ namespace Presentation.Unit
 		public static readonly AnimationResult Empty = new(null, false);
 	}
 
+	public readonly struct IdleSet // 为了小动作的播放
+	{
+		public readonly AnimationResult[] BaseClips;
+		public readonly AnimationResult[] FidgetClips;
+
+		public IdleSet(AnimationResult[] baseClips, AnimationResult[] fidgetClips)
+		{
+			BaseClips = baseClips;
+			FidgetClips = fidgetClips;
+		}
+
+		public bool IsValid => BaseClips is { Length: > 0 };
+		public bool HasFidgets => FidgetClips is { Length: > 0 };
+		public static readonly IdleSet Empty = new(null, null);
+	}
+
 	[CreateAssetMenu(fileName = "NewUnitAnimConfig", menuName = "Game/Unit Animation Config")]
 	public class UnitAnimationConfig : ScriptableObject
 	{
@@ -69,6 +85,10 @@ namespace Presentation.Unit
 
 		[TitleGroup("Defaults")]
 		[SerializeField] private EGripType defaultGrip = EGripType.Default;
+
+		[TitleGroup("Fidget")]
+		[SerializeField, MinMaxSlider(1f, 30f, ShowFields = true)]
+		private Vector2 fidgetInterval = new(5f, 12f);
 
 		[TitleGroup("Animations")]
 		[SerializeField, TableList(ShowIndexLabels = true)] private List<AnimationEntry> animations = new();
@@ -196,7 +216,12 @@ namespace Presentation.Unit
 
 		public EUnitStance DefaultStance => defaultStance;
 		public EGripType DefaultGrip => defaultGrip;
+		public float FidgetMinDelay => fidgetInterval.x;
+		public float FidgetMaxDelay => fidgetInterval.y;
 
+		private static readonly System.Random SharedRandom = new();
+
+		// 如果有多个相同状态相同名字的，会随机返回一个
 		public AnimationResult GetAnimation(string action, EUnitStance stance, EGripType grip)
 		{
 			var result = MatchAnimation(action, stance, grip);
@@ -230,11 +255,33 @@ namespace Presentation.Unit
 			return null;
 		}
 
+		public IdleSet GetIdleSet(EUnitStance stance, EGripType grip)
+		{
+			var set = MatchIdleSet(stance, grip);
+			if (set.IsValid) return set;
+
+			if (grip != defaultGrip)
+			{
+				set = MatchIdleSet(stance, defaultGrip);
+				if (set.IsValid) return set;
+			}
+
+			if (stance != defaultStance || grip != defaultGrip)
+			{
+				set = MatchIdleSet(defaultStance, defaultGrip);
+				if (set.IsValid) return set;
+			}
+
+			return IdleSet.Empty;
+		}
+
 		private AnimationResult MatchAnimation(string action, EUnitStance stance, EGripType grip)
 		{
-			foreach (var entry in animations.Where(entry => entry.Matches(action, stance, grip)))
-				return new AnimationResult(entry.clipName, entry.loop);
-			return AnimationResult.Empty;
+			var matches = animations.Where(entry => entry.Matches(action, stance, grip)).ToList();
+			if (matches.Count == 0) return AnimationResult.Empty;
+
+			var picked = matches[SharedRandom.Next(matches.Count)];
+			return new AnimationResult(picked.clipName, picked.loop);
 		}
 
 		private string MatchTransition(EUnitStance from, EUnitStance to, EGripType grip)
@@ -243,6 +290,20 @@ namespace Presentation.Unit
 				.Where(entry => entry.Matches(from, to, grip))
 				.Select(entry => entry.clipName)
 				.FirstOrDefault();
+		}
+
+		private IdleSet MatchIdleSet(EUnitStance stance, EGripType grip)
+		{
+			var matches = animations.Where(e => e.Matches("idle", stance, grip)).ToList();
+			if (matches.Count == 0) return IdleSet.Empty;
+
+			var bases = matches.Where(e => e.loop)
+				.Select(e => new AnimationResult(e.clipName, true)).ToArray();
+			var fidgets = matches.Where(e => !e.loop)
+				.Select(e => new AnimationResult(e.clipName, false)).ToArray();
+
+			// Need at least one base clip to be valid
+			return bases.Length > 0 ? new IdleSet(bases, fidgets) : IdleSet.Empty;
 		}
 
 		#region Editor Display

@@ -82,6 +82,19 @@ namespace Presentation.Unit
 		// onComplete will be called even if the animation fails to play (e.g. not found)
 		public void PlayAction(string action, Action onComplete = null)
 		{
+			if (action == "idle")
+			{
+				var idleSet = _config.GetIdleSet(_stance, _grip);
+				if (idleSet.HasFidgets)
+				{
+					animator.PlayLoopWithFidgets(
+						idleSet.BaseClips, idleSet.FidgetClips,
+						_config.FidgetMinDelay, _config.FidgetMaxDelay);
+					onComplete?.Invoke(); // Loop has no natural "complete"
+					return;
+				}
+			}
+
 			var result = _config.GetAnimation(action, _stance, _grip);
 			if (!result.IsValid)
 			{

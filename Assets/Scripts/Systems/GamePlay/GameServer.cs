@@ -119,10 +119,6 @@ namespace Systems.GamePlay
 			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber));
 
 			var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
-			foreach (var pos in visible)
-			{
-				this.Log($"{pos.x} {pos.y}");
-			}
 			_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
 
 			AwaitThen(() => StartNewUnitTurn(unit), cmd => cmd
