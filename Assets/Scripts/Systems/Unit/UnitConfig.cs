@@ -32,7 +32,6 @@ namespace Systems.Unit
 		public EUnitFaction faction = EUnitFaction.Neutral;
         public int defense = 100;
         public float defenseRate = 0f;
-        public int quickness = 100; // 用于大回合行动顺序的计算
         
 
 		#region Validation
