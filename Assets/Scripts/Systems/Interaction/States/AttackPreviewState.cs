@@ -34,7 +34,7 @@ namespace Systems.Interaction.States
 			CalculateReachableTarget(ctx);
             
 			Publish(ctx, new RangeDisplayEvent(
-				ERangeType.Movement,
+				ERangeType.Attack,
 				ctx.validTargetCells,
 				origin: ctx.selectedUnit.position,
 				sourceUnitId: ctx.selectedUnit.id));
@@ -127,6 +127,7 @@ namespace Systems.Interaction.States
 				unit.id,
                 Context.targetUnit.id,
 				2, // todo: 计算消耗
+                Context.currentAction,
 				Context.UnitService,
 				Context.MapService,
 				Context.EventBus

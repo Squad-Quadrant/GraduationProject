@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Systems.Damage;
 using Systems.Equipment.Config;
 
 namespace Systems.Equipment
@@ -20,7 +22,7 @@ namespace Systems.Equipment
         public abstract int GetRange();
     }
     
-    public class WeaponLogic : EquipmentLogic
+    public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
         public WeaponLogic(EquipmentConfig config) : base(config)
         {
@@ -30,9 +32,19 @@ namespace Systems.Equipment
         {
             return int.MaxValue;
         }
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            if (context.DamageType == DamageType.Bullet)
+            {
+                return new List<DamageInfluence>{new ShotDamageInfluence(this) };
+            }
+
+            return null;
+        }
     }
     
-    public class TacticalItemLogic : EquipmentLogic
+    public class TacticalItemLogic : EquipmentLogic, IDamageInfluencer
     {
         public TacticalItemLogic(EquipmentConfig config) : base(config)
         {
@@ -41,6 +53,11 @@ namespace Systems.Equipment
         public override int GetRange()
         {
             return Config.AttackRange;
+        }
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            return null;
         }
     }
 }

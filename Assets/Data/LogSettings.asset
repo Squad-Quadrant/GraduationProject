@@ -36,7 +36,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.UnitAttackCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.CameraControl.CameraController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.FogOfWar.FogOfWarView
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -116,6 +128,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AttackPreviewState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.Interaction.States.ExecutingState
     enabled: 1
     minLogLevel: 0
@@ -156,23 +172,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
-  - typeName: Systems.Interaction.States.AttackPreviewState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.UnitAttackCommand
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.CameraControl.CameraController
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.FogOfWar.FogOfWarView
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
   - typeName: Systems.Vision.VisionService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Damage.DamageService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1

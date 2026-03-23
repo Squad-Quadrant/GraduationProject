@@ -1,6 +1,6 @@
 namespace Systems.Damage
 {
-    public interface IDamageServer
+    public interface IDamageService
     {
         
     }

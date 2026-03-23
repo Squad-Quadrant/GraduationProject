@@ -16,6 +16,7 @@ namespace Data.Runtime.Commands
         private readonly string _targetUnitId;
         private readonly int _apCost;
         private readonly int _damage;
+        private readonly EActionType  _actionType;
 
 		private readonly IUnitService _unitService;
 		private readonly IMapService _mapService;
@@ -32,6 +33,7 @@ namespace Data.Runtime.Commands
 			string unitId,
             string targetUnitId,
             int apCost,
+            EActionType  actionType,
 			IUnitService unitService,
 			IMapService mapService,
 			IEventBus eventBus)
@@ -39,6 +41,7 @@ namespace Data.Runtime.Commands
 			_unitId = unitId;
             _targetUnitId = targetUnitId;
             _apCost = apCost;
+            _actionType =  actionType;
             
 			_unitService = unitService;
 			_mapService = mapService;
@@ -67,7 +70,7 @@ namespace Data.Runtime.Commands
             // todo: 命中判定
             _eventBus.Publish(new UnitBeHitEvent(unit));
             
-            _eventBus.Publish(new UnitDealDamageEvent(unit, targetUnit));
+            _eventBus.Publish(new UnitAttackedDealDamageEvent(unit, targetUnit, _actionType));
             
             unit.currentAp -= _apCost;
             
