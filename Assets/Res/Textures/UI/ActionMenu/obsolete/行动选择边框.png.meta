@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f320f93603be9bf4cabe2cc770e3d0c5
+guid: 5e026805e4cfb494d94ddcaf27bd66c0
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -49,7 +49,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 400
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 200, y: 0, z: 200, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -108,18 +108,65 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_0"
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 153
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce7a7728dc7222c4a9ad76110c2cefd0
+      internalID: -1181916805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_3"
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 12
+        width: 657
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34e499de845fe9841b71d1a586224fc2
+      internalID: 351004610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_0": -1181916805
+      "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_1": -1388150537
+      "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_2": -688920964
+      "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_3": 351004610
+      "\u884C\u52A8\u9009\u62E9\u8FB9\u6846_4": 1040508007
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
