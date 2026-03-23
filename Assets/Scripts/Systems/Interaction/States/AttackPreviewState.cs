@@ -93,7 +93,7 @@ namespace Systems.Interaction.States
 		private void CalculateReachableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
-            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.GetRange();
+            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.Range();
             
             // 搜索范围内的敌人
             var enemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)

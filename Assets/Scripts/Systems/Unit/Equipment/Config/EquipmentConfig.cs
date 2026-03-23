@@ -52,10 +52,13 @@ namespace Systems.Equipment.Config
         public int AmmoCapacity;
         
         [Tooltip("射击类武器的攻击范围和对应的命中率")]
-        public List<RangeHitRate> ShotRange;
+        public List<ShotRange> ShotRanges;
         
         [Tooltip("伤害衰减")]
-        public List<(int, float)> DamageAttenuation;
+        public DamageAttenuation DamageAttenuation;
+
+        [Tooltip("穿透率")] 
+        public float PenetrationRate;
 
         #endregion
 
@@ -83,11 +86,16 @@ namespace Systems.Equipment.Config
     }
 
     [Serializable]
-    public struct RangeHitRate
+    public struct ShotRange
     {
         public int min;
-        public int max;
         public float hitRate;
     }
     
+    [Serializable]
+    public struct DamageAttenuation
+    {
+        public int perGrid;
+        public float multiplier;
+    }
 }

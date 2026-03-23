@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Core.Log;
 using Data.Runtime;
+using UnityEngine;
 
 namespace Systems.Damage
 {
@@ -55,7 +57,19 @@ namespace Systems.Damage
         private void ApplyDamage()
         {
             var defender = _context.Defender;
-            defender.currentHp -= _context.Damage;
+            if (_context.HitRate > Random.Range(0f, 1f))
+            {
+                defender.defense -= _context.DefenceDamage;
+                // defender.curr -= _context.MentalDamage;
+                defender.currentHp -= _context.Damage;
+                this.Log($"Damage applied: {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
+                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.defense}");
+            }
+            else
+            {
+                // todo: miss
+                this.Log($"Attack missed! Defender ID:{defender.id}");
+            }
         }
     }
 
@@ -78,9 +92,9 @@ namespace Systems.Damage
             DamageType = owner.DamageType;
         }
 
-        public float HitRate;
-        public int Damage;
-        public int DefenceDamage; // 对护甲的伤害
-        public int MentalDamage; // San值伤害
+        public float HitRate = 1;
+        public int Damage = 0;
+        public int DefenceDamage = 0; // 对护甲的伤害
+        public int MentalDamage = 0; // San值伤害
     }
 }

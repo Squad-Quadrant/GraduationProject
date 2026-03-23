@@ -18,8 +18,7 @@ namespace Systems.Equipment
             return Config.Damage;
         }
 
-        // 获取攻击范围
-        public abstract int GetRange();
+        public abstract int Range();
     }
     
     public class WeaponLogic : EquipmentLogic, IDamageInfluencer
@@ -27,20 +26,44 @@ namespace Systems.Equipment
         public WeaponLogic(EquipmentConfig config) : base(config)
         {
         }
-
-        public override int GetRange()
+        
+        
+        public virtual int AmmoCapacity()
         {
-            return int.MaxValue;
+            return Config.AmmoCapacity;
+        }
+        
+        public virtual List<ShotRange> ShotRange()
+        {
+            return Config.ShotRanges;
+        }
+        
+        public virtual DamageAttenuation DamageAttenuation()
+        {
+            return Config.DamageAttenuation;
+        }
+
+        public virtual float PenetrationRate()
+        {
+            return Config.PenetrationRate;
         }
 
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
             if (context.DamageType == DamageType.Bullet)
             {
-                return new List<DamageInfluence>{new ShotDamageInfluence(this) };
+                return new List<DamageInfluence>{
+                    new ShotDamageInfluence(this), 
+                    new ShotHitRateInfluence(this), 
+                    new ShotDefenceDamageInfluence(this) };
             }
 
             return null;
+        }
+
+        public override int Range()
+        {
+            return int.MaxValue;
         }
     }
     
@@ -50,7 +73,7 @@ namespace Systems.Equipment
         {
         }
 
-        public override int GetRange()
+        public override int Range()
         {
             return Config.AttackRange;
         }

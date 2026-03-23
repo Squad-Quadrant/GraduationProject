@@ -184,3 +184,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Damage.DamageService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Damage.DamageExecutingChain
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
