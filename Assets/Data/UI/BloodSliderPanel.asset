@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
+  m_Name: BloodSliderPanel
+  m_EditorClassIdentifier: 
+  panelId: BloodSliderPanel
+  prefab: {fileID: 8753922868381692218, guid: e51d1fe1a15df0542ac554a07f3efd38, type: 3}
+  layer: 2
+  cacheOnClose: 1
