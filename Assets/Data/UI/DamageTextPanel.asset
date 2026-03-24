@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DamageTextPanel
   m_EditorClassIdentifier: 
   panelId: DamageTextPanel
-  prefab: {fileID: 8753922868381692218, guid: e51d1fe1a15df0542ac554a07f3efd38, type: 3}
+  prefab: {fileID: 7082509817793366905, guid: 49c8713a3f55c9a4a85ebed9697aee33, type: 3}
   layer: 2
   cacheOnClose: 1

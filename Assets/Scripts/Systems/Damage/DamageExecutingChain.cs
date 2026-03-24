@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Core.Events;
 using Core.Log;
 using Data.Runtime;
+using Data.Runtime.Events.Damage;
 using UnityEngine;
 
 namespace Systems.Damage
@@ -11,14 +13,16 @@ namespace Systems.Damage
         private DamageExecutingContext _context;
         private readonly List<DamageInfluence> _influences = new();
         private readonly List<IDamageInfluencer> _influencers = new();
+        private IEventBus _eventBus;
         
         public DamageExecutingChain(DamageType damageType)
         {
             DamageType = damageType;
         }
 
-        public void Init(DamageExecutingContext context)
+        public void Init(DamageExecutingContext context, IEventBus eventBus)
         {
+            _eventBus = eventBus;
             context.Owner = this;
             _context = context;
             
@@ -70,6 +74,7 @@ namespace Systems.Damage
                 // todo: miss
                 this.Log($"Attack missed! Defender ID:{defender.id}");
             }
+            _eventBus.Publish(new DamageAppliedEvent(_context));
         }
     }
 

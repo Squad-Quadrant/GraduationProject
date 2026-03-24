@@ -1,6 +1,6 @@
 using Core.Events;
 
-namespace Data.Runtime.Events.Interaction
+namespace Data.Runtime.Events.Damage
 {
     public struct UnitAttackedDealDamageEvent : IEvent
     {

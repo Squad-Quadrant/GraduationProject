@@ -16,7 +16,8 @@ namespace Presentation.UI.Presenter
         private readonly IEventBus _eventBus;
         private readonly ICoordinateConverter  _coordinateConverter;
         private readonly IUnitService _unitService;
-        private BloodSliderPanel _bloodSliderPanel = new();
+        private BloodSliderPanel _bloodSliderPanel;
+        private DamageTextPanell _damageTextPanel;
         
         public CommonPanelPresenter(UIManager uiManager, IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService)
         {
@@ -39,6 +40,9 @@ namespace Presentation.UI.Presenter
         {
             _bloodSliderPanel = _uiManager.Open<BloodSliderPanel>();
             _bloodSliderPanel.Init(_eventBus, _coordinateConverter, _unitService);
+            
+            _damageTextPanel  = _uiManager.Open<DamageTextPanell>();
+            _damageTextPanel.Init(_eventBus, _coordinateConverter, _unitService);
         }
 
         private void OnGameOver()

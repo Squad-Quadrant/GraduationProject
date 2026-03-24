@@ -1,6 +1,7 @@
 using System;
 using Core.Events;
 using Core.Log;
+using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
 using Systems.Unit;
 
@@ -31,7 +32,7 @@ namespace Systems.Damage
             var damageChain = new DamageExecutingChain(DamageType.Bullet);
             DamageExecutingContext context =
                 new DamageExecutingContext(e.Attacker, e.Target, e.ActionType, damageChain);
-            damageChain.Init(context);
+            damageChain.Init(context, _eventBus);
             damageChain.Execute();
 
             _unitService.CheckUnitDeath();
