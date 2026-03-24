@@ -615,12 +615,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fogShader: {fileID: 4800000, guid: efe7a100f16e4329b29aa41b06fa4b78, type: 3}
   noiseTex: {fileID: 2800000, guid: 75b254a55f7e3f347ac8f2b5db9b11d9, type: 3}
-  fogColor: {r: 0, g: 0, b: 0, a: 0.9137255}
-  noiseIntensity: 0.3
+  fogColor: {r: 0, g: 0, b: 0, a: 0.98039216}
+  noiseIntensity: 0.2
   noiseScale: 0.7
   edgeSoftness: 0.2
   paddingRange: 1
-  paddingStrength: 0.4
+  paddingStrength: 0.35
   transitionSpeed: 8
   sortingLayerName: OnGround
   sortingOrder: 1000
