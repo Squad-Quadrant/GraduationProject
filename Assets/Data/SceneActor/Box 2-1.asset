@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc7b3ddaebc6431ea79db67ef2f6e246, type: 3}
-  m_Name: Frklift
+  m_Name: Box 2-1
   m_EditorClassIdentifier: 
-  Type: 2
-  ExtraGrid:
-  - {x: 1, y: 0}
+  Type: 0
+  ExtraGrid: []
   tiles:
-  - {fileID: 11400000, guid: 0cded0e432abf5046ad86d3170276e73, type: 2}
+  - {fileID: 11400000, guid: 92e542b77be71ee4a8b85418e9e5bb85, type: 2}
   blockVision: 1
