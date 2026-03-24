@@ -26,7 +26,9 @@ namespace Presentation.UI.Core
 
 		// Scene-owned canvas references (registered by LevelCanvasProvider)
 		private Canvas _screenCanvas;
+        public Canvas ScreenCanvas => _screenCanvas;
 		private Canvas _overlayCanvas;
+        public Canvas OverlayCanvas => _overlayCanvas;
 
 		private readonly Dictionary<string, UIPanel> _openPanels = new();
 		private readonly Dictionary<string, UIPanel> _cache = new(); // closed but not destroyed panels

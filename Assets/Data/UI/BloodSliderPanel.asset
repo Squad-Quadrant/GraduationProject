@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7b3ddaebc6431ea79db67ef2f6e246, type: 3}
-  m_Name: Frklift
+  m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
+  m_Name: BloodSliderPanel
   m_EditorClassIdentifier: 
-  Type: 2
-  ExtraGrid:
-  - {x: 1, y: 0}
-  tiles:
-  - {fileID: 11400000, guid: 0cded0e432abf5046ad86d3170276e73, type: 2}
-  blockVision: 1
+  panelId: BloodSliderPanel
+  prefab: {fileID: 8753922868381692218, guid: e51d1fe1a15df0542ac554a07f3efd38, type: 3}
+  layer: 2
+  cacheOnClose: 1
