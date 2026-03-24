@@ -60,5 +60,7 @@ namespace Presentation.Logger
                 _ => Color.white
             };
         }
+
+        public static string GetColored(string message, Color color) => $"<color=#{color}>{message}</color>";
 	}
 }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultStance: 0
   defaultGrip: 0
+  fidgetInterval: {x: 5, y: 12}
   animations:
   - action: shoot
     stance: 0
@@ -53,7 +54,7 @@ MonoBehaviour:
   - action: idle
     stance: 1
     grip: 0
-    clipName: idle/idle bend
+    clipName: idle/idle bend1
     loop: 1
   - action: idle
     stance: 1
@@ -63,8 +64,13 @@ MonoBehaviour:
   - action: idle
     stance: 0
     grip: 0
-    clipName: idle/idle stand
+    clipName: idle/idle stand1
     loop: 1
+  - action: idle
+    stance: 0
+    grip: 0
+    clipName: idle/idle stand2
+    loop: 0
   - action: idle
     stance: 0
     grip: 1
@@ -133,19 +139,6 @@ MonoBehaviour:
     to: 1
     grip: 1
     clipName: trans/stand to bend hg
-  - from: 3
-    to: 1
-    grip: 0
-    clipName: trans/hit bend
-  - from: 3
-    to: 1
-    grip: 1
-    clipName: trans/hit bend hg
-  - from: 3
-    to: 0
-    grip: 0
-    clipName: trans/hit stand
-  - from: 3
-    to: 0
-    grip: 1
-    clipName: trans/hit stand hg
+  animIndex: 7
+  transIndex: 0
+  skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}

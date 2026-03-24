@@ -32,15 +32,18 @@ namespace Presentation.UI.Panel.TurnOrder
 		[TitleGroup("Animation")]
 		[SerializeField] private float entranceOffsetY = 80f;
 
-
 		private RectTransform _rect;
-		public RectTransform RectTransform => _rect ??= (RectTransform)transform;
+		public RectTransform Rect => _rect ??= (RectTransform)transform;
 
 		public string UnitId { get; private set; }
 
-		private Tween _moveTween;
+		private Tween _slideXTween;
+		private Tween _offsetYTween;
 		private Tween _scaleTween;
 		private Tween _fadeTween;
+
+		private Tween _entranceSeq;
+		private Tween _exitSeq;
 
 		public void Setup(string unitId, Sprite icon, Sprite factionBg)
 		{
@@ -50,93 +53,131 @@ namespace Presentation.UI.Panel.TurnOrder
 			borderImage.sprite = factionBg;
 		}
 
-		private void OnDestroy() => KillAllTweens();
-
-		public void SetState(float scale, float alpha)
+		public void SetX(float x)
 		{
-			KillTween(ref _scaleTween);
-			KillTween(ref _fadeTween);
-			RectTransform.localScale = Vector3.one * scale;
-			canvasGroup.alpha = alpha;
+			KillTween(ref _slideXTween);
+			var pos = Rect.anchoredPosition;
+			pos.x = x;
+			Rect.anchoredPosition = pos;
 		}
 
-		public void AnimateState(float targetScale, float targetAlpha, float duration)
+		public void SetVisual(SlotVisual visual)
 		{
+			KillLifecycleSequences();
+			KillTween(ref _offsetYTween);
 			KillTween(ref _scaleTween);
 			KillTween(ref _fadeTween);
-			_scaleTween = RectTransform
-				.DOScale(Vector3.one * targetScale, duration)
-				.SetEase(stateEase);
-			_fadeTween = canvasGroup
-				.DOFade(targetAlpha, duration)
-				.SetEase(stateEase);
-		}
 
-		public void SetX(float targetX)
-		{
-			KillTween(ref _moveTween);
-			var pos = RectTransform.anchoredPosition;
-			pos.x = targetX;
-			RectTransform.anchoredPosition = pos;
+			var pos = Rect.anchoredPosition;
+			pos.y = visual.OffsetY;
+			Rect.anchoredPosition = pos;
+			Rect.localScale = Vector3.one * visual.Scale;
+			canvasGroup.alpha = visual.Alpha;
 		}
 
 		public void AnimateToX(float targetX, float duration)
 		{
-			KillTween(ref _moveTween);
-			_moveTween = RectTransform
+			KillLifecycleSequences();
+			KillTween(ref _slideXTween);
+
+			_slideXTween = Rect
 				.DOAnchorPosX(targetX, duration)
 				.SetEase(slideEase);
 		}
 
-		public void AnimateEntrance(float finalY, float duration, float delay)
+		public void AnimateVisual(SlotVisual visual, float duration)
 		{
-			KillTween(ref _moveTween);
+			KillLifecycleSequences();
+			KillTween(ref _offsetYTween);
+			KillTween(ref _scaleTween);
 			KillTween(ref _fadeTween);
 
-			var pos = RectTransform.anchoredPosition;
-			RectTransform.anchoredPosition = new Vector2(pos.x, finalY + entranceOffsetY);
-			canvasGroup.alpha = 0f;
+			_offsetYTween = Rect
+				.DOAnchorPosY(visual.OffsetY, duration)
+				.SetEase(stateEase);
 
-			_moveTween = RectTransform
-				.DOAnchorPosY(finalY, duration)
-				.SetEase(entranceEase)
-				.SetDelay(delay);
+			_scaleTween = Rect
+				.DOScale(Vector3.one * visual.Scale, duration)
+				.SetEase(stateEase);
+
 			_fadeTween = canvasGroup
-				.DOFade(1f, duration * 0.6f)
-				.SetDelay(delay);
+				.DOFade(visual.Alpha, duration)
+				.SetEase(stateEase);
 		}
 
-		public void AnimateExit(float duration, Action onComplete = null)
+		public void PlayEntrance(SlotVisual targetVisual, float duration, float delay)
 		{
 			KillAllTweens();
 
-			DOTween.Sequence()
-				.Append(canvasGroup.DOFade(0f, duration).SetEase(exitEase))
-				.Join(RectTransform.DOScale(Vector3.zero, duration).SetEase(exitEase))
+			// Start state: above target position, invisible, at target scale
+			var pos = Rect.anchoredPosition;
+			Rect.anchoredPosition = new Vector2(pos.x, targetVisual.OffsetY + entranceOffsetY);
+			Rect.localScale = Vector3.one * targetVisual.Scale;
+			canvasGroup.alpha = 0f;
+
+			const float fadeRatio = 0.6f;
+
+			_entranceSeq = DOTween.Sequence()
+				.SetDelay(delay)
+				.Append(
+					Rect.DOAnchorPosY(targetVisual.OffsetY, duration)
+						.SetEase(entranceEase))
+				.Join(
+					canvasGroup.DOFade(targetVisual.Alpha, duration * fadeRatio))
+				// Clear reference on natural completion so KillAllTweens won't
+				// try to kill an already-dead sequence
+				.OnKill(() => _entranceSeq = null);
+		}
+
+		public void PlayExit(float duration, Action onComplete = null)
+		{
+			KillAllTweens();
+
+			_exitSeq = DOTween.Sequence()
+				.Append(
+					canvasGroup.DOFade(0f, duration)
+						.SetEase(exitEase))
+				.Join(
+					Rect.DOScale(Vector3.zero, duration)
+						.SetEase(exitEase))
+				.OnKill(() => _exitSeq = null)
 				.OnComplete(() => onComplete?.Invoke());
 		}
 
 		public void ResetForPool()
 		{
 			KillAllTweens();
+
 			UnitId = null;
 			iconImage.sprite = null;
 			iconImage.enabled = false;
-			RectTransform.localScale = Vector3.one;
+			Rect.localScale = Vector3.one;
+			Rect.anchoredPosition = Vector2.zero;
 			canvasGroup.alpha = 1f;
 		}
 
+		private void OnDestroy() => KillAllTweens();
+
 		private void KillAllTweens()
 		{
-			KillTween(ref _moveTween);
+			KillTween(ref _slideXTween);
+			KillTween(ref _offsetYTween);
 			KillTween(ref _scaleTween);
 			KillTween(ref _fadeTween);
+			KillTween(ref _entranceSeq);
+			KillTween(ref _exitSeq);
 		}
 
-		private void KillTween(ref Tween tween)
+		private void KillLifecycleSequences()
+		{
+			KillTween(ref _entranceSeq);
+			KillTween(ref _exitSeq);
+		}
+
+		private static void KillTween(ref Tween tween)
 		{
 			if (tween == null) return;
-			tween.Kill();
+			if (tween.active) tween.Kill();
 			tween = null;
 		}
 	}

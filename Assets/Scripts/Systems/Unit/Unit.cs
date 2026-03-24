@@ -35,7 +35,6 @@ namespace Systems.Unit
 		public EUnitFaction faction;
         public int defense;
         public float defenseRate = 0f;
-        public int quickness;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;
@@ -73,7 +72,6 @@ namespace Systems.Unit
 				faction = config.faction,
                 defense = config.defense,
                 defenseRate = config.defenseRate,
-                quickness = config.quickness,
 
 				animationConfig = config.animationConfig,
 				skeletonDataAsset = config.skeletonDataAsset,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Core.Log;
 using Sirenix.OdinInspector;
 using Spine;
@@ -22,6 +23,8 @@ namespace Presentation.Unit
 		private TrackEntry _currentEntry;
 		private Spine.AnimationState.TrackEntryDelegate _pendingCallback;
 		private Spine.AnimationState.TrackEntryEventDelegate _pendingCallbackEvent;
+
+		private Coroutine _fidgetCoroutine;
 
 		public bool IsInitialized { get; private set; }
 
@@ -67,30 +70,15 @@ namespace Presentation.Unit
 		public void Play(string animName, bool loop, Action onComplete = null)
 		{
 			if (!ValidateReady()) return;
+			StopFidgetCycle();
+			PlayInternal(animName, loop, onComplete);
+		}
 
-			ClearPendingCallback();
-			ClearPendingCallbackEvent();
-
-			var anim = _skeleton.Data.FindAnimation(animName);
-			if (anim == null)
-			{
-				this.LogError($"Animation '{animName}' not found in skeleton data");
-				return;
-			}
-
-			_currentEntry = _animState.SetAnimation(MainTrack, anim, loop);
-
-			if (onComplete != null)
-			{
-				_pendingCallback = _ =>
-				{
-					_pendingCallback = null;
-					onComplete.Invoke();
-				};
-				_currentEntry.Complete += _pendingCallback;
-			}
-
-			this.Log($"Playing animation: '{animName}', loop: {loop}");
+		public void PlayLoopWithFidgets(AnimationResult[] baseClips, AnimationResult[] fidgetClips, float minDelay, float maxDelay)
+		{
+			if (!ValidateReady()) return;
+			StopFidgetCycle();
+			_fidgetCoroutine = StartCoroutine(FidgetCycleCoroutine(baseClips, fidgetClips, minDelay, maxDelay));
 		}
 
 		public void Queue(string animName, bool loop, float delay = 0f, Action onComplete = null)
@@ -123,6 +111,7 @@ namespace Presentation.Unit
 		public void Stop()
 		{
 			if (!ValidateReady()) return;
+			StopFidgetCycle();
 			ClearPendingCallback();
 			_animState.ClearTrack(MainTrack);
 			_currentEntry = null;
@@ -158,6 +147,60 @@ namespace Presentation.Unit
 			_animState.Event += _pendingCallbackEvent;
 		}
 
+		private void PlayInternal(string animName, bool loop, Action onComplete = null)
+		{
+			ClearPendingCallback();
+			ClearPendingCallbackEvent();
+
+			var anim = _skeleton.Data.FindAnimation(animName);
+			if (anim == null)
+			{
+				this.LogError($"Animation '{animName}' not found in skeleton data");
+				return;
+			}
+
+			_currentEntry = _animState.SetAnimation(MainTrack, anim, loop);
+			if (loop && anim.Duration > 0f) // 错开循环动画
+				_currentEntry.TrackTime = UnityEngine.Random.Range(0f, anim.Duration);
+
+			if (onComplete != null)
+			{
+				_pendingCallback = _ =>
+				{
+					_pendingCallback = null;
+					onComplete.Invoke();
+				};
+				_currentEntry.Complete += _pendingCallback;
+			}
+
+			this.Log($"Playing animation: '{animName}', loop: {loop}");
+		}
+
+		private IEnumerator FidgetCycleCoroutine(AnimationResult[] baseClips, AnimationResult[] fidgetClips,
+			float minDelay, float maxDelay)
+		{
+			while (true)
+			{
+				var baseClip = baseClips[UnityEngine.Random.Range(0, baseClips.Length)];
+				PlayInternal(baseClip.ClipName, true);
+
+				yield return new WaitForSeconds(UnityEngine.Random.Range(minDelay, maxDelay));
+
+				var fidget = fidgetClips[UnityEngine.Random.Range(0, fidgetClips.Length)];
+
+				bool done = false;
+				PlayInternal(fidget.ClipName, false, () => done = true);
+				yield return new WaitUntil(() => done);
+			}
+		}
+
+		private void StopFidgetCycle()
+		{
+			if (_fidgetCoroutine == null) return;
+			StopCoroutine(_fidgetCoroutine);
+			_fidgetCoroutine = null;
+		}
+
 		private void ClearPendingCallback()
 		{
 			if (_pendingCallback != null && _currentEntry != null)
@@ -172,7 +215,7 @@ namespace Presentation.Unit
 			_pendingCallbackEvent = null;
 		}
 
-	private bool ValidateReady()
+		private bool ValidateReady()
 		{
 			if (IsInitialized) return true;
 			this.LogWarning("Not initialized. Call Initialize() first.");

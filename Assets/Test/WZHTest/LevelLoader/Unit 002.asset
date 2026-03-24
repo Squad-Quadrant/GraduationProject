@@ -15,7 +15,7 @@ MonoBehaviour:
   configId: unit_002
   unitName: Test Player 2
   description: This is a new unit.
-  icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
+  icon: {fileID: -1128652821404161721, guid: 8a1f96c93a153e34a98b5f6dd6bbfebd, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: pcb2 front
@@ -28,5 +28,5 @@ MonoBehaviour:
   visionRange: 2
   faction: 0
   defense: 100
-  defenseRate: 0.5
+  defenseRate: 0
   quickness: 100

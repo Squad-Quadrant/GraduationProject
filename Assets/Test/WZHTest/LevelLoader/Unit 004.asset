@@ -15,7 +15,7 @@ MonoBehaviour:
   configId: unit_004
   unitName: Test Player 4
   description: This is a Enemy
-  icon: {fileID: 21300000, guid: 9ac9c9f61594e5b49b108dadc5a935c4, type: 3}
+  icon: {fileID: -1742949670, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: pcb3 front
@@ -28,5 +28,5 @@ MonoBehaviour:
   visionRange: 2
   faction: 1
   defense: 100
-  defenseRate: 0.5
+  defenseRate: 0
   quickness: 100

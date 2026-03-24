@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Spine.Unity;
 using UnityEngine;
 
 namespace Presentation.Unit
@@ -60,6 +61,22 @@ namespace Presentation.Unit
 		public static readonly AnimationResult Empty = new(null, false);
 	}
 
+	public readonly struct IdleSet // 为了小动作的播放
+	{
+		public readonly AnimationResult[] BaseClips;
+		public readonly AnimationResult[] FidgetClips;
+
+		public IdleSet(AnimationResult[] baseClips, AnimationResult[] fidgetClips)
+		{
+			BaseClips = baseClips;
+			FidgetClips = fidgetClips;
+		}
+
+		public bool IsValid => BaseClips is { Length: > 0 };
+		public bool HasFidgets => FidgetClips is { Length: > 0 };
+		public static readonly IdleSet Empty = new(null, null);
+	}
+
 	[CreateAssetMenu(fileName = "NewUnitAnimConfig", menuName = "Game/Unit Animation Config")]
 	public class UnitAnimationConfig : ScriptableObject
 	{
@@ -69,15 +86,142 @@ namespace Presentation.Unit
 		[TitleGroup("Defaults")]
 		[SerializeField] private EGripType defaultGrip = EGripType.Default;
 
+		[TitleGroup("Fidget")]
+		[SerializeField, MinMaxSlider(1f, 30f, ShowFields = true)]
+		private Vector2 fidgetInterval = new(5f, 12f);
+
 		[TitleGroup("Animations")]
-		[SerializeField, TableList] private List<AnimationEntry> animations = new();
+		[SerializeField, TableList(ShowIndexLabels = true)] private List<AnimationEntry> animations = new();
 
 		[TitleGroup("Transitions")]
-		[SerializeField, TableList] private List<TransitionEntry> transitions = new();
+		[SerializeField, TableList(ShowIndexLabels = true)] private List<TransitionEntry> transitions = new();
+
+		#region Inspector Helper
+
+		[TitleGroup("Animations"), HorizontalGroup("Animations/Move")]
+		[SerializeField, LabelText("Row"), LabelWidth(30), PropertyRange(0, nameof(AnimMaxIndex))]
+		private int animIndex;
+
+		private int AnimMaxIndex => Mathf.Max(0, animations.Count - 1);
+
+		[TitleGroup("Animations"), HorizontalGroup("Animations/Move", width: 30)]
+		[Button("↑")]
+		private void AnimMoveUp()
+		{
+			if (animIndex <= 0 || animIndex >= animations.Count) return;
+			(animations[animIndex], animations[animIndex - 1]) = (animations[animIndex - 1], animations[animIndex]);
+			animIndex--;
+		}
+
+		[TitleGroup("Animations"), HorizontalGroup("Animations/Move", width: 30)]
+		[Button("↓")]
+		private void AnimMoveDown()
+		{
+			if (animIndex >= animations.Count - 1) return;
+			(animations[animIndex], animations[animIndex + 1]) = (animations[animIndex + 1], animations[animIndex]);
+			animIndex++;
+		}
+
+
+		[TitleGroup("Transitions"), HorizontalGroup("Transitions/Move")]
+		[SerializeField, LabelText("Row"), LabelWidth(30), PropertyRange(0, nameof(TranMaxIndex))]
+		private int transIndex;
+
+		private int TranMaxIndex => Mathf.Max(0, transitions.Count - 1);
+
+		[TitleGroup("Transitions"), HorizontalGroup("Transitions/Move", width: 30)]
+		[Button("↑")]
+		private void TransMoveUp()
+		{
+			if (transIndex <= 0 || transIndex >= transitions.Count) return;
+			(transitions[transIndex], transitions[transIndex - 1]) = (transitions[transIndex - 1], transitions[transIndex]);
+			transIndex--;
+		}
+
+		[TitleGroup("Transitions"), HorizontalGroup("Transitions/Move", width: 30)]
+		[Button("↓")]
+		private void TransMoveDown()
+		{
+			if (transIndex >= transitions.Count - 1) return;
+			(transitions[transIndex], transitions[transIndex + 1]) = (transitions[transIndex + 1], transitions[transIndex]);
+			transIndex++;
+		}
+
+
+		[TitleGroup("Validation")]
+		[SerializeField] private SkeletonDataAsset skeletonDataAsset;
+
+		[TitleGroup("Validation")]
+		[Button]
+		private void Validate()
+		{
+			if (!skeletonDataAsset)
+			{
+				Debug.LogWarning("Skeleton data asset not set");
+				return;
+			}
+
+			var skeletonData = skeletonDataAsset.GetSkeletonData(false);
+			if (skeletonData == null)
+			{
+				Debug.LogWarning("Skeleton data asset not set");
+				return;
+			}
+
+			var skeletonAnimations = skeletonData.Animations.Select(a => a.Name).ToHashSet();
+
+			Debug.Log("Checking Animations:");
+			for (int i = 0; i < animations.Count; i++)
+			{
+				var animation = animations[i];
+				if (string.IsNullOrEmpty(animation.clipName))
+				{
+					Debug.LogWarning($"{i}: Animation clip name not set");
+					continue;
+				}
+				if (string.IsNullOrEmpty(animation.action))
+					Debug.LogWarning($"{i}: Action not set");
+
+				if (!skeletonAnimations.Contains(animation.clipName))
+					Debug.LogError($"{i}: clip name {animation.clipName} not exist");
+				else
+					skeletonAnimations.Remove(animation.clipName);
+			}
+
+			Debug.Log("==================================");
+			Debug.Log("Checking Transitions:");
+			for (int i = 0; i < transitions.Count; i++)
+			{
+				var transition = transitions[i];
+				if (string.IsNullOrEmpty(transition.clipName))
+				{
+					Debug.LogWarning($"{i}: Transition clip name not set");
+					continue;
+				}
+
+				if (!skeletonAnimations.Contains(transition.clipName))
+					Debug.LogError($"{i}: clip name '{transition.clipName}' not exist");
+				else
+					skeletonAnimations.Remove(transition.clipName);
+			}
+
+			Debug.Log("==================================");
+			if (skeletonAnimations.Count == 0) return;
+			var msg = skeletonAnimations
+				.Aggregate("Clip Name that have not use yet: \n", (current, animation) => current + $"{animation}\n");
+			Debug.LogWarning(msg);
+		}
+
+		#endregion
 
 		public EUnitStance DefaultStance => defaultStance;
 		public EGripType DefaultGrip => defaultGrip;
+		public float FidgetMinDelay => fidgetInterval.x;
+		public float FidgetMaxDelay => fidgetInterval.y;
 
+		private static readonly System.Random SharedRandom = new();
+
+		// 如果有多个相同状态相同名字的，会随机返回一个
 		public AnimationResult GetAnimation(string action, EUnitStance stance, EGripType grip)
 		{
 			var result = MatchAnimation(action, stance, grip);
@@ -111,11 +255,33 @@ namespace Presentation.Unit
 			return null;
 		}
 
+		public IdleSet GetIdleSet(EUnitStance stance, EGripType grip)
+		{
+			var set = MatchIdleSet(stance, grip);
+			if (set.IsValid) return set;
+
+			if (grip != defaultGrip)
+			{
+				set = MatchIdleSet(stance, defaultGrip);
+				if (set.IsValid) return set;
+			}
+
+			if (stance != defaultStance || grip != defaultGrip)
+			{
+				set = MatchIdleSet(defaultStance, defaultGrip);
+				if (set.IsValid) return set;
+			}
+
+			return IdleSet.Empty;
+		}
+
 		private AnimationResult MatchAnimation(string action, EUnitStance stance, EGripType grip)
 		{
-			foreach (var entry in animations.Where(entry => entry.Matches(action, stance, grip)))
-				return new AnimationResult(entry.clipName, entry.loop);
-			return AnimationResult.Empty;
+			var matches = animations.Where(entry => entry.Matches(action, stance, grip)).ToList();
+			if (matches.Count == 0) return AnimationResult.Empty;
+
+			var picked = matches[SharedRandom.Next(matches.Count)];
+			return new AnimationResult(picked.clipName, picked.loop);
 		}
 
 		private string MatchTransition(EUnitStance from, EUnitStance to, EGripType grip)
@@ -124,6 +290,20 @@ namespace Presentation.Unit
 				.Where(entry => entry.Matches(from, to, grip))
 				.Select(entry => entry.clipName)
 				.FirstOrDefault();
+		}
+
+		private IdleSet MatchIdleSet(EUnitStance stance, EGripType grip)
+		{
+			var matches = animations.Where(e => e.Matches("idle", stance, grip)).ToList();
+			if (matches.Count == 0) return IdleSet.Empty;
+
+			var bases = matches.Where(e => e.loop)
+				.Select(e => new AnimationResult(e.clipName, true)).ToArray();
+			var fidgets = matches.Where(e => !e.loop)
+				.Select(e => new AnimationResult(e.clipName, false)).ToArray();
+
+			// Need at least one base clip to be valid
+			return bases.Length > 0 ? new IdleSet(bases, fidgets) : IdleSet.Empty;
 		}
 
 		#region Editor Display
