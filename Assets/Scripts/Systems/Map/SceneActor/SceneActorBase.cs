@@ -18,6 +18,8 @@ namespace Systems.Map.SceneActor
         public Tile Tile { get; set; }
 
         public bool BlocksVision { get; set; }
+
+        public bool BlockMovement { get; set; }
         
         public SceneActorBase(SceneActorType type, uint uid)
         {

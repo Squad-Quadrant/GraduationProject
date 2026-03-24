@@ -45,11 +45,6 @@ namespace Presentation.Debugger
 
 		[TitleGroup("Interaction Context")]
 		[ShowInInspector, ReadOnly]
-		[LabelText("Path Length")]
-		private int PathLength => _cachedController?.Context?.currentPath?.Count ?? 0;
-
-		[TitleGroup("Interaction Context")]
-		[ShowInInspector, ReadOnly]
 		private InteractionContext FullContext => _cachedController?.Context;
 
 		protected override StateMachine<InteractionContext> FindStateMachine()

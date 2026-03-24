@@ -19,16 +19,13 @@ namespace Systems.PathFinding.TraversalRule
 			var targetCell = mapData.GetCell(to);
 			if (targetCell == null ||
 			    (!options.IgnoreTerrainWalkability && !targetCell.IsWalkable) ||
-			    !CanCrossWall(from, to, mapData, options))
-				return TraversalCheckResult.Blocked;
-
-			if (targetCell.SceneActor != null) // todo: check scene actor, now all scene actors are blocking; unit belongs to scene actor?
+			    !CanCrossWall(from, to, mapData, options) ||
+			    targetCell.SceneActor is { BlockMovement: true })
 				return TraversalCheckResult.Blocked;
 
 			int baseCost = options.IgnoreTerrainWalkability ? 1 : targetCell.MoveCost;
 
 			var occupationResult = CheckUnitOccupation(to, options);
-
 			return occupationResult switch
 			{
 				OccupationType.Empty => TraversalCheckResult.Stoppable(baseCost),
@@ -55,26 +52,22 @@ namespace Systems.PathFinding.TraversalRule
 
 		private OccupationType CheckUnitOccupation(Vector2Int position, PathFindingOptions options)
 		{
-			if (_unitService == null)
+			var unit = _unitService.GetUnitAtPosition(position);
+			if (unit == null) // 没单位
 				return OccupationType.Empty;
 
-			var units = _unitService.GetUnitsWhere(u => u.position == position);
-			if (units.Count == 0)
-				return OccupationType.Empty;
-
-			var occupant = units[0];
-
-			if (!string.IsNullOrEmpty(options.MovingUnitId) && occupant.id == options.MovingUnitId)
+			if (!string.IsNullOrEmpty(options.MovingUnitId) && unit.id == options.MovingUnitId) // 是自己
 				return OccupationType.Self;
 
+			if (options.VisibleCells != null && !options.VisibleCells.Contains(position)) // 看不见 = 没有
+				return OccupationType.Empty;
+
+			// 阵营判断
 			if (options.MovingUnitFaction == EUnitFaction.None)
 				return OccupationType.Enemy;
-
-			bool isAlly = occupant.faction == options.MovingUnitFaction;
-
+			bool isAlly = unit.faction == options.MovingUnitFaction;
 			if (isAlly)
 				return options.CanPassThroughAllies ? OccupationType.Ally : OccupationType.Enemy;
-
 			return options.EnemiesBlockMovement ? OccupationType.Enemy : OccupationType.Empty;
 		}
 

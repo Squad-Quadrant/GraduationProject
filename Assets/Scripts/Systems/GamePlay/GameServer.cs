@@ -120,6 +120,7 @@ namespace Systems.GamePlay
 
 			var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
 			_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
+			_fsm.Context.VisibleCells = visible;
 
 			AwaitThen(() => StartNewUnitTurn(unit), cmd => cmd
 				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)

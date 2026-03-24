@@ -14,5 +14,7 @@ namespace Systems.Map.Config
         public List<Tile> tiles = new();
 
         public bool blockVision = true;
+
+        public bool blockMovement = true;
     }
 }

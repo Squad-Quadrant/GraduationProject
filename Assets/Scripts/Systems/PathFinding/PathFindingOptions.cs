@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Systems.Unit;
+using UnityEngine;
 
 namespace Systems.PathFinding
 {
@@ -26,6 +28,8 @@ namespace Systems.PathFinding
 
         [ShowInInspector, ReadOnly] public readonly bool IgnoreTerrainWalkability;
 
+        public readonly HashSet<Vector2Int> VisibleCells;
+
         public PathFindingOptions(
             bool canPassThroughAllies,
             bool enemiesBlockMovement,
@@ -33,7 +37,8 @@ namespace Systems.PathFinding
             string movingUnitId,
             bool canCrossLowWalls,
             bool canCrossHighWalls,
-            bool ignoreTerrainWalkability)
+            bool ignoreTerrainWalkability,
+            HashSet<Vector2Int> visibleCells = null)
         {
             CanPassThroughAllies = canPassThroughAllies;
             EnemiesBlockMovement = enemiesBlockMovement;
@@ -42,6 +47,7 @@ namespace Systems.PathFinding
             CanCrossLowWalls = canCrossLowWalls;
             CanCrossHighWalls = canCrossHighWalls;
             IgnoreTerrainWalkability = ignoreTerrainWalkability;
+            VisibleCells = visibleCells;
         }
 
         public static PathFindingOptions Default => new(
@@ -51,8 +57,7 @@ namespace Systems.PathFinding
             movingUnitId: null,
             canCrossLowWalls: false,
             canCrossHighWalls: false,
-            ignoreTerrainWalkability: false
-        );
+            ignoreTerrainWalkability: false);
 
         // Builder-style methods for easy customization
         public PathFindingOptions WithMovingUnit(string unitId, EUnitFaction faction) => new(
@@ -63,6 +68,16 @@ namespace Systems.PathFinding
 	        CanCrossLowWalls,
 	        CanCrossHighWalls,
 	        IgnoreTerrainWalkability);
+
+        public PathFindingOptions WithVisibleCells(HashSet<Vector2Int> visibleCells) => new(
+			CanPassThroughAllies,
+			EnemiesBlockMovement,
+			MovingUnitFaction,
+			MovingUnitId,
+			CanCrossLowWalls,
+			CanCrossHighWalls,
+			IgnoreTerrainWalkability,
+			visibleCells);
 
         public override string ToString() =>
             $"[PathfindingOptions] PassAllies:{CanPassThroughAllies}, " +
