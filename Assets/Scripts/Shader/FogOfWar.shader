@@ -4,9 +4,9 @@
 	{
 		_FogColor		("Fog Color", Color)				= (0, 0, 0, 0.75)
 		_NoiseTex		("Noise Tex", 2D)					= "gray" {}
-		_NoiseIntensity	("Noise Intensity", Float)	= 0.15
+		_NoiseIntensity	("Noise Intensity", Float)			= 0.15
 		_NoiseScale		("Noise Scale", Float)				= 0.5
-		_EdgeSoftness   ("Edge Softness", Range(0.01, 1))  = 0.35
+		_EdgeSoftness   ("Edge Softness", Range(0.01, 1))   = 0.35
 	}
 
 	SubShader
@@ -22,12 +22,6 @@
         ZWrite Off
         Cull Off
 
-        Stencil
-        {
-			Ref 1
-			Comp NotEqual
-		}
-
 		Pass
 		{
 			Name "FogOfWar"
@@ -37,6 +31,8 @@
             #pragma fragment Frag
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+			#define MAX_UNITS 32
 
 			struct Attributes
             {
@@ -64,7 +60,14 @@
                 float4 _GridOrigin;
                 float4 _InvBasisRow0;
                 float4 _InvBasisRow1;
+
+				float4 _UnitEllipseRadius;
+				float4 _UnitCenterOffset;
+				float  _UnitMaskSoftness;
             CBUFFER_END
+
+			float4 _UnitPositions[MAX_UNITS];
+			int    _UnitCount;
 
 			Varyings Vert(Attributes IN)
             {
@@ -78,10 +81,11 @@
 			half4 Frag(Varyings IN) : SV_Target
             {
                 float2 offset = IN.worldPos - _GridOrigin.xy;
+
                 float2 gridCoords = float2(
-                    dot(offset, _InvBasisRow0.xy),
-                    dot(offset, _InvBasisRow1.xy)
-                );
+					dot(offset, _InvBasisRow0.xy),
+					dot(offset, _InvBasisRow1.xy)
+				);
 
                 float2 visUV = gridCoords * _MapParams.xy;
 
@@ -96,9 +100,24 @@
                 float halfBand = _EdgeSoftness * 0.5;
                 float clearAmount = smoothstep(bandCenter - halfBand, bandCenter + halfBand, visibility);
 
-            	float fogAlpha = (1.0 - clearAmount) * _FogColor.a;
+				float unitMask = 0.0;
+				float innerEdge = 1.0 - _UnitMaskSoftness;
 
-                return half4(_FogColor.rgb, fogAlpha);
+				[loop]
+				for (int i = 0; i < _UnitCount; i++)
+				{
+					float2 center = _UnitPositions[i].xy + _UnitCenterOffset.xy;
+					float2 delta  = IN.worldPos - center;
+					float2 scaled = delta / _UnitEllipseRadius.xy;
+					float  dist   = length(scaled);
+					float m = 1.0 - smoothstep(innerEdge, 1.0, dist);
+					unitMask = max(unitMask, m);
+				}
+
+				float totalClear = max(clearAmount, unitMask);
+				float fogAlpha   = (1.0 - totalClear) * _FogColor.a;
+
+				return half4(_FogColor.rgb, fogAlpha);
             }
 
 
