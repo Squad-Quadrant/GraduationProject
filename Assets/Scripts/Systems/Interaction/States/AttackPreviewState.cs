@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Log;
 using Data.Runtime;
@@ -96,11 +97,20 @@ namespace Systems.Interaction.States
             int attackRange = unit.GetEquipment(ctx.currentAction).Logic.Range();
             
             // 搜索范围内的敌人
-            var enemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)
+            var reachableEnemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)
                 .Where(u => u.faction == EUnitFaction.Enemy).ToList();
-            // todo: 确定是否能攻击空格
-            
-            // todo: 计算遮挡并剔除，枪线判断
+
+            // 剔除看不见的敌人
+            var visionService = ctx.VisionService;
+            var visibleCells = visionService.CalculateVisibleCells(unit.position, unit.visionRange);
+            List<Unit.Unit> enemyUnits = new();
+            foreach (var enemyUnit in reachableEnemyUnits)
+            {
+                if (visibleCells.Contains(enemyUnit.position))
+                {
+                    enemyUnits.Add(enemyUnit);
+                }
+            }
             
             ctx.validTargetCells.Clear();
             ctx.validTargetCells = enemyUnits.Select(u => u.position).ToList();

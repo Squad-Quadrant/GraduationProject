@@ -10,6 +10,7 @@ using Systems.Map;
 using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Presentation.Interaction
@@ -41,7 +42,8 @@ namespace Presentation.Interaction
 				services.Resolve<IMapService>(),
 				services.Resolve<ITurnService>(),
 				services.Resolve<ICommandQueue>(),
-				services.Resolve<IPathFindingService>());
+				services.Resolve<IPathFindingService>(),
+                services.Resolve<IVisionService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

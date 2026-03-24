@@ -8,6 +8,7 @@ using Systems.Map;
 using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Interaction
@@ -26,6 +27,7 @@ namespace Systems.Interaction
 		public ICommandQueue CommandQueue { get; }
 
 		public IPathFindingService PathFindingService { get; }
+        public IVisionService VisionService { get; }
 
 		#endregion
 
@@ -53,7 +55,8 @@ namespace Systems.Interaction
 			IMapService mapService,
 			ITurnService turnService,
 			ICommandQueue commandQueue,
-			IPathFindingService pathFindingService)
+			IPathFindingService pathFindingService,
+            IVisionService visionService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -61,6 +64,7 @@ namespace Systems.Interaction
 			TurnService = turnService;
 			CommandQueue = commandQueue;
 			PathFindingService = pathFindingService;
+            VisionService = visionService;
 		}
 
 		/// <summary>
