@@ -64,11 +64,11 @@ namespace Systems.Damage
             _context.isMiss = _context.HitRate < Random.Range(0f, 1f);
             if (!_context.isMiss)
             {
-                defender.defense -= _context.DefenceDamage;
+                defender.currentDefense -= _context.DefenceDamage;
                 // defender.curr -= _context.MentalDamage;
                 defender.currentHp -= _context.Damage;
                 this.Log($"Damage applied: {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
-                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.defense}");
+                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}");
             }
             else
             {

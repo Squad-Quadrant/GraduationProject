@@ -81,6 +81,7 @@ namespace Systems.Unit
 				icon = config.icon,
 
 				currentHp = config.maxHp,
+                currentDefense = config.defense,
 				position = startPosition,
 				isStunned = false,
 				currentAp = config.actionPoints

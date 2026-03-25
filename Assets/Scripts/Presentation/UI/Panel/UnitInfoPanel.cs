@@ -12,6 +12,7 @@ namespace Presentation.UI.Panel
 		[SerializeField, Required] private Image portraitImage;
 		[SerializeField, Required] private TextMeshProUGUI nameText;
 		[SerializeField, Required] private Image hpImage;
+		[SerializeField, Required] private Image defenseImage;
 		[SerializeField, Required] private RectTransform actionPointsParent;
 		[SerializeField, Required] private GameObject actionPointsPrefab;
 
@@ -29,6 +30,8 @@ namespace Presentation.UI.Panel
 			var currentHp = unit.currentHp;
 			var maxHp = unit.maxHp;
 			hpImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
+            defenseImage.enabled = unit.defense > 0;
+            defenseImage.fillAmount = (float)unit.currentDefense / unit.defense;
 
 			foreach (Transform child in actionPointsParent)
 				Destroy(child.gameObject);
