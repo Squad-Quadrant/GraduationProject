@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Systems.Unit;
 
 namespace Data.Runtime.Events.Turn
 {
@@ -13,10 +14,13 @@ namespace Data.Runtime.Events.Turn
 
 		public int TurnNumber { get; }
 
-		public UnitTurnStartedEvent(string unitId, int turnNumber)
+		public bool IsVisibleToPlayer { get; } // 现在这个单位在不在友方视野里
+
+		public UnitTurnStartedEvent(string unitId, int turnNumber, bool isVisibleToPlayer)
 		{
 			UnitId = unitId;
 			TurnNumber = turnNumber;
+			IsVisibleToPlayer = isVisibleToPlayer;
 		}
 
 		public override string ToString() => $"[UnitTurnStarted] Unit '{UnitId}' on Turn {TurnNumber}";

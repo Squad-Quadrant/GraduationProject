@@ -6,6 +6,7 @@ using Data.Runtime.Events.Map;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ namespace Presentation.FogOfWar
 		private bool _isDirty;           // true when current != target, triggers Update work
 
 		private const int MaxUnits = 32;
-		private readonly Dictionary<string, Transform> _trackedUnits = new();
+		private readonly Dictionary<string, UnitView> _trackedUnits = new();
 		private readonly Vector4[] _unitPositionBuffer = new Vector4[MaxUnits];
 
 		private static readonly int PropVisibilityTex  = Shader.PropertyToID("_VisibilityTex");
@@ -159,8 +160,8 @@ namespace Presentation.FogOfWar
 
 		private void OnUnitViewSpawned(UnitViewSpawnedEvent e)
 		{
-			if (e.Transform)
-				_trackedUnits[e.UnitId] = e.Transform;
+			if (e.View)
+				_trackedUnits[e.UnitId] = e.View;
 		}
 
 		private void OnUnitViewDespawned(UnitViewDespawnedEvent e)
@@ -344,10 +345,10 @@ namespace Presentation.FogOfWar
 			int count = 0;
 			foreach (var t in _trackedUnits.Values)
 			{
-				if (!t || !t.gameObject.activeInHierarchy) continue;
+				if (!t || !t.GetVisible()) continue;
 				if (count >= MaxUnits) break;
 
-				var pos = t.position;
+				var pos = t.gameObject.transform.position;
 				_unitPositionBuffer[count] = new Vector4(pos.x, pos.y, 0f, 0f);
 				count++;
 			}

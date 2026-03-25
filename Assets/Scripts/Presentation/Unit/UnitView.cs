@@ -23,6 +23,7 @@ namespace Presentation.Unit
 		[TitleGroup("References")]
 		[SerializeField, Required, ChildGameObjectsOnly]
 		private UnitAnimator animator;
+		private MeshRenderer _renderer;
 
 		private UnitAnimationConfig _config;
 		private ICoordinateConverter _coordConverter;
@@ -59,6 +60,7 @@ namespace Presentation.Unit
 			_backBodySkinName = backBodySkinName;
 
 			animator.Initialize(skeletonDataAsset, frontBodySkinName, weaponSkinName);
+			_renderer = animator.GetComponent<MeshRenderer>();
 
 			_stance = config.DefaultStance;
 			_grip = config.DefaultGrip;
@@ -185,6 +187,9 @@ namespace Presentation.Unit
 
 		public void Pause() => animator.Pause();
 		public void Resume() => animator.Resume();
+
+		public void SetVisible(bool visible) => _renderer.enabled = visible;
+		public bool GetVisible() => _renderer.enabled;
 
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)
 		{

@@ -208,3 +208,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.AI.AIService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.PlayerTurnController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.AITurnController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.MoveEvaluator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

@@ -38,7 +38,7 @@ namespace Systems.PathFinding.MovementSimulation
 				foreach (var cell in newlyRevealed)
 				{
 					var occupant = unitService.GetUnitAtPosition(cell);
-					if (occupant is { IsAlive: true } && IsHostile(movingUnit, occupant))
+					if (occupant is { IsAlive: true } && movingUnit.IsHostile(occupant))
 						enemyDiscovered.Add(occupant);
 				}
 
@@ -51,14 +51,6 @@ namespace Systems.PathFinding.MovementSimulation
 				return MovementSimulationResult.Interrupted(truncated, enemyDiscovered, everSeen);
 			}
 			return MovementSimulationResult.Completed(path, everSeen);
-		}
-
-		private static bool IsHostile(Unit.Unit self, Unit.Unit other)
-		{
-			if (other.faction is EUnitFaction.None or EUnitFaction.Neutral || self.faction is EUnitFaction.None or EUnitFaction.Neutral)
-				return false;
-
-			return other.faction != self.faction;
 		}
 
 		private static int FindLastStoppableIndex(

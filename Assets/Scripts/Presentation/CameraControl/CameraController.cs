@@ -69,6 +69,8 @@ namespace Presentation.CameraControl
 
 		private void OnUnitTurnStarted(UnitTurnStartedEvent e)
 		{
+			if (!e.IsVisibleToPlayer) return;
+
 			var unitService = LevelContainer.Instance.TryResolve<IUnitService>();
 			var unit = unitService?.GetUnit(e.UnitId);
 			if (unit == null) return;

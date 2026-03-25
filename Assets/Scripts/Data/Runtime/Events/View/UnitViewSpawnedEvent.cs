@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Presentation.Unit;
 using UnityEngine;
 
 namespace Data.Runtime.Events.View
@@ -6,12 +7,12 @@ namespace Data.Runtime.Events.View
 	public readonly struct UnitViewSpawnedEvent : IEvent
 	{
 		public string UnitId { get; }
-		public Transform Transform { get; }
+		public UnitView View { get; }
 
-		public UnitViewSpawnedEvent(string unitId, Transform transform)
+		public UnitViewSpawnedEvent(string unitId, UnitView view)
 		{
 			UnitId = unitId;
-			Transform = transform;
+			View = view;
 		}
 	}
 }

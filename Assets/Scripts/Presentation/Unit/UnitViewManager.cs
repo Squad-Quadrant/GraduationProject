@@ -100,8 +100,8 @@ namespace Presentation.Unit
 
 			var viewInstance = CreateUnitViewInstance(unit);
 			_views[unit.id] = viewInstance;
-			viewInstance.gameObject.SetActive(false);
-			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance.transform));
+			viewInstance.SetVisible(false);
+			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance));
 
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -257,17 +257,17 @@ namespace Presentation.Unit
 
 		        if (unitId == e.UnitId)
 		        {
-			        view.gameObject.SetActive(true);
+			        view.SetVisible(true);
 			        continue;
 		        }
 
 		        if (!_unitService.TryGetUnit(unitId, out var unit))
 		        {
-			        view.gameObject.SetActive(false);
+			        view.SetVisible(false);
 			        continue;
 		        }
 
-		        view.gameObject.SetActive(e.VisibleCells.Contains(unit.position));
+		        view.SetVisible(e.VisibleCells.Contains(unit.position));
 	        }
         }
 

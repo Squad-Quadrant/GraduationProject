@@ -4,6 +4,7 @@ using Data.Runtime;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
+using Systems.AI.Config;
 using Systems.Equipment;
 using Systems.Equipment.Config;
 using Systems.Turn;
@@ -34,7 +35,8 @@ namespace Systems.Unit
         public int visionRange;
 		public EUnitFaction faction;
         public int defense;
-        public float defenseRate = 0f;
+        public float defenseRate;
+        public AIBrainConfig aiBrainConfig;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;
@@ -72,6 +74,7 @@ namespace Systems.Unit
 				faction = config.faction,
                 defense = config.defense,
                 defenseRate = config.defenseRate,
+                aiBrainConfig = config.aiBrainConfig,
 
 				animationConfig = config.animationConfig,
 				skeletonDataAsset = config.skeletonDataAsset,
@@ -115,6 +118,14 @@ namespace Systems.Unit
 			return moveRange <= 0
 				? pathCost
 				: Mathf.CeilToInt((float)pathCost / moveRange);
+		}
+
+		public bool IsHostile(Unit other)
+		{
+			if (other == null) return false;
+			if (faction is EUnitFaction.None or EUnitFaction.Neutral || other.faction is EUnitFaction.None or EUnitFaction.Neutral)
+				return false;
+			return faction != other.faction;
 		}
 
 		public override string ToString() =>

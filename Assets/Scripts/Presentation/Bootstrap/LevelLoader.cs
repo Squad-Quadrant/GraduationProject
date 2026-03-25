@@ -14,6 +14,7 @@ using Presentation.UI.Core;
 using Presentation.UI.Presenter;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
+using Systems.AI;
 using Systems.Damage;
 using Systems.GamePlay;
 using Systems.Interfaces;
@@ -154,6 +155,7 @@ namespace Presentation.Bootstrap
 				return new PathFindingService(mapService, traversalRule);
 			});
 			_levelContainer.Services.Register<IVisionService, VisionService>();
+			_levelContainer.Services.Register<IAIService, AIService>();
 
 			_levelContainer.Services.RegisterInstance(interactionController);
 		}

@@ -1,6 +1,7 @@
 ﻿using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
+using Systems.AI.Config;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -32,6 +33,10 @@ namespace Systems.Unit
 		public EUnitFaction faction = EUnitFaction.Neutral;
         public int defense = 100;
         public float defenseRate = 0f;
+
+        [TitleGroup("AI")]
+        [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]
+        public AIBrainConfig aiBrainConfig;
         
 
 		#region Validation

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Commands;
 using Core.Events;
@@ -10,6 +11,7 @@ using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Interaction;
+using Systems.AI;
 using Systems.Interaction.States;
 using Systems.Turn;
 using Systems.Unit;
@@ -30,13 +32,17 @@ namespace Systems.GamePlay
 		private readonly InteractionController _fsm;
 		private readonly IVisionService _visionService;
 
+		private readonly PlayerTurnController _playerController;
+		private readonly AITurnController _aiController;
+
 		public GameServer(
 			IEventBus eventBus,
 			ICommandQueue commandQueue,
 			ITurnService turnService,
 			IUnitService unitService,
 			InteractionController interactionController,
-			IVisionService visionService)
+			IVisionService visionService,
+			IAIService aiService)
 		{
 			_turnService = turnService;
 			_eventBus = eventBus;
@@ -44,6 +50,9 @@ namespace Systems.GamePlay
 			_unitService = unitService;
 			_fsm = interactionController;
 			_visionService = visionService;
+
+			_playerController = new PlayerTurnController(_eventBus, _fsm);
+			_aiController = new AITurnController(_turnService, aiService);
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
             _eventBus.Subscribe<UnitDestroyedEvent>(CheckGameOver);
@@ -113,39 +122,36 @@ namespace Systems.GamePlay
 			}
 
 			var unit = _unitService.GetUnit(turnUnit.Id);
-			this.Log($"Unit '{unit.id}' turn starting");
+			bool isPlayer = unit.faction == EUnitFaction.Player;
 
-			// todo: 这里或许需要根据unit的阵营决定行为
-			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber));
+			if (isPlayer)
+			{
+				var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
+				_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
+				_fsm.Context.VisibleCells = visible;
+			}
 
-			var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
-			_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
-			_fsm.Context.VisibleCells = visible;
+			bool visibleToPlayer = isPlayer || (_fsm.Context.VisibleCells != null && _fsm.Context.VisibleCells.Contains(unit.position));
+			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber, visibleToPlayer));
+
+			this.Log($"Unit '{unit.id}' ({unit.faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
 
 			AwaitThen(() => StartNewUnitTurn(unit), cmd => cmd
 				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
 			);
 		}
 
-		private void StartNewUnitTurn(Systems.Unit.Unit unit) // 实际开始一个新的单位回合，控制状态机推进
+		private void StartNewUnitTurn(Systems.Unit.Unit unit) // 实际开始一个新的单位回合
 		{
 			this.Log($"Unit '{unit.id}' is now acting");
-
-			// Control transfers to InteractionFSM (player) or AI system (enemy)
-			switch (unit.faction)
-			{
-				case EUnitFaction.Player: // 直接切换到 UnitSelectedState 让玩家操作
-				case EUnitFaction.Enemy:
-				case EUnitFaction.Neutral:
-				case EUnitFaction.None:
-					_fsm.Context.selectedUnit = unit;
-					_eventBus.Publish(new UnitSelectedEvent(unit.id, unit.position));
-					_fsm.StateMachine.ChangeState<UnitSelectedState>();
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
+			ResolveTurnController(unit).BeginTurn(unit);
 		}
+
+		private ITurnController ResolveTurnController(Unit.Unit unit) => unit.faction switch
+		{
+			EUnitFaction.Player => _playerController,
+			_ => _aiController
+		};
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
@@ -171,9 +177,6 @@ namespace Systems.GamePlay
 			_turnService.EndTurn();
 
 			this.Log($"Turn {turnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} ended");
-
-			// TODO: check win/lose conditions here before starting next turn
-			// if (CheckGameOver()) return;
 
 			AwaitThen(StartNewTurn, cmd => cmd
 				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
