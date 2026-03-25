@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Presentation.UI.Panel
 {
-    public class DamageTextPanell : UIPanel, IDisposable
+    public class DamageTextPanel : UIPanel, IDisposable
     {
         private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;

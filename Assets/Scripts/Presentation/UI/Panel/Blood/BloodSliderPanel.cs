@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
+using Presentation.Unit;
 using Systems.Interfaces;
 using Systems.Unit;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Presentation.UI.Panel
         private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;
         private IUnitService _unitService;
+        private UnitViewManager _unitViewManager;
         [SerializeField] private BloodSlider bloodSliderPrototype;
         private Dictionary<Systems.Unit.Unit ,BloodSlider> _bloodSliders = new();
         
@@ -24,11 +26,12 @@ namespace Presentation.UI.Panel
             this.Log("OnInitialize");
         }
         
-        public void Init(IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService)
+        public void Init(IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService, UnitViewManager unitViewManager)
         {
             _eventBus = eventBus;
             _coordinateConverter = coordinateConverter;
             _unitService = unitService;
+            _unitViewManager = unitViewManager;
             _eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
             _eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 
@@ -53,7 +56,7 @@ namespace Presentation.UI.Panel
         private void OnUnitCreated(Systems.Unit.Unit unit)
         {
             var slider = Instantiate(bloodSliderPrototype, transform);
-            slider.Init(unit, _coordinateConverter);
+            slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id));
             _bloodSliders.Add(unit, slider);
         }
         

@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 186567486}
   - component: {fileID: 186567485}
   - component: {fileID: 186567484}
+  - component: {fileID: 186567488}
   m_Layer: 5
   m_Name: Btn_GameStart
   m_TagString: Untagged
@@ -381,6 +382,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &186567488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186567483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eafc3eb0267141458f572453d9b8170c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxScale: 1.1
+  minScale: 0.9
+  scalingSpeed: 0.15
 --- !u!1 &738049249
 GameObject:
   m_ObjectHideFlags: 0

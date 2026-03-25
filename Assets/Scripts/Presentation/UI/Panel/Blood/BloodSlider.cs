@@ -1,4 +1,5 @@
 using System;
+using Presentation.Unit;
 using Systems.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ namespace Presentation.UI.Panel
     public class BloodSlider : MonoBehaviour
     {
         private Systems.Unit.Unit _owner;
+        private UnitView _unitView;
         [SerializeField] private Image bloodSliderImage;
         [SerializeField] private float xOffset;
         [SerializeField] private float yOffset;
@@ -19,9 +21,10 @@ namespace Presentation.UI.Panel
             Refresh();
         }
 
-        public void Init(Systems.Unit.Unit owner, ICoordinateConverter coordinateConverter)
+        public void Init(Systems.Unit.Unit owner, ICoordinateConverter coordinateConverter, UnitView unitView)
         {
             _owner = owner;
+            _unitView = unitView;
             _coordinateConverter = coordinateConverter;
 
             Refresh();
@@ -40,8 +43,9 @@ namespace Presentation.UI.Panel
         private void Refresh()
         {
             bloodSliderImage.fillAmount = (float)_owner.currentHp / _owner.maxHp;
-            Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);
-            transform.position = Camera.main.WorldToScreenPoint(worldPosition);
+            // Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);
+            transform.position = Camera.main.WorldToScreenPoint(_unitView.transform.position + new Vector3(xOffset, yOffset, 0));
+            bloodSliderImage.enabled = _unitView.gameObject.activeSelf;
         }
     }
 }

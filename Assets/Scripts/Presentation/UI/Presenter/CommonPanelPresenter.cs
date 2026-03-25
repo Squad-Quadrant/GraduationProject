@@ -5,6 +5,7 @@ using Data.Runtime.Events;
 using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Presentation.Unit;
 using Systems.Interfaces;
 using Systems.Unit;
 
@@ -16,16 +17,18 @@ namespace Presentation.UI.Presenter
         private readonly IEventBus _eventBus;
         private readonly ICoordinateConverter  _coordinateConverter;
         private readonly IUnitService _unitService;
+        private readonly UnitViewManager _unitViewManager;
         private BloodSliderPanel _bloodSliderPanel;
-        private DamageTextPanell _damageTextPanel;
+        private DamageTextPanel _damageTextPanel;
         
-        public CommonPanelPresenter(UIManager uiManager, IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService)
+        public CommonPanelPresenter(UIManager uiManager, IEventBus eventBus, ICoordinateConverter coordinateConverter,
+            IUnitService unitService, UnitViewManager unitViewManager)
         {
             _uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
             _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
-            
+            _unitViewManager =  unitViewManager ?? throw new ArgumentNullException(nameof(unitViewManager));
             _eventBus.Subscribe<LevelLoadedEvent>(OnLevelLoaded);
 
             this.Log("Initialized");
@@ -39,9 +42,9 @@ namespace Presentation.UI.Presenter
         private void OnLevelLoaded(LevelLoadedEvent e)
         {
             _bloodSliderPanel = _uiManager.Open<BloodSliderPanel>();
-            _bloodSliderPanel.Init(_eventBus, _coordinateConverter, _unitService);
+            _bloodSliderPanel.Init(_eventBus, _coordinateConverter, _unitService, _unitViewManager);
             
-            _damageTextPanel  = _uiManager.Open<DamageTextPanell>();
+            _damageTextPanel  = _uiManager.Open<DamageTextPanel>();
             _damageTextPanel.Init(_eventBus, _coordinateConverter, _unitService);
         }
 
