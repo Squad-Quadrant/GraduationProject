@@ -82,10 +82,10 @@ namespace Data.Runtime.Commands
 
 		private void Complete()
 		{
+			CompleteExecution();
 			_completed = true;
 			_onComplete?.Invoke();
 			Cleanup();
-			CompleteExecution();
 		}
 
 		private void Cleanup()

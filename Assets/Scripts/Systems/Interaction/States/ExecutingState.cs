@@ -2,6 +2,7 @@
 using Core.Commands.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 
 namespace Systems.Interaction.States
@@ -9,6 +10,7 @@ namespace Systems.Interaction.States
 	public class ExecutingState : InteractionState
 	{
 		private Action<CommandCompletedEvent> _onQueueCompleted;
+		private Action<PresentationCompleteEvent> _onDiscoveryFocusComplete;
 
 		public ExecutingState() : base(InteractionStates.Executing) { }
 
@@ -22,7 +24,7 @@ namespace Systems.Interaction.States
 			if (ctx.CommandQueue.IsIdle)
 			{
 				this.Log("Queue already idle, transitioning immediately");
-				DetermineNextState();
+				HandlePostCommand();
 				return;
 			}
 
@@ -40,6 +42,8 @@ namespace Systems.Interaction.States
 				_onQueueCompleted = null;
 			}
 
+			CleanupDiscoverySubscription();
+
 			base.OnExit(ctx);
 		}
 
@@ -53,31 +57,51 @@ namespace Systems.Interaction.States
 		private void OnCommandsCompleted(CommandCompletedEvent commandCompletedEvent)
 		{
 			this.Log("All commands completed");
-			DetermineNextState();
+			HandlePostCommand();
 		}
 
-		private void DetermineNextState()
+		private void HandlePostCommand()
 		{
 			var simResult = Context.LastSimulationResult;
-			if (simResult is { WasInterrupted: true })
-			{
-				this.Log($"Movement was interrupted — {simResult.DiscoveredUnits.Count} enemies discovered");
-
-				Publish(Context, new EnemiesDiscoveredEvent(Context.selectedUnit?.id, simResult.DiscoveredUnits));
-
-				Context.VisibleCells = simResult.FinalVisibleCells;
-				Publish(Context, new VisionChangedEvent(Context.VisibleCells, Context.selectedUnit?.id));
-			}
 			Context.LastSimulationResult = null;
 
-			// Check if we still have a selected unit
+			if (simResult is not { WasInterrupted: true })
+			{
+				ResolveNextState();
+				return;
+			}
+
+			this.Log($"Movement interrupted — {simResult.DiscoveredUnits.Count} enemies discovered");
+
+			Context.VisibleCells = simResult.FinalVisibleCells;
+			Publish(Context, new EnemiesDiscoveredEvent(Context.selectedUnit?.id, simResult.DiscoveredUnits));
+			Publish(Context, new VisionChangedEvent(Context.VisibleCells, Context.selectedUnit?.id));
+
+			_onDiscoveryFocusComplete = OnDiscoveryFocusComplete;
+			Subscribe(Context, _onDiscoveryFocusComplete);
+
+			this.Log("Waiting for discovery focus to complete...");
+		}
+
+		private void OnDiscoveryFocusComplete(PresentationCompleteEvent e)
+		{
+			if (!e.Matches(EPresentationCategory.Camera, PresentationType.Camera.DiscoveryFocus))
+				return;
+
+			this.Log("Discovery focus complete, resuming");
+			CleanupDiscoverySubscription();
+			ResolveNextState();
+		}
+
+		private void ResolveNextState()
+		{
 			if (Context.selectedUnit == null)
 			{
 				this.Log("No selected unit");
 				Context.TurnService.EndUnitTurn();
 				return;
 			}
-            
+
 			var unit = Context.selectedUnit;
 			var currentTurnUnit = Context.TurnService.ActiveUnit;
 
@@ -100,6 +124,13 @@ namespace Systems.Interaction.States
 				this.Log($"Unit {unit.name} turn complete");
 				Context.TurnService.EndUnitTurn();
 			}
+		}
+
+		private void CleanupDiscoverySubscription()
+		{
+			if (_onDiscoveryFocusComplete == null) return;
+			Unsubscribe(Context, _onDiscoveryFocusComplete);
+			_onDiscoveryFocusComplete = null;
 		}
 	}
 }

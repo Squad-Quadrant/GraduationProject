@@ -1,7 +1,10 @@
-﻿using Core.Events;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
+using Data.Runtime.Events.Vision;
 using DG.Tweening;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
@@ -47,6 +50,7 @@ namespace Presentation.CameraControl
 
 			ComputeWorldBounds();
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 
 			_isInitialized = true;
 			this.Log("Initialized");
@@ -55,6 +59,7 @@ namespace Presentation.CameraControl
 		private void OnDestroy()
 		{
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 			KillFocusTween();
 		}
 
@@ -79,6 +84,19 @@ namespace Presentation.CameraControl
 			FocusOn(worldPos);
 		}
 
+		private void OnEnemiesDiscovered(EnemiesDiscoveredEvent e)
+		{
+			if (e.DiscoveredUnits == null || e.DiscoveredUnits.Count == 0)
+				return;
+
+			var positions = new List<Vector2Int>(e.DiscoveredUnits.Count);
+			positions.AddRange(e.DiscoveredUnits.Select(unit => unit.position));
+
+			this.Log($"Enemies discovered: {positions.Count} units, starting focus sequence");
+
+			FocusOnCellSequence(positions);
+		}
+
 		public void FocusOn(Vector3 worldPos)
 		{
 			KillFocusTween();
@@ -94,8 +112,7 @@ namespace Presentation.CameraControl
 				.OnComplete(() =>
 				{
 					_isFocusing = false;
-					_eventBus.Publish(new PresentationCompleteEvent(
-						EPresentationCategory.Camera, PresentationType.Camera.Focus));
+					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera, PresentationType.Camera.Focus));
 				});
 
 			this.Log($"Focusing on {worldPos}");
@@ -105,6 +122,50 @@ namespace Presentation.CameraControl
 		{
 			var worldPos = _coordinateConverter.CellToWorld(cellPos);
 			FocusOn(worldPos);
+		}
+
+		public void FocusOnCellSequence(IReadOnlyList<Vector2Int> cellPositions)
+		{
+			if (cellPositions == null || cellPositions.Count == 0)
+				return;
+
+			KillFocusTween();
+
+			var cameraTransform = mainCamera.transform;
+			var seq = DOTween.Sequence();
+
+			for (int i = 0; i < cellPositions.Count; i++)
+			{
+				var worldPos = _coordinateConverter.CellToWorld(cellPositions[i]);
+				var clamped = ClampPosition(worldPos);
+				var targetPos = new Vector3(clamped.x, clamped.y, cameraTransform.position.z);
+
+				// move to the target position
+				seq.Append(
+					cameraTransform
+						.DOMove(targetPos, config.discoveryFocusDuration)
+						.SetEase(config.discoveryEase)
+				);
+
+				// interval
+				if (i < cellPositions.Count - 1)
+					seq.AppendInterval(config.discoveryDwellDuration);
+			}
+
+			_isFocusing = true;
+			seq.OnComplete(() =>
+			{
+				_isFocusing = false;
+				_focusTween = null;
+
+				this.Log("Discovery focus sequence complete");
+
+				_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera, PresentationType.Camera.DiscoveryFocus));
+			});
+
+			_focusTween = seq;
+
+			this.Log($"Discovery focus sequence started: {cellPositions.Count} targets");
 		}
 
 		public void SnapTo(Vector3 worldPos)

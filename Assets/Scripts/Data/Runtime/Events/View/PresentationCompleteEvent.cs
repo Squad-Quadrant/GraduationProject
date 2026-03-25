@@ -79,6 +79,7 @@ namespace Data.Runtime.Events.View
 		public static class Camera
 		{
 			public const string Focus = "Focus";
+			public const string DiscoveryFocus = "DiscoveryFocus";
 			public const string Pan = "Pan";
 			public const string Shake = "Shake";
 		}

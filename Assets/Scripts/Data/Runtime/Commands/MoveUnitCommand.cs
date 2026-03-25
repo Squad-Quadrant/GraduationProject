@@ -28,7 +28,7 @@ namespace Data.Runtime.Commands
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
-		public override string Name => $"Move({_unitId}: {_fromPosition} → {_toPosition})";
+		public override string Name => $"Move ['{_unitId}': {_fromPosition} → {_toPosition}]";
 		public override bool CanUndo => false;
 
 

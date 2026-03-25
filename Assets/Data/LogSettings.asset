@@ -84,6 +84,18 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.BloodSliderPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.DamageTextPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.DamageTextPanell
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.TurnBanner
     enabled: 1
     minLogLevel: 0
@@ -108,6 +120,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.CommonPanelPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.UI.Presenter.TurnBannerPresenter
     enabled: 1
     minLogLevel: 0
@@ -122,13 +138,21 @@ MonoBehaviour:
     autoDiscovered: 1
   - typeName: Presentation.Unit.UnitAnimator
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 2
     autoDiscovered: 1
   - typeName: Presentation.Unit.UnitView
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.Unit.UnitViewManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.AI.AIService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.MoveEvaluator
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -140,7 +164,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.GamePlay.AITurnController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.GamePlay.GameServer
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.PlayerTurnController
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -191,36 +223,4 @@ MonoBehaviour:
   - typeName: Systems.Vision.VisionService
     enabled: 1
     minLogLevel: 2
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.CommonPanelPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.BloodSliderPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.DamageTextPanell
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.DamageTextPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.AIService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.PlayerTurnController
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.AITurnController
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.MoveEvaluator
-    enabled: 1
-    minLogLevel: 0
     autoDiscovered: 1

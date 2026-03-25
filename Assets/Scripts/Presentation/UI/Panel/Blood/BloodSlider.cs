@@ -43,8 +43,8 @@ namespace Presentation.UI.Panel
 
         private void Refresh()
         {
-            bloodSliderImage.enabled = _unitView.gameObject.activeSelf;
-            defenseSliderImage.enabled = _unitView.gameObject.activeSelf;
+	        bloodSliderImage.enabled = _unitView.GetVisible();
+            defenseSliderImage.enabled = _unitView.GetVisible();
             bloodSliderImage.fillAmount = Mathf.Lerp(bloodSliderImage.fillAmount, (float)_owner.currentHp / _owner.maxHp, 0.05f);
             defenseSliderImage.fillAmount = Mathf.Lerp(defenseSliderImage.fillAmount, (float)_owner.currentDefense / _owner.defense, 0.05f);
             // Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);

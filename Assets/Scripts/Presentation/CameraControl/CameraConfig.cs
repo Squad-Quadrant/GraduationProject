@@ -46,6 +46,17 @@ namespace Presentation.CameraControl
 		[SuffixLabel("units"), Range(0f, 5f)]
 		public float boundaryPadding = 1f;
 
+		[FoldoutGroup("Discovery")]
+		[SuffixLabel("sec"), Range(0.1f, 1f)]
+		public float discoveryFocusDuration = 0.3f;
+
+		[FoldoutGroup("Discovery")]
+		[SuffixLabel("sec"), Range(0.1f, 2f)]
+		public float discoveryDwellDuration = 0.6f;
+
+		[FoldoutGroup("Discovery")]
+		public Ease discoveryEase = Ease.OutCubic;
+
 		[FoldoutGroup("Shake")]
 		[SuffixLabel("sec"), Range(0.05f, 1f)]
 		public float shakeDuration = 0.2f;
