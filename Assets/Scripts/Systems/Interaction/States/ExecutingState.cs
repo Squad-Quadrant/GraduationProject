@@ -2,6 +2,7 @@
 using Core.Commands.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Vision;
 
 namespace Systems.Interaction.States
 {
@@ -33,8 +34,11 @@ namespace Systems.Interaction.States
 		{
 			this.Log("Exited");
 
-			Unsubscribe(ctx, _onQueueCompleted);
-			_onQueueCompleted = null;
+			if (_onQueueCompleted != null)
+			{
+				Unsubscribe(ctx, _onQueueCompleted);
+				_onQueueCompleted = null;
+			}
 
 			base.OnExit(ctx);
 		}
@@ -54,6 +58,18 @@ namespace Systems.Interaction.States
 
 		private void DetermineNextState()
 		{
+			var simResult = Context.LastSimulationResult;
+			if (simResult is { WasInterrupted: true })
+			{
+				this.Log($"Movement was interrupted — {simResult.DiscoveredUnits.Count} enemies discovered");
+
+				Publish(Context, new EnemiesDiscoveredEvent(Context.selectedUnit?.id, simResult.DiscoveredUnits));
+
+				Context.VisibleCells = simResult.FinalVisibleCells;
+				Publish(Context, new VisionChangedEvent(Context.VisibleCells, Context.selectedUnit?.id));
+			}
+			Context.LastSimulationResult = null;
+
 			// Check if we still have a selected unit
 			if (Context.selectedUnit == null)
 			{

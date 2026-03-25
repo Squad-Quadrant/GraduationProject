@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.UI;
+using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
@@ -35,6 +37,8 @@ namespace Presentation.Input
 		private Vector2Int? _lastHoveredCell;
 		private string _lastHoveredUnitId;
 
+		private HashSet<Vector2Int> _visibleCells;
+
 		public void Initialize(ServiceContainer services)
 		{
 			_eventBus = services.Resolve<IEventBus>();
@@ -45,6 +49,8 @@ namespace Presentation.Input
 			if (!mainCamera) mainCamera = Camera.main;
 
 			SetupInputActions();
+
+			_eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
 
 			this.Log("Initialized");
 		}
@@ -63,6 +69,8 @@ namespace Presentation.Input
 
 		private void OnDestroy()
 		{
+			_eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
+
 			if (_inputActions == null) return;
 
 			_inputActions.Gameplay.PrimaryClick.performed -= OnPrimaryClick;
@@ -91,6 +99,8 @@ namespace Presentation.Input
 
 			this.Log($"{(enable ? "Enabled" : "Disabled")}");
 		}
+
+		private void OnVisionChanged(VisionChangedEvent e) => _visibleCells = e.VisibleCells;
 
 		private void OnPrimaryClick(InputAction.CallbackContext ctx)
 		{
@@ -201,6 +211,11 @@ namespace Presentation.Input
 		}
 
 		private string GetUnitAtCell(Vector2Int cellPosition)
-			=> (from unit in _unitService.GetAllUnits() where unit.position == cellPosition select unit.id).FirstOrDefault();
+		{
+			if (_visibleCells != null && !_visibleCells.Contains(cellPosition))
+				return null;
+
+			return (from unit in _unitService.GetAllUnits() where unit.position == cellPosition select unit.id).FirstOrDefault();
+		}
 	}
 }

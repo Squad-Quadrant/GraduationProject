@@ -25,7 +25,7 @@ MonoBehaviour:
   speed: 10
   moveRange: 2
   actionPoints: 2
-  visionRange: 2
+  visionRange: 3
   faction: 1
   defense: 100
   defenseRate: 0.5

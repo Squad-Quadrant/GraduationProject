@@ -5,7 +5,10 @@ using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Vision;
 using Systems.PathFinding;
+using Systems.PathFinding.MovementSimulation;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -32,9 +35,14 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			var reachableArea = CalculateReachableArea(ctx);
+			var reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisibleCells);
 			var stoppableCells = reachableArea.GetStoppableCellsList();
 			var costMap = reachableArea.CostMap;
+
+			// Cache
+			ctx.LastReachableArea = reachableArea;
+			ctx.validTargetCells.Clear();
+			ctx.validTargetCells.AddRange(stoppableCells);
 
 			this.LogDebug($"Valid target cells: {string.Join(", ", stoppableCells)}");
 
@@ -77,7 +85,7 @@ namespace Systems.Interaction.States
 
 		private void OnCellClicked(CellClickedEvent e)
 		{
-			if (!Context.CachedReachableArea.CanStopAt(e.CellPosition))
+			if (!Context.LastReachableArea.CanStopAt(e.CellPosition))
 			{
 				this.Log($"Invalid target: {e.CellPosition}");
 				// todo: Could play error sound or show feedback
@@ -93,7 +101,6 @@ namespace Systems.Interaction.States
 			{
 				// Pointer outside map - hide path
 				Publish(Context, PathPreviewEvent.Hide());
-				Context.currentPath.Clear();
 				return;
 			}
 
@@ -101,14 +108,7 @@ namespace Systems.Interaction.States
 
 			// Calculate path to hovered cell
 			var pathResult = GetPathFromCache(targetCell);
-			var isValid = Context.CachedReachableArea?.CanStopAt(targetCell) ?? false;
-
-			// Update context
-			Context.currentPath.Clear();
-			if (pathResult.Found)
-			{
-				Context.currentPath.AddRange(pathResult.Path);
-			}
+			var isValid = Context.LastReachableArea?.CanStopAt(targetCell) ?? false;
 
 			Publish(Context, new PathPreviewEvent(
 				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
@@ -132,52 +132,36 @@ namespace Systems.Interaction.States
 			Context.StateMachine.ChangeState<IdleState>();
 		}
 
-		private ReachableAreaResult CalculateReachableArea(InteractionContext ctx)
+		private ReachableAreaResult CalculateReachableArea(Unit.Unit selectedUnit, IPathFindingService pathfinding, HashSet<Vector2Int> visibleCells)
 		{
-			var unit = ctx.selectedUnit;
-			var pathfinding = ctx.PathFindingService;
-
-			if (pathfinding == null)
-			{
-				this.LogError("PathfindingService not available!");
-				ctx.validTargetCells.Clear();
-				return null;
-			}
-
-			// Build pathfinding options based on unit capabilities
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
 				enemiesBlockMovement: true,
-				movingUnitFaction: unit.faction,
-				movingUnitId: unit.id,
+				movingUnitFaction: selectedUnit.faction,
+				movingUnitId: selectedUnit.id,
 				canCrossLowWalls: false,  // TODO: could be unit-specific
 				canCrossHighWalls: false,
-				ignoreTerrainWalkability: false
+				ignoreTerrainWalkability: false,
+				visibleCells: visibleCells
 			);
 
-			var maxMovementPoints = unit.moveRange * unit.currentAp;
+			var maxMovementPoints = selectedUnit.moveRange * selectedUnit.currentAp;
 
 			var reachableArea = pathfinding.GetReachableArea(
-				unit.position,
+				selectedUnit.position,
 				maxMovementPoints,
 				options);
 
-			// Cache the result for path queries during hover
-			ctx.CachedReachableArea = reachableArea;
-
-			// Populate validTargetCells with stoppable cells only
-			ctx.validTargetCells.Clear();
-			ctx.validTargetCells.AddRange(reachableArea.GetStoppableCellsList());
-
 			this.Log($"Calculated reachable area: {reachableArea.StoppableCount} stoppable cells, " +
-			         $"{reachableArea.ReachableCount} total reachable");
+			         $"{reachableArea.ReachableCount} total reachable" +
+			         $"(vision: {visibleCells.Count} cells)");
 
 			return reachableArea;
 		}
 
 		private PathResult GetPathFromCache(Vector2Int target)
 		{
-			var cachedArea = Context.CachedReachableArea;
+			var cachedArea = Context.LastReachableArea;
 
 			if (cachedArea != null) return cachedArea.GetPathTo(target);
 
@@ -197,16 +181,47 @@ namespace Systems.Interaction.States
 
 			Context.targetCell = targetCell;
 
-			var pathResult = GetPathFromCache(targetCell);
+			var fullPathResult = GetPathFromCache(targetCell);
+			if (!fullPathResult.Found)
+			{
+				this.LogError($"No path found to {targetCell}");
+				return;
+			}
+
 			var unit = Context.selectedUnit;
-			int apCost = unit.CalculateMovementApCost(pathResult.TotalCost);
+			var simResult = MovementSimulator.Simulate(
+				fullPathResult.Path,
+				unit,
+				Context.VisibleCells,
+				Context.VisionService,
+				Context.UnitService);
+
+			Context.LastSimulationResult = simResult;
+
+			this.Log($"Movement interrupted: {simResult.WasInterrupted}");
+
+			var actualPath = simResult.ActualPath;
+			var actualDestination = actualPath[^1];
+
+			this.Log($"{unit.position} - {actualDestination}");
+
+			if (actualDestination == unit.position)
+			{
+				this.Log("Truncated to origin — no movement needed");
+				unit.currentAp -= 1;
+				Context.StateMachine.ChangeState<ExecutingState>();
+				return;
+			}
+
+			int pathCost = Context.LastReachableArea.GetCostTo(actualDestination);
+			int apCost = unit.CalculateMovementApCost(pathCost);
 
 			// Create and queue move command
 			var moveCommand = new MoveUnitCommand(
 				unit.id,
 				unit.position,
-				targetCell,
-				pathResult.Path,
+				actualDestination,
+				actualPath,
 				apCost,
 				Context.UnitService,
 				Context.MapService,

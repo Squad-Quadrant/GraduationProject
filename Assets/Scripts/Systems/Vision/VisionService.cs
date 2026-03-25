@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using Systems.Map;
 using Systems.Map.Config;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Systems.Vision
@@ -10,8 +11,13 @@ namespace Systems.Vision
 	public class VisionService : IVisionService
 	{
 		private readonly IMapService _mapService;
+		private readonly IUnitService _unitService;
 
-		public VisionService(IMapService mapService) => _mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
+		public VisionService(IMapService mapService, IUnitService unitService)
+		{
+			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
+			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+		}
 
 		// 按曼哈顿距离遍历所有visionRange中的格子，一个个调用HasLineOfSight
 		public HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange)
@@ -32,6 +38,13 @@ namespace Systems.Vision
 					if (HasLineOfSight(origin, target, mapData))
 						visible.Add(target);
 				}
+			}
+
+			var allUnits = _unitService.GetAllAliveUnits();
+			foreach (var unit in allUnits)
+			{
+				if (unit.faction != EUnitFaction.Player) continue;
+				visible.Add(unit.position);
 			}
 
 			return visible;
@@ -142,7 +155,7 @@ namespace Systems.Vision
 				var entered = horizontal
 					? new Vector2Int(pos, axis)
 					: new Vector2Int(axis, pos);
-				this.Log($"Checking Wall {entered}: {IsCellBlocking(entered, mapData)}");
+				this.Log($"Checking Cell {entered}: {IsCellBlocking(entered, mapData)}");
 				if (IsCellBlocking(entered, mapData))
 					return false;
 			}

@@ -100,6 +100,7 @@ namespace Presentation.Unit
 			var viewInstance = CreateUnitViewInstance(unit);
 			_views[unit.id] = viewInstance;
 			viewInstance.gameObject.SetActive(false);
+			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance.transform));
 
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -123,6 +124,7 @@ namespace Presentation.Unit
 			view.CancelMovement();
 			view.PlayAction("death", () =>
 			{
+				_eventBus.Publish(new UnitViewDespawnedEvent(unitId));
 				if (view && view.gameObject)
 					Destroy(view.gameObject);
 			});

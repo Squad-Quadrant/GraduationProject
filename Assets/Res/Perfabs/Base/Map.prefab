@@ -622,6 +622,10 @@ MonoBehaviour:
   paddingRange: 1
   paddingStrength: 0.35
   transitionSpeed: 8
+  unitMaskRadiusX: 0.2
+  unitMaskRadiusY: 0.5
+  unitCenterOffsetY: 0.15
+  unitMaskSoftness: 0.4
   sortingLayerName: OnGround
   sortingOrder: 1000
   padding: 5

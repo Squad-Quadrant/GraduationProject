@@ -6,6 +6,7 @@ using Core.FSM;
 using Data.Runtime;
 using Systems.Map;
 using Systems.PathFinding;
+using Systems.PathFinding.MovementSimulation;
 using Systems.Turn;
 using Systems.Unit;
 using Systems.Vision;
@@ -42,12 +43,14 @@ namespace Systems.Interaction
 		public EActionType currentAction;
 
 		public List<Vector2Int> validTargetCells = new();
-        
-        // public List<Unit.Unit> validTargetUnits = new();
 
-		public List<Vector2Int> currentPath = new();
+		// public List<Vector2Int> currentPath = new();
 
-		public ReachableAreaResult CachedReachableArea;
+		public ReachableAreaResult LastReachableArea;
+
+		public HashSet<Vector2Int> VisibleCells;
+
+		public MovementSimulationResult LastSimulationResult;
 
 		public InteractionContext(
 			IEventBus eventBus,
@@ -67,28 +70,18 @@ namespace Systems.Interaction
             VisionService = visionService;
 		}
 
-		/// <summary>
-		/// Clears all selection-related state.
-		/// Call this when deselecting a unit or returning to idle.
-		/// </summary>
 		public void ClearSelection()
 		{
 			selectedUnit = null;
 			targetCell = InvalidCell;
 			targetUnit = null;
 			validTargetCells.Clear();
-			currentPath.Clear();
 		}
 
-		/// <summary>
-		/// Clears only the target-related state.
-		/// Call this when cancelling target selection but keeping unit selected.
-		/// </summary>
 		public void ClearTarget()
 		{
 			targetCell = InvalidCell;
 			targetUnit = null;
-			currentPath.Clear();
 		}
 
 		public bool HasTarget => targetCell != InvalidCell || targetUnit != null;

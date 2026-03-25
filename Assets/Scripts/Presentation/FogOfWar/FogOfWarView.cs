@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Map;
+using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
@@ -28,6 +29,12 @@ namespace Presentation.FogOfWar
 		[Title("Animation")]
 		[SerializeField, Range(1f, 20f)] private float transitionSpeed = 8f;
 
+		[Title("Unit Mask")]
+		[OnValueChanged("UpdateMaterial")] [SerializeField] private float unitMaskRadiusX = 0.6f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField] private float unitMaskRadiusY = 1.2f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField] private float unitCenterOffsetY = 0.4f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 1f)] private float unitMaskSoftness = 0.4f;
+
 		[Title("Rendering")]
 		[SerializeField] private string sortingLayerName = "Default";
 		[SerializeField] private int sortingOrder = 1000;
@@ -45,6 +52,10 @@ namespace Presentation.FogOfWar
 		private Color[] _pixelBuffer;    // reusable buffer for texture upload
 		private bool _isDirty;           // true when current != target, triggers Update work
 
+		private const int MaxUnits = 32;
+		private readonly Dictionary<string, Transform> _trackedUnits = new();
+		private readonly Vector4[] _unitPositionBuffer = new Vector4[MaxUnits];
+
 		private static readonly int PropVisibilityTex  = Shader.PropertyToID("_VisibilityTex");
 		private static readonly int PropNoiseTex       = Shader.PropertyToID("_NoiseTex");
 		private static readonly int PropFogColor       = Shader.PropertyToID("_FogColor");
@@ -55,6 +66,11 @@ namespace Presentation.FogOfWar
 		private static readonly int PropGridOrigin     = Shader.PropertyToID("_GridOrigin");
 		private static readonly int PropInvBasisRow0   = Shader.PropertyToID("_InvBasisRow0");
 		private static readonly int PropInvBasisRow1   = Shader.PropertyToID("_InvBasisRow1");
+		private static readonly int PropUnitPositions     = Shader.PropertyToID("_UnitPositions");
+		private static readonly int PropUnitCount         = Shader.PropertyToID("_UnitCount");
+		private static readonly int PropUnitEllipseRadius = Shader.PropertyToID("_UnitEllipseRadius");
+		private static readonly int PropUnitCenterOffset  = Shader.PropertyToID("_UnitCenterOffset");
+		private static readonly int PropUnitMaskSoftness  = Shader.PropertyToID("_UnitMaskSoftness");
 
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -65,19 +81,25 @@ namespace Presentation.FogOfWar
 		{
 			EventBus.Subscribe<MapViewInitEvent>(OnMapInitialized);
 			EventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
+			EventBus.Subscribe<UnitViewSpawnedEvent>(OnUnitViewSpawned);
+			EventBus.Subscribe<UnitViewDespawnedEvent>(OnUnitViewDespawned);
 		}
 
 		private void OnDisable()
 		{
 			EventBus.Unsubscribe<MapViewInitEvent>(OnMapInitialized);
 			EventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
+			EventBus.Unsubscribe<UnitViewSpawnedEvent>(OnUnitViewSpawned);
+			EventBus.Unsubscribe<UnitViewDespawnedEvent>(OnUnitViewDespawned);
 			Cleanup();
 		}
 
 		private void Update()
 		{
-			if (!_initialized || !_isDirty) return;
+			if (!_initialized) return;
+			UpdateUnitMask();
 
+			if (!_isDirty) return;
 			float maxDelta = transitionSpeed * Time.deltaTime;
 			bool stillDirty = false;
 			int count = _targetValues.Length;
@@ -135,6 +157,17 @@ namespace Presentation.FogOfWar
 			_isDirty = true;
 		}
 
+		private void OnUnitViewSpawned(UnitViewSpawnedEvent e)
+		{
+			if (e.Transform)
+				_trackedUnits[e.UnitId] = e.Transform;
+		}
+
+		private void OnUnitViewDespawned(UnitViewDespawnedEvent e)
+		{
+			_trackedUnits.Remove(e.UnitId);
+		}
+
 		private void CreateVisibilityTexture()
 		{
 			_visibilityTex = new Texture2D(_mapSize.x, _mapSize.y, TextureFormat.R8, false)
@@ -160,6 +193,9 @@ namespace Presentation.FogOfWar
 			_material.SetFloat(PropNoiseIntensity, noiseIntensity);
 			_material.SetFloat(PropNoiseScale, noiseScale);
 			_material.SetFloat(PropEdgeSoftness, edgeSoftness);
+			_material.SetVector(PropUnitEllipseRadius, new Vector4(unitMaskRadiusX, unitMaskRadiusY, 0f, 0f));
+			_material.SetVector(PropUnitCenterOffset, new Vector4(0f, unitCenterOffsetY, 0f, 0f));
+			_material.SetFloat(PropUnitMaskSoftness, unitMaskSoftness);
 		}
 
 		private void SetupShaderUniforms()
@@ -303,6 +339,28 @@ namespace Presentation.FogOfWar
 			_isDirty = true;
 		}
 
+		private void UpdateUnitMask()
+		{
+			int count = 0;
+			foreach (var t in _trackedUnits.Values)
+			{
+				if (!t || !t.gameObject.activeInHierarchy) continue;
+				if (count >= MaxUnits) break;
+
+				var pos = t.position;
+				_unitPositionBuffer[count] = new Vector4(pos.x, pos.y, 0f, 0f);
+				count++;
+			}
+
+			// Zero out remaining slots so stale data from previous frames
+			// doesn't create phantom masks in the shader.
+			for (int i = count; i < MaxUnits; i++)
+				_unitPositionBuffer[i] = Vector4.zero;
+
+			_material.SetVectorArray(PropUnitPositions, _unitPositionBuffer);
+			_material.SetInt(PropUnitCount, count);
+		}
+
 		private void Cleanup()
 		{
 			if (_quadObj) Destroy(_quadObj);
@@ -313,6 +371,7 @@ namespace Presentation.FogOfWar
 			_material = null;
 			_visibilityTex = null;
 			_pixelBuffer = null;
+			_trackedUnits.Clear();
 		}
 
 		#region Debug
