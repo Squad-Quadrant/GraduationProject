@@ -106,6 +106,26 @@ MonoBehaviour:
     grip: 1
     clipName: move/move end hg
     loop: 0
+  - action: beHit
+    stance: 0
+    grip: 0
+    clipName: act/hit stand
+    loop: 0
+  - action: beHit
+    stance: 0
+    grip: 1
+    clipName: act/hit stand hg
+    loop: 0
+  - action: beHit
+    stance: 1
+    grip: 0
+    clipName: act/hit bend
+    loop: 0
+  - action: beHit
+    stance: 1
+    grip: 1
+    clipName: act/hit bend hg
+    loop: 0
   transitions:
   - from: 2
     to: 0
@@ -139,6 +159,6 @@ MonoBehaviour:
     to: 1
     grip: 1
     clipName: trans/stand to bend hg
-  animIndex: 7
+  animIndex: 6
   transIndex: 0
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}

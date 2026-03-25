@@ -16,7 +16,7 @@ namespace Presentation.UI.Panel
         private ICoordinateConverter _coordinateConverter;
 
         // todo: 先搁着刷吧,懒得写事件了,以后再说
-        private void Update()
+        private void FixedUpdate()
         {
             Refresh();
         }
@@ -42,7 +42,7 @@ namespace Presentation.UI.Panel
 
         private void Refresh()
         {
-            bloodSliderImage.fillAmount = (float)_owner.currentHp / _owner.maxHp;
+            bloodSliderImage.fillAmount = Mathf.Lerp(bloodSliderImage.fillAmount, (float)_owner.currentHp / _owner.maxHp, 0.05f);
             // Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);
             transform.position = Camera.main.WorldToScreenPoint(_unitView.transform.position + new Vector3(xOffset, yOffset, 0));
             bloodSliderImage.enabled = _unitView.gameObject.activeSelf;

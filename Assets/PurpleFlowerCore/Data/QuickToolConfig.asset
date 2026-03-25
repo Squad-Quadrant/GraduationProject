@@ -61,3 +61,11 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
+  - name: Spine
+    commandType: 3
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 0
+    commandParam: Assets/Res/Spine/character/character_SkeletonData.asset
+    command:
+      m_PersistentCalls:
+        m_Calls: []

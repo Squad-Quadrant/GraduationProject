@@ -22,9 +22,18 @@ namespace Presentation.UI.Panel
             _context = context;
             _coordinateConverter = coordinateConverter;
 
-            damageText.text = context.Damage.ToString();
-            defenseDamageText.enabled = context.DefenceDamage > 0;
-            defenseDamageText.text = context.DefenceDamage.ToString();
+            if (context.isMiss)
+            {
+                damageText.text = "Miss";
+                defenseDamageText.enabled = false;
+            }
+            else
+            {
+                damageText.text = context.Damage.ToString();
+                defenseDamageText.enabled = context.DefenceDamage > 0;
+                defenseDamageText.text = context.DefenceDamage.ToString();
+            }
+
             Vector3 worldPosition = _coordinateConverter.CellToWorld(_context.Defender.position) + new Vector3(xOffset, yOffset, 0);
             transform.position = Camera.main.WorldToScreenPoint(worldPosition);
             Play();

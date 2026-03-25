@@ -61,7 +61,8 @@ namespace Systems.Damage
         private void ApplyDamage()
         {
             var defender = _context.Defender;
-            if (_context.HitRate > Random.Range(0f, 1f))
+            _context.isMiss = _context.HitRate < Random.Range(0f, 1f);
+            if (!_context.isMiss)
             {
                 defender.defense -= _context.DefenceDamage;
                 // defender.curr -= _context.MentalDamage;
@@ -71,7 +72,6 @@ namespace Systems.Damage
             }
             else
             {
-                // todo: miss
                 this.Log($"Attack missed! Defender ID:{defender.id}");
             }
             _eventBus.Publish(new DamageAppliedEvent(_context));
@@ -101,5 +101,6 @@ namespace Systems.Damage
         public int Damage = 0;
         public int DefenceDamage = 0; // 对护甲的伤害
         public int MentalDamage = 0; // San值伤害
+        public bool isMiss;
     }
 }

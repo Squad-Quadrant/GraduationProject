@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Core.Log;
+using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
@@ -42,7 +43,7 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
             _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
-            _eventBus.Subscribe<UnitBeHitEvent>(OnUnitBeHit);
+            _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
 
 			this.Log("Initialized");
@@ -54,7 +55,7 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
             _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
-            _eventBus.Unsubscribe<UnitBeHitEvent>(OnUnitBeHit);
+            _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
 
 			// destroy all remaining views to clean up the scene
@@ -221,28 +222,31 @@ namespace Presentation.Unit
             });
         }
         
-        private void OnUnitBeHit(UnitBeHitEvent e)
+        private void OnUnitBeHit(DamageAppliedEvent e)
         {
-            if (e.Unit == null)
+            var defender = e.Context.Defender;
+            if (defender == null)
             {
                 this.LogError("UnitBeHitEvent has null Unit");
                 return;
             }
 
-            if (!_views.TryGetValue(e.Unit.id, out var view))
+            if (!_views.TryGetValue(defender.id, out var view))
             {
-                this.LogWarning($"No view found for hit unit '{e.Unit.id}'.");
+                this.LogWarning($"No view found for hit unit '{defender.id}'.");
                 return;
             }
-
-            view.PlayAction("beHit", () =>
+            if (!e.Context.isMiss)
             {
-                _eventBus.Publish(new PresentationCompleteEvent(
-                    category: EPresentationCategory.Animation,
-                    type: PresentationType.Animation.BeHit,
-                    entityId: e.Unit.id
-                ));
-            });
+                view.PlayAction("beHit", () =>
+                {
+                    _eventBus.Publish(new PresentationCompleteEvent(
+                        category: EPresentationCategory.Animation,
+                        type: PresentationType.Animation.BeHit,
+                        entityId: defender.id
+                    ));
+                });
+            }
         }
 
         private void OnVisionChanged(VisionChangedEvent e)
