@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wall_1_r
+      name: "wall_1_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 517
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_1_l
+      name: "wall_1_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 738
@@ -152,7 +152,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_4_r
+      name: "wall_4_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 981
@@ -173,7 +173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_4_l
+      name: "wall_4_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1202
@@ -194,7 +194,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_1
+      name: "ground_1_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1473
@@ -215,7 +215,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_6
+      name: "ground_6_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1904
@@ -236,7 +236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_2
+      name: "ground_2_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1473
@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_7
+      name: "ground_7_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1908
@@ -278,7 +278,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_2_r
+      name: "wall_2_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 517
@@ -299,7 +299,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_2_l
+      name: "wall_2_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 738
@@ -320,7 +320,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_5_r
+      name: "wall_5_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 981
@@ -341,7 +341,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_5_l
+      name: "wall_5_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1202
@@ -362,7 +362,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_3
+      name: "ground_3_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1476
@@ -383,7 +383,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_3_r
+      name: "wall_3_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 517
@@ -404,7 +404,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_3_l
+      name: "wall_3_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 738
@@ -425,7 +425,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_6_r
+      name: "wall_6_r_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 981
@@ -446,7 +446,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_6_l
+      name: "wall_6_l_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1202
@@ -467,7 +467,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_4
+      name: "ground_4_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1475
@@ -488,7 +488,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ground_5
+      name: "ground_5_\u5E26\u63CF\u8FB9"
       rect:
         serializedVersion: 2
         x: 1476
@@ -519,25 +519,25 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ground_1: -1356125697
-      ground_2: 1636893266
-      ground_3: 1181626590
-      ground_4: 344607634
-      ground_5: -2018512191
-      ground_6: 363804163
-      ground_7: 418168806
-      wall_1_l: 854056031
-      wall_1_r: 750974609
-      wall_2_l: -1327559600
-      wall_2_r: -1769643886
-      wall_3_l: 1853303806
-      wall_3_r: -1727386343
-      wall_4_l: 886821021
-      wall_4_r: 1252566087
-      wall_5_l: 80623880
-      wall_5_r: -1986902733
-      wall_6_l: -822644117
-      wall_6_r: 410914789
+      "ground_1_\u5E26\u63CF\u8FB9": -1356125697
+      "ground_2_\u5E26\u63CF\u8FB9": 1636893266
+      "ground_3_\u5E26\u63CF\u8FB9": 1181626590
+      "ground_4_\u5E26\u63CF\u8FB9": 344607634
+      "ground_5_\u5E26\u63CF\u8FB9": -2018512191
+      "ground_6_\u5E26\u63CF\u8FB9": 363804163
+      "ground_7_\u5E26\u63CF\u8FB9": 418168806
+      "wall_1_l_\u5E26\u63CF\u8FB9": 854056031
+      "wall_1_r_\u5E26\u63CF\u8FB9": 750974609
+      "wall_2_l_\u5E26\u63CF\u8FB9": -1327559600
+      "wall_2_r_\u5E26\u63CF\u8FB9": -1769643886
+      "wall_3_l_\u5E26\u63CF\u8FB9": 1853303806
+      "wall_3_r_\u5E26\u63CF\u8FB9": -1727386343
+      "wall_4_l_\u5E26\u63CF\u8FB9": 886821021
+      "wall_4_r_\u5E26\u63CF\u8FB9": 1252566087
+      "wall_5_l_\u5E26\u63CF\u8FB9": 80623880
+      "wall_5_r_\u5E26\u63CF\u8FB9": -1986902733
+      "wall_6_l_\u5E26\u63CF\u8FB9": -822644117
+      "wall_6_r_\u5E26\u63CF\u8FB9": 410914789
       "\u80CC\u666F_6": -314669909
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

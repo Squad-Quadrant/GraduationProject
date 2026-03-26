@@ -1,6 +1,6 @@
 
 character.png
-size: 1590,149
+size: 1922,149
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -32,6 +32,20 @@ body/ru1f_b
   orig: 60, 112
   offset: 1, 1
   index: -1
+body/spectra b
+  rotate: true
+  xy: 2, 5
+  size: 50, 110
+  orig: 60, 112
+  offset: 5, 1
+  index: -1
+body/spectra f
+  rotate: true
+  xy: 1430, 97
+  size: 50, 110
+  orig: 60, 112
+  offset: 5, 1
+  index: -1
 empty
   rotate: false
   xy: 1012, 47
@@ -48,28 +62,28 @@ flash
   index: -1
 hand/pcbl
   rotate: false
-  xy: 97, 2
+  xy: 855, 43
   size: 24, 24
   orig: 26, 26
   offset: 1, 1
   index: -1
 hand/pcbr
   rotate: false
-  xy: 855, 40
+  xy: 114, 28
   size: 24, 27
   orig: 26, 29
   offset: 1, 1
   index: -1
 hand/rul
   rotate: false
-  xy: 855, 14
+  xy: 855, 17
   size: 24, 24
   orig: 26, 26
   offset: 1, 1
   index: -1
 hand/rur
-  rotate: false
-  xy: 97, 28
+  rotate: true
+  xy: 114, 2
   size: 24, 27
   orig: 26, 29
   offset: 1, 1
@@ -82,8 +96,8 @@ head/pcb1b
   offset: 1, 1
   index: -1
 head/pcb1f
-  rotate: false
-  xy: 1318, 23
+  rotate: true
+  xy: 1396, 20
   size: 67, 64
   orig: 69, 66
   offset: 1, 1
@@ -97,37 +111,79 @@ head/pcb2b
   index: -1
 head/pcb2f
   rotate: false
-  xy: 1114, 2
+  xy: 1180, 2
   size: 63, 63
   orig: 68, 66
   offset: 1, 2
   index: -1
 head/pcb3b
   rotate: false
-  xy: 1456, 11
+  xy: 1600, 11
   size: 66, 64
   orig: 69, 66
   offset: 1, 1
   index: -1
 head/pcb3f
   rotate: false
-  xy: 1516, 81
+  xy: 1327, 21
   size: 67, 66
   orig: 69, 69
   offset: 1, 2
   index: -1
 head/ru1b
   rotate: false
-  xy: 1387, 11
+  xy: 1531, 11
   size: 67, 64
   orig: 70, 66
   offset: 1, 1
   index: -1
 head/ru1f
   rotate: false
-  xy: 1245, 10
+  xy: 1462, 29
   size: 67, 66
   orig: 69, 68
+  offset: 1, 1
+  index: -1
+head/ru2b
+  rotate: false
+  xy: 1668, 11
+  size: 64, 64
+  orig: 66, 66
+  offset: 1, 1
+  index: -1
+head/ru2f
+  rotate: true
+  xy: 1114, 2
+  size: 63, 64
+  orig: 65, 66
+  offset: 1, 1
+  index: -1
+head/spectra1b
+  rotate: false
+  xy: 1628, 77
+  size: 81, 70
+  orig: 83, 72
+  offset: 1, 1
+  index: -1
+head/spectra1f
+  rotate: false
+  xy: 1711, 77
+  size: 80, 70
+  orig: 82, 72
+  offset: 1, 1
+  index: -1
+head/spectra2f
+  rotate: false
+  xy: 1793, 77
+  size: 80, 70
+  orig: 82, 72
+  offset: 1, 1
+  index: -1
+head/spectra3f
+  rotate: false
+  xy: 1245, 6
+  size: 80, 70
+  orig: 82, 72
   offset: 1, 1
   index: -1
 weapon/a1
@@ -188,14 +244,14 @@ weapon/ar10
   index: -1
 weapon/g17
   rotate: false
-  xy: 2, 4
+  xy: 1866, 24
   size: 46, 51
   orig: 49, 53
   offset: 1, 1
   index: -1
 weapon/m11
   rotate: false
-  xy: 1524, 15
+  xy: 1734, 11
   size: 64, 64
   orig: 66, 66
   offset: 1, 1
@@ -216,7 +272,7 @@ weapon/m177
   index: -1
 weapon/m1911
   rotate: false
-  xy: 50, 4
+  xy: 1875, 96
   size: 45, 51
   orig: 47, 53
   offset: 1, 1
@@ -230,7 +286,7 @@ weapon/m1911ct
   index: -1
 weapon/mk22
   rotate: false
-  xy: 1430, 77
+  xy: 1542, 77
   size: 84, 70
   orig: 86, 72
   offset: 1, 1
@@ -244,7 +300,7 @@ weapon/mp5
   index: -1
 weapon/mp5k
   rotate: false
-  xy: 1179, 10
+  xy: 1800, 20
   size: 64, 55
   orig: 68, 57
   offset: 2, 1
