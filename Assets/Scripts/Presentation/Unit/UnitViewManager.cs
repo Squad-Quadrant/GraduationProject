@@ -170,7 +170,10 @@ namespace Presentation.Unit
 					_currentVisibleCells = e.Unit.faction == EUnitFaction.Player
 						? _visionService.CalculateVisibleCells(cell, movingUnit.visionRange)
 						: _currentVisibleCells;
-					_eventBus.Publish(new VisionChangedEvent(_currentVisibleCells, movingUnit.id));
+					var targetUnit = e.Unit.faction == EUnitFaction.Player
+						? movingUnit.id
+						: null;
+					_eventBus.Publish(new VisionChangedEvent(_currentVisibleCells, targetUnit));
 				},
 				onComplete: () =>
 				{
