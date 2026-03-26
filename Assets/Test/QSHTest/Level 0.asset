@@ -19,7 +19,16 @@ MonoBehaviour:
   unitPlacements:
   - unitId: 001
     unitConfig: {fileID: 11400000, guid: 9086bee10a790d940a1b6ed09845b6cf, type: 2}
-    startPosition: {x: 17, y: 2}
+    startPosition: {x: 15, y: 2}
   - unitId: 002
     unitConfig: {fileID: 11400000, guid: 8983d7ce568a88c419856ae956bff8a3, type: 2}
     startPosition: {x: 16, y: 2}
+  - unitId: 003
+    unitConfig: {fileID: 11400000, guid: d2ca4e4d09d494b4a85444d937afe4f3, type: 2}
+    startPosition: {x: 17, y: 2}
+  - unitId: 004
+    unitConfig: {fileID: 11400000, guid: 29a558215c001cc4dbb634812ebbcc54, type: 2}
+    startPosition: {x: 12, y: 8}
+  - unitId: 005
+    unitConfig: {fileID: 11400000, guid: 29a558215c001cc4dbb634812ebbcc54, type: 2}
+    startPosition: {x: 4, y: 7}

@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fe1742d0f494787a9923bbde5816c0a, type: 3}
-  m_Name: Unit 001
+  m_Name: Unit 004
   m_EditorClassIdentifier: 
-  configId: unit_001
-  unitName: Test Player 1
-  description: This is a new unit.
-  icon: {fileID: 4153240674832713612, guid: 8a1f96c93a153e34a98b5f6dd6bbfebd, type: 3}
+  configId: unit_004
+  unitName: Test Player 4
+  description: This is a Enemy
+  icon: {fileID: -1742949670, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
-  frontBodySkin: pcb1 front
-  backBodySkin: pcb1 back
+  frontBodySkin: pcb3 front
+  backBodySkin: pcb3 back
   defaultWeaponSkin: 
   maxHp: 100
-  speed: 120
-  moveRange: 6
-  actionPoints: 3
-  visionRange: 6
-  faction: 0
-  defense: 80
+  speed: 90
+  moveRange: 4
+  actionPoints: 2
+  visionRange: 5
+  faction: 1
+  defense: 40
   defenseRate: 0
   aiBrainConfig: {fileID: 0}
