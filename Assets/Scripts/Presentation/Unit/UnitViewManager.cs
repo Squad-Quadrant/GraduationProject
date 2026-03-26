@@ -164,7 +164,9 @@ namespace Presentation.Unit
 			view.Move(
 				e.Path,
 				onStep: cell =>
-				{
+                {
+                    if (e.Unit.faction != EUnitFaction.Player)
+                        return;
 					var visible = _visionService.CalculateVisibleCells(cell, movingUnit.visionRange);
 					_eventBus.Publish(new VisionChangedEvent(visible, movingUnit.id));
 				},
