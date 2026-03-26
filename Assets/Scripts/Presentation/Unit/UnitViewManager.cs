@@ -30,6 +30,8 @@ namespace Presentation.Unit
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
 
+		private HashSet<Vector2Int> _currentVisibleCells = new();
+
 		public void Initialize(ServiceContainer services)
 		{
 			_eventBus = services.Resolve<IEventBus>();
@@ -164,11 +166,11 @@ namespace Presentation.Unit
 			view.Move(
 				e.Path,
 				onStep: cell =>
-                {
-                    if (e.Unit.faction != EUnitFaction.Player)
-                        return;
-					var visible = _visionService.CalculateVisibleCells(cell, movingUnit.visionRange);
-					_eventBus.Publish(new VisionChangedEvent(visible, movingUnit.id));
+				{
+					_currentVisibleCells = e.Unit.faction == EUnitFaction.Player
+						? _visionService.CalculateVisibleCells(cell, movingUnit.visionRange)
+						: _currentVisibleCells;
+					_eventBus.Publish(new VisionChangedEvent(_currentVisibleCells, movingUnit.id));
 				},
 				onComplete: () =>
 				{
