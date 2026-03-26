@@ -136,7 +136,7 @@ namespace Systems.Interaction.States
 			var attackCommand = new UnitAttackCommand(
 				unit.id,
                 Context.targetUnit.id,
-				2, // todo: 计算消耗
+				1, // todo: 计算消耗
                 Context.currentAction,
 				Context.UnitService,
 				Context.MapService,
