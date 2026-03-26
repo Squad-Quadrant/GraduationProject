@@ -30,5 +30,5 @@ MonoBehaviour:
     unitConfig: {fileID: 11400000, guid: 29a558215c001cc4dbb634812ebbcc54, type: 2}
     startPosition: {x: 12, y: 8}
   - unitId: 005
-    unitConfig: {fileID: 11400000, guid: 29a558215c001cc4dbb634812ebbcc54, type: 2}
+    unitConfig: {fileID: 11400000, guid: 6d56957bf1843be4e9797b0ce48036f3, type: 2}
     startPosition: {x: 4, y: 7}

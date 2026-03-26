@@ -18,9 +18,9 @@ MonoBehaviour:
   icon: {fileID: 4153240674832713612, guid: 8a1f96c93a153e34a98b5f6dd6bbfebd, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
-  frontBodySkin: pcb1 front
-  backBodySkin: pcb1 back
-  defaultWeaponSkin: 
+  frontBodySkin: pcb2 front
+  backBodySkin: pcb2 back
+  defaultWeaponSkin: weapon_a1car
   maxHp: 100
   speed: 120
   moveRange: 6

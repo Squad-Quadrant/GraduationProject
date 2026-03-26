@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Wall 2-3
   m_EditorClassIdentifier: 
   wallType: 2
-  leftTile: {fileID: 11400000, guid: 551d54df92d7ec34f9ab317a21eeafd7, type: 2}
-  rightTile: {fileID: 11400000, guid: 109fdae53b852fd4ba2379418f57d81c, type: 2}
+  leftTile: {fileID: 11400000, guid: 7de38ba4ff3e09149bbee2dbadec4e5f, type: 2}
+  rightTile: {fileID: 11400000, guid: 466129561fb0e1f4b9fcff154c2aa486, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37492c62a17d4feca233a688a5595265, type: 3}
   m_Name: Cell 4
   m_EditorClassIdentifier: 
-  Tile: {fileID: 11400000, guid: 1ff930cf9f29ceb4da56742d50b76c56, type: 2}
+  Tile: {fileID: 11400000, guid: 1f5fec6a3fcba0c44a733f99777964bc, type: 2}
   IsWalkable: 1
   MoveCost: 1
   TerrainType: 0
