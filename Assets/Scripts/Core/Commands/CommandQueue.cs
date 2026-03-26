@@ -278,7 +278,7 @@ namespace Core.Commands
 				if (completed.CanUndo)
 					_executedCommands.Push(completed);
 
-				this.Log($"Completed: {completed.Name}");
+				this.Log($"Completed: {completed.Name}", true);
 				_eventBus.Publish(new CommandCompletedEvent(completed));
 
 				// Continue with next command

@@ -68,11 +68,11 @@ namespace Systems.Damage
                 // defender.curr -= _context.MentalDamage;
                 defender.currentHp -= _context.Damage;
                 this.Log($"Damage applied: {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
-                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}");
+                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}", true);
             }
             else
             {
-                this.Log($"Attack missed! Defender ID:{defender.id}");
+                this.Log($"Attack missed! Defender ID:{defender.id}", true);
             }
             _eventBus.Publish(new DamageAppliedEvent(_context));
         }

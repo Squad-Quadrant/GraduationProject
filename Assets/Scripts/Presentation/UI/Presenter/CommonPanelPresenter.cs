@@ -5,6 +5,7 @@ using Data.Runtime.Events;
 using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Presentation.UI.Panel.Log;
 using Presentation.Unit;
 using Systems.Interfaces;
 using Systems.Unit;
@@ -18,8 +19,10 @@ namespace Presentation.UI.Presenter
         private readonly ICoordinateConverter  _coordinateConverter;
         private readonly IUnitService _unitService;
         private readonly UnitViewManager _unitViewManager;
+        
         private BloodSliderPanel _bloodSliderPanel;
         private DamageTextPanel _damageTextPanel;
+        private GameLogger _gameLogger;
         
         public CommonPanelPresenter(UIManager uiManager, IEventBus eventBus, ICoordinateConverter coordinateConverter,
             IUnitService unitService, UnitViewManager unitViewManager)
@@ -46,6 +49,8 @@ namespace Presentation.UI.Presenter
             
             _damageTextPanel  = _uiManager.Open<DamageTextPanel>();
             _damageTextPanel.Init(_eventBus, _coordinateConverter, _unitService);
+            _gameLogger = _uiManager.Open<GameLogger>();
+            
         }
 
         private void OnGameOver()

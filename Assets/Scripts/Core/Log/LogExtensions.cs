@@ -8,6 +8,7 @@ namespace Core.Log
 		private static ILoggerFactory _factory;
 		private static readonly Dictionary<Type, ILogger> LoggerCache = new();
 		private static readonly object Lock = new();
+        private static ILogger _gameLogger;
 
 		public static void Initialize(ILoggerFactory factory)
 		{
@@ -15,14 +16,47 @@ namespace Core.Log
 
 			lock (Lock) LoggerCache.Clear();
 		}
+        
+        public static void RegisterGameLogger(ILogger logger)
+        {
+            _gameLogger = logger;
+        }
 
-		public static void LogDebug(this object obj, string message, bool format = true) => GetLogger(obj)?.Debug(message, format);
+		public static void LogDebug(this object obj, string message, bool forPlayer = false, bool format = true)
+        {
+            if (forPlayer && _gameLogger != null)
+            {
+                _gameLogger.Debug(message, format);
+            }
+            GetLogger(obj)?.Debug(message, format);
+        }
 
-		public static void Log(this object obj, string message, bool format = true) => GetLogger(obj)?.Info(message, format);
+		public static void Log(this object obj, string message, bool forPlayer = false, bool format = true)
+        {
+            if (forPlayer && _gameLogger != null)
+            {
+                _gameLogger.Info(message, format);
+            }
+            GetLogger(obj)?.Info(message, format);
+        }
 
-		public static void LogWarning(this object obj, string message, bool format = true) => GetLogger(obj)?.Warning(message, format);
+		public static void LogWarning(this object obj, string message, bool forPlayer = false, bool format = true)
+        {
+            if (forPlayer && _gameLogger != null)
+            {
+                _gameLogger.Warning(message, format);
+            }
+            GetLogger(obj)?.Warning(message, format);
+        }
 
-		public static void LogError(this object obj, string message, bool format = true) => GetLogger(obj)?.Error(message, format);
+		public static void LogError(this object obj, string message, bool forPlayer = false, bool format = true)
+        {
+            if (forPlayer && _gameLogger != null)
+            {
+                _gameLogger.Error(message, format);
+            }
+            GetLogger(obj)?.Error(message, format);
+        }
 
 		private static ILogger GetLogger(object obj)
 		{
