@@ -145,7 +145,8 @@ namespace Systems.Interaction.States
 				visibleCells: visibleCells
 			);
 
-			var maxMovementPoints = selectedUnit.moveRange * selectedUnit.currentAp;
+            int ap = selectedUnit.currentAp > 2 ? 2 : selectedUnit.currentAp;
+			var maxMovementPoints = selectedUnit.moveRange * ap;
 
 			var reachableArea = pathfinding.GetReachableArea(
 				selectedUnit.position,

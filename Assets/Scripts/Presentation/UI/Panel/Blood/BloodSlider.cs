@@ -15,6 +15,7 @@ namespace Presentation.UI.Panel
         [SerializeField] private float xOffset;
         [SerializeField] private float yOffset;
         private ICoordinateConverter _coordinateConverter;
+        private float _originCameraSize;
 
         // todo: 先搁着刷吧,懒得写事件了,以后再说
         private void FixedUpdate()
@@ -24,6 +25,7 @@ namespace Presentation.UI.Panel
 
         public void Init(Systems.Unit.Unit owner, ICoordinateConverter coordinateConverter, UnitView unitView)
         {
+            _originCameraSize = Camera.main.orthographicSize;
             _owner = owner;
             _unitView = unitView;
             _coordinateConverter = coordinateConverter;
@@ -48,8 +50,9 @@ namespace Presentation.UI.Panel
             bloodSliderImage.fillAmount = Mathf.Lerp(bloodSliderImage.fillAmount, (float)_owner.currentHp / _owner.maxHp, 0.05f);
             defenseSliderImage.fillAmount = Mathf.Lerp(defenseSliderImage.fillAmount, (float)_owner.currentDefense / _owner.defense, 0.05f);
             // Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);
-            transform.position = Camera.main.WorldToScreenPoint(_unitView.transform.position + new Vector3(xOffset, yOffset, 0));
-            
+            transform.position = _unitView.transform.position + new Vector3(xOffset, yOffset, 0);
+            transform.localScale =  _originCameraSize * Vector3.one / Camera.main.orthographicSize;
+
         }
     }
 }
