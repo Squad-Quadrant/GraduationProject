@@ -167,13 +167,14 @@ namespace Presentation.Unit
 				e.Path,
 				onStep: cell =>
 				{
-					_currentVisibleCells = e.Unit.faction == EUnitFaction.Player
-						? _visionService.CalculateVisibleCells(cell, movingUnit.visionRange)
-						: _currentVisibleCells;
-					var targetUnit = e.Unit.faction == EUnitFaction.Player
-						? movingUnit.id
-						: null;
-					_eventBus.Publish(new VisionChangedEvent(_currentVisibleCells, targetUnit));
+					if (e.Unit.faction != EUnitFaction.Player)
+					{
+						bool inPlayerSight = _currentVisibleCells != null && _currentVisibleCells.Contains(cell);
+						view.SetVisible(inPlayerSight);
+						return;
+					}
+					var visible = _visionService.CalculateVisibleCells(cell, movingUnit.visionRange);
+					_eventBus.Publish(new VisionChangedEvent(visible, movingUnit.id));
 				},
 				onComplete: () =>
 				{
@@ -258,6 +259,8 @@ namespace Presentation.Unit
 
         private void OnVisionChanged(VisionChangedEvent e)
         {
+	        _currentVisibleCells = e.VisibleCells;
+
 	        foreach (var (unitId, view) in _views)
 	        {
 		        if (!view) continue;

@@ -112,7 +112,14 @@ namespace Presentation.CameraControl
 				.OnComplete(() =>
 				{
 					_isFocusing = false;
-					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera, PresentationType.Camera.Focus));
+					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera,
+						PresentationType.Camera.Focus));
+				})
+				.OnKill(() =>
+				{
+					_isFocusing = false;
+					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera,
+						PresentationType.Camera.Focus));
 				});
 
 			this.Log($"Focusing on {worldPos}");
@@ -154,14 +161,21 @@ namespace Presentation.CameraControl
 
 			_isFocusing = true;
 			seq.OnComplete(() =>
-			{
-				_isFocusing = false;
-				_focusTween = null;
-
-				this.Log("Discovery focus sequence complete");
-
-				_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera, PresentationType.Camera.DiscoveryFocus));
-			});
+				{
+					_isFocusing = false;
+					_focusTween = null;
+					this.Log("Discovery focus sequence complete");
+					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera,
+						PresentationType.Camera.DiscoveryFocus));
+				})
+				.OnKill(() =>
+				{
+					_isFocusing = false;
+					_focusTween = null;
+					this.Log("Discovery focus sequence complete");
+					_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera,
+						PresentationType.Camera.DiscoveryFocus));
+				});
 
 			_focusTween = seq;
 
@@ -198,6 +212,8 @@ namespace Presentation.CameraControl
 
 		private void HandleDragInput()
 		{
+			if (_isFocusing) return;
+
 			var mouse = Mouse.current;
 			if (mouse == null) return;
 
@@ -228,6 +244,7 @@ namespace Presentation.CameraControl
 
 		private void HandleKeyboardPan()
 		{
+			if (_isFocusing) return;
 			if (_isDragging) return; // 鼠标抓取时屏蔽键盘移动
 			var kb = Keyboard.current;
 			if (kb == null) return;
@@ -333,7 +350,6 @@ namespace Presentation.CameraControl
 			if (_focusTween == null) return;
 			_focusTween.Kill();
 			_focusTween = null;
-			_isFocusing = false;
 		}
 
 		private void OnDrawGizmos()
