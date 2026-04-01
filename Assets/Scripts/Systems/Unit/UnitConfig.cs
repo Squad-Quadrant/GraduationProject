@@ -33,6 +33,7 @@ namespace Systems.Unit
 		public EUnitFaction faction = EUnitFaction.Neutral;
         public int defense = 100;
         public float defenseRate = 0f;
+        public int san = 100;
 
         [TitleGroup("AI")]
         [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]

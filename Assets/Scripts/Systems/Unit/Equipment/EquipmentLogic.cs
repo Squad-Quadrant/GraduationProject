@@ -7,10 +7,10 @@ namespace Systems.Equipment
     // 装备系统：
     // 单位可装备不同的各式武器装备，包括一把主武器、一把副武器和三个战术道具。主武器大多为枪械。战术道具包括：投掷类道具、医疗类道具、侦查类道具等。
     
-    // 我不是很想封装地狱,先这样写着吧
     public abstract class EquipmentLogic
     {
-        protected EquipmentConfig Config;
+        // Logic不暴露Config,所有属性的获取都需要用Logic做转向获取
+        protected readonly EquipmentConfig Config;
         public EquipmentLogic(EquipmentConfig config) => Config = config;
        
         public virtual int GetDamage()
@@ -23,11 +23,28 @@ namespace Systems.Equipment
     
     public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
+        protected int currentAmmo;
         public WeaponLogic(EquipmentConfig config) : base(config)
         {
+            currentAmmo = config.AmmoCapacity;
+        }
+
+        public virtual bool CanPreciseShoot()
+        {
+            return Config.canPreciseShoot;
         }
         
-        
+        public virtual int CurrentAmmo(int delta = 0)
+        {
+            currentAmmo += delta;
+            return currentAmmo;
+        }
+
+        public virtual int ShootSpeed()
+        {
+            return Config.shootSpeed;
+        }
+
         public virtual int AmmoCapacity()
         {
             return Config.AmmoCapacity;
@@ -47,6 +64,11 @@ namespace Systems.Equipment
         {
             return Config.PenetrationRate;
         }
+        
+        public override int Range()
+        {
+            return int.MaxValue;
+        }
 
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
@@ -59,11 +81,6 @@ namespace Systems.Equipment
             }
 
             return null;
-        }
-
-        public override int Range()
-        {
-            return int.MaxValue;
         }
     }
     

@@ -16,7 +16,7 @@ namespace Systems.Damage
             Priority = priority;
         }
 
-        public void Init(DamageExecutingContext context)
+        public virtual void Init(DamageExecutingContext context)
         {
             Context = context;
             Attacker = context.Attacker;

@@ -9,8 +9,9 @@ namespace Systems.Damage
         {
         }
 
-        public override void Execute()
+        public override void Init(DamageExecutingContext context)
         {
+            base.Init(context);
             var theWeapon = ((WeaponLogic)Owner);
             
             // 获得两个单位的距离
@@ -27,6 +28,11 @@ namespace Systems.Damage
             }
             
             Context.HitRate *= hitRateMultiplier;
+        }
+
+        public override void Execute()
+        {
+
         }
     }
 }

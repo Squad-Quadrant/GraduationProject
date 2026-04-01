@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PurpleFlowerCore;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Systems.Equipment.Config
@@ -28,43 +29,62 @@ namespace Systems.Equipment.Config
 
     public class EquipmentConfig : ScriptableObject
     {
-        [Tooltip("唯一ID")]
+        [LabelText("ID(必要)")]
         public int Id;
         
-        [Tooltip("名称")]
+        [LabelText("名称")]
         public string Name;
         
-        [Tooltip("伤害")]
+        [LabelText("描述")]
+        public string Description;
+        
+        [LabelText("图标")]
+        public Sprite Icon;
+        
+        [LabelText("伤害")]
         public int Damage;
 
-        [Tooltip("精神伤害")]
+        [LabelText("精神伤害")]
         public int MentalDamage;
         
-        [Tooltip("重量")]
+        [LabelText("重量")]
         public float Weight;
         
         [Tooltip("武器类型-可精确到具体武器，也可以是更抽象的类别，只要逻辑可以统一")]
+        [LabelText("装备类型")]
         public EquipmentType Type;
 
         #region Weapon-specific properties
         
-        [Tooltip("射击类武器的弹容量")]
+        [LabelText("射击类武器的弹容量")]
         public int AmmoCapacity;
         
-        [Tooltip("射击类武器的攻击范围和对应的命中率")]
+        [LabelText("射击类武器的攻击范围和对应的命中率")]
         public List<ShotRange> ShotRanges;
         
-        [Tooltip("伤害衰减")]
+        [LabelText("伤害衰减")]
         public DamageAttenuation DamageAttenuation;
 
-        [Tooltip("穿透率")] 
+        [LabelText("穿透率")] 
         public float PenetrationRate;
+
+        [LabelText("射速 (发/点AP)")]
+        public int shootSpeed;
+        
+        [LabelText("是否可以精确射击")]
+        public bool canPreciseShoot;
+        
+        [LabelText("精确射击模式下的射速 (发/点AP)")]
+        public int preciseShootSpeed;
+        
+        [LabelText("精确射击模式下的命中率加成")]
+        public float preciseShootHitRateBonus;
 
         #endregion
 
         #region Equipment-specific properties
         
-        [Tooltip("手雷类武器的攻击范围")]
+        [LabelText("手雷类武器的攻击范围")]
         public int AttackRange;
         
         #endregion

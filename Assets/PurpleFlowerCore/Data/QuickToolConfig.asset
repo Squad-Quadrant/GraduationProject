@@ -61,11 +61,27 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
-  - name: Spine
+  - name: spine
     commandType: 3
     color: {r: 1, g: 1, b: 1, a: 1}
     lineBreak: 0
     commandParam: Assets/Res/Spine/character/character_SkeletonData.asset
+    command:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: "\u88C5\u5907\u914D\u7F6E"
+    commandType: 3
+    color: {r: 1, g: 0.95848835, b: 0, a: 1}
+    lineBreak: 1
+    commandParam: Assets/Data/Equipment/NormalPistol.asset
+    command:
+      m_PersistentCalls:
+        m_Calls: []
+  - name: UI Prefab
+    commandType: 3
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 0
+    commandParam: Assets/Res/Perfabs/UI/TurnBanner.prefab
     command:
       m_PersistentCalls:
         m_Calls: []

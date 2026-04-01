@@ -1,4 +1,5 @@
 ﻿using System;
+using Data.Runtime;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,8 +8,10 @@ using UnityEngine.UI;
 namespace Presentation.UI.Component
 {
 	[RequireComponent(typeof(Button))]
-	public class ActionBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+	public class ActionMenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
+        [Title("General")]
+        [SerializeField] private EActionType actionType;
 		[Title("Desc")]
 		[SerializeField] private string description;
 
@@ -24,6 +27,13 @@ namespace Presentation.UI.Component
 
 		public Button Button => button;
 		public string Description => description;
+        public EActionType ActionType => actionType;
+
+        public bool Interactable
+        {
+            get => button.interactable;
+            set => button.interactable = value;
+        }
 
 		public event Action<string> OnHoverEnter;
 		public event Action<string> OnHoverExit;
@@ -41,5 +51,10 @@ namespace Presentation.UI.Component
 			icon.color = normalColor;
 			OnHoverExit?.Invoke(description);
 		}
+
+        public void Switch(bool enable)
+        {
+            gameObject.SetActive(enable);
+        }
 	}
 }

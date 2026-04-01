@@ -4,11 +4,11 @@ namespace Data.Runtime.Events.Interaction
 {
 	public readonly struct UnitAttackedEvent : IEvent
 	{
-        public Systems.Unit.Unit Unit { get; }
+        public Systems.Unit.Unit Attacker { get; }
         
-        public UnitAttackedEvent(Systems.Unit.Unit unit)
+        public UnitAttackedEvent(Systems.Unit.Unit attacker)
         {
-            Unit = unit;
+            Attacker = attacker;
         }
 	}
 }

@@ -14,7 +14,5 @@ namespace Data.Runtime.Events.Damage
             Target = target;
             ActionType = actionType;
         }
-        
-        // todo: 伤害计算，需要接入装备系统, 预计主要在UnitServer实现
     }
 }

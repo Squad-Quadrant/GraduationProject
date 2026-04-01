@@ -9,12 +9,14 @@
 		Move,
 		Wait,
 		Interact,
-		MainWeapon,
-        SecondaryWeapon,
+        Attack,
+        // SecondaryWeapon,
         TacticalItem0,
         TacticalItem1,
         TacticalItem2,
 		Defend,
+        Reload,
+        ChangeWeapon,
         //...
 		Count,
 	}
