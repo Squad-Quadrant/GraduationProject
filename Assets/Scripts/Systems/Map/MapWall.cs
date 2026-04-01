@@ -39,18 +39,15 @@ namespace Systems.Map
 	    public (Vector2Int, bool) ToPositionAndIsLeft()
 	    {
 		    if (_position1.y == _position2.y)
-			    return (_position1, true);
+			    return (_position1, false);
 
 		    if (_position1.x == _position2.x)
-			    return (_position1, false);
+			    return (_position1, true);
 
 		    throw new ArgumentException("Positions do not form a valid wall.");
 	    }
 
-	    public bool IsLeft()
-	    {
-		    return ToPositionAndIsLeft().Item2;
-	    }
+	    public bool IsLeft() => ToPositionAndIsLeft().Item2;
 
 	    public bool Equals(WallKey other)
 		    => _position1.Equals(other._position1) && _position2.Equals(other._position2);
@@ -70,7 +67,7 @@ namespace Systems.Map
     public class MapWall
     {
         public WallKey Key { get; }
-        public WallType WallType { get; set; }
+        public WallType Type { get; set; }
         [CanBeNull] public TileBase Tile { get; set; }
 
         public MapWall(WallKey key)

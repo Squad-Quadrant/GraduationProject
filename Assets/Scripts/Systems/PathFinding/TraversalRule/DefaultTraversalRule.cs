@@ -41,7 +41,7 @@ namespace Systems.PathFinding.TraversalRule
 			var wall = mapData.GetWall(new WallKey(from, to));
 			if (wall == null)
 				return true;
-			return wall.WallType switch
+			return wall.Type switch
 			{
 				WallType.None => true,
 				WallType.LowWall => options.CanCrossLowWalls,

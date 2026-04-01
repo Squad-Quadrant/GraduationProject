@@ -173,7 +173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_1_r
+      name: wall_1_l
       rect:
         serializedVersion: 2
         x: 1427
@@ -194,7 +194,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_1_l
+      name: wall_1_r
       rect:
         serializedVersion: 2
         x: 1646
@@ -215,7 +215,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_4_r
+      name: wall_4_l
       rect:
         serializedVersion: 2
         x: 1889
@@ -236,7 +236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_4_l
+      name: wall_4_r
       rect:
         serializedVersion: 2
         x: 2112
@@ -320,7 +320,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_2_r
+      name: wall_2_l
       rect:
         serializedVersion: 2
         x: 1427
@@ -341,7 +341,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_2_l
+      name: wall_2_r
       rect:
         serializedVersion: 2
         x: 1646
@@ -362,7 +362,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_5_r
+      name: wall_5_l
       rect:
         serializedVersion: 2
         x: 1889
@@ -383,7 +383,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_5_l
+      name: wall_5_r
       rect:
         serializedVersion: 2
         x: 2112
@@ -404,7 +404,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_3_r
+      name: wall_3_l
       rect:
         serializedVersion: 2
         x: 1427
@@ -425,7 +425,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_3_l
+      name: wall_3_r
       rect:
         serializedVersion: 2
         x: 1646
@@ -446,7 +446,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_6_r
+      name: wall_6_l
       rect:
         serializedVersion: 2
         x: 1889
@@ -467,7 +467,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wall_6_l
+      name: wall_6_r
       rect:
         serializedVersion: 2
         x: 2112
@@ -504,18 +504,18 @@ TextureImporter:
       ground_4: -956218373
       ground_5: 372926849
       ground_6: -1777739112
-      wall_1_l: 1908197564
-      wall_1_r: -1308566539
-      wall_2_l: -1864424496
-      wall_2_r: 1617398487
-      wall_3_l: -196743767
-      wall_3_r: -1103690225
-      wall_4_l: 2045033796
-      wall_4_r: -1159041970
-      wall_5_l: 955596578
-      wall_5_r: -2130729283
-      wall_6_l: 678706827
-      wall_6_r: 1910684569
+      wall_1_l: -1308566539
+      wall_1_r: 1908197564
+      wall_2_l: 1617398487
+      wall_2_r: -1864424496
+      wall_3_l: -1103690225
+      wall_3_r: -196743767
+      wall_4_l: -1159041970
+      wall_4_r: 2045033796
+      wall_5_l: -2130729283
+      wall_5_r: 955596578
+      wall_6_l: 1910684569
+      wall_6_r: 678706827
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

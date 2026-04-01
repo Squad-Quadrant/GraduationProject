@@ -228,3 +228,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.FogOfWar.BlackoutView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Map.Region.RegionService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

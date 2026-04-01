@@ -81,7 +81,6 @@
 			half4 Frag(Varyings IN) : SV_Target
             {
                 float2 offset = IN.worldPos - _GridOrigin.xy;
-
                 float2 gridCoords = float2(
 					dot(offset, _InvBasisRow0.xy),
 					dot(offset, _InvBasisRow1.xy)

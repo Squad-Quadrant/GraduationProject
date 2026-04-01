@@ -30,19 +30,19 @@ namespace Systems.Map
 				cell.Terrain = cellConfig.Terrain;
 				cell.IsWalkable = cellConfig.IsWalkable;
 				cell.MoveCost = cellConfig.MoveCost;
-                cell.Tile = cellConfig.cell?.Tile;
 			}
             
             foreach (var wallConfig in config.walls)
             {
                 var wall = Data.GetWall(wallConfig.WallKey);
                 if (wall == null) continue;
-                wall.WallType = wallConfig.WallType;
-                wall.Tile = wallConfig.WallKey.IsLeft() ? wallConfig.wall?.leftTile : wallConfig.wall?.rightTile;
+                wall.Type = wallConfig.WallType;
+                wall.Tile = wallConfig.WallKey.IsLeft()
+	                ? wallConfig.wall?.leftTile
+	                : wallConfig.wall?.rightTile;
             }
             
             var sceneActorFactory = new SceneActorFactory();
-            // 场景物体的初始化逻辑需要滞后于地图单元格的初始化
             foreach (var cellConfig in config.cells)
             {
                 var cell = Data.GetCell(cellConfig.position);
@@ -59,7 +59,7 @@ namespace Systems.Map
             
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
             
-            _eventBus.Publish(new MapViewInitEvent(Data));
+            _eventBus.Publish(new MapViewInitEvent(Data, config.groundSprite));
         }
 
 		public bool IsCellWalkable(Vector2Int position)

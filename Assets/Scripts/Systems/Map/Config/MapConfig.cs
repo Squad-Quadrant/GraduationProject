@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Data.Config;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,7 +9,6 @@ namespace Systems.Map.Config
 	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map Config")]
 	public class MapConfig : ScriptableObject
 	{
-		#region Basic Info
 #if UNITY_EDITOR
 		[LabelText("地图名称")]
 		public string editedMapName = "New Map";
@@ -25,8 +23,10 @@ namespace Systems.Map.Config
 		[Button("保存更改", ButtonSizes.Medium), GUIColor(0.6f, 1f, 0.6f)]
 		private void Confirm()
 		{
-			OnMapNameChanged();
-			OnSizeChanged();
+			if (editedMapName != mapName) OnMapNameChanged();
+			if (editedSize != size) OnSizeChanged();
+			UnityEditor.EditorUtility.SetDirty(this);
+			UnityEditor.AssetDatabase.SaveAssets();
 		}
 		
 		[ShowIf("Dirty")]
@@ -43,21 +43,31 @@ namespace Systems.Map.Config
 		[SerializeField][HideInInspector]private Vector2Int size = new(10, 10);
 		public Vector2Int Size => size;
 
-		#endregion
-		
-		#region Terrain Data
+
+		[Title("地面与区域")]
+		[PropertyOrder(0)]
+		[LabelText("地面整图")]
+		[PreviewField(ObjectFieldAlignment.Center, Height = 64)]
+		public Sprite groundSprite;
+
+		[PropertyOrder(0)]
+		[LabelText("区域定义")]
+		[TableList(AlwaysExpanded = true)]
+		public RegionDefinition[] regions = { RegionDefinition.DefaultOutdoor };
+
 
 		[LabelText("地形配置")]
 		[PropertyOrder(1)]
 		[TableList(ShowIndexLabels = true)]
 		public CellConfigData[] cells = Array.Empty<CellConfigData>();
-        public int CellCount => Size.x * Size.y;
-        [LabelText("墙体配置")]
+
+		[LabelText("墙体配置")]
         [PropertyOrder(2)]
         [TableList(ShowIndexLabels = true)]
         public WallConfigData[] walls = Array.Empty<WallConfigData>();
+
+        public int CellCount => Size.x * Size.y;
         public int WallCount => (Size.x - 1) * Size.y + (Size.y - 1) * Size.x;
-		#endregion
 
 		#region Tools
 
@@ -71,12 +81,18 @@ namespace Systems.Map.Config
 				if (!positions.Add(cell.position))
 					Debug.LogError($"Duplicate position found: {cell.position}");
 
+			// Validate region references
+			var regionIds = new HashSet<int>();
+			foreach (var region in regions)
+				if (!regionIds.Add(region.regionId))
+					Debug.LogError($"Duplicate region ID: {region.regionId}");
+
+			foreach (var cell in cells)
+				if (!regionIds.Contains(cell.regionId))
+					Debug.LogWarning($"Cell {cell.position} references undefined region {cell.regionId}");
+
 			Debug.Log($"[MapConfig] Validation complete. Total cells: {cells.Length}");
 		}
-
-		#endregion
-		
-		#region Editor Display
 
 		[ShowInInspector, DisplayAsString, HideLabel]
 		[PropertyOrder(-1)]
@@ -84,8 +100,11 @@ namespace Systems.Map.Config
 
 		#endregion
 
-        public void Init()
+		public void Init()
         {
+	        if (regions == null || regions.Length == 0)
+		        regions = new[] { RegionDefinition.DefaultOutdoor };
+
             cells = new CellConfigData[Size.x * Size.y];
             int index = 0;
             for (int y = 0; y < Size.y; y++)
@@ -95,43 +114,41 @@ namespace Systems.Map.Config
                     cells[index] = new CellConfigData
                     {
                         position = new Vector2Int(x, y),
-                        // terrain = ETerrainType.Plain,
-                        // IsWalkable = true,
-                        // moveCost = 1
+                        regionId = 0
                     };
                     index++;
                 }
             }
 
-            // 考虑到功能制作的便利性，也初始化墙体数据
             walls = new WallConfigData[WallCount];
             int wallIndex = 0;
             for (int y = 0; y < Size.y; y++)
             {
                 for (int x = 0; x < Size.x; x++)
                 {
-                    // 水平墙
                     if (x < Size.x - 1)
                     {
                         walls[wallIndex++] = new WallConfigData
                         {
                             position1 = new Vector2Int(x, y),
                             position2 = new Vector2Int(x + 1, y),
-                            // wallType = WallType.None
                         };
                     }
-                    // 垂直墙
                     if (y < Size.y - 1)
                     {
                         walls[wallIndex++] = new WallConfigData
                         {
                             position1 = new Vector2Int(x, y),
                             position2 = new Vector2Int(x, y + 1),
-                            // wallType = WallType.None
                         };
                     }
                 }
             }
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
 
         private void OnSizeChanged()
@@ -155,9 +172,7 @@ namespace Systems.Map.Config
                         cells[index] = new CellConfigData
                         {
                             position = pos,
-                            // terrain = ETerrainType.Plain,
-                            // IsWalkable = true,
-                            // moveCost = 1
+                            regionId = 0
                         };
                     }
                     index++;
@@ -188,7 +203,6 @@ namespace Systems.Map.Config
                             {
                                 position1 = p1,
                                 position2 = p2,
-                                // wallType = WallType.None
                             };
                         }
                     }
@@ -209,7 +223,6 @@ namespace Systems.Map.Config
                             {
                                 position1 = p1,
                                 position2 = p2,
-                                // wallType = WallType.None
                             };
                         }
                     }
@@ -217,16 +230,16 @@ namespace Systems.Map.Config
             }
         }
 
-		
+
 		private void OnMapNameChanged()
 		{
 #if UNITY_EDITOR
 			mapName = editedMapName;
 			string assetPath = UnityEditor.AssetDatabase.GetAssetPath(this);
 			UnityEditor.AssetDatabase.RenameAsset(assetPath, mapName);
-			UnityEditor.AssetDatabase.SaveAssets();
 #endif
 		}
+
 	}
 
 	/// <summary>
@@ -239,47 +252,11 @@ namespace Systems.Map.Config
 		[LabelText("坐标"), LabelWidth(20), ReadOnly]
 		public Vector2Int position;
 
-        public ETerrainType Terrain
-        {
-            get
-            {
-                if (!cell)
-                {
-                    return ETerrainType.Void;
-                }
-                return cell.TerrainType;
-            }
-        }
+        public ETerrainType Terrain => !cell ? ETerrainType.Void : cell.terrainType;
 
-        // 指地块本身是否支持通行，不算场景物体等其他因素的影响
-        public bool IsWalkable
-        {
-            get
-            {
-                if (!cell)
-                {
-                    return false;
-                }
-                return cell.IsWalkable;
-            }
-        }
+        public bool IsWalkable => cell && cell.isWalkable;
 
-        public int MoveCost
-        {
-            get 
-            {
-                if (!cell)
-                {
-                    return int.MaxValue;
-                }
-                return cell.MoveCost;
-            }
-        }
-
-		// [HorizontalGroup("Props")]
-		// [LabelText("高度"), LabelWidth(40)]
-		// [Range(0, 5)]
-		// public int height = 0;
+        public int MoveCost => !cell ? int.MaxValue : cell.moveCost;
 
         [HorizontalGroup("Props")] 
         [LabelText("地块"), LabelWidth(40)]
@@ -290,31 +267,26 @@ namespace Systems.Map.Config
         [LabelText("场景物体"), LabelWidth(40)]
         [CanBeNull]
         public SceneActorConfig sceneActor;
+
+        [HorizontalGroup("Props")]
+        [LabelText("区域"), LabelWidth(30)]
+        public int regionId;
     }
 
     [Serializable]
     public class WallConfigData
     {
         public Vector2Int position1;
+
         public Vector2Int position2;
-        public WallKey WallKey => new WallKey(position1, position2);
+
+        public WallKey WallKey => new(position1, position2);
+
         public WallConfig wall;
 
-        public WallType WallType
-        {
+        public WallType WallType => !wall ? WallType.None : wall.wallType;
 
-            get{
-                if (!wall)
-                {
-                    return WallType.None;
-                }
-                return wall.wallType;
-            }
-        }
-        
         public bool Check(Vector2Int posA, Vector2Int posB)
-        {
-            return (position1 == posA && position2 == posB) || (position1 == posB && position2 == posA);
-        }
+	        => (position1 == posA && position2 == posB) || (position1 == posB && position2 == posA);
     }
 }

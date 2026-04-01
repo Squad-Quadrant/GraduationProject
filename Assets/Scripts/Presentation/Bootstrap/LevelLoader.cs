@@ -19,6 +19,7 @@ using Systems.Damage;
 using Systems.GamePlay;
 using Systems.Interfaces;
 using Systems.Map;
+using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.PathFinding.TraversalRule;
 using Systems.Turn;
@@ -28,10 +29,6 @@ using UnityEngine;
 
 namespace Presentation.Bootstrap
 {
-	/// <summary>
-	/// 关卡加载引导脚本，目前只完成了Map、Unit、Turn服务的初始化和注册
-	/// todo: 还需要手动触发Map的渲染、Unit的实例化、Turn的开始等逻辑
-	/// </summary>
 	public class LevelLoader : MonoBehaviour
 	{
 		private struct LoadStepEntry
@@ -155,6 +152,7 @@ namespace Presentation.Bootstrap
 				return new PathFindingService(mapService, traversalRule);
 			});
 			_levelContainer.Services.Register<IVisionService, VisionService>();
+			_levelContainer.Services.Register<IRegionService, RegionService>();
 			_levelContainer.Services.Register<IAIService, AIService>();
 
 			_levelContainer.Services.RegisterInstance(interactionController);
@@ -186,6 +184,8 @@ namespace Presentation.Bootstrap
 		{
 			if (!levelConfig.mapConfig)
 				throw new InvalidOperationException("LevelConfig has no MapConfig assigned!");
+
+			_levelContainer.Resolve<IRegionService>().Initialize(levelConfig.mapConfig);
 
 			_levelContainer.Resolve<IMapService>().LoadFromConfig(levelConfig.mapConfig);
 			this.Log($"Map: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");

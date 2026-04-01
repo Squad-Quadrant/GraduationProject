@@ -12,11 +12,8 @@ namespace Systems.Map
 	{
 		public Vector2Int Position { get; }
 		public ETerrainType Terrain { get; set; }
-		// public int Height { get; set; } = 0;
 		public bool IsWalkable { get; set; } = true;
 		public int MoveCost { get; set; } = 1;
-        
-        [CanBeNull] public TileBase Tile { get; set; }
 
         public bool IsOccupied => !string.IsNullOrEmpty(UnitId) || SceneActor != null;
         public SceneActorBase SceneActor { get; set; }
