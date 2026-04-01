@@ -14,7 +14,8 @@ namespace Presentation.Debugger
 	/// Displays all units, their stats, and provides inspection/manipulation tools.
 	/// </summary>
 	[AddComponentMenu("Debugger/Unit Service Debugger")]
-	public class UnitServiceDebugger : MonoBehaviour
+	public class 
+        UnitServiceDebugger : MonoBehaviour
 	{
 		#region Connection
 

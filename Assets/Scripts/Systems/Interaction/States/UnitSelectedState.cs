@@ -69,8 +69,7 @@ namespace Systems.Interaction.States
 					StateMachine(Context).ChangeState<MovementPreviewState>();
 					break;
 
-				case EActionType.MainWeapon:
-                case EActionType.SecondaryWeapon:
+				case EActionType.Attack:
                 case EActionType.TacticalItem0:
                 case EActionType.TacticalItem1:
                 case EActionType.TacticalItem2:

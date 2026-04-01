@@ -14,10 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 2
   Name: "\u6807\u51C6\u624B\u67AA"
+  Description: "\u666E\u901A\u624B\u67AA\uFF0C\u8FD9\u662F\u4E00\u4E2A\u666E\u901A\u624B\u67AA"
+  Icon: {fileID: 21300000, guid: bfc97159735c20d49837234cb1d76a32, type: 3}
   Damage: 30
   MentalDamage: 0
   Weight: 0
   Type: 1
   AmmoCapacity: 0
-  penetrationRate: 0
+  ShotRanges: []
+  DamageAttenuation:
+    perGrid: 0
+    multiplier: 0
+  PenetrationRate: 0
   AttackRange: 0

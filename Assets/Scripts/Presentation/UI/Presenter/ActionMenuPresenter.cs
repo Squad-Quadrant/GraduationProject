@@ -12,7 +12,8 @@ namespace Presentation.UI.Presenter
 	{
 		private readonly UIManager _uiManager;
 		private readonly IEventBus _eventBus;
-		private ActionMenuPanel _panel;
+		private ActionMenuPanel _actionMenuPanel;
+        private AttackPreviewPanel  _attackPreviewPanel;
 
 		public ActionMenuPresenter(UIManager uiManager, IEventBus eventBus)
 		{
@@ -29,22 +30,33 @@ namespace Presentation.UI.Presenter
 			_eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 		}
 
-		private void OnStateChanged(StateChangedEvent<InteractionContext> e)
-		{
-			var current = e.CurrentState?.Name;
-			var previous = e.PreviousState?.Name;
+        private void OnStateChanged(StateChangedEvent<InteractionContext> e)
+        {
+            var current = e.CurrentState?.Name;
+            var previous = e.PreviousState?.Name;
 
-			if (current == InteractionStates.UnitSelected)
-			{
-				_panel = _uiManager.Open<ActionMenuPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
-				return;
-			}
+            if (previous == InteractionStates.UnitSelected && _actionMenuPanel)
+            {
+                _uiManager.Close<ActionMenuPanel>();
+                _actionMenuPanel = null;
+            }
 
-			if (previous == InteractionStates.UnitSelected && _panel)
-			{
-				_uiManager.Close<ActionMenuPanel>();
-				_panel = null;
-			}
-		}
-	}
+            if (previous == InteractionStates.AttackPreview && _attackPreviewPanel)
+            {
+                _uiManager.Close<AttackPreviewPanel>();
+                _attackPreviewPanel = null;
+            }
+            
+            
+            if (current == InteractionStates.UnitSelected)
+            {
+                _actionMenuPanel = _uiManager.Open<ActionMenuPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
+            }
+
+            if (current == InteractionStates.AttackPreview)
+            {
+                _attackPreviewPanel = _uiManager.Open<AttackPreviewPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
+            }
+        }
+    }
 }

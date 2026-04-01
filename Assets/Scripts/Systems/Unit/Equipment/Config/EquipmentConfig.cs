@@ -34,6 +34,12 @@ namespace Systems.Equipment.Config
         [Tooltip("名称")]
         public string Name;
         
+        [Tooltip("描述")]
+        public string Description;
+        
+        [Tooltip("图标")]
+        public Sprite Icon;
+        
         [Tooltip("伤害")]
         public int Damage;
 

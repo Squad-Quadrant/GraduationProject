@@ -9,6 +9,7 @@ using Systems.Equipment;
 using Systems.Equipment.Config;
 using Systems.Turn;
 using UnityEngine;
+using UnityEngine.Android;
 
 namespace Systems.Unit
 {
@@ -94,20 +95,23 @@ namespace Systems.Unit
 		public List<EActionType> GetAvailableActions()
 		{
 			var actions = new List<EActionType>();
-            // todo: 计算攻击所需的AP
 			if (HasAp)
 			{
 				actions.Add(EActionType.Move);
-                if (!MainWeapon.IsNullOrEmpty())
-                    actions.Add(EActionType.MainWeapon);
-                if (!SecondaryWeapon.IsNullOrEmpty())
-                    actions.Add(EActionType.SecondaryWeapon);
+                // if (!MainWeapon.IsNullOrEmpty())
+                //     actions.Add(EActionType.MainWeapon);
+                // if (!SecondaryWeapon.IsNullOrEmpty())
+                //     actions.Add(EActionType.SecondaryWeapon);
+                // todo: 当前武器有且有子弹
+                actions.Add(EActionType.Attack);
                 if (!TacticalItem0.IsNullOrEmpty())
                     actions.Add(EActionType.TacticalItem0);
                 if (!TacticalItem1.IsNullOrEmpty())
                     actions.Add(EActionType.TacticalItem1);
                 if (!TacticalItem2.IsNullOrEmpty())
                     actions.Add(EActionType.TacticalItem2);
+                if (!MainWeapon.IsNullOrEmpty() || !SecondaryWeapon.IsNullOrEmpty())
+                    actions.Add(EActionType.Reload);
 			}
 			actions.Add(EActionType.Wait);
 			return actions;
@@ -145,6 +149,8 @@ namespace Systems.Unit
 
         public EquipmentContainer MainWeapon { get; set; }
         public EquipmentContainer SecondaryWeapon { get; set; }
+
+        public EquipmentContainer CurrentWeapon => !MainWeapon.IsNullOrEmpty() ? MainWeapon : SecondaryWeapon;
         public EquipmentContainer TacticalItem0 { get; set; }
         public EquipmentContainer TacticalItem1 { get; set; }
         public EquipmentContainer TacticalItem2 { get; set; }
@@ -174,10 +180,8 @@ namespace Systems.Unit
         {
             switch (actionType)
             {
-                case EActionType.MainWeapon:
-                    return MainWeapon;
-                case EActionType.SecondaryWeapon:
-                    return SecondaryWeapon;
+                case EActionType.Attack:
+                    return CurrentWeapon;
                 case EActionType.TacticalItem0:
                     return TacticalItem0;
                 case EActionType.TacticalItem1:
