@@ -39,9 +39,10 @@ namespace Presentation.UI.Panel
 
             foreach (var action in availableActions)
             {
-                var item = GetItem(action);
+                var item = GetItem(action.actionType);
                 if (!item) continue;
                 item.Switch(true);
+                item.Interactable = action.isAvailable;
             }
         }
 

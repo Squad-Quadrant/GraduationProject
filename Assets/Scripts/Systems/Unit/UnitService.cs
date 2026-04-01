@@ -62,6 +62,8 @@ namespace Systems.Unit
 
 			this.Log($"Unit destroyed: {unit.name}({unitId})" +
 			          (killerUnitId != null ? $" by {killerUnitId}" : ""));
+            
+            this.Log($"{unit.name}死亡", true);
 
 			_eventBus.Publish(new UnitDestroyedEvent(unit, killerUnitId));
 		}

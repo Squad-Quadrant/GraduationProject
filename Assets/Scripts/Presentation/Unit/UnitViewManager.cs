@@ -207,15 +207,15 @@ namespace Presentation.Unit
         
         private void OnUnitAttacked(UnitAttackedEvent e)
         {
-            if (e.Unit == null)
+            if (e.Attacker == null)
             {
                 this.LogError("UnitAttackedEvent has null Unit");
                 return;
             }
 
-            if (!_views.TryGetValue(e.Unit.id, out var view))
+            if (!_views.TryGetValue(e.Attacker.id, out var view))
             {
-                this.LogWarning($"No view found for attacked unit '{e.Unit.id}'.");
+                this.LogWarning($"No view found for attacked unit '{e.Attacker.id}'.");
                 return;
             }
 
@@ -224,7 +224,7 @@ namespace Presentation.Unit
                 _eventBus.Publish(new PresentationCompleteEvent(
                     category: EPresentationCategory.Animation,
                     type: PresentationType.Animation.Attack,
-                    entityId: e.Unit.id
+                    entityId: e.Attacker.id
                 ));
                 view.PlayAction("idle");
             });

@@ -3,7 +3,7 @@ using Systems.Damage;
 
 namespace Data.Runtime.Events.Damage
 {
-    public class DamageAppliedEvent : IEvent
+    public struct DamageAppliedEvent : IEvent
     {
         public DamageExecutingContext Context { get;}
         

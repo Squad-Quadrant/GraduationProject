@@ -43,6 +43,7 @@ namespace Presentation.UI.Presenter
 			}
 
 			_panel = _uiManager.Open<UnitInfoPanel, Systems.Unit.Unit>(unit);
+            _panel.Init(_eventBus);
 		}
 
 		private void OnUnitDeselected(UnitDeselectedEvent e)

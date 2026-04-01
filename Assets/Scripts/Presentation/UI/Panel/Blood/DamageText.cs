@@ -16,6 +16,7 @@ namespace Presentation.UI.Panel
         [SerializeField] private float yOffset;
         [SerializeField] private float floatSpeed = 50f;
         [SerializeField] private float fadeDuration = 1.0f;
+        [SerializeField] private Vector2 positionRandom = new(0, 0);
 
         public void Init(DamageExecutingContext context, ICoordinateConverter coordinateConverter)
         {
@@ -34,7 +35,9 @@ namespace Presentation.UI.Panel
                 defenseDamageText.text = context.DefenceDamage.ToString();
             }
 
-            Vector3 worldPosition = _coordinateConverter.CellToWorld(_context.Defender.position) + new Vector3(xOffset, yOffset, 0);
+            Vector3 worldPosition = _coordinateConverter.CellToWorld(_context.Defender.position) +
+                                    new Vector3(xOffset, yOffset, 0) +
+                                    new Vector3(Random.Range(-positionRandom.x, positionRandom.x), Random.Range(-positionRandom.y, positionRandom.y), 0);
             transform.position = Camera.main.WorldToScreenPoint(worldPosition);
             Play();
         }

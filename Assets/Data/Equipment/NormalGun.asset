@@ -32,4 +32,8 @@ MonoBehaviour:
     perGrid: 20
     multiplier: 0.95
   PenetrationRate: 0.7
+  shootSpeed: 5
+  canPreciseShoot: 1
+  preciseShootSpeed: 2
+  preciseShootHitRateBonus: 15
   AttackRange: 0

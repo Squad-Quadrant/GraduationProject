@@ -8,7 +8,16 @@ namespace Systems.Damage
     public class ShotDamageInfluence : DamageInfluence
     {
         public ShotDamageInfluence(IDamageInfluencer owner, int priority = 0) : base(owner, priority) { }
-        
+
+        public override void Init(DamageExecutingContext context)
+        {
+            base.Init(context);
+            var theWeapon = (WeaponLogic)Owner;
+            int bulletNum = theWeapon.CurrentAmmo() > theWeapon.ShootSpeed() ? theWeapon.ShootSpeed() : theWeapon.CurrentAmmo();
+            theWeapon.CurrentAmmo(-bulletNum);
+            Context.CalculateNum = bulletNum;
+        }
+
         public override void Execute()
         {
             var theWeapon = (WeaponLogic)Owner;

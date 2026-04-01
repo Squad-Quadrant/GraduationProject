@@ -50,35 +50,62 @@ namespace Systems.Damage
 
         public void Execute()
         {
-            foreach (var influence in _influences)
+            for (int i = 0; i < _context.CalculateNum; i++)
             {
-                influence.Execute();
+                if (_context.HitRate > Random.Range(0f, 1f)) 
+                    _context.FinalCalculatedNum++;
             }
 
-            ApplyDamage();
+            for (int i = 0; i < _context.FinalCalculatedNum; i++)
+            {
+                _context.CurrentDamageIndex = i;
+                foreach (var influence in _influences)
+                {
+                    influence.Execute();
+                }
+                ApplyDamage();
+                if (_context.needResetDamage) 
+                    ResetDamage();
+            }
+            
+            if(_context.isMiss)
+            {
+                this.Log($"Attack missed! Defender ID:{_context.Defender.id}", true);
+            }else if (_context.DamageType == DamageType.Bullet)
+            {
+                this.Log($"{_context.Attacker.name}对{_context.Defender.name}进行攻击，命中{_context.FinalCalculatedNum}发子弹，" +
+                         $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenceDamage}", true);
+            }
+            
         }
 
         private void ApplyDamage()
         {
             var defender = _context.Defender;
-            _context.isMiss = _context.HitRate < Random.Range(0f, 1f);
-            if (!_context.isMiss)
-            {
-                defender.currentDefense -= _context.DefenceDamage;
-                // defender.curr -= _context.MentalDamage;
-                defender.currentHp -= _context.Damage;
-                this.Log($"Damage applied: {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
-                         $" {_context.MentalDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}", true);
-            }
-            else
-            {
-                this.Log($"Attack missed! Defender ID:{defender.id}", true);
-            }
-            _eventBus.Publish(new DamageAppliedEvent(_context));
+
+            defender.currentDefense -= _context.DefenceDamage;
+            defender.currentSan -= _context.SanDamage;
+            defender.currentHp -= _context.Damage;
+            
+            _context.TotalDamage += _context.Damage;
+            _context.TotalDefenceDamage += _context.DefenceDamage;
+            _context.TotalMentalDamage += _context.SanDamage;
+            
+            this.Log($"Damage applied: type:{_context.DamageType}, {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
+                $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}");
+
+            _eventBus.Publish(new DamageAppliedEvent(_context.GetSnapshot()));
+        }
+
+        private void ResetDamage()
+        {
+            _context.Damage = 0;
+            _context.DefenceDamage = 0;
+            _context.SanDamage = 0;
         }
     }
 
-    public class DamageExecutingContext
+    public record DamageExecutingContext
     {
         public Unit.Unit Attacker;
         public Unit.Unit Defender;
@@ -97,10 +124,25 @@ namespace Systems.Damage
             DamageType = owner.DamageType;
         }
 
-        public float HitRate = 1;
         public int Damage = 0;
         public int DefenceDamage = 0; // 对护甲的伤害
-        public int MentalDamage = 0; // San值伤害
-        public bool isMiss;
+        public int SanDamage = 0; // San值伤害
+        
+        public float HitRate = 1;
+        
+        public int CalculateNum = 1; // 该伤害流程的重复计算次数
+        public int FinalCalculatedNum = 0; // 添加命中率影响后的实际应用数量
+        public int CurrentDamageIndex = 0; // 当前正在计算的伤害序号（用于多次伤害的情况）
+        public bool isMiss => FinalCalculatedNum == 0;
+        public bool needResetDamage = true; // 在每次重新计算伤害之前是否需要重置伤害
+
+        public int TotalDamage = 0;
+        public int TotalDefenceDamage = 0;
+        public int TotalMentalDamage = 0;
+
+        public DamageExecutingContext GetSnapshot()
+        {
+            return this with { };
+        }
     }
 }

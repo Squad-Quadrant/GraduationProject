@@ -53,10 +53,25 @@ namespace Systems.Unit
 		public bool isStunned;
 		public int currentAp;
         public int currentDefense;
+        public int currentSan;
 
 		public bool IsAlive => currentHp > 0;
 		public bool CanAct => IsAlive && !isStunned;
 		public bool HasAp => currentAp > 0;
+
+        public bool HasAmmo
+        {
+            get
+            {
+                if (CurrentWeapon.IsNullOrEmpty()) return false;
+                if (CurrentWeapon.Logic is WeaponLogic weaponLogic)
+                {
+                    return weaponLogic.CurrentAmmo() > 0;
+                }
+
+                return false;
+            }
+        }
 		
 		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
 		{
@@ -86,34 +101,27 @@ namespace Systems.Unit
 
 				currentHp = config.maxHp,
                 currentDefense = config.defense,
+                currentSan = config.san,
 				position = startPosition,
 				isStunned = false,
 				currentAp = config.actionPoints
 			};
 		}
 
-		public List<EActionType> GetAvailableActions()
+		public List<ActionAbility> GetAvailableActions()
 		{
-			var actions = new List<EActionType>();
-			if (HasAp)
-			{
-				actions.Add(EActionType.Move);
-                // if (!MainWeapon.IsNullOrEmpty())
-                //     actions.Add(EActionType.MainWeapon);
-                // if (!SecondaryWeapon.IsNullOrEmpty())
-                //     actions.Add(EActionType.SecondaryWeapon);
-                // todo: 当前武器有且有子弹
-                actions.Add(EActionType.Attack);
-                if (!TacticalItem0.IsNullOrEmpty())
-                    actions.Add(EActionType.TacticalItem0);
-                if (!TacticalItem1.IsNullOrEmpty())
-                    actions.Add(EActionType.TacticalItem1);
-                if (!TacticalItem2.IsNullOrEmpty())
-                    actions.Add(EActionType.TacticalItem2);
-                if (!MainWeapon.IsNullOrEmpty() || !SecondaryWeapon.IsNullOrEmpty())
-                    actions.Add(EActionType.Reload);
-			}
-			actions.Add(EActionType.Wait);
+			var actions = new List<ActionAbility>();
+            actions.Add(new ActionAbility(EActionType.Move, HasAp));
+            actions.Add(new ActionAbility(EActionType.Attack, !CurrentWeapon.IsNullOrEmpty() && HasAp && HasAmmo));
+            if (!TacticalItem0.IsNullOrEmpty())
+                actions.Add(new ActionAbility(EActionType.TacticalItem0, HasAp));
+            if (!TacticalItem1.IsNullOrEmpty())
+                actions.Add(new ActionAbility(EActionType.TacticalItem1, HasAp));
+            if (!TacticalItem2.IsNullOrEmpty())
+                actions.Add(new ActionAbility(EActionType.TacticalItem2, HasAp));
+            if (!MainWeapon.IsNullOrEmpty() || !SecondaryWeapon.IsNullOrEmpty())
+                actions.Add(new ActionAbility(EActionType.Reload, HasAp && HasAmmo));
+			actions.Add(new ActionAbility(EActionType.Wait));
 			return actions;
 		}
 
@@ -195,4 +203,15 @@ namespace Systems.Unit
         
         #endregion
 	}
+
+    public struct ActionAbility
+    {
+        public EActionType actionType;
+        public bool isAvailable;
+        public ActionAbility(EActionType actionType = EActionType.None, bool isAvailable = true)
+        {
+            this.actionType = actionType;
+            this.isAvailable = isAvailable;
+        }
+    }
 }
