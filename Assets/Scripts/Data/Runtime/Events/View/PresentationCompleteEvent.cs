@@ -64,6 +64,7 @@ namespace Data.Runtime.Events.View
 			public const string Spawn = "Spawn";
 			public const string Idle = "Idle";
             public const string Reload = "Reload";
+            public const string SwitchWeapon = "SwitchWeapon";
 		}
 
 		public static class UI

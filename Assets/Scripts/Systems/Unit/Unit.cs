@@ -156,6 +156,7 @@ namespace Systems.Unit
 			var actions = new List<ActionAbility>();
             actions.Add(new ActionAbility(EActionType.Move, HasAp));
             actions.Add(new ActionAbility(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo));
+			actions.Add(new ActionAbility(EActionType.Wait));
             if (!TacticalItem0.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem0, HasAp));
             if (!TacticalItem1.IsNullOrEmpty())
@@ -164,7 +165,8 @@ namespace Systems.Unit
                 actions.Add(new ActionAbility(EActionType.TacticalItem2, HasAp));
             if (CurrentWeapon!= null)
                 actions.Add(new ActionAbility(EActionType.Reload, HasAp));
-			actions.Add(new ActionAbility(EActionType.Wait));
+            if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
+                actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp));
 			return actions;
 		}
 
@@ -268,6 +270,12 @@ namespace Systems.Unit
                 default:
                     throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
             }
+        }
+
+        public void SwitchWeapon()
+        {
+            CurrentEquipment = _currentEquipment == MainWeapon ? SecondaryWeapon : MainWeapon;
+            TriggerInfoChanged();
         }
         
         #endregion

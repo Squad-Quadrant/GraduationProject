@@ -34,7 +34,7 @@ namespace Presentation.UI.Panel
             description.text = config.Description;
 
             isPreciseShooting.onValueChanged.RemoveAllListeners();
-            isPreciseShooting.enabled = currentEquipment.Config.canPreciseShoot;
+            isPreciseShooting.gameObject.SetActive(currentEquipment.Config.canPreciseShoot);
             isPreciseShooting.isOn = unit.CurrentWeapon.isOnPreciseShoot;
 
             if (unit.CurrentWeapon.CanPreciseShoot())

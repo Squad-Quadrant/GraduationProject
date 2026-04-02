@@ -19,6 +19,11 @@ namespace Systems.Equipment
             Owner = owner;
             Config = config;
         }
+        
+        public virtual string Name()
+        {
+            return Config.Name;
+        }
        
         public virtual int GetDamage()
         {

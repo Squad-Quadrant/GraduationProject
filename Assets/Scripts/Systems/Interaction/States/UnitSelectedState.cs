@@ -81,12 +81,20 @@ namespace Systems.Interaction.States
 					ExecuteWait();
 					break;
                 case EActionType.Reload:
-                    var attackCommand = new UnitReloadCommand(
+                    var reloadCommand = new UnitReloadCommand(
                         Context.selectedUnit,
                         1,
                         Context.EventBus
                     );
-                    Context.CommandQueue.EnqueueAndExecute(attackCommand);
+                    Context.CommandQueue.EnqueueAndExecute(reloadCommand);
+                    break;
+                case EActionType.SwitchWeapon:
+                    var switchWeaponCommand = new UnitSwitchWeaponCommand(
+                        Context.selectedUnit,
+                        1,
+                        Context.EventBus
+                    );
+                    Context.CommandQueue.EnqueueAndExecute(switchWeaponCommand);
                     break;
 				case EActionType.None:
 				case EActionType.Interact:

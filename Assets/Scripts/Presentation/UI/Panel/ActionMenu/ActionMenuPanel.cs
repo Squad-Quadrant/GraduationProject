@@ -27,6 +27,14 @@ namespace Presentation.UI.Panel
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
+            foreach (var item in items)
+            {
+                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
+                
+                item.OnHoverEnter += SetDescription;
+                item.OnHoverExit += ClearDescription;
+                item.Switch(false);
+            }
             Refresh(unit);
         }
 
@@ -48,15 +56,6 @@ namespace Presentation.UI.Panel
         
         private void Refresh(Systems.Unit.Unit unit)
         {
-            foreach (var item in items)
-            {
-                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
-                
-                item.OnHoverEnter += SetDescription;
-                item.OnHoverExit += ClearDescription;
-                item.Switch(false);
-            }
-            
             var availableActions = unit.GetAvailableActions();
 
             foreach (var action in availableActions)

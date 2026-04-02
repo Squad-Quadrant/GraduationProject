@@ -74,7 +74,7 @@ namespace Systems.Damage
             }else if (_context.DamageType == DamageType.Bullet)
             {
                 string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
-                this.Log($"{_context.Attacker.name}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
+                this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
                          $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenceDamage}", true);
             }
             

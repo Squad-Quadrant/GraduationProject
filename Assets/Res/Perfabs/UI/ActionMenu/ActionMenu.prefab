@@ -74,13 +74,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1215ab1af3471db9e80f20cfb75bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveButton: {fileID: 7677981545139499554}
-  mainWeaponButton: {fileID: 6046753789001522863}
-  secondaryWeaponButton: {fileID: 8581412980671459144}
-  tacticalItem0Button: {fileID: 6099266306204368348}
-  tacticalItem1Button: {fileID: 6062069874753228874}
-  tacticalItem2Button: {fileID: 6899897995838092668}
-  waitButton: {fileID: 1819561547439441466}
   currentActionText: {fileID: 1281431697676504866}
   items:
   - {fileID: 7677981545139499554}
@@ -90,7 +83,6 @@ MonoBehaviour:
   - {fileID: 6062069874753228874}
   - {fileID: 6899897995838092668}
   - {fileID: 1819561547439441466}
-  - {fileID: 8581412980671459144}
   - {fileID: 8090714016383140214}
 --- !u!1 &759740139514924958
 GameObject:
@@ -1290,7 +1282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2010246498418104544, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: description
-      value: ChangeWeapon
+      value: SwitchWeapon
       objectReference: {fileID: 0}
     - target: {fileID: 7731491664829948298, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: m_Sprite
@@ -1298,7 +1290,7 @@ PrefabInstance:
       objectReference: {fileID: 1263837722, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
     - target: {fileID: 8507568210659486334, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: m_Name
-      value: ActionBtn_ChangeWeapon
+      value: ActionBtn_SwitchWeapon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -16,7 +16,7 @@
         TacticalItem2,
 		Defend,
         Reload,
-        ChangeWeapon,
+        SwitchWeapon,
         //...
 		Count,
 	}
