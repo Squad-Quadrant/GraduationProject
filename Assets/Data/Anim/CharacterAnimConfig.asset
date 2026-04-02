@@ -129,12 +129,12 @@ MonoBehaviour:
   - action: reload
     stance: 0
     grip: 0
-    clipName: reload m16
+    clipName: reload/reloading m16
     loop: 0
   - action: reload
     stance: 0
     grip: 0
-    clipName: reload mp5
+    clipName: reload/reloading mp5
     loop: 0
   transitions:
   - from: 2
