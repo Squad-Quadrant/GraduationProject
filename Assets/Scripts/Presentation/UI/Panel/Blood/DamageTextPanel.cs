@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Presentation.UI.Panel
 {
-    public class DamageTextPanel : UIPanel, IDisposable
+    public class DamageTextPanel : UIPanel
     {
         private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;
@@ -35,9 +35,10 @@ namespace Presentation.UI.Panel
             _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
         }
 
-        public void Dispose()
+        protected override void OnDestroy()
         {
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            base.OnDestroy();
         }
 
         private void OnDamageApplied(DamageAppliedEvent e)

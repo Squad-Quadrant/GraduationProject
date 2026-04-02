@@ -47,8 +47,8 @@ namespace Presentation.UI.Panel
         {
 	        bloodSliderImage.enabled = _unitView.GetVisible();
             defenseSliderImage.enabled = _unitView.GetVisible();
-            bloodSliderImage.fillAmount = Mathf.Lerp(bloodSliderImage.fillAmount, (float)_owner.currentHp / _owner.maxHp, 0.05f);
-            defenseSliderImage.fillAmount = Mathf.Lerp(defenseSliderImage.fillAmount, (float)_owner.currentDefense / _owner.defense, 0.05f);
+            bloodSliderImage.fillAmount = Mathf.Lerp(bloodSliderImage.fillAmount, (float)_owner.CurrentHp / _owner.maxHp, 0.05f);
+            defenseSliderImage.fillAmount = Mathf.Lerp(defenseSliderImage.fillAmount, (float)_owner.CurrentDefense / _owner.defense, 0.05f);
             // Vector3 worldPosition = _coordinateConverter.CellToWorld(_owner.position) + new Vector3(xOffset, yOffset, 0);
             transform.position = _unitView.transform.position + new Vector3(xOffset, yOffset, 0);
             transform.localScale =  _originCameraSize * Vector3.one / Camera.main.orthographicSize;

@@ -78,11 +78,11 @@ namespace Presentation.Debugger
 					Id = u.id ?? "null",
 					Name = u.name ?? "null",
 					Position = u.position,
-					CurrentHp = u.currentHp,
+					CurrentHp = u.CurrentHp,
 					MaxHp = u.maxHp,
 					Speed = u.speed,
 					IsAlive = u.IsAlive,
-					IsStunned = u.isStunned
+					IsStunned = u.IsStunned
 				}).ToList();
 			}
 		}
@@ -189,9 +189,9 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return;
 
-			var oldHp = unit.currentHp;
-			unit.currentHp = Mathf.Clamp(unit.currentHp + _hpChange, 0, unit.maxHp);
-			Debug.Log($"[UnitServiceDebugger] {unit.name} HP: {oldHp} -> {unit.currentHp}");
+			var oldHp = unit.CurrentHp;
+			unit.CurrentHp = Mathf.Clamp(unit.CurrentHp + _hpChange, 0, unit.maxHp);
+			Debug.Log($"[UnitServiceDebugger] {unit.name} HP: {oldHp} -> {unit.CurrentHp}");
 		}
 
 		[HorizontalGroup("Debug Actions/Status")]
@@ -202,8 +202,8 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return;
 
-			unit.isStunned = !unit.isStunned;
-			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.isStunned}");
+			unit.IsStunned = !unit.IsStunned;
+			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.IsStunned}");
 		}
 
 		[HorizontalGroup("Debug Actions/Status")]
@@ -214,7 +214,7 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return;
 
-			unit.currentHp = 0;
+			unit.CurrentHp = 0;
 			Debug.Log($"[UnitServiceDebugger] {unit.name} killed (HP set to 0)");
 		}
 
@@ -226,7 +226,7 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return;
 
-			unit.currentHp = unit.maxHp;
+			unit.CurrentHp = unit.maxHp;
 			Debug.Log($"[UnitServiceDebugger] {unit.name} revived (HP set to max)");
 		}
 
@@ -309,17 +309,17 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return default;
 
-			var hpPercent = unit.maxHp > 0 ? (float)unit.currentHp / unit.maxHp : 0f;
+			var hpPercent = unit.maxHp > 0 ? (float)unit.CurrentHp / unit.maxHp : 0f;
 			return new UnitStateInfo
 			{
-				CurrentHp = unit.currentHp,
+				CurrentHp = unit.CurrentHp,
 				MaxHp = unit.maxHp,
 				HpPercent = hpPercent,
 				Speed = unit.speed,
 				MoveRange = unit.moveRange,
 				ActionPoints = unit.maxAp,
 				IsAlive = unit.IsAlive,
-				IsStunned = unit.isStunned
+				IsStunned = unit.IsStunned
 			};
 		}
 

@@ -126,6 +126,16 @@ MonoBehaviour:
     grip: 1
     clipName: act/hit bend hg
     loop: 0
+  - action: reload
+    stance: 0
+    grip: 0
+    clipName: reload m16
+    loop: 0
+  - action: reload
+    stance: 0
+    grip: 0
+    clipName: reload mp5
+    loop: 0
   transitions:
   - from: 2
     to: 0

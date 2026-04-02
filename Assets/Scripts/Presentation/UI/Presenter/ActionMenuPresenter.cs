@@ -51,6 +51,7 @@ namespace Presentation.UI.Presenter
             if (current == InteractionStates.UnitSelected)
             {
                 _actionMenuPanel = _uiManager.Open<ActionMenuPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
+                _actionMenuPanel.Init(_eventBus);
             }
 
             if (current == InteractionStates.AttackPreview)

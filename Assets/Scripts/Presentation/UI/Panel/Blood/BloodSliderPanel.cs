@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Presentation.UI.Panel
 {
-    public class BloodSliderPanel : UIPanel, IDisposable
+    public class BloodSliderPanel : UIPanel
     {
         private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;
@@ -42,10 +42,11 @@ namespace Presentation.UI.Panel
             }
         }
 
-        public void Dispose()
+        protected override void OnDestroy()
         {
             _eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
             _eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+            base.OnDestroy();
         }
         
         private void OnUnitCreated(UnitCreatedEvent e)

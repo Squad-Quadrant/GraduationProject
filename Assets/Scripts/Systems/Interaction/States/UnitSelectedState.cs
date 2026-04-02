@@ -1,6 +1,7 @@
 ﻿using System;
 using Core.Log;
 using Data.Runtime;
+using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.UI;
@@ -79,6 +80,14 @@ namespace Systems.Interaction.States
 				case EActionType.Wait:
 					ExecuteWait();
 					break;
+                case EActionType.Reload:
+                    var attackCommand = new UnitReloadCommand(
+                        Context.selectedUnit,
+                        1,
+                        Context.EventBus
+                    );
+                    Context.CommandQueue.EnqueueAndExecute(attackCommand);
+                    break;
 				case EActionType.None:
 				case EActionType.Interact:
 				case EActionType.Defend:

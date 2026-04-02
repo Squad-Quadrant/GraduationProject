@@ -65,7 +65,7 @@ namespace Data.Runtime.Commands
 
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.position = _toPosition;
-			unit.currentAp -= _apCost;
+			unit.CurrentAp -= _apCost;
 
 			_eventBus.Publish(new UnitMovedEvent(
 				unit,

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Events;
 using Data.Runtime;
+using Data.Runtime.Events.Unit;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -48,32 +50,71 @@ namespace Systems.Unit
 		public Sprite icon;
 
 		[TitleGroup("Runtime")]
-		public int currentHp;
-		public Vector2Int position;
-		public bool isStunned;
-		public int currentAp;
-        public int currentDefense;
-        public int currentSan;
+		protected int currentHp;
+        protected int currentDefense;
+        protected int currentSan;
+		protected int currentAp;
+            
+        public Vector2Int position;
+        public bool IsStunned;
+        
+        public int CurrentHp
+        {
+            get => currentHp;
+            set
+            {
+                TriggerInfoChanged();
+                currentHp = value;
+            }
+        }
+        
+        public int CurrentDefense
+        {
+            get => currentDefense;
+            set
+            {
+                TriggerInfoChanged();
+                currentDefense = value;
+            }
+        }
 
-		public bool IsAlive => currentHp > 0;
-		public bool CanAct => IsAlive && !isStunned;
-		public bool HasAp => currentAp > 0;
+        public int CurrentSan
+        {
+            get => currentSan;
+            set
+            {
+                TriggerInfoChanged();
+                currentSan = value;
+            }
+        }
+        
+        public int CurrentAp
+        {
+            get => currentAp;
+            set
+            {
+                TriggerInfoChanged();
+                currentAp = value;
+            }
+        }
+
+		public bool IsAlive => CurrentHp > 0;
+		public bool CanAct => IsAlive && !IsStunned;
+		public bool HasAp => CurrentAp > 0;
 
         public bool HasAmmo
         {
             get
             {
-                if (CurrentWeapon.IsNullOrEmpty()) return false;
-                if (CurrentWeapon.Logic is WeaponLogic weaponLogic)
-                {
-                    return weaponLogic.CurrentAmmo() > 0;
-                }
-
-                return false;
+                if (CurrentWeapon == null) return false;
+                
+                return CurrentWeapon.CurrentAmmo() > 0;
             }
         }
+
+        protected IEventBus _eventBus;
 		
-		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
+		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition, IEventBus eventBus)
 		{
 			return new Unit
 			{
@@ -99,12 +140,14 @@ namespace Systems.Unit
 				defaultWeaponSkin = config.defaultWeaponSkin,
 				icon = config.icon,
 
-				currentHp = config.maxHp,
-                currentDefense = config.defense,
-                currentSan = config.san,
+				CurrentHp = config.maxHp,
+                CurrentDefense = config.defense,
+                CurrentSan = config.san,
 				position = startPosition,
-				isStunned = false,
-				currentAp = config.actionPoints
+				IsStunned = false,
+				CurrentAp = config.actionPoints,
+                
+                _eventBus = eventBus
 			};
 		}
 
@@ -112,15 +155,15 @@ namespace Systems.Unit
 		{
 			var actions = new List<ActionAbility>();
             actions.Add(new ActionAbility(EActionType.Move, HasAp));
-            actions.Add(new ActionAbility(EActionType.Attack, !CurrentWeapon.IsNullOrEmpty() && HasAp && HasAmmo));
+            actions.Add(new ActionAbility(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo));
             if (!TacticalItem0.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem0, HasAp));
             if (!TacticalItem1.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem1, HasAp));
             if (!TacticalItem2.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem2, HasAp));
-            if (!MainWeapon.IsNullOrEmpty() || !SecondaryWeapon.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.Reload, HasAp && HasAmmo));
+            if (CurrentWeapon!= null)
+                actions.Add(new ActionAbility(EActionType.Reload, HasAp));
 			actions.Add(new ActionAbility(EActionType.Wait));
 			return actions;
 		}
@@ -140,8 +183,13 @@ namespace Systems.Unit
 			return faction != other.faction;
 		}
 
+        public void TriggerInfoChanged()
+        {
+            _eventBus?.Publish(new UnitInfoChangedEvent(this));
+        }
+
 		public override string ToString() =>
-			$"[Unit] {name}({id}) HP:{currentHp}/{maxHp} AP:{currentAp}/{maxAp} Pos:{position}";
+			$"[Unit] {name}({id}) HP:{CurrentHp}/{maxHp} AP:{CurrentAp}/{maxAp} Pos:{position}";
 
 		#region ITurnUnit
 
@@ -149,7 +197,7 @@ namespace Systems.Unit
 		int ITurnUnit.Speed => speed;
 		bool ITurnUnit.CanAct => CanAct;
 		public int ActionPriority { get; set; }
-		void ITurnUnit.OnTurnStart() => currentAp = maxAp;
+		void ITurnUnit.OnTurnStart() => CurrentAp = maxAp;
 
 		#endregion
 
@@ -158,7 +206,28 @@ namespace Systems.Unit
         public EquipmentContainer MainWeapon { get; set; }
         public EquipmentContainer SecondaryWeapon { get; set; }
 
-        public EquipmentContainer CurrentWeapon => !MainWeapon.IsNullOrEmpty() ? MainWeapon : SecondaryWeapon;
+        private EquipmentContainer _currentEquipment;
+
+        public EquipmentContainer CurrentEquipment
+        {
+            get
+            {
+                _currentEquipment ??= MainWeapon.IsNullOrEmpty() ? SecondaryWeapon : MainWeapon;
+                return _currentEquipment;
+            }
+            set => _currentEquipment = value;
+        }
+        
+        public WeaponLogic CurrentWeapon
+        {
+            get
+            {
+                if (CurrentEquipment.IsNullOrEmpty()) return null;
+                if (CurrentEquipment.Logic is WeaponLogic weaponLogic)
+                    return weaponLogic;
+                return null;
+            }
+        }
         public EquipmentContainer TacticalItem0 { get; set; }
         public EquipmentContainer TacticalItem1 { get; set; }
         public EquipmentContainer TacticalItem2 { get; set; }
@@ -177,11 +246,11 @@ namespace Systems.Unit
             TacticalItem1 = new EquipmentContainer();
             TacticalItem2 = new EquipmentContainer();
             
-            MainWeapon.Init(equipmentConfigs[0]);
-            SecondaryWeapon.Init(equipmentConfigs[1]);
-            TacticalItem0.Init(equipmentConfigs[2]);
-            TacticalItem1.Init(equipmentConfigs[3]);
-            TacticalItem2.Init(equipmentConfigs[4]);
+            MainWeapon.Init(equipmentConfigs[0], this);
+            SecondaryWeapon.Init(equipmentConfigs[1], this);
+            TacticalItem0.Init(equipmentConfigs[2], this);
+            TacticalItem1.Init(equipmentConfigs[3], this);
+            TacticalItem2.Init(equipmentConfigs[4], this);
         }
 
         public EquipmentContainer GetEquipment(EActionType actionType)
@@ -189,7 +258,7 @@ namespace Systems.Unit
             switch (actionType)
             {
                 case EActionType.Attack:
-                    return CurrentWeapon;
+                    return CurrentEquipment;
                 case EActionType.TacticalItem0:
                     return TacticalItem0;
                 case EActionType.TacticalItem1:

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Systems.Damage;
 using Systems.Equipment.Config;
+using UnityEngine;
 
 namespace Systems.Equipment
 {
@@ -11,7 +12,13 @@ namespace Systems.Equipment
     {
         // Logic不暴露Config,所有属性的获取都需要用Logic做转向获取
         protected readonly EquipmentConfig Config;
-        public EquipmentLogic(EquipmentConfig config) => Config = config;
+        public Unit.Unit Owner { get; private set; }
+
+        public EquipmentLogic(EquipmentConfig config, Unit.Unit owner)
+        {
+            Owner = owner;
+            Config = config;
+        }
        
         public virtual int GetDamage()
         {
@@ -24,7 +31,7 @@ namespace Systems.Equipment
     public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
         protected int currentAmmo;
-        public WeaponLogic(EquipmentConfig config) : base(config)
+        public WeaponLogic(EquipmentConfig config, Unit.Unit owner) : base(config, owner)
         {
             currentAmmo = config.AmmoCapacity;
         }
@@ -37,6 +44,9 @@ namespace Systems.Equipment
         public virtual int CurrentAmmo(int delta = 0)
         {
             currentAmmo += delta;
+            currentAmmo = Mathf.Clamp(currentAmmo, 0, AmmoCapacity());
+            if (delta != 0)
+                Owner.TriggerInfoChanged();
             return currentAmmo;
         }
 
@@ -86,7 +96,7 @@ namespace Systems.Equipment
     
     public class TacticalItemLogic : EquipmentLogic, IDamageInfluencer
     {
-        public TacticalItemLogic(EquipmentConfig config) : base(config)
+        public TacticalItemLogic(EquipmentConfig config, Unit.Unit owner) : base(config, owner)
         {
         }
 

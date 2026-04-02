@@ -2,6 +2,7 @@
 using Core.Events;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
 using PurpleFlowerCore.Utility;
 using Sirenix.OdinInspector;
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 
 namespace Presentation.UI.Panel
 {
-	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>, IDisposable
+	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[TitleGroup("References")]
 		[SerializeField, Required] private Image portraitImage;
@@ -35,12 +36,19 @@ namespace Presentation.UI.Panel
         public void Init(IEventBus eventBus)
         {
             _eventBus = eventBus;
-            _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
         }
         
-        public void Dispose()
+        protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+        }
+        
+        private void OnUnitAttacked(UnitInfoChangedEvent e)
+        {
+            if (e.Unit != _currentUnit) return;
+            // DelayUtility.DelayFrame(1, () => );
+            Refresh(e.Unit);
         }
 
         public void Refresh(Systems.Unit.Unit unit)
@@ -48,35 +56,28 @@ namespace Presentation.UI.Panel
 			portraitImage.sprite = unit.icon;
 			nameText.text = unit.name;
 
-			var currentHp = unit.currentHp;
+			var currentHp = unit.CurrentHp;
 			var maxHp = unit.maxHp;
 			hpImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
             defenseImage.enabled = unit.defense > 0;
-            defenseImage.fillAmount = (float)unit.currentDefense / unit.defense;
+            defenseImage.fillAmount = (float)unit.CurrentDefense / unit.defense;
 
 			foreach (Transform child in actionPointsParent)
 				Destroy(child.gameObject);
-			for (int i = 0; i < unit.currentAp; i++)
+			for (int i = 0; i < unit.CurrentAp; i++)
 				Instantiate(actionPointsPrefab, actionPointsParent);
 
             RefreshAmmo(unit);
         }
 
-        private void OnUnitAttacked(UnitAttackedEvent e)
-        {
-            if (e.Attacker != _currentUnit) return;
-            DelayUtility.DelayFrame(1, () => RefreshAmmo(e.Attacker));
-            
-        }
-
         private void RefreshAmmo(Systems.Unit.Unit unit)
         {
             var currentWeapon = unit.CurrentWeapon;
-            if (!currentWeapon.IsNullOrEmpty() && currentWeapon.Logic is WeaponLogic weaponLogic)
+            if (currentWeapon != null)
             {
                 bulletAmountText.enabled = true;
                 bulletAmountText.text =
-                    $"{weaponLogic.CurrentAmmo()}/{weaponLogic.AmmoCapacity()}";
+                    $"{currentWeapon.CurrentAmmo()}/{currentWeapon.AmmoCapacity()}";
             }
             else
             {
