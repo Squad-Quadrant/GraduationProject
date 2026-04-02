@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37492c62a17d4feca233a688a5595265, type: 3}
-  m_Name: Cell 3-1
+  m_Name: Cell 1
   m_EditorClassIdentifier: 
-  Tile: {fileID: 11400000, guid: 98681c9f47a49214082f17aa81881f22, type: 2}
+  Tile: {fileID: 11400000, guid: f235ed57ebfb16d46b6a94637e1b5b9e, type: 2}
   IsWalkable: 1
   MoveCost: 1
   TerrainType: 0
