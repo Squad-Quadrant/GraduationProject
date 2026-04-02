@@ -29,7 +29,7 @@ namespace Systems.AI.Evaluation
 
 			var reachable = context.ReachableArea;
 			int effectiveAttackRange = GetEffectiveAttackRange(unit);
-			float maxRelevantDistance = unit.moveRange * unit.currentAp + 10f;
+			float maxRelevantDistance = unit.moveRange * unit.CurrentAp + 10f;
 
 			Vector2Int bestCell = unit.position;
 			float bestScore = float.MinValue;
@@ -40,7 +40,7 @@ namespace Systems.AI.Evaluation
 
                 int pathCost = reachable.GetCostTo(cell);
                 int apCost = unit.CalculateMovementApCost(pathCost);
-                int apRemaining = unit.currentAp - apCost;
+                int apRemaining = unit.CurrentAp - apCost;
 
                 int nearestDist = int.MaxValue;
                 bool anyInRange = false; // 对当前格子来说，有没有在攻击距离内的

@@ -108,7 +108,7 @@ namespace Systems.Interaction.States
 			if (currentTurnUnit != null && currentTurnUnit.Id == unit.id && currentTurnUnit.CanAct)
 			{
 				// Unit can still act - return to unit selected
-				this.Log($"Unit {unit.name} still acting (AP:{unit.currentAp}), returning to UnitSelected");
+				this.Log($"Unit {unit.name} still acting (AP:{unit.CurrentAp}), returning to UnitSelected");
 
 				// Re-publish selection event (UI might need to refresh)
 				Publish(Context, new UnitSelectedEvent(

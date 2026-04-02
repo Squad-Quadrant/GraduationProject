@@ -43,7 +43,7 @@ namespace Systems.Unit
 			if (_units.ContainsKey(unitId))
 				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
-			var unit = Unit.LoadFromConfig(unitId, config, position);
+			var unit = Unit.LoadFromConfig(unitId, config, position, _eventBus);
             var equipmentConig = _dataManager.GetEquipmentConfigList(unitId);
             unit.InitEquipment(equipmentConig);
 			_units[unitId] = unit;

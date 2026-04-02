@@ -83,16 +83,16 @@ namespace Systems.Damage
         {
             var defender = _context.Defender;
 
-            defender.currentDefense -= _context.DefenceDamage;
-            defender.currentSan -= _context.SanDamage;
-            defender.currentHp -= _context.Damage;
+            defender.CurrentDefense -= _context.DefenceDamage;
+            defender.CurrentSan -= _context.SanDamage;
+            defender.CurrentHp -= _context.Damage;
             
             _context.TotalDamage += _context.Damage;
             _context.TotalDefenceDamage += _context.DefenceDamage;
             _context.TotalMentalDamage += _context.SanDamage;
             
             this.Log($"Damage applied: type:{_context.DamageType}, {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
-                $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.currentHp}, Defense: {defender.currentDefense}");
+                $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
 
             _eventBus.Publish(new DamageAppliedEvent(_context.GetSnapshot()));
         }

@@ -145,7 +145,7 @@ namespace Systems.Interaction.States
 				visibleCells: visibleCells
 			);
 
-            int ap = selectedUnit.currentAp > 2 ? 2 : selectedUnit.currentAp;
+            int ap = selectedUnit.CurrentAp > 2 ? 2 : selectedUnit.CurrentAp;
 			var maxMovementPoints = selectedUnit.moveRange * ap;
 
 			var reachableArea = pathfinding.GetReachableArea(
@@ -209,7 +209,7 @@ namespace Systems.Interaction.States
 			if (actualDestination == unit.position)
 			{
 				this.Log("Truncated to origin — no movement needed");
-				unit.currentAp -= 1;
+				unit.CurrentAp -= 1;
 				Context.StateMachine.ChangeState<ExecutingState>();
 				return;
 			}

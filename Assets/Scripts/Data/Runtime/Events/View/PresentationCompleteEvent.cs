@@ -63,6 +63,7 @@ namespace Data.Runtime.Events.View
 			public const string Death = "Death";
 			public const string Spawn = "Spawn";
 			public const string Idle = "Idle";
+            public const string Reload = "Reload";
 		}
 
 		public static class UI

@@ -65,7 +65,7 @@ namespace Systems.AI
 			_currentUnit = unit;
 			_onTurnComplete = onComplete;
 
-			this.Log($"Starting AI turn for '{unit.name}' (AP:{unit.currentAp})");
+			this.Log($"Starting AI turn for '{unit.name}' (AP:{unit.CurrentAp})");
 			DecisionLoop();
 		}
 
@@ -131,7 +131,7 @@ namespace Systems.AI
 				ignoreTerrainWalkability: false,
 				visibleCells: visibleCells
 			);
-			int maxMove = unit.moveRange * unit.currentAp;
+			int maxMove = unit.moveRange * unit.CurrentAp;
 			var reachableArea = _pathFinding.GetReachableArea(unit.position, maxMove, options);
 
 			return new AIContext(unit, enemies, allies, reachableArea, visibleCells);

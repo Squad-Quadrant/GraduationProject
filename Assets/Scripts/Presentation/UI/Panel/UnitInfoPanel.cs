@@ -48,15 +48,15 @@ namespace Presentation.UI.Panel
 			portraitImage.sprite = unit.icon;
 			nameText.text = unit.name;
 
-			var currentHp = unit.currentHp;
+			var currentHp = unit.CurrentHp;
 			var maxHp = unit.maxHp;
 			hpImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
             defenseImage.enabled = unit.defense > 0;
-            defenseImage.fillAmount = (float)unit.currentDefense / unit.defense;
+            defenseImage.fillAmount = (float)unit.CurrentDefense / unit.defense;
 
 			foreach (Transform child in actionPointsParent)
 				Destroy(child.gameObject);
-			for (int i = 0; i < unit.currentAp; i++)
+			for (int i = 0; i < unit.CurrentAp; i++)
 				Instantiate(actionPointsPrefab, actionPointsParent);
 
             RefreshAmmo(unit);
@@ -72,11 +72,11 @@ namespace Presentation.UI.Panel
         private void RefreshAmmo(Systems.Unit.Unit unit)
         {
             var currentWeapon = unit.CurrentWeapon;
-            if (!currentWeapon.IsNullOrEmpty() && currentWeapon.Logic is WeaponLogic weaponLogic)
+            if (currentWeapon != null)
             {
                 bulletAmountText.enabled = true;
                 bulletAmountText.text =
-                    $"{weaponLogic.CurrentAmmo()}/{weaponLogic.AmmoCapacity()}";
+                    $"{currentWeapon.CurrentAmmo()}/{currentWeapon.AmmoCapacity()}";
             }
             else
             {

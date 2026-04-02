@@ -43,7 +43,7 @@ namespace Systems.Damage
             
             if (Context.DefenceDamage > Defender.defense)
             {
-                Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * (1 - Defender.defenseRate) + (Context.DefenceDamage - Defender.currentDefense));
+                Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * (1 - Defender.defenseRate) + (Context.DefenceDamage - Defender.CurrentDefense));
             }
             else
             {

@@ -15,7 +15,7 @@ namespace Presentation.UI.Panel
         [SerializeField] private Toggle isPreciseShooting;
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-            var currentEquipment = unit.CurrentWeapon;
+            var currentEquipment = unit.CurrentEquipment;
             if (currentEquipment.IsNullOrEmpty())
             {
                 this.LogError("当前武器为空");

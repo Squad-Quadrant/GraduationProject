@@ -72,7 +72,7 @@ namespace Data.Runtime.Commands
             // _eventBus.Publish(new UnitBeHitEvent(unit));
             _eventBus.Publish(new UnitAttackedDealDamageEvent(unit, targetUnit, _actionType));
             
-            unit.currentAp -= _apCost;
+            unit.CurrentAp -= _apCost;
             
 			if (WaitForAnimation)
 			{

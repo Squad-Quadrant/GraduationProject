@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Systems.Damage;
 using Systems.Equipment.Config;
+using UnityEngine;
 
 namespace Systems.Equipment
 {
@@ -37,6 +38,9 @@ namespace Systems.Equipment
         public virtual int CurrentAmmo(int delta = 0)
         {
             currentAmmo += delta;
+            
+            currentAmmo = Mathf.Clamp(currentAmmo, 0, AmmoCapacity());
+            
             return currentAmmo;
         }
 
