@@ -24,6 +24,9 @@ MonoBehaviour:
   - regionId: 1
     regionName: test1
     initiallyUnlocked: 0
+  - regionId: 2
+    regionName: 
+    initiallyUnlocked: 0
   cells:
   - position: {x: 0, y: 0}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
@@ -84,11 +87,11 @@ MonoBehaviour:
   - position: {x: 4, y: 1}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
-    regionId: 0
+    regionId: 2
   - position: {x: 5, y: 1}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
-    regionId: 0
+    regionId: 2
   - position: {x: 6, y: 1}
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
@@ -124,11 +127,11 @@ MonoBehaviour:
   - position: {x: 4, y: 2}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
-    regionId: 0
+    regionId: 2
   - position: {x: 5, y: 2}
     cell: {fileID: 11400000, guid: 7d10ec7d40675ef4281c04351afb3444, type: 2}
     sceneActor: {fileID: 0}
-    regionId: 0
+    regionId: 2
   - position: {x: 6, y: 2}
     cell: {fileID: 0}
     sceneActor: {fileID: 0}
@@ -506,7 +509,7 @@ MonoBehaviour:
     wall: {fileID: 0}
   - position1: {x: 3, y: 1}
     position2: {x: 3, y: 2}
-    wall: {fileID: 11400000, guid: d2cfa420ea12f6b44b58c62f83ebb7d7, type: 2}
+    wall: {fileID: 0}
   - position1: {x: 4, y: 1}
     position2: {x: 5, y: 1}
     wall: {fileID: 0}

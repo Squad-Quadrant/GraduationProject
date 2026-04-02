@@ -115,7 +115,7 @@ namespace Presentation.FogOfWar
         {
             _visibilityTex = new Texture2D(_mapSize.x, _mapSize.y, TextureFormat.R8, false)
             {
-                filterMode = FilterMode.Bilinear,
+                filterMode = FilterMode.Point,
                 wrapMode = TextureWrapMode.Clamp
             };
         }
