@@ -5,8 +5,10 @@ namespace Systems.Damage
 {
     public class ShotHitRateInfluence : DamageInfluence
     {
-        public ShotHitRateInfluence(IDamageInfluencer owner, int priority = 0) : base(owner, priority)
+        private bool _preciseShootSpeed;
+        public ShotHitRateInfluence(IDamageInfluencer owner, int priority = 0, bool preciseShootSpeed = false) : base(owner, priority)
         {
+            _preciseShootSpeed = preciseShootSpeed;
         }
 
         public override void Init(DamageExecutingContext context)
@@ -28,6 +30,11 @@ namespace Systems.Damage
             }
             
             Context.HitRate *= hitRateMultiplier;
+
+            if (_preciseShootSpeed)
+            {
+                Context.HitRate += theWeapon.PreciseShootHitRateBonus();
+            }
         }
 
         public override void Execute()

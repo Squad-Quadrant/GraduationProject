@@ -32,6 +32,18 @@ namespace Presentation.UI.Panel
             equipmentIcon.rectTransform.sizeDelta = fixedRect;
             equipmentName.text = config.Name;
             description.text = config.Description;
+
+            isPreciseShooting.onValueChanged.RemoveAllListeners();
+            isPreciseShooting.enabled = currentEquipment.Config.canPreciseShoot;
+            isPreciseShooting.isOn = unit.CurrentWeapon.isOnPreciseShoot;
+
+            if (unit.CurrentWeapon.CanPreciseShoot())
+            {
+                isPreciseShooting.onValueChanged.AddListener(isOn =>
+                {
+                    unit.CurrentWeapon.isOnPreciseShoot = isOn;
+                });
+            }
         }
     }
 }

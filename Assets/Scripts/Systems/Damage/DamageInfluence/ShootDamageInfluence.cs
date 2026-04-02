@@ -5,17 +5,31 @@ using UnityEngine;
 namespace Systems.Damage
 {
     // 常规射击伤害
-    public class ShotDamageInfluence : DamageInfluence
+    public class ShootDamageInfluence : DamageInfluence
     {
-        public ShotDamageInfluence(IDamageInfluencer owner, int priority = 0) : base(owner, priority) { }
+        private bool _isOnPreciseShoot;
+        public ShootDamageInfluence(IDamageInfluencer owner, int priority = 0, bool isOnPreciseShoot = false) : base(
+            owner, priority)
+        {
+            _isOnPreciseShoot = isOnPreciseShoot;
+        }
 
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);
             var theWeapon = (WeaponLogic)Owner;
-            int bulletNum = theWeapon.CurrentAmmo() > theWeapon.ShootSpeed() ? theWeapon.ShootSpeed() : theWeapon.CurrentAmmo();
-            theWeapon.CurrentAmmo(-bulletNum);
-            Context.CalculateNum = bulletNum;
+            if (!_isOnPreciseShoot)
+            {
+                int bulletNum = theWeapon.CurrentAmmo() > theWeapon.ShootSpeed() ? theWeapon.ShootSpeed() : theWeapon.CurrentAmmo();
+                theWeapon.CurrentAmmo(-bulletNum);
+                Context.CalculateNum = bulletNum;
+            }
+            else
+            {
+                int bulletNum = theWeapon.CurrentAmmo() > theWeapon.PreciseShootSpeed() ? theWeapon.PreciseShootSpeed() : theWeapon.CurrentAmmo();
+                theWeapon.CurrentAmmo(-bulletNum);
+                Context.CalculateNum = bulletNum;
+            }
         }
 
         public override void Execute()

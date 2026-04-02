@@ -35,5 +35,5 @@ MonoBehaviour:
   shootSpeed: 5
   canPreciseShoot: 1
   preciseShootSpeed: 2
-  preciseShootHitRateBonus: 15
+  preciseShootHitRateBonus: 0.15
   AttackRange: 0

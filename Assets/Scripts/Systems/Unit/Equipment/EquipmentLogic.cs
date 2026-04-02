@@ -31,6 +31,7 @@ namespace Systems.Equipment
     public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
         protected int currentAmmo;
+        public bool isOnPreciseShoot = false;
         public WeaponLogic(EquipmentConfig config, Unit.Unit owner) : base(config, owner)
         {
             currentAmmo = config.AmmoCapacity;
@@ -59,6 +60,16 @@ namespace Systems.Equipment
         {
             return Config.AmmoCapacity;
         }
+
+        public virtual int PreciseShootSpeed()
+        {
+            return Config.preciseShootSpeed;
+        }
+        
+        public virtual float PreciseShootHitRateBonus()
+        {
+            return Config.preciseShootHitRateBonus;
+        }
         
         public virtual List<ShotRange> ShotRange()
         {
@@ -85,8 +96,8 @@ namespace Systems.Equipment
             if (context.DamageType == DamageType.Bullet)
             {
                 return new List<DamageInfluence>{
-                    new ShotDamageInfluence(this), 
-                    new ShotHitRateInfluence(this), 
+                    new ShootDamageInfluence(this, 0, isOnPreciseShoot), 
+                    new ShotHitRateInfluence(this, 0, isOnPreciseShoot), 
                     new ShotDefenceDamageInfluence(this) };
             }
 
