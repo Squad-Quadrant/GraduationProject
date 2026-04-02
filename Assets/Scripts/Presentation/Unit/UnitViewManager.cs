@@ -47,6 +47,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
             _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
+            _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
 
 			this.Log("Initialized");
 		}
@@ -59,6 +60,7 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
+            _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -255,6 +257,30 @@ namespace Presentation.Unit
                     ));
                 });
             }
+        }
+
+        private void OnUnitReload(UnitReloadedEvent e)
+        {
+            var unit = e.Unit;
+            if (unit == null)
+            {
+                this.LogError("UnitBeHitEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(unit.id, out var view))
+            {
+                this.LogWarning($"No view found for hit unit '{unit.id}'.");
+                return;
+            }
+            view.PlayAction("reload", () =>
+            {
+                _eventBus.Publish(new PresentationCompleteEvent(
+                    category: EPresentationCategory.Animation,
+                    type: PresentationType.Animation.Reload,
+                    entityId: unit.id
+                ));
+            });
         }
 
         private void OnVisionChanged(VisionChangedEvent e)

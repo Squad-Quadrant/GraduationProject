@@ -10,6 +10,8 @@ namespace Systems.Equipment
         
         private EquipmentLogic _logic;
         public EquipmentLogic Logic => _logic;
+        
+        public Unit.Unit Owner { get; private set; }
 
         public EquipmentType Type
         {
@@ -20,17 +22,18 @@ namespace Systems.Equipment
             }
         }
         
-        public void Init(EquipmentConfig config)
+        public void Init(EquipmentConfig config, Unit.Unit owner)
         {
+            Owner = owner;
             _config = config;
             if (!config) return;
             switch (config.Type)
             {
                 case EquipmentType.Weapon:
-                    _logic = new WeaponLogic(config);
+                    _logic = new WeaponLogic(config, Owner);
                     break;
                 case EquipmentType.TacticalItem:
-                    _logic = new TacticalItemLogic(config); 
+                    _logic = new TacticalItemLogic(config, Owner); 
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

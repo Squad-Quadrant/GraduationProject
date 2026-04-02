@@ -183,7 +183,7 @@ namespace Systems.Unit
 			return faction != other.faction;
 		}
 
-        internal void TriggerInfoChanged()
+        public void TriggerInfoChanged()
         {
             _eventBus?.Publish(new UnitInfoChangedEvent(this));
         }
@@ -246,11 +246,11 @@ namespace Systems.Unit
             TacticalItem1 = new EquipmentContainer();
             TacticalItem2 = new EquipmentContainer();
             
-            MainWeapon.Init(equipmentConfigs[0]);
-            SecondaryWeapon.Init(equipmentConfigs[1]);
-            TacticalItem0.Init(equipmentConfigs[2]);
-            TacticalItem1.Init(equipmentConfigs[3]);
-            TacticalItem2.Init(equipmentConfigs[4]);
+            MainWeapon.Init(equipmentConfigs[0], this);
+            SecondaryWeapon.Init(equipmentConfigs[1], this);
+            TacticalItem0.Init(equipmentConfigs[2], this);
+            TacticalItem1.Init(equipmentConfigs[3], this);
+            TacticalItem2.Init(equipmentConfigs[4], this);
         }
 
         public EquipmentContainer GetEquipment(EActionType actionType)

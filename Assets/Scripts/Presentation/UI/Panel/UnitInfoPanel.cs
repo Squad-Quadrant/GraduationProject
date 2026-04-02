@@ -2,6 +2,7 @@
 using Core.Events;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
 using PurpleFlowerCore.Utility;
 using Sirenix.OdinInspector;
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 
 namespace Presentation.UI.Panel
 {
-	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>, IDisposable
+	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[TitleGroup("References")]
 		[SerializeField, Required] private Image portraitImage;
@@ -35,12 +36,19 @@ namespace Presentation.UI.Panel
         public void Init(IEventBus eventBus)
         {
             _eventBus = eventBus;
-            _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
         }
         
-        public void Dispose()
+        protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+        }
+        
+        private void OnUnitAttacked(UnitInfoChangedEvent e)
+        {
+            if (e.Unit != _currentUnit) return;
+            // DelayUtility.DelayFrame(1, () => );
+            Refresh(e.Unit);
         }
 
         public void Refresh(Systems.Unit.Unit unit)
@@ -60,13 +68,6 @@ namespace Presentation.UI.Panel
 				Instantiate(actionPointsPrefab, actionPointsParent);
 
             RefreshAmmo(unit);
-        }
-
-        private void OnUnitAttacked(UnitAttackedEvent e)
-        {
-            if (e.Attacker != _currentUnit) return;
-            DelayUtility.DelayFrame(1, () => RefreshAmmo(e.Attacker));
-            
         }
 
         private void RefreshAmmo(Systems.Unit.Unit unit)

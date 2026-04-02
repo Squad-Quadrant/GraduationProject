@@ -15,7 +15,7 @@ namespace Data.Runtime.Commands
 
 		private readonly IEventBus _eventBus;
 
-		public bool WaitForAnimation { get; set; } = false;
+		public bool WaitForAnimation { get; set; } = true;
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 

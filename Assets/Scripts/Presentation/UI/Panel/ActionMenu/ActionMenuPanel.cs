@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Core.Events;
 using Data.Runtime;
 using Data.Runtime.Events.UI;
+using Data.Runtime.Events.Unit;
 using Presentation.UI.Component;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
@@ -12,29 +15,48 @@ namespace Presentation.UI.Panel
 {
     public class ActionMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
-        [SerializeField, Required] private ActionMenuItem moveButton;
-        [SerializeField, Required] private ActionMenuItem mainWeaponButton;
-        [SerializeField, Required] private ActionMenuItem secondaryWeaponButton;
-        [SerializeField, Required] private ActionMenuItem tacticalItem0Button;
-        [SerializeField, Required] private ActionMenuItem tacticalItem1Button;
-        [SerializeField, Required] private ActionMenuItem tacticalItem2Button;
-        [SerializeField, Required] private ActionMenuItem waitButton;
         [SerializeField, Required] private TextMeshProUGUI currentActionText;
         [SerializeField] private List<ActionMenuItem> items;
+        protected IEventBus _eventBus;
+        
 
         protected override void OnInitialize()
         {
-            foreach (var item in items)
-            {
-                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
-                item.OnHoverEnter += SetDescription;
-                item.OnHoverExit += ClearDescription;
-                item.Switch(false);
-            }
+            base.OnInitialize();
         }
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
+            Refresh(unit);
+        }
+
+        public void Init(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+        }
+        
+        protected override void OnDestroy()
+        {
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+        }
+        
+        public void OnUnitInfoChanged(UnitInfoChangedEvent e)
+        {
+            Refresh(e.Unit);
+        }
+        
+        private void Refresh(Systems.Unit.Unit unit)
+        {
+            foreach (var item in items)
+            {
+                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
+                
+                item.OnHoverEnter += SetDescription;
+                item.OnHoverExit += ClearDescription;
+                item.Switch(false);
+            }
+            
             var availableActions = unit.GetAvailableActions();
 
             foreach (var action in availableActions)
