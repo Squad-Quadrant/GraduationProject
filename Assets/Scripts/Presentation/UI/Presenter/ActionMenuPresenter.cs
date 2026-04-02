@@ -4,21 +4,27 @@ using Core.FSM;
 using Core.Log;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Systems.Damage;
 using Systems.Interaction;
+using Systems.Unit;
 
 namespace Presentation.UI.Presenter
 {
 	public class ActionMenuPresenter : IDisposable
 	{
 		private readonly UIManager _uiManager;
+        private readonly IDamageService _damageService;
+        private readonly IUnitService _unitService;
 		private readonly IEventBus _eventBus;
 		private ActionMenuPanel _actionMenuPanel;
         private AttackPreviewPanel  _attackPreviewPanel;
 
-		public ActionMenuPresenter(UIManager uiManager, IEventBus eventBus)
+		public ActionMenuPresenter(UIManager uiManager, IEventBus eventBus, IDamageService damageService, IUnitService unitService)
 		{
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _damageService = damageService ?? throw new ArgumentNullException(nameof(damageService));
+            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 
 			_eventBus.Subscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 
@@ -57,6 +63,7 @@ namespace Presentation.UI.Presenter
             if (current == InteractionStates.AttackPreview)
             {
                 _attackPreviewPanel = _uiManager.Open<AttackPreviewPanel, Systems.Unit.Unit>(e.Context.selectedUnit);
+                _attackPreviewPanel.Init(_damageService, _unitService);
             }
         }
     }

@@ -1,12 +1,7 @@
-﻿using System;
-using Core.Events;
-using Data.Runtime.Events.Damage;
-using Data.Runtime.Events.Interaction;
+﻿using Core.Events;
 using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
-using PurpleFlowerCore.Utility;
 using Sirenix.OdinInspector;
-using Systems.Equipment;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

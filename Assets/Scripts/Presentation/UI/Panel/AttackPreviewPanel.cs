@@ -1,6 +1,10 @@
 using Core.Log;
+using Data.Runtime;
+using Data.Runtime.Events.Input;
 using Presentation.UI.Core;
+using Systems.Damage;
 using Systems.Equipment;
+using Systems.Unit;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +15,30 @@ namespace Presentation.UI.Panel
         [SerializeField] private Image equipmentIcon;
         [SerializeField] private Text equipmentName;
         [SerializeField] private Text description;
-        [SerializeField] private Text hitChance;
+        [SerializeField] private Text hitRate;
         [SerializeField] private Toggle isPreciseShooting;
+        private IDamageService _damageService;
+        private IUnitService _unitService;
+        private Systems.Unit.Unit _unit;
+
+        public void Init(IDamageService damageService, IUnitService unitService)
+        {
+            _unitService = unitService;
+            _damageService = damageService;
+        }
+
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
+        }
+        
+        protected override void OnDestroy()
+        {
+            EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
+            base.OnDestroy();
+        }
+
         public void DataInitialize(Systems.Unit.Unit unit)
         {
             var currentEquipment = unit.CurrentEquipment;
@@ -22,9 +48,12 @@ namespace Presentation.UI.Panel
                 return;
             }
 
+            hitRate.text = "";
+
+            _unit = unit;
             var config = currentEquipment.Config; 
             equipmentIcon.sprite = config.Icon;
-            var fixedRect = new Vector2()
+            var fixedRect = new Vector2
             {
                 x = config.Icon.rect.width / config.Icon.rect.height * equipmentIcon.rectTransform.sizeDelta.y,
                 y = equipmentIcon.rectTransform.sizeDelta.y
@@ -43,6 +72,23 @@ namespace Presentation.UI.Panel
                 {
                     unit.CurrentWeapon.isOnPreciseShoot = isOn;
                 });
+            }
+        }
+
+
+
+        private void OnPointerHover(PointerHoverEvent e)
+        {
+            if (e.HoveredUnitId != null && _unitService.HasUnit(e.HoveredUnitId))
+            {
+                var target = _unitService.GetUnit(e.HoveredUnitId);
+                var damageContext = _damageService.GetSimulatedDamage(new DamageTriggeringInfo(DamageType.Bullet, _unit, target, EActionType.Attack));
+                hitRate.text = "命中率: " + Mathf.RoundToInt(damageContext.HitRate * 100) + "%";
+            }
+            else
+            {
+                hitRate.text = "";
+                
             }
         }
     }

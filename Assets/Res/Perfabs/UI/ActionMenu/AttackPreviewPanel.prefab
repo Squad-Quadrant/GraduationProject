@@ -155,7 +155,7 @@ MonoBehaviour:
   equipmentIcon: {fileID: 4858858284410620252}
   equipmentName: {fileID: 7222021640436691708}
   description: {fileID: 8729025309348554307}
-  hitChance: {fileID: 7778698275929666479}
+  hitRate: {fileID: 7778698275929666479}
   isPreciseShooting: {fileID: 4627022972636198069}
 --- !u!1 &759740139514924958
 GameObject:
@@ -266,8 +266,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 310.10547, y: 28}
-  m_SizeDelta: {x: 162.851, y: 56}
+  m_AnchoredPosition: {x: 314.33997, y: 28}
+  m_SizeDelta: {x: 171.32, y: 56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6827995523396542918
 CanvasRenderer:
@@ -299,10 +299,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 28
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -310,7 +310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u547D\u4E2D\u7387:50%"
+  m_Text: "\u547D\u4E2D\u7387: 50%"
 --- !u!1 &1787453492807469123
 GameObject:
   m_ObjectHideFlags: 0

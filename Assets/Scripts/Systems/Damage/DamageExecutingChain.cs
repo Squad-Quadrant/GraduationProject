@@ -63,21 +63,24 @@ namespace Systems.Damage
                 {
                     influence.Execute();
                 }
-                ApplyDamage();
+                if (_context.needApplyDamage)
+                    ApplyDamage();
                 if (_context.needResetDamage) 
                     ResetDamage();
             }
-            
-            if(_context.isMiss)
+
+            if (_context.needApplyDamage)
             {
-                this.Log($"Attack missed! Defender ID:{_context.Defender.id}", true);
-            }else if (_context.DamageType == DamageType.Bullet)
-            {
-                string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
-                this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
-                         $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenceDamage}", true);
+                if(_context.isMiss)
+                {
+                    this.Log($"Attack missed! Defender ID:{_context.Defender.id}", true);
+                }else if (_context.DamageType == DamageType.Bullet)
+                {
+                    string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
+                    this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
+                             $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenceDamage}", true);
+                }
             }
-            
         }
 
         private void ApplyDamage()
@@ -135,11 +138,13 @@ namespace Systems.Damage
         public int FinalCalculatedNum = 0; // 添加命中率影响后的实际应用数量
         public int CurrentDamageIndex = 0; // 当前正在计算的伤害序号（用于多次伤害的情况）
         public bool isMiss => FinalCalculatedNum == 0;
+        public bool needApplyDamage = true;
         public bool needResetDamage = true; // 在每次重新计算伤害之前是否需要重置伤害
 
         public int TotalDamage = 0;
         public int TotalDefenceDamage = 0;
         public int TotalMentalDamage = 0;
+
 
         public DamageExecutingContext GetSnapshot()
         {

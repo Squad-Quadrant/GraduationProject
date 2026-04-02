@@ -157,12 +157,13 @@ namespace Systems.Unit
             actions.Add(new ActionAbility(EActionType.Move, HasAp));
             actions.Add(new ActionAbility(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo));
 			actions.Add(new ActionAbility(EActionType.Wait));
+            // todo: 使用道具
             if (!TacticalItem0.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem0, HasAp));
+                actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
             if (!TacticalItem1.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem1, HasAp));
+                actions.Add(new ActionAbility(EActionType.TacticalItem1, false));
             if (!TacticalItem2.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem2, HasAp));
+                actions.Add(new ActionAbility(EActionType.TacticalItem2, false));
             if (CurrentWeapon!= null)
                 actions.Add(new ActionAbility(EActionType.Reload, HasAp));
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())

@@ -143,7 +143,7 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<ITurnService, TurnService>();
 			_levelContainer.Services.Register<IGameServer, GameServer>();
             _levelContainer.Services.Register<IDamageService, DamageService>();
-            _levelContainer.Services.Resolve<IDamageService>();   // todo: 直接实例化DamageService
+            // _levelContainer.Services.Resolve<IDamageService>();
 			_levelContainer.Services.Register<IPathFindingService>(container =>
 			{
 				var mapService = container.Resolve<IMapService>();
@@ -164,8 +164,9 @@ namespace Presentation.Bootstrap
 			var turnService = _levelContainer.Services.Resolve<ITurnService>();
 			var unitService = _levelContainer.Services.Resolve<IUnitService>();
             var coordinateConverter = _levelContainer.Services.Resolve<ICoordinateConverter>();
-
-			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
+            var damageServer = _levelContainer.Services.Resolve<IDamageService>();
+            
+			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer, unitService));
 			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
 			_levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
 			_levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));

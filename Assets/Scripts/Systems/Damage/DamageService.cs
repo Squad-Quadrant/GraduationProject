@@ -1,8 +1,8 @@
 using System;
 using Core.Events;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Events.Damage;
-using Data.Runtime.Events.Interaction;
 using Systems.Unit;
 
 namespace Systems.Damage
@@ -27,6 +27,7 @@ namespace Systems.Damage
             this.Log("Disposed");
         }
         
+        // todo: 通用伤害触发事件
         private void DealDamage(UnitAttackedDealDamageEvent e)
         {
             var damageChain = new DamageExecutingChain(DamageType.Bullet);
@@ -36,6 +37,33 @@ namespace Systems.Damage
             damageChain.Execute();
 
             _unitService.CheckUnitDeath();
+        }
+
+        public DamageExecutingContext GetSimulatedDamage(DamageTriggeringInfo info)
+        {
+            var damageChain = new DamageExecutingChain(info.DamageType);
+            DamageExecutingContext context =
+                new DamageExecutingContext(info.Attacker, info.Defender, info.ActionType, damageChain);
+            context.needApplyDamage = false;
+            damageChain.Init(context, _eventBus);
+            damageChain.Execute();
+
+            return context;
+        }
+    }
+
+    public struct DamageTriggeringInfo
+    {
+        public DamageType DamageType;
+        public Unit.Unit Attacker;
+        public Unit.Unit Defender;
+        public EActionType ActionType;
+        public DamageTriggeringInfo(DamageType damageType, Unit.Unit attacker, Unit.Unit defender, EActionType actionType)
+        {
+            DamageType = damageType;
+            Attacker = attacker;
+            Defender = defender;
+            ActionType = actionType;
         }
     }
 
