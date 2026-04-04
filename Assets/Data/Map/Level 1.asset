@@ -16,7 +16,7 @@ MonoBehaviour:
   editedSize: {x: 20, y: 20}
   mapName: Level 1
   size: {x: 20, y: 20}
-  groundSprite: {fileID: 0}
+  groundSprite: {fileID: 7306260, guid: c419b00e7a48ebd45a0b62a2088c8afa, type: 3}
   regions:
   - regionId: 0
     regionName: "\u6237\u5916"

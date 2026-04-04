@@ -587,7 +587,7 @@ MonoBehaviour:
   interactionController: {fileID: 300474405}
   unitViewManager: {fileID: 1069617573}
   cameraController: {fileID: 1008293021}
-  levelConfig: {fileID: 11400000, guid: dfb71d7da9329884f83e6d0513381b72, type: 2}
+  levelConfig: {fileID: 11400000, guid: be21afb0f8021324e9b3805bd906f324, type: 2}
   autoLoadLevel: 1
 --- !u!4 &1138979030
 Transform:

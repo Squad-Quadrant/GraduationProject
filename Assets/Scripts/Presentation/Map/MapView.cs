@@ -36,6 +36,7 @@ namespace Presentation.Map
         [SerializeField, Required] private Tilemap sceneActorTilemap;
         [SerializeField, Required] private Tilemap highlightTilemap;
         [SerializeField, Required] private Tilemap pathTilemap;
+        [SerializeField, Required] private Tilemap cursorHoverTilemap;
 
         [Title("Highlight")]
         [SerializeField, Required] private RuleTile highlightRuleTile;
@@ -50,7 +51,10 @@ namespace Presentation.Map
 
         [Title("Path Preview")]
         [SerializeField, TableList] private List<PathTileConfig> pathTileConfigs = new();
-        
+
+        [Title("Cursor Hover")]
+        [SerializeField] private TileBase cursorHoverTile;
+
         private IEventBus _eventBus;
         private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
 
@@ -238,7 +242,11 @@ namespace Presentation.Map
 
 		private void OnPointerHover(PointerHoverEvent e)
 		{
+			cursorHoverTilemap.ClearAllTiles();
+
 			if (!e.CellPosition.HasValue) return;
+
+			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, cursorHoverTile);
 
 			List<MapWall> walls;
 			if (_previousHoverCellPos.HasValue)
