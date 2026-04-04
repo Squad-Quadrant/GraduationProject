@@ -13,13 +13,12 @@ namespace Presentation.UI.Panel
 {
     public class DamageTextPanel : UIPanel
     {
-        private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;
         private IUnitService _unitService;
         [SerializeField] private DamageText damageTextPrototype;
         [SerializeField] private float interval = 0.1f;
         
-        private readonly Queue<DamageAppliedEvent> _damageEventQueue = new Queue<DamageAppliedEvent>();
+        private readonly Queue<DamageAppliedEvent> _damageEventQueue = new();
         private bool _isProcessingDamageEvents;
         
         protected override void OnInitialize()
@@ -27,17 +26,16 @@ namespace Presentation.UI.Panel
             this.Log("OnInitialize");
         }
         
-        public void Init(IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService)
+        public void Init(ICoordinateConverter coordinateConverter, IUnitService unitService)
         {
-            _eventBus = eventBus;
             _coordinateConverter = coordinateConverter;
             _unitService = unitService;
-            _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
+            EventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
         }
 
         protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            EventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
             base.OnDestroy();
         }
 

@@ -10,6 +10,7 @@ using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Equipment;
 using Systems.Interfaces;
 using Systems.Unit;
 using Systems.Vision;
@@ -48,7 +49,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
-
+            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
 			this.Log("Initialized");
 		}
 
@@ -61,6 +62,7 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -281,6 +283,28 @@ namespace Presentation.Unit
                     entityId: unit.id
                 ));
             });
+        }
+
+        private void OnUnitInfoChanged(UnitInfoChangedEvent e)
+        {
+            if (e.Unit == null)
+            {
+                this.LogError("UnitInfoChangedEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(e.Unit.id, out var view))
+            {
+                this.LogWarning($"No view found for updated unit '{e.Unit.id}'.");
+                return;
+            }
+
+            if (!e.Unit.CurrentEquipment.IsNullOrEmpty())
+            {
+                var config = e.Unit.CurrentEquipment.Config;
+                view.SetGrip(config.GripType);
+                view.SetWeaponSkin(config.SpineName);
+            }
         }
 
         private void OnVisionChanged(VisionChangedEvent e)

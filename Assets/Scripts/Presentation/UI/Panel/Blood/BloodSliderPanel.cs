@@ -13,7 +13,6 @@ namespace Presentation.UI.Panel
 {
     public class BloodSliderPanel : UIPanel
     {
-        private IEventBus _eventBus;
         private ICoordinateConverter  _coordinateConverter;
         private IUnitService _unitService;
         private UnitViewManager _unitViewManager;
@@ -26,14 +25,13 @@ namespace Presentation.UI.Panel
             this.Log("OnInitialize");
         }
         
-        public void Init(IEventBus eventBus, ICoordinateConverter coordinateConverter, IUnitService unitService, UnitViewManager unitViewManager)
+        public void Init(ICoordinateConverter coordinateConverter, IUnitService unitService, UnitViewManager unitViewManager)
         {
-            _eventBus = eventBus;
             _coordinateConverter = coordinateConverter;
             _unitService = unitService;
             _unitViewManager = unitViewManager;
-            _eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
-            _eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+            EventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
+            EventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 
             var allUnits = _unitService.GetAllUnits();
             foreach (var unit in allUnits)
@@ -44,8 +42,8 @@ namespace Presentation.UI.Panel
 
         protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
-            _eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+            EventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
+            EventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
             base.OnDestroy();
         }
         
@@ -57,7 +55,7 @@ namespace Presentation.UI.Panel
         private void OnUnitCreated(Systems.Unit.Unit unit)
         {
             var slider = Instantiate(bloodSliderPrototype, transform);
-            slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id));
+            slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id), EventBus);
             _bloodSliders.Add(unit, slider);
         }
         

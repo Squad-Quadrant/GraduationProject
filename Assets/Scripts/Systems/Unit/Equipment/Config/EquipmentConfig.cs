@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Presentation.Unit;
 using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -53,6 +54,12 @@ namespace Systems.Equipment.Config
         [Tooltip("武器类型-可精确到具体武器，也可以是更抽象的类别，只要逻辑可以统一")]
         [LabelText("装备类型")]
         public EquipmentType Type;
+        
+        [LabelText("Spine动画使用的名称")]
+        public string SpineName;
+        
+        [LabelText("握持方式")]
+        public EGripType GripType;
 
         #region Weapon-specific properties
         

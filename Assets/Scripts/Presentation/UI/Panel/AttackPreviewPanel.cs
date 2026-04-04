@@ -4,6 +4,7 @@ using Data.Runtime.Events.Input;
 using Presentation.UI.Core;
 using Systems.Damage;
 using Systems.Equipment;
+using Systems.Interaction;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,12 +20,15 @@ namespace Presentation.UI.Panel
         [SerializeField] private Toggle isPreciseShooting;
         private IDamageService _damageService;
         private IUnitService _unitService;
+        private InteractionContext _interactionContext;
         private Systems.Unit.Unit _unit;
+        
 
-        public void Init(IDamageService damageService, IUnitService unitService)
+        public void Init(IDamageService damageService, IUnitService unitService, InteractionContext interactionContext)
         {
             _unitService = unitService;
             _damageService = damageService;
+            _interactionContext = interactionContext;
         }
 
         protected override void OnInitialize()
@@ -79,7 +83,7 @@ namespace Presentation.UI.Panel
 
         private void OnPointerHover(PointerHoverEvent e)
         {
-            if (e.HoveredUnitId != null && _unitService.HasUnit(e.HoveredUnitId))
+            if (e.HoveredUnitId != null && _unitService.HasUnit(e.HoveredUnitId) && _interactionContext.validTargetCells.Contains(e.CellPosition.Value))
             {
                 var target = _unitService.GetUnit(e.HoveredUnitId);
                 var damageContext = _damageService.GetSimulatedDamage(new DamageTriggeringInfo(DamageType.Bullet, _unit, target, EActionType.Attack));
