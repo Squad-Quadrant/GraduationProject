@@ -17,8 +17,6 @@ namespace Presentation.UI.Panel
     {
         [SerializeField, Required] private TextMeshProUGUI currentActionText;
         [SerializeField] private List<ActionMenuItem> items;
-        protected IEventBus _eventBus;
-        
 
         protected override void OnInitialize()
         {
@@ -36,17 +34,12 @@ namespace Presentation.UI.Panel
                 item.Switch(false);
             }
             Refresh(unit);
-        }
-
-        public void Init(IEventBus eventBus)
-        {
-            _eventBus = eventBus;
-            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+            EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
         
         protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+            EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
         
         public void OnUnitInfoChanged(UnitInfoChangedEvent e)

@@ -45,10 +45,10 @@ namespace Presentation.UI.Presenter
         private void OnLevelLoaded(LevelLoadedEvent e)
         {
             _bloodSliderPanel = _uiManager.Open<BloodSliderPanel>();
-            _bloodSliderPanel.Init(_eventBus, _coordinateConverter, _unitService, _unitViewManager);
+            _bloodSliderPanel.Init(_coordinateConverter, _unitService, _unitViewManager);
             
             _damageTextPanel  = _uiManager.Open<DamageTextPanel>();
-            _damageTextPanel.Init(_eventBus, _coordinateConverter, _unitService);
+            _damageTextPanel.Init(_coordinateConverter, _unitService);
             _gameLogger = _uiManager.Open<GameLogger>();
             
         }

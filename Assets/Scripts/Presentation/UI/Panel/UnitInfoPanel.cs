@@ -18,7 +18,6 @@ namespace Presentation.UI.Panel
 		[SerializeField, Required] private Image defenseImage;
 		[SerializeField, Required] private RectTransform actionPointsParent;
 		[SerializeField, Required] private GameObject actionPointsPrefab;
-        private IEventBus _eventBus;
         private Systems.Unit.Unit _currentUnit;
 
 		public void DataInitialize(Systems.Unit.Unit unit)
@@ -26,17 +25,12 @@ namespace Presentation.UI.Panel
 			if (unit == null) return;
             _currentUnit = unit;
 			Refresh(unit);
+            EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
 		}
-        
-        public void Init(IEventBus eventBus)
-        {
-            _eventBus = eventBus;
-            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
-        }
         
         protected override void OnDestroy()
         {
-            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+            EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
         }
         
         private void OnUnitAttacked(UnitInfoChangedEvent e)

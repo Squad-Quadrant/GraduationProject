@@ -99,8 +99,8 @@ namespace Presentation.Bootstrap
             
 			AddStep("SetupLevelContainer", SetupLevelContainer);
 			AddStep("RegisterServices", RegisterServices);
-			AddStep("RegisterPresenter", RegisterPresenter);
 			AddStep("InitializeComponents", InitializeComponents);
+			AddStep("RegisterPresenter", RegisterPresenter);
 			AddStep("LoadMap", LoadMap);
 			AddStep("InitializeCameraController", InitializeCameraController);
 			AddStep("LoadUnits", LoadUnits);
@@ -157,31 +157,34 @@ namespace Presentation.Bootstrap
 
 			_levelContainer.Services.RegisterInstance(interactionController);
 		}
+        
+        private void InitializeComponents()
+        {
+            inputService.Initialize(_levelContainer.Services);
+            interactionController.Initialize(_levelContainer.Services);
+            unitViewManager.Initialize(_levelContainer.Services);
+        }
 
-		private void RegisterPresenter()
-		{
-			var uiManager = RootContainer.Instance.Resolve<UIManager>();
-			var turnService = _levelContainer.Services.Resolve<ITurnService>();
-			var unitService = _levelContainer.Services.Resolve<IUnitService>();
+        private void RegisterPresenter()
+        {
+            var uiManager = RootContainer.Instance.Resolve<UIManager>();
+            var turnService = _levelContainer.Services.Resolve<ITurnService>();
+            var unitService = _levelContainer.Services.Resolve<IUnitService>();
             var coordinateConverter = _levelContainer.Services.Resolve<ICoordinateConverter>();
             var damageServer = _levelContainer.Services.Resolve<IDamageService>();
-            
-			_levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer, unitService));
-			_levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
-			_levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
-			_levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
-            _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter,
+
+            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer,
+                unitService, interactionController.Context));
+            _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
+            _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService,
+                unitService));
+            _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
+            _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus,
+                coordinateConverter,
                 unitService, unitViewManager));
-		}
+        }
 
-		private void InitializeComponents()
-		{
-			inputService.Initialize(_levelContainer.Services);
-			interactionController.Initialize(_levelContainer.Services);
-			unitViewManager.Initialize(_levelContainer.Services);
-		}
-
-		private void LoadMap()
+        private void LoadMap()
 		{
 			if (!levelConfig.mapConfig)
 				throw new InvalidOperationException("LevelConfig has no MapConfig assigned!");
