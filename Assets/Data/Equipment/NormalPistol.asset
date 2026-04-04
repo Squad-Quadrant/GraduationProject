@@ -20,6 +20,8 @@ MonoBehaviour:
   MentalDamage: 0
   Weight: 0
   Type: 1
+  SpineName: weapon_glock
+  GripType: 1
   AmmoCapacity: 15
   ShotRanges: []
   DamageAttenuation:

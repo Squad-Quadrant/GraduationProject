@@ -20,10 +20,16 @@ MonoBehaviour:
   MentalDamage: 0
   Weight: 0
   Type: 2
+  SpineName: 
+  GripType: 1
   AmmoCapacity: 0
   ShotRanges: []
   DamageAttenuation:
     perGrid: 0
     multiplier: 0
   PenetrationRate: 0
+  shootSpeed: 0
+  canPreciseShoot: 0
+  preciseShootSpeed: 0
+  preciseShootHitRateBonus: 0
   AttackRange: 0

@@ -218,7 +218,11 @@ namespace Systems.Unit
                 _currentEquipment ??= MainWeapon.IsNullOrEmpty() ? SecondaryWeapon : MainWeapon;
                 return _currentEquipment;
             }
-            set => _currentEquipment = value;
+            set
+            {
+                _currentEquipment = value;
+                _eventBus.Publish(new UnitInfoChangedEvent(this));
+            }
         }
         
         public WeaponLogic CurrentWeapon
@@ -254,6 +258,8 @@ namespace Systems.Unit
             TacticalItem0.Init(equipmentConfigs[2], this);
             TacticalItem1.Init(equipmentConfigs[3], this);
             TacticalItem2.Init(equipmentConfigs[4], this);
+
+            CurrentEquipment = MainWeapon;
         }
 
         public EquipmentContainer GetEquipment(EActionType actionType)

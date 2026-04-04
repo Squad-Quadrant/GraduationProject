@@ -57,7 +57,7 @@ namespace Presentation.UI.Panel
         private void OnUnitCreated(Systems.Unit.Unit unit)
         {
             var slider = Instantiate(bloodSliderPrototype, transform);
-            slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id));
+            slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id), _eventBus);
             _bloodSliders.Add(unit, slider);
         }
         

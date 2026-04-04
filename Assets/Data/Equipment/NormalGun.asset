@@ -20,6 +20,8 @@ MonoBehaviour:
   MentalDamage: 0
   Weight: 0
   Type: 1
+  SpineName: weapon_m177
+  GripType: 0
   AmmoCapacity: 30
   ShotRanges:
   - min: 0

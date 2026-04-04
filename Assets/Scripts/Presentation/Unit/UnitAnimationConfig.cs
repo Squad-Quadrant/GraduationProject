@@ -17,8 +17,10 @@ namespace Presentation.Unit
 
 	public enum EGripType
 	{
-		Default,
-		HandGun
+        [InspectorName("默认(双手)")]
+		Default, // 双手
+        [InspectorName("手枪(单手)")]
+		HandGun // 单手
 	}
 
 	[Serializable]
