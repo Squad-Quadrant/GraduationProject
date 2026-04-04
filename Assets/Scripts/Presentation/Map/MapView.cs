@@ -8,6 +8,7 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Interfaces;
 using Systems.Map;
 using Systems.Map.Config;
 using Systems.Map.Region;
@@ -29,7 +30,6 @@ namespace Presentation.Map
 	public class MapView : MonoBehaviour
 	{
 		[Title("References")]
-		[SerializeField, Required] private Grid grid;
 		[SerializeField, Required] private SpriteRenderer groundRenderer;
         [SerializeField, Required] private Tilemap leftWallTilemap;
         [SerializeField, Required] private Tilemap rightTilemap;
@@ -57,6 +57,9 @@ namespace Presentation.Map
 
         private IEventBus _eventBus;
         private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
+
+        private ICoordinateConverter _coordinateConverter;
+		private ICoordinateConverter CoordinateConverter => _coordinateConverter ??= LevelContainer.Instance.Resolve<ICoordinateConverter>();
 
         private IMapService _mapService;
         private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
@@ -130,11 +133,8 @@ namespace Presentation.Map
 
 		private Vector3 ComputeGridOrigin(Vector2Int mapSize)
 		{
-			var center00 = (Vector2)grid.GetCellCenterWorld(Vector3Int.zero);
-			var center10 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(1, 0, 0));
-			var center01 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(0, 1, 0));
-			Vector2 basisX = center10 - center00;
-			Vector2 basisY = center01 - center00;
+			var (basisX, basisY) = CoordinateConverter.GetBasis();
+			var center00 = CoordinateConverter.GetCenter00();
 
 			Vector2 bottomPoint = center00 - 0.5f * basisX - 0.5f * basisY;
 			Vector2 leftPoint = center00 - 0.5f * basisX + (mapSize.y - 0.5f) * basisY;

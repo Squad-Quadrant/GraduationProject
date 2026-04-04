@@ -8,6 +8,7 @@ using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
+using Systems.Interfaces;
 using UnityEngine;
 
 namespace Presentation.FogOfWar
@@ -40,7 +41,6 @@ namespace Presentation.FogOfWar
 		[SerializeField] private string sortingLayerName = "Default";
 		[SerializeField] private int sortingOrder = 1000;
 		[SerializeField] private float padding = 5f;
-		[SerializeField, Required] private Grid grid;
 
 		private Texture2D _visibilityTex;
 		private Material _material;
@@ -75,6 +75,9 @@ namespace Presentation.FogOfWar
 
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
+
+		private ICoordinateConverter _coordinateConverter;
+		private ICoordinateConverter CoordinateConverter => _coordinateConverter ??= LevelContainer.Instance.Resolve<ICoordinateConverter>();
 
 		private HashSet<Vector2Int> _visibleCells;
 
@@ -201,11 +204,8 @@ namespace Presentation.FogOfWar
 
 		private void SetupShaderUniforms()
 		{
-			var center00 = (Vector2)grid.GetCellCenterWorld(Vector3Int.zero);
-			var center10 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(1, 0, 0));
-			var center01 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(0, 1, 0));
-			Vector2 basisX = center10 - center00;
-			Vector2 basisY = center01 - center00;
+			var (basisX, basisY) = CoordinateConverter.GetBasis();
+			var center00 = CoordinateConverter.GetCenter00();
 
 			Vector2 gridOrigin = center00 - 0.5f * basisX - 0.5f * basisY;
 
@@ -229,11 +229,9 @@ namespace Presentation.FogOfWar
 
 		private void CreateQuad()
 		{
-			var center00 = (Vector2)grid.GetCellCenterWorld(Vector3Int.zero);
-			var center10 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(1, 0, 0));
-			var center01 = (Vector2)grid.GetCellCenterWorld(new Vector3Int(0, 1, 0));
-			Vector2 basisX = center10 - center00;
-			Vector2 basisY = center01 - center00;
+			var (basisX, basisY) = CoordinateConverter.GetBasis();
+			var center00 = CoordinateConverter.GetCenter00();
+
 			Vector2 gridOrigin = center00 - 0.5f * basisX - 0.5f * basisY;
 
 			Vector2[] corners =

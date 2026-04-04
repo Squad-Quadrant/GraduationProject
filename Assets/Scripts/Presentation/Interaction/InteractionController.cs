@@ -4,6 +4,7 @@ using Core.FSM;
 using Core.Log;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Damage;
 using Systems.Interaction;
 using Systems.Interaction.States;
 using Systems.Map;
@@ -43,7 +44,8 @@ namespace Presentation.Interaction
 				services.Resolve<ITurnService>(),
 				services.Resolve<ICommandQueue>(),
 				services.Resolve<IPathFindingService>(),
-                services.Resolve<IVisionService>());
+                services.Resolve<IVisionService>(),
+				services.Resolve<IDamageService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

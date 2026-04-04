@@ -1,6 +1,8 @@
 ﻿using System;
 using Core.Events;
 using Core.FSM;
+using Data.Runtime.Events.Input;
+using Data.Runtime.Events.Interaction;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -24,5 +26,27 @@ namespace Systems.Interaction.States
 
 		protected static void Publish<TEvent>(InteractionContext ctx, TEvent evt) where TEvent : IEvent
 			=> ctx.EventBus.Publish(evt);
+
+		protected static void PublishBasicCursorInfo(InteractionContext ctx, PointerHoverEvent e)
+		{
+			if (!e.CellPosition.HasValue)
+			{
+				Publish(ctx, CursorInfoEvent.Hide());
+				return;
+			}
+
+			var cell = e.CellPosition.Value;
+			var terrainName = ctx.MapService.Data.GetCell(cell)?.Terrain.ToString() ?? "";
+
+			if (e.HoveredUnitId != null && ctx.UnitService.TryGetUnit(e.HoveredUnitId, out var unit))
+			{
+				Publish(ctx, CursorInfoEvent.ForUnit(
+					cell, e.WorldPosition, terrainName,
+					unit.name, unit.CurrentHp, unit.maxHp, unit.faction.ToString()));
+				return;
+			}
+
+			Publish(ctx, CursorInfoEvent.ForTerrain(cell, e.WorldPosition, terrainName));
+		}
 	}
 }

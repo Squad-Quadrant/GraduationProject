@@ -7,10 +7,10 @@ namespace Systems.Interaction.States
 {
 	public class IdleState : InteractionState
 	{
-		// for event unsubscription
 		private Action<UnitClickedEvent> _onUnitClicked;
 		private Action<CellClickedEvent> _onCellClicked;
 		private Action<EscInputEvent> _onEsc;
+		private Action<PointerHoverEvent> _onPointerHover;
 
 		public IdleState() : base(InteractionStates.Idle) { }
 
@@ -23,9 +23,12 @@ namespace Systems.Interaction.States
 			_onUnitClicked = OnUnitClicked;
 			_onCellClicked = OnCellClicked;
 			_onEsc = OnEsc;
+			_onPointerHover = OnPointerHover;
+
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onCellClicked);
 			Subscribe(ctx, _onEsc);
+			Subscribe(ctx, _onPointerHover);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -35,9 +38,13 @@ namespace Systems.Interaction.States
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onEsc);
+			Unsubscribe(ctx, _onPointerHover);
+
 			_onUnitClicked = null;
 			_onCellClicked = null;
 			_onEsc = null;
+			_onPointerHover = null;
+			Publish(ctx, CursorInfoEvent.Hide());
 
 			base.OnExit(ctx);
 		}
@@ -67,6 +74,8 @@ namespace Systems.Interaction.States
 			this.Log("ESC pressed in Idle → requesting settings panel");
 			Publish(Context, new OpenSettingsRequestEvent());
 		}
+
+		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);
 
 		private void SelectUnit(Unit.Unit unit)
 		{

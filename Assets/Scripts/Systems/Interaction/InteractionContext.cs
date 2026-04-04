@@ -4,6 +4,7 @@ using Core.Commands;
 using Core.Events;
 using Core.FSM;
 using Data.Runtime;
+using Systems.Damage;
 using Systems.Map;
 using Systems.PathFinding;
 using Systems.PathFinding.MovementSimulation;
@@ -26,9 +27,9 @@ namespace Systems.Interaction
 		public IMapService MapService { get; }
 		public ITurnService TurnService { get; }
 		public ICommandQueue CommandQueue { get; }
-
 		public IPathFindingService PathFindingService { get; }
         public IVisionService VisionService { get; }
+        public IDamageService DamageService { get; }
 
 		#endregion
 
@@ -59,7 +60,8 @@ namespace Systems.Interaction
 			ITurnService turnService,
 			ICommandQueue commandQueue,
 			IPathFindingService pathFindingService,
-            IVisionService visionService)
+            IVisionService visionService,
+			IDamageService damageService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -68,6 +70,7 @@ namespace Systems.Interaction
 			CommandQueue = commandQueue;
 			PathFindingService = pathFindingService;
             VisionService = visionService;
+            DamageService = damageService;
 		}
 
 		public void ClearSelection()

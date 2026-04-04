@@ -14,6 +14,7 @@ namespace Systems.Interaction.States
 		private Action<UnitClickedEvent> _onUnitClicked;
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
+		private Action<PointerHoverEvent> _onPointerHover;
 
 		public UnitSelectedState() : base(InteractionStates.UnitSelected) { }
 
@@ -34,11 +35,13 @@ namespace Systems.Interaction.States
 			_onUnitClicked = OnUnitClicked;
 			_onBack = OnBack;
 			_onEsc = OnEsc;
+			_onPointerHover = OnPointerHover;
             
 			Subscribe(ctx, _onActionSelected);
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onBack);
 			Subscribe(ctx, _onEsc);
+			Subscribe(ctx, _onPointerHover);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -49,11 +52,15 @@ namespace Systems.Interaction.States
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
+			Unsubscribe(ctx, _onPointerHover);
 
 			_onActionSelected = null;
 			_onUnitClicked = null;
 			_onBack = null;
 			_onEsc = null;
+			_onPointerHover = null;
+
+			Publish(ctx, CursorInfoEvent.Hide());
 
 			base.OnExit(ctx);
 		}
@@ -138,6 +145,8 @@ namespace Systems.Interaction.States
 			DeselectUnit();
 			StateMachine(Context).ChangeState<IdleState>();
 		}
+
+		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);
 
 		private void SwitchToUnit(Unit.Unit newUnit)
 		{

@@ -69,6 +69,7 @@ namespace Systems.Interaction.States
 
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Movement));
 			Publish(ctx, PathPreviewEvent.Hide());
+			Publish(ctx, CursorInfoEvent.Hide());
 
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onPointerHover);
@@ -99,14 +100,12 @@ namespace Systems.Interaction.States
 		{
 			if (!e.CellPosition.HasValue)
 			{
-				// Pointer outside map - hide path
 				Publish(Context, PathPreviewEvent.Hide());
+				Publish(Context, CursorInfoEvent.Hide());
 				return;
 			}
 
 			var targetCell = e.CellPosition.Value;
-
-			// Calculate path to hovered cell
 			var pathResult = GetPathFromCache(targetCell);
 			var isValid = Context.LastReachableArea?.CanStopAt(targetCell) ?? false;
 
@@ -116,6 +115,19 @@ namespace Systems.Interaction.States
 				isValid,
 				Context.selectedUnit.id
 			));
+
+			var terrainName = Context.MapService.Data.GetCell(targetCell)?.Terrain.ToString() ?? "";
+			if (pathResult.Found)
+			{
+				var unit = Context.selectedUnit;
+				int apCost = unit.CalculateMovementApCost(pathResult.TotalCost);
+
+				Publish(Context, CursorInfoEvent.ForMovement(
+					targetCell, e.WorldPosition, terrainName,
+					apCost, unit.CurrentAp - apCost, isValid));
+			}
+			else
+				Publish(Context, CursorInfoEvent.ForTerrain(targetCell, e.WorldPosition, terrainName));
 		}
 
 		private void OnBack(BackInputEvent e)

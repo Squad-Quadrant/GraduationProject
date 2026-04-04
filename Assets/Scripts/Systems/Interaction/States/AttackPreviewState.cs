@@ -6,6 +6,7 @@ using Data.Runtime;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Systems.Damage;
 using Systems.Unit;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Systems.Interaction.States
 		private Action<UnitClickedEvent> _onUnitClicked;
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
+		private Action<PointerHoverEvent> _onPointerHover;
 
         public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
@@ -43,9 +45,12 @@ namespace Systems.Interaction.States
 			_onUnitClicked = OnUnitClicked;
 			_onBack = OnBack;
 			_onEsc = OnEsc;
+			_onPointerHover = OnPointerHover;
+
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onBack);
 			Subscribe(ctx, _onEsc);
+			Subscribe(ctx, _onPointerHover);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -58,10 +63,14 @@ namespace Systems.Interaction.States
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
+			Unsubscribe(ctx, _onPointerHover);
 
 			_onUnitClicked = null;
 			_onBack = null;
 			_onEsc = null;
+			_onPointerHover = null;
+
+			Publish(ctx, CursorInfoEvent.Hide());
 
 			base.OnExit(ctx);
 		}
@@ -91,6 +100,41 @@ namespace Systems.Interaction.States
 			Context.StateMachine.ChangeState<IdleState>();
 		}
 
+		private void OnPointerHover(PointerHoverEvent e)
+		{
+			if (!e.CellPosition.HasValue)
+			{
+				Publish(Context, CursorInfoEvent.Hide());
+				return;
+			}
+
+			var cell = e.CellPosition.Value;
+			var terrainName = Context.MapService.Data.GetCell(cell)?.Terrain.ToString() ?? "";
+
+			if (e.HoveredUnitId != null
+			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out var target)
+			    && Context.validTargetCells.Contains(cell))
+			{
+				// todo: this is duplicating a lot of logic from the damage preview in the combat forecast panel. We should unify this logic in the future to avoid inconsistencies.
+				var damageContext = Context.DamageService.GetSimulatedDamage(
+					new DamageTriggeringInfo(
+						DamageType.Bullet,
+						Context.selectedUnit,
+						target,
+						Context.currentAction));
+
+				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
+
+				Publish(Context, CursorInfoEvent.ForAttack(
+					cell, e.WorldPosition, terrainName,
+					target.name, target.CurrentHp, target.maxHp, hitPercent));
+			}
+			else
+			{
+				Publish(Context, CursorInfoEvent.ForTerrain(cell, e.WorldPosition, terrainName));
+			}
+		}
+
 		private void CalculateReachableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
@@ -103,15 +147,8 @@ namespace Systems.Interaction.States
             // 剔除看不见的敌人
             var visionService = ctx.VisionService;
             var visibleCells = visionService.CalculateVisibleCells(unit.position, unit.visionRange);
-            List<Unit.Unit> enemyUnits = new();
-            foreach (var enemyUnit in reachableEnemyUnits)
-            {
-                if (visibleCells.Contains(enemyUnit.position))
-                {
-                    enemyUnits.Add(enemyUnit);
-                }
-            }
-            
+            List<Unit.Unit> enemyUnits = reachableEnemyUnits.Where(enemyUnit => visibleCells.Contains(enemyUnit.position)).ToList();
+
             ctx.validTargetCells.Clear();
             ctx.validTargetCells = enemyUnits.Select(u => u.position).ToList();
             
