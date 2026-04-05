@@ -7,6 +7,11 @@
 		_NoiseIntensity	("Noise Intensity", Float)			= 0.15
 		_NoiseScale		("Noise Scale", Float)				= 0.5
 		_EdgeSoftness   ("Edge Softness", Range(0.01, 1))   = 0.35
+
+		[Header(Halftone)]
+		_DotDensity     ("Dot Density", Float)              = 8.0
+		_DotMaxRadius   ("Dot Max Radius", Range(0.3, 1.0)) = 0.75
+		_DotSoftness    ("Dot Edge Softness", Range(0.0, 0.15)) = 0.03
 	}
 
 	SubShader
@@ -56,6 +61,12 @@
                 float  _NoiseIntensity;
                 float  _NoiseScale;
                 float  _EdgeSoftness;
+
+				// Halftone parameters
+                float  _DotDensity;
+                float  _DotMaxRadius;
+                float  _DotSoftness;
+
                 float4 _MapParams; // (1.0/mapWidth, 1.0/mapHeight, mapWidth, mapHeight)
                 float4 _GridOrigin;
                 float4 _InvBasisRow0;
@@ -80,16 +91,17 @@
 
 			half4 Frag(Varyings IN) : SV_Target
             {
+            	// World → grid UV
                 float2 offset = IN.worldPos - _GridOrigin.xy;
                 float2 gridCoords = float2(
 					dot(offset, _InvBasisRow0.xy),
 					dot(offset, _InvBasisRow1.xy)
 				);
-
                 float2 visUV = gridCoords * _MapParams.xy;
 
                 float inside = step(0.0, visUV.x) * step(0.0, visUV.y) * step(visUV.x, 1.0) * step(visUV.y, 1.0);
-                float visibility = SAMPLE_TEXTURE2D(_VisibilityTex, sampler_VisibilityTex, visUV).r;
+
+            	float visibility = SAMPLE_TEXTURE2D(_VisibilityTex, sampler_VisibilityTex, visUV).r;
                 visibility *= inside;
 
                 float noise = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, IN.worldPos * _NoiseScale).r;
@@ -114,7 +126,14 @@
 				}
 
 				float totalClear = max(clearAmount, unitMask);
-				float fogAlpha   = (1.0 - totalClear) * _FogColor.a;
+
+            	float2 dotUV = IN.worldPos * _DotDensity;
+            	float2 cellFrac = frac(dotUV) - 0.5;
+            	float distToCenter = length(cellFrac);
+            	float dotRadius = (1.0 - totalClear) * _DotMaxRadius;
+				float dotAlpha = 1.0 - smoothstep(dotRadius - _DotSoftness, dotRadius + _DotSoftness, distToCenter);
+
+                float fogAlpha = dotAlpha * _FogColor.a;
 
 				return half4(_FogColor.rgb, fogAlpha);
             }

@@ -37,6 +37,11 @@ namespace Presentation.FogOfWar
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private float unitCenterOffsetY = 0.4f;
 		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 1f)] private float unitMaskSoftness = 0.4f;
 
+		[Title("Halftone")]
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(1f, 30f)] private float dotDensity = 8f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0.3f, 1f)] private float dotMaxRadius = 0.75f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 0.15f)] private float dotSoftness = 0.03f;
+
 		[Title("Rendering")]
 		[SerializeField] private string sortingLayerName = "Default";
 		[SerializeField] private int sortingOrder = 1000;
@@ -72,6 +77,9 @@ namespace Presentation.FogOfWar
 		private static readonly int PropUnitEllipseRadius = Shader.PropertyToID("_UnitEllipseRadius");
 		private static readonly int PropUnitCenterOffset  = Shader.PropertyToID("_UnitCenterOffset");
 		private static readonly int PropUnitMaskSoftness  = Shader.PropertyToID("_UnitMaskSoftness");
+		private static readonly int PropDotDensity   = Shader.PropertyToID("_DotDensity");
+		private static readonly int PropDotMaxRadius = Shader.PropertyToID("_DotMaxRadius");
+		private static readonly int PropDotSoftness  = Shader.PropertyToID("_DotSoftness");
 
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -200,6 +208,9 @@ namespace Presentation.FogOfWar
 			_material.SetVector(PropUnitEllipseRadius, new Vector4(unitMaskRadiusX, unitMaskRadiusY, 0f, 0f));
 			_material.SetVector(PropUnitCenterOffset, new Vector4(0f, unitCenterOffsetY, 0f, 0f));
 			_material.SetFloat(PropUnitMaskSoftness, unitMaskSoftness);
+			_material.SetFloat(PropDotDensity, dotDensity);
+			_material.SetFloat(PropDotMaxRadius, dotMaxRadius);
+			_material.SetFloat(PropDotSoftness, dotSoftness);
 		}
 
 		private void SetupShaderUniforms()
