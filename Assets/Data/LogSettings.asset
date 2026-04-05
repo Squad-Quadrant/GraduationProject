@@ -248,3 +248,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.AttackEvaluator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

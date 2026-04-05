@@ -23,6 +23,9 @@ namespace Data.Runtime.Commands
 		private readonly IMapService _mapService;
 		private readonly IEventBus _eventBus;
 
+        private bool _attackAnimationDone = false;
+        private bool _beHitAnimationDone = false;
+
 		public bool WaitForAnimation { get; set; } = true;
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
@@ -92,12 +95,15 @@ namespace Data.Runtime.Commands
 			CompleteUndo();
 		}
 
-        // todo: 保证攻击和受击动画都播完
 		private void OnPresentationComplete(PresentationCompleteEvent e)
-		{
-			// Check if this is our animation
-			if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Attack, _unitId))
-				return;
+        {
+            if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Attack, _unitId))
+                _attackAnimationDone = true;
+            
+            if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.BeHit, _targetUnitId))
+                _beHitAnimationDone = true;
+            
+            if (!_attackAnimationDone || !_beHitAnimationDone) return;
 
 			this.Log($"Animation complete for {_unitId}");
 

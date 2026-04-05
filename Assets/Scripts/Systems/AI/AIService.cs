@@ -52,7 +52,8 @@ namespace Systems.AI
 			_evaluators = new List<IActionEvaluator>
 			{
 				new WaitEvaluator(),
-				new MoveEvaluator()
+				new MoveEvaluator(),
+                new AttackEvaluator()
 			};
 
 			this.Log("Initialized");
@@ -187,7 +188,7 @@ namespace Systems.AI
 			var cmd = new UnitAttackCommand(
 				unit.id,
 				option.TargetUnitId,
-				2,
+				1,
 				option.EquipmentAction,
 				_unitService,
 				_mapService,

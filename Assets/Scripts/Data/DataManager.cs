@@ -17,6 +17,7 @@ namespace Data
             _unitEquipmentData.Add("001", new[] {1, 2, 0, 3, 4});
             _unitEquipmentData.Add("002", new[] {1, 2, 0, 3, 4});
             _unitEquipmentData.Add("003", new[] {1, 2, 0, 3, 4});
+            _unitEquipmentData.Add("004", new[] {2, 1, 0, 3, 4});
             // temp end
         }
 

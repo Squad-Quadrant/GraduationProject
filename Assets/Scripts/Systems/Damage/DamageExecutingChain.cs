@@ -78,7 +78,7 @@ namespace Systems.Damage
                 {
                     string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
                     this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
-                             $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenceDamage}", true);
+                             $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
                 }
             }
         }
@@ -92,8 +92,8 @@ namespace Systems.Damage
             defender.CurrentHp -= _context.Damage;
             
             _context.TotalDamage += _context.Damage;
-            _context.TotalDefenceDamage += _context.DefenceDamage;
-            _context.TotalMentalDamage += _context.SanDamage;
+            _context.TotalDefenseDamage += _context.DefenceDamage;
+            _context.TotalSanDamage += _context.SanDamage;
             
             this.Log($"Damage applied: type:{_context.DamageType}, {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
                 $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
@@ -142,8 +142,8 @@ namespace Systems.Damage
         public bool needResetDamage = true; // 在每次重新计算伤害之前是否需要重置伤害
 
         public int TotalDamage = 0;
-        public int TotalDefenceDamage = 0;
-        public int TotalMentalDamage = 0;
+        public int TotalDefenseDamage = 0;
+        public int TotalSanDamage = 0;
 
 
         public DamageExecutingContext GetSnapshot()

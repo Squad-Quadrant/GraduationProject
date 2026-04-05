@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Systems.Damage;
 using Systems.Equipment.Config;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Systems.Equipment
@@ -31,6 +32,8 @@ namespace Systems.Equipment
         }
 
         public abstract int Range();
+        
+        public abstract bool CheckAttackable(Unit.Unit target);
     }
     
     public class WeaponLogic : EquipmentLogic, IDamageInfluencer
@@ -96,6 +99,13 @@ namespace Systems.Equipment
             return int.MaxValue;
         }
 
+        public override bool CheckAttackable(Unit.Unit target)
+        {
+            if (target == null || target.faction == Owner.faction)
+                return false;
+            return Vector2Int.Distance(Owner.position, target.position) <= Range() && CurrentAmmo() > 0;
+        }
+
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
             if (context.DamageType == DamageType.Bullet)
@@ -119,6 +129,13 @@ namespace Systems.Equipment
         public override int Range()
         {
             return Config.AttackRange;
+        }
+
+        public override bool CheckAttackable(Unit.Unit target)
+        {
+            if (target == null || target.faction == Owner.faction)
+                return false;
+            return Vector2Int.Distance(Owner.position, target.position) <= Range();
         }
 
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)

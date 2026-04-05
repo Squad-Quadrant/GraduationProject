@@ -1,6 +1,5 @@
 ﻿using Core.Commands;
 using Core.Events;
-using Core.Log;
 using UnityEngine;
 
 namespace Presentation.Bootstrap

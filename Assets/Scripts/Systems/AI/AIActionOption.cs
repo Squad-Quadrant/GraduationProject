@@ -7,7 +7,9 @@ namespace Systems.AI
 	{
 		Wait,
 		Move,
-		Attack
+		Attack,
+        Reload,
+        Switch
 	}
 
 	public class AIActionOption

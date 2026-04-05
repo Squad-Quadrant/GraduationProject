@@ -137,11 +137,12 @@ namespace Systems.Interaction.States
 		private void CalculateReachableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
-            int attackRange = unit.GetEquipment(ctx.currentAction).Logic.Range();
+
+            var currentEquipment = unit.CurrentEquipment;
             
             // 搜索范围内的敌人
-            var reachableEnemyUnits = ctx.UnitService.GetUnitsInDistance(unit.position, attackRange)
-                .Where(u => u.faction == EUnitFaction.Enemy).ToList();
+            var reachableEnemyUnits = ctx.UnitService.GetAllAliveUnits()
+                .Where(u => currentEquipment.Logic.CheckAttackable(u)).ToList();
 
             // 剔除看不见的敌人
             var visionService = ctx.VisionService;

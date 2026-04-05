@@ -13,6 +13,7 @@ namespace Systems.AI
 		public List<Unit.Unit> Allies { get; }
 		public ReachableAreaResult ReachableArea { get; }
 		public HashSet<Vector2Int> VisibleCells { get; }
+        // public List<Unit.Unit> AttackableEnemies { get; }
 
 		public AIContext(
 			Unit.Unit self,
@@ -27,6 +28,7 @@ namespace Systems.AI
 			Allies = allies;
 			ReachableArea = reachableArea;
 			VisibleCells = visibleCells;
+            // AttackableEnemies = attackableEnemies;
 		}
 	}
 }
