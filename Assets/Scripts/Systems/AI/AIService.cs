@@ -53,7 +53,8 @@ namespace Systems.AI
 			{
 				new WaitEvaluator(),
 				new MoveEvaluator(),
-                new AttackEvaluator()
+                new AttackEvaluator(),
+                new ReloadEvaluator()
 			};
 
 			this.Log("Initialized");
@@ -97,6 +98,10 @@ namespace Systems.AI
 				case EAIActionType.Attack:
 					ExecuteAttack(best);
 					break;
+                
+                case EAIActionType.Reload:
+                    ExecuteReload(best);
+                    break;
 
 				default:
 					this.LogWarning($"Unhandled action type: {best.ActionType}");
@@ -197,6 +202,19 @@ namespace Systems.AI
 
 			ExecuteCommandThenContinue(cmd);
 		}
+        
+        private void ExecuteReload(AIActionOption option)
+        {
+            var unit = _currentUnit;
+            
+            var cmd = new UnitReloadCommand(
+                unit,
+                1,
+                _eventBus
+            );
+
+            ExecuteCommandThenContinue(cmd);
+        }
 
 		private void ExecuteCommandThenContinue(ICommand command)
 		{

@@ -62,25 +62,14 @@ namespace Systems.AI.Config
         [LabelText("换弹癌")]
         public float reloadBase = 0.3f;
         
+        [FoldoutGroup("Reload"), Tooltip("已消耗子弹的影响,如消耗了30%的子弹,则总分数+[0.3*该值]")]
+        [Range(0f, 2f)]
+        [LabelText("空仓焦虑")]
+        public float ammoAnxiety = 1f;
+        
         [FoldoutGroup("Reload"), Tooltip("剩余ap的影响,总分数+[该值*剩余ap]")]
         [Range(0f, 1f)]
         [LabelText("战术-持久战")]
         public float tacticsReload = 0.1f;
-        
-        //
-        // [FoldoutGroup("Reload"), Tooltip("换弹动作的基础分数")]
-        // [Range(0f, 2f)]
-        // [LabelText("")]
-        // public float reloadBase = 0.3f;
-        
-        // [FoldoutGroup("Attack"), Tooltip("剩余ap的影响,总分数+[该值*剩余ap]")]
-        // [Range(0f, 1f)]
-        // [LabelText("战术-强攻")]
-        // public float tactics = 0.1f;
-        //
-        // [FoldoutGroup("Attack"), Tooltip("剩余ap的影响,总分数+[该值*剩余ap]")]
-        // [Range(0f, 1f)]
-        // [LabelText("战术-强攻")]
-        // public float tactics = 0.1f;
     }
 }

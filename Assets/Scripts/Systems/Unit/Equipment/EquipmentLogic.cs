@@ -52,10 +52,12 @@ namespace Systems.Equipment
         
         public virtual int CurrentAmmo(int delta = 0)
         {
-            currentAmmo += delta;
-            currentAmmo = Mathf.Clamp(currentAmmo, 0, AmmoCapacity());
             if (delta != 0)
+            {
+                currentAmmo += delta;
+                currentAmmo = Mathf.Clamp(currentAmmo, 0, AmmoCapacity());
                 Owner.TriggerInfoChanged();
+            }
             return currentAmmo;
         }
 

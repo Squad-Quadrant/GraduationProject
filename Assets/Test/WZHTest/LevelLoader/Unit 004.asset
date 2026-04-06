@@ -29,3 +29,5 @@ MonoBehaviour:
   faction: 1
   defense: 100
   defenseRate: 0.5
+  san: 100
+  aiBrainConfig: {fileID: 11400000, guid: 2ab7077191b4a7f4db93eaf8ff561289, type: 2}
