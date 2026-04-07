@@ -9,8 +9,6 @@ namespace Systems.Map.Config
     public class WallConfig : ScriptableObject
     {
         public WallType wallType;
-        public TileBase leftTile;
-        public TileBase rightTile;
     }
     
     public enum WallType

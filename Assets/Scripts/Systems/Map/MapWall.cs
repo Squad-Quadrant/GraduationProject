@@ -61,14 +61,13 @@ namespace Systems.Map
 	    public static bool operator ==(WallKey left, WallKey right) => left.Equals(right);
 	    public static bool operator !=(WallKey left, WallKey right) => !left.Equals(right);
 
-	    public override string ToString() => $"Wall({_position1} <-> {_position2})";
+	    public override string ToString() => $"Wall[{_position1} <-> {_position2}]";
     }
     
     public class MapWall
     {
         public WallKey Key { get; }
         public WallType Type { get; set; }
-        [CanBeNull] public TileBase Tile { get; set; }
 
         public MapWall(WallKey key)
         {

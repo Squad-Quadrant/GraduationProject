@@ -4,12 +4,12 @@ using Systems.Map;
 
 namespace Data.Runtime.Events.Map
 {
-	public readonly struct MapCellChangedEvent : IEvent
+	public readonly struct MapCellStateChangedEvent : IEvent
 	{
 		public MapCell Cell { get; }
 		public IReadOnlyList<MapWall> Walls { get; }
 
-		public MapCellChangedEvent(MapCell cell, IReadOnlyList<MapWall> walls)
+		public MapCellStateChangedEvent(MapCell cell, IReadOnlyList<MapWall> walls)
 		{
 			Cell = cell;
 			Walls = walls;

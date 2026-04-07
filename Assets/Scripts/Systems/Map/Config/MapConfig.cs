@@ -51,6 +51,10 @@ namespace Systems.Map.Config
 		public Sprite groundSprite;
 
 		[PropertyOrder(0)]
+		[LabelText("墙体预制体")]
+		public GameObject wallViewPrefab;
+
+		[PropertyOrder(0)]
 		[LabelText("区域定义")]
 		[TableList(AlwaysExpanded = true)]
 		public RegionDefinition[] regions = { RegionDefinition.DefaultOutdoor };
