@@ -1,0 +1,63 @@
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Systems.Buff
+{
+    public abstract class BuffProxy
+    {
+        protected List<BuffInfo> buffInfos = new();
+
+        protected BuffProxy(){}
+
+        public virtual void Init()
+        {
+            foreach (var buffInfo in buffInfos)
+            {
+                buffInfo.OnInit();
+            }
+        }
+
+        public virtual void Turn()
+        {
+            foreach (var buffInfo in buffInfos)
+            {
+                buffInfo.OnTurn();
+            }
+        }
+
+        public virtual void Reset()
+        {
+            foreach (var buffInfo in buffInfos)
+            {
+                buffInfo.OnReset();
+            }
+        }
+        
+        public virtual void Register(BuffInfo buffInfo)
+        {
+            buffInfos.Add(buffInfo);
+            buffInfo.OnAttach();
+        }
+        
+        public virtual void Unregister(BuffInfo buffInfo)
+        {
+            buffInfos.Remove(buffInfo);
+            buffInfo.OnLost();
+        }
+
+        public virtual BuffInfo GetBuff(int id)
+        {
+            return buffInfos.FirstOrDefault(b => b.Id == id);
+        }
+    }
+    
+    public class UnitBuffProxy : BuffProxy
+    {
+        private Unit.Unit _owner;
+        
+        public UnitBuffProxy(Unit.Unit owner) : base()
+        {
+            _owner = owner;
+        }
+    }
+}

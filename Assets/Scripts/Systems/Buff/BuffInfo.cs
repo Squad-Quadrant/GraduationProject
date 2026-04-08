@@ -1,19 +1,33 @@
 ﻿using System;
 using Systems.Buff.Config;
-using Systems.Unit;
 using UnityEngine;
 
 namespace Systems.Buff
 {
+    public enum BuffType
+    {
+        UnitBuff,
+        CellBuff
+    }
+    
     [Serializable]
     public class BuffInfo : IComparable<BuffInfo>
     {
-        public BuffData buffData;
-        public GameObject creator;
-        public Unit.Unit target;
-        public float durationCounter;
-        public float tickCounter;
-        public int currentStack;
+        private BuffData buffData;
+        private GameObject creator;
+        private Unit.Unit target;
+        private float durationCounter;
+        private float tickCounter;
+        private int currentStack;
+        private int id; // 运行时生成的id
+        
+        public BuffData BuffData => buffData;
+        public GameObject Creator => creator;
+        public Unit.Unit Target => target;
+        public float DurationCounter => durationCounter;
+        public float TickCounter => tickCounter;
+        public int CurrentStack => currentStack;
+        public int Id => id;
 
         public BuffInfo(BuffData buffData, GameObject creator, Unit.Unit target)
         {

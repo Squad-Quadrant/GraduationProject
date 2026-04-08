@@ -11,7 +11,6 @@ using Systems.Equipment;
 using Systems.Equipment.Config;
 using Systems.Turn;
 using UnityEngine;
-using UnityEngine.Android;
 
 namespace Systems.Unit
 {
