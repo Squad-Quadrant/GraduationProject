@@ -18,7 +18,8 @@ namespace Editor
 		[SerializeField] private List<Texture2D> rightAtlases = new();
 		[SerializeField] private float worldMinX;
 		[SerializeField] private float worldMinY;
-		[SerializeField] private int overhang = 200;
+		[SerializeField] private int overhangTop = 200;
+		[SerializeField] private int overhangDown = 10;
 		[SerializeField] private int ppu = 400;
 
 		private SerializedObject _serializedSelf;
@@ -64,7 +65,8 @@ namespace Editor
 				PasteWorldMinFromClipboard();
 			EditorGUILayout.EndHorizontal();
 
-			overhang = EditorGUILayout.IntSlider("Overhang (px)", overhang, 0, 400);
+			overhangTop = EditorGUILayout.IntSlider("Overhang Top (px)", overhangTop, 0, 400);
+			overhangDown = EditorGUILayout.IntSlider("Overhang Down (px)", overhangDown, 0, 100);
 			ppu = EditorGUILayout.IntField("PPU", ppu);
 
 			EditorGUILayout.Space(8);
@@ -272,9 +274,9 @@ namespace Editor
             foreach (var slice in slices)
             {
                 int minPx = Mathf.Min(slice.EdgeStartPx.x, slice.EdgeEndPx.x);
-                int minPy = Mathf.Min(slice.EdgeStartPx.y, slice.EdgeEndPx.y);
+                int minPy = Mathf.Min(slice.EdgeStartPx.y, slice.EdgeEndPx.y) - overhangDown;
                 int maxPx = Mathf.Max(slice.EdgeStartPx.x, slice.EdgeEndPx.x);
-                int maxPy = Mathf.Max(slice.EdgeStartPx.y, slice.EdgeEndPx.y) + overhang;
+                int maxPy = Mathf.Max(slice.EdgeStartPx.y, slice.EdgeEndPx.y) + overhangTop;
 
                 minPx = Mathf.Max(0, minPx);
                 minPy = Mathf.Max(0, minPy);
