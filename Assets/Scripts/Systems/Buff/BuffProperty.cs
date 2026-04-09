@@ -32,7 +32,12 @@ namespace Systems.Buff
 
         public T Value 
         {
-            get => _owner.BuffProxy.Property(_type, _baseValue);
+            get
+            {
+                var copy = _baseValue;
+                _owner.BuffProxy.Property(_type, ref copy);
+                return copy;
+            }
 
             set => _baseValue = value;
         }

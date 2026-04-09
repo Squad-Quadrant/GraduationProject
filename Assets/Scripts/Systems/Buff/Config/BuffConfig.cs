@@ -52,6 +52,6 @@ namespace Systems.Buff.Config
         [InlineEditor] public BuffEvent[] onLostEvents;
         [InlineEditor] public BuffEvent[] onTurnEvents;
         [InlineEditor] public BuffEvent[] onResetEvents;
-        [InlineEditor] public BuffEvent[] onPropertyEvents;
+        [InlineEditor] public BuffInfluence[] propertyInfluences;
     }
 }

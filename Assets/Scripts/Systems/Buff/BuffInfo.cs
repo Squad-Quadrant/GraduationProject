@@ -8,8 +8,8 @@ namespace Systems.Buff
     public class BuffInfo : IComparable<BuffInfo>
     {
         private BuffData _buffData;
-        private GameObject _creator;
-        private Unit.Unit _target;
+        private MonoBehaviour _creator;
+        private IBuffAble _target;
         private float _durationCounter;
         private float _tickCounter;
         private int _currentStack;
@@ -17,15 +17,15 @@ namespace Systems.Buff
         private int _uid; // 运行时生成的id
         
         public BuffData BuffData => _buffData;
-        public GameObject Creator => _creator;
-        public Unit.Unit Target => _target;
+        public MonoBehaviour Creator => _creator;
+        public IBuffAble Target => _target;
         public float DurationCounter => _durationCounter;
         public float TickCounter => _tickCounter;
         public int CurrentStack => _currentStack;
         public int Id => _id;
         public int Uid => _uid;
 
-        public BuffInfo(BuffData buffData, GameObject creator, Unit.Unit target)
+        public BuffInfo(BuffData buffData, MonoBehaviour creator, Unit.Unit target)
         {
             this._buffData = buffData;
             this._creator = creator;
@@ -92,13 +92,13 @@ namespace Systems.Buff
             }
         }
 
-        public void OnProperty<T>(PropertyType propertyType, ref T baseValue)
+        public void OnProperty<T>(PropertyType propertyType, ref T baseValue) where T : struct, IConvertible
         {
             if (_buffData.onTurnEvents is null) return;
-            foreach (var onTurnEvent in _buffData.onPropertyEvents)
+            foreach (var onTurnEvent in _buffData.propertyInfluences)
             {
                 if (onTurnEvent.propertyType == propertyType)
-                    onTurnEvent.Trigger(this);
+                    onTurnEvent.Execute(this, ref baseValue);
             }
         }
     }

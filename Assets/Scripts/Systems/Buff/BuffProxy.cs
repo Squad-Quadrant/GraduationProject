@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -50,7 +51,7 @@ namespace Systems.Buff
             }
         }
 
-        public virtual void Property<T>(PropertyType propertyType, ref T baseValue)
+        public virtual void Property<T>(PropertyType propertyType, ref T baseValue) where T : struct, IConvertible
         {
             foreach (var buffInfo in buffInfos)
             {
