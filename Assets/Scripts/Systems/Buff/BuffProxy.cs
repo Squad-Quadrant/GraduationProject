@@ -6,17 +6,34 @@ namespace Systems.Buff
     public abstract class BuffProxy
     {
         protected List<BuffInfo> buffInfos = new();
+        protected readonly IBuffService buffService;
+        public List<BuffInfo> BuffInfos => buffInfos;
 
-        protected BuffProxy(){}
-
-        public virtual void Init()
+        protected BuffProxy(IBuffService buffService)
         {
-            foreach (var buffInfo in buffInfos)
-            {
-                buffInfo.OnInit();
-            }
+            this.buffService = buffService;
         }
-
+        
+        // public virtual void Init()
+        // {
+        //     foreach (var buffInfo in buffInfos)
+        //     {
+        //         buffInfo.OnInit();
+        //     }
+        // }
+        
+        public virtual void Attach(BuffInfo buffInfo)
+        {
+            buffInfos.Add(buffInfo);
+            buffInfo.OnAttach();
+        }
+        
+        public virtual void Lost(BuffInfo buffInfo)
+        {
+            buffInfos.Remove(buffInfo);
+            buffInfo.OnLost();
+        }
+        
         public virtual void Turn()
         {
             foreach (var buffInfo in buffInfos)
@@ -32,17 +49,13 @@ namespace Systems.Buff
                 buffInfo.OnReset();
             }
         }
-        
-        public virtual void Register(BuffInfo buffInfo)
+
+        public virtual void Property<T>(PropertyType propertyType, ref T baseValue)
         {
-            buffInfos.Add(buffInfo);
-            buffInfo.OnAttach();
-        }
-        
-        public virtual void Unregister(BuffInfo buffInfo)
-        {
-            buffInfos.Remove(buffInfo);
-            buffInfo.OnLost();
+            foreach (var buffInfo in buffInfos)
+            {
+                buffInfo.OnProperty(propertyType, ref baseValue);
+            }
         }
 
         public virtual BuffInfo GetBuff(int id)
@@ -55,7 +68,7 @@ namespace Systems.Buff
     {
         private Unit.Unit _owner;
         
-        public UnitBuffProxy(Unit.Unit owner) : base()
+        public UnitBuffProxy(Unit.Unit owner, IBuffService buffService) : base(buffService)
         {
             _owner = owner;
         }

@@ -1,6 +1,6 @@
 namespace Systems.Buff
 {
-    public class IBuffServer
+    public class IBuffService
     {
         
     }

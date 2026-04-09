@@ -47,10 +47,11 @@ namespace Systems.Buff.Config
         public BuffLostType lostType;
 
         [Title("Callback Event")]
-        [InlineEditor] public BuffEvent[] onInitEvents;
+        // [InlineEditor] public BuffEvent[] onInitEvents;
         [InlineEditor] public BuffEvent[] onAttachEvents;
         [InlineEditor] public BuffEvent[] onLostEvents;
         [InlineEditor] public BuffEvent[] onTurnEvents;
         [InlineEditor] public BuffEvent[] onResetEvents;
+        [InlineEditor] public BuffEvent[] onPropertyEvents;
     }
 }

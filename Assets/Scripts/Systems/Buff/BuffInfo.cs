@@ -4,36 +4,32 @@ using UnityEngine;
 
 namespace Systems.Buff
 {
-    public enum BuffType
-    {
-        UnitBuff,
-        CellBuff
-    }
-    
     [Serializable]
     public class BuffInfo : IComparable<BuffInfo>
     {
-        private BuffData buffData;
-        private GameObject creator;
-        private Unit.Unit target;
-        private float durationCounter;
-        private float tickCounter;
-        private int currentStack;
-        private int id; // 运行时生成的id
+        private BuffData _buffData;
+        private GameObject _creator;
+        private Unit.Unit _target;
+        private float _durationCounter;
+        private float _tickCounter;
+        private int _currentStack;
+        private int _id;
+        private int _uid; // 运行时生成的id
         
-        public BuffData BuffData => buffData;
-        public GameObject Creator => creator;
-        public Unit.Unit Target => target;
-        public float DurationCounter => durationCounter;
-        public float TickCounter => tickCounter;
-        public int CurrentStack => currentStack;
-        public int Id => id;
+        public BuffData BuffData => _buffData;
+        public GameObject Creator => _creator;
+        public Unit.Unit Target => _target;
+        public float DurationCounter => _durationCounter;
+        public float TickCounter => _tickCounter;
+        public int CurrentStack => _currentStack;
+        public int Id => _id;
+        public int Uid => _uid;
 
         public BuffInfo(BuffData buffData, GameObject creator, Unit.Unit target)
         {
-            this.buffData = buffData;
-            this.creator = creator;
-            this.target = target;
+            this._buffData = buffData;
+            this._creator = creator;
+            this._target = target;
         }
 
         public int CompareTo(BuffInfo other)
@@ -51,19 +47,19 @@ namespace Systems.Buff
             return 1;
         }
 
-        public void OnInit()
-        {
-            if (buffData.onInitEvents is null) return;
-            foreach (var onInitEvent in buffData.onInitEvents)
-            {
-                onInitEvent.Trigger(this);
-            }
-        }
+        // public void OnInit()
+        // {
+        //     if (_buffData.onInitEvents is null) return;
+        //     foreach (var onInitEvent in _buffData.onInitEvents)
+        //     {
+        //         onInitEvent.Trigger(this);
+        //     }
+        // }
         
         public void OnAttach()
         {
-            if (buffData.onAttachEvents is null) return;
-            foreach (var onAttachEvent in buffData.onAttachEvents)
+            if (_buffData.onAttachEvents is null) return;
+            foreach (var onAttachEvent in _buffData.onAttachEvents)
             {
                 onAttachEvent.Trigger(this);
             }
@@ -71,8 +67,8 @@ namespace Systems.Buff
         
         public void OnLost()
         {
-            if (buffData.onLostEvents is null) return;
-            foreach (var onLostEvent in buffData.onLostEvents)
+            if (_buffData.onLostEvents is null) return;
+            foreach (var onLostEvent in _buffData.onLostEvents)
             {
                 onLostEvent.Trigger(this);
             }
@@ -80,8 +76,8 @@ namespace Systems.Buff
         
         public void OnTurn()
         {
-            if (buffData.onTurnEvents is null) return;
-            foreach (var onTurnEvent in buffData.onTurnEvents)
+            if (_buffData.onTurnEvents is null) return;
+            foreach (var onTurnEvent in _buffData.onTurnEvents)
             {
                 onTurnEvent.Trigger(this);
             }
@@ -89,10 +85,20 @@ namespace Systems.Buff
 
         public void OnReset()
         {
-            if (buffData.onResetEvents is null) return;
-            foreach (var onResetEvent in buffData.onResetEvents)
+            if (_buffData.onResetEvents is null) return;
+            foreach (var onResetEvent in _buffData.onResetEvents)
             {
                 onResetEvent.Trigger(this);
+            }
+        }
+
+        public void OnProperty<T>(PropertyType propertyType, ref T baseValue)
+        {
+            if (_buffData.onTurnEvents is null) return;
+            foreach (var onTurnEvent in _buffData.onPropertyEvents)
+            {
+                if (onTurnEvent.propertyType == propertyType)
+                    onTurnEvent.Trigger(this);
             }
         }
     }

@@ -7,6 +7,7 @@ using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
+using Systems.Buff;
 using Systems.Equipment;
 using Systems.Equipment.Config;
 using Systems.Turn;
@@ -21,7 +22,7 @@ namespace Systems.Unit
 	}
 
 	[Serializable]
-	public class Unit : ITurnUnit, IEquipable
+	public class Unit : ITurnUnit, IEquipable, IBuffAble
 	{
 		[TitleGroup("Identity")]
 		public string id;		// id for runtime instance
@@ -283,6 +284,12 @@ namespace Systems.Unit
             CurrentEquipment = _currentEquipment == MainWeapon ? SecondaryWeapon : MainWeapon;
             TriggerInfoChanged();
         }
+        
+        #endregion
+
+        #region IBuffable
+        
+        public BuffProxy BuffProxy { get; }
         
         #endregion
 	}
