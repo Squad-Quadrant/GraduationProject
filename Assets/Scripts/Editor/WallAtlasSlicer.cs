@@ -18,8 +18,8 @@ namespace Editor
 		[SerializeField] private List<Texture2D> rightAtlases = new();
 		[SerializeField] private float worldMinX;
 		[SerializeField] private float worldMinY;
-		[SerializeField] private int overhangTop = 200;
-		[SerializeField] private int overhangDown = 10;
+		[SerializeField] private int overhangTop = 700;
+		[SerializeField] private int overhangDown = 50;
 		[SerializeField] private int ppu = 400;
 
 		private SerializedObject _serializedSelf;
@@ -65,7 +65,7 @@ namespace Editor
 				PasteWorldMinFromClipboard();
 			EditorGUILayout.EndHorizontal();
 
-			overhangTop = EditorGUILayout.IntSlider("Overhang Top (px)", overhangTop, 0, 400);
+			overhangTop = EditorGUILayout.IntSlider("Overhang Top (px)", overhangTop, 0, 1000);
 			overhangDown = EditorGUILayout.IntSlider("Overhang Down (px)", overhangDown, 0, 100);
 			ppu = EditorGUILayout.IntField("PPU", ppu);
 
@@ -166,7 +166,11 @@ namespace Editor
                 var atlas = atlases[atlasIdx];
                 if (!atlas) continue;
 
-                bool wasReadable = EnsureReadable(atlas, true);
+                string atlasPath = AssetDatabase.GetAssetPath(atlas);
+                var (wasReadable, wasMaxSize) = EnsureImportSettings(atlas);
+
+                atlas = AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath);
+                atlases[atlasIdx] = atlas;
 
                 var slicesForThisAtlas = new List<WallSliceData>();
                 foreach (var wall in allWalls
@@ -177,9 +181,6 @@ namespace Editor
 	                claimed.Add(wall.WallKey);
                 }
 
-                if (!wasReadable)
-                    EnsureReadable(atlas, false);
-
                 if (slicesForThisAtlas.Count == 0)
                 {
                     Debug.Log($"[WallAtlasSlicer] Atlas '{atlas.name}' has no detectable {sideLabel} walls.");
@@ -188,6 +189,7 @@ namespace Editor
 
                 ApplySliceMetadata(atlas, slicesForThisAtlas, nameToKey, atlasIdx);
 
+                RestoreImportSettings(atlas, wasReadable, wasMaxSize);
                 Debug.Log($"[WallAtlasSlicer] Atlas '{atlas.name}': detected {slicesForThisAtlas.Count} {sideLabel} walls.");
             }
 
@@ -230,18 +232,34 @@ namespace Editor
             return false;
         }
 
-        private static bool EnsureReadable(Texture2D texture, bool readable)
+        private static (bool wasReadable, int wasMaxSize) EnsureImportSettings(Texture2D texture)
         {
-            string path = AssetDatabase.GetAssetPath(texture);
-            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-            if (!importer) return readable;
+	        string path = AssetDatabase.GetAssetPath(texture);
+	        var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+	        if (!importer) return (true, 8192);
 
-            bool wasReadable = importer.isReadable;
-            if (wasReadable == readable) return wasReadable;
+	        bool wasReadable = importer.isReadable;
+	        int wasMaxSize = importer.maxTextureSize;
+	        bool needReimport = false;
 
-            importer.isReadable = readable;
-            importer.SaveAndReimport();
-            return wasReadable;
+	        if (!wasReadable)   { importer.isReadable = true;       needReimport = true; }
+	        if (wasMaxSize < 16384) { importer.maxTextureSize = 16384; needReimport = true; }
+
+	        if (needReimport) importer.SaveAndReimport();
+	        return (wasReadable, wasMaxSize);
+        }
+
+        private static void RestoreImportSettings(Texture2D texture, bool wasReadable, int wasMaxSize)
+        {
+	        string path = AssetDatabase.GetAssetPath(texture);
+	        var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+	        if (!importer) return;
+
+	        bool needReimport = false;
+	        if (importer.isReadable != wasReadable)       { importer.isReadable = wasReadable;       needReimport = true; }
+	        if (importer.maxTextureSize != wasMaxSize) { importer.maxTextureSize = wasMaxSize; needReimport = true; }
+
+	        if (needReimport) importer.SaveAndReimport();
         }
 
         private void ApplySliceMetadata(

@@ -16,8 +16,8 @@ MonoBehaviour:
   editedSize: {x: 20, y: 20}
   mapName: Level 1
   size: {x: 20, y: 20}
-  groundSprite: {fileID: 7306260, guid: c419b00e7a48ebd45a0b62a2088c8afa, type: 3}
-  wallViewPrefab: {fileID: 2596705348162793201, guid: c8461f39f4439d04fa2128eb13c49635, type: 3}
+  groundSprite: {fileID: 1381947548, guid: ef00bed11173aa34790c2e7de5112eab, type: 3}
+  wallViewPrefab: {fileID: 3890425844443005889, guid: c8461f39f4439d04fa2128eb13c49635, type: 3}
   regions:
   - regionId: 0
     regionName: "\u6237\u5916"
