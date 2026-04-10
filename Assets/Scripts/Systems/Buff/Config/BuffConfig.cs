@@ -9,9 +9,12 @@ namespace Systems.Buff.Config
     /// </summary>
     public enum BuffAttachType
     {
-        Override,   // 覆写
-        Add,        // 增加层数，时间叠加
-        Keep        // 无法叠加
+        [InspectorName("增加层数")]
+        Add,
+        [InspectorName("重置时间")]
+        Override,
+        [InspectorName("无法叠加")]
+        Keep
     }
 
     /// <summary>
@@ -19,8 +22,10 @@ namespace Systems.Buff.Config
     /// </summary>
     public enum BuffLostType
     {
-        Reduce,     // 减少一层
-        Clear       // 全部移除
+        [InspectorName("减少一层")]
+        Reduce,
+        [InspectorName("全部清除")]
+        Clear
     }
 
     [Configurable("Buff/BuffData")]
@@ -28,19 +33,18 @@ namespace Systems.Buff.Config
     public class BuffData : ScriptableObject
     {
         [Title("Base Info")]
-        public int id;
+        public BuffType buffType;
         public string buffName;
         public string description;
         public Sprite icon;
-        public int priority;
         public int maxStack;
         public string[] tags;
         public bool showInUI;
 
         [Title("Time Info")]
-        public bool willLastForever;
-        public float durationTime; // 大于等于10000则认为持续时间无限
-        public float tickTime;
+        // public bool willLastForever;
+        public int durationTurn = -1; // 大于等于10000则认为持续时间无限
+        // public float tickTime;
 
         [Title("Update Type")]
         public BuffAttachType attachType;
@@ -48,10 +52,10 @@ namespace Systems.Buff.Config
 
         [Title("Callback Event")]
         // [InlineEditor] public BuffEvent[] onInitEvents;
-        [InlineEditor] public BuffEvent[] onAttachEvents;
-        [InlineEditor] public BuffEvent[] onLostEvents;
-        [InlineEditor] public BuffEvent[] onTurnEvents;
-        [InlineEditor] public BuffEvent[] onResetEvents;
-        [InlineEditor] public BuffInfluence[] propertyInfluences;
+        [InlineEditor] public BuffEvent[] onAttachEvents; // 附加buff时调用
+        [InlineEditor] public BuffEvent[] onLostEvents; // 移除buff时调用
+        [InlineEditor] public BuffEvent[] onTurnEvents; // 每回合调用
+        [InlineEditor] public BuffEvent[] onResetEvents; // 重制时调用
+        [InlineEditor] public BuffInfluence[] propertyInfluences; // 属性影响
     }
 }

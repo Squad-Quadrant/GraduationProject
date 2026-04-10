@@ -16,9 +16,9 @@ namespace Systems.Buff
             BuffProxy.Attach(info);
         }
 
-        public void LostBuff(BuffInfo info)
-        {
-            BuffProxy.Lost(info);
-        }
+        // public void LostBuff(BuffInfo info)
+        // {
+        //     BuffProxy.Lost(info);
+        // }
     }
 }

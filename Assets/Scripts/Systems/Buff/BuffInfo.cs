@@ -1,50 +1,51 @@
 ﻿using System;
 using Systems.Buff.Config;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Systems.Buff
 {
+    public enum BuffType
+    {
+        Fracture,
+        Toxicosis,
+        Blind
+    }
+    
     [Serializable]
-    public class BuffInfo : IComparable<BuffInfo>
+    public class BuffInfo
     {
         private BuffData _buffData;
-        private MonoBehaviour _creator;
+        private Object _creator;
         private IBuffAble _target;
-        private float _durationCounter;
-        private float _tickCounter;
+        private int _durationCounter;
         private int _currentStack;
-        private int _id;
         private int _uid; // 运行时生成的id
         
         public BuffData BuffData => _buffData;
-        public MonoBehaviour Creator => _creator;
+        public Object Creator => _creator;
         public IBuffAble Target => _target;
         public float DurationCounter => _durationCounter;
-        public float TickCounter => _tickCounter;
         public int CurrentStack => _currentStack;
-        public int Id => _id;
         public int Uid => _uid;
+        
+        public BuffType BuffType => BuffData.buffType;
+        public BuffAttachType AttachType => BuffData.attachType;
+        public BuffLostType LostType => BuffData.lostType;
+        public int MaxStack => BuffData.maxStack;
+        public int DurationTurn => BuffData.durationTurn;
 
-        public BuffInfo(BuffData buffData, MonoBehaviour creator, Unit.Unit target)
+        public BuffInfo(BuffData buffData, Object creator, IBuffAble target, int uid)
         {
-            this._buffData = buffData;
-            this._creator = creator;
-            this._target = target;
+            _buffData = buffData;
+            _creator = creator;
+            _target = target;
+            _uid = uid;
         }
 
-        public int CompareTo(BuffInfo other)
+        public bool Mergeable()
         {
-            // if (ReferenceEquals(this, other)) return 0;
-            //
-            // if (other == null) return 1;
-            // if (buffData == null) return other.buffData == null ? 0 : -1;
-            // if (other.buffData == null) return 1;
-            //
-            // if (target == other.target)
-            //     return buffData.id.CompareTo(other.buffData.id);
-            // else return target.ID > other.target.ID ? 1 : -1;
-            // todo: 适配我们游戏的Buff规则
-            return 1;
+            return AttachType != BuffAttachType.Keep;
         }
 
         // public void OnInit()
@@ -55,6 +56,22 @@ namespace Systems.Buff
         //         onInitEvent.Trigger(this);
         //     }
         // }
+
+        public void Merge(int stackNum)
+        {
+            if (AttachType == BuffAttachType.Add)
+            {
+                _currentStack += stackNum;
+                _currentStack = _currentStack > MaxStack ? MaxStack : _currentStack;
+            }
+
+            if (AttachType == BuffAttachType.Override)
+            {
+                _durationCounter = 0;
+            }
+            
+            OnAttach();
+        }
         
         public void OnAttach()
         {

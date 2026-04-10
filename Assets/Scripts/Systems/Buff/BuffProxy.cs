@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Android;
 
 namespace Systems.Buff
 {
@@ -15,25 +16,18 @@ namespace Systems.Buff
             this.buffService = buffService;
         }
         
-        // public virtual void Init()
+        public virtual void Attach(BuffType buffType)
+        {
+            // todo: 
+            // buffInfos.Add(buffInfo);
+            // buffInfo.OnAttach();
+        }
+        
+        // public virtual void Lost(BuffInfo buffInfo)
         // {
-        //     foreach (var buffInfo in buffInfos)
-        //     {
-        //         buffInfo.OnInit();
-        //     }
+        //     buffInfos.Remove(buffInfo);
+        //     buffInfo.OnLost();
         // }
-        
-        public virtual void Attach(BuffInfo buffInfo)
-        {
-            buffInfos.Add(buffInfo);
-            buffInfo.OnAttach();
-        }
-        
-        public virtual void Lost(BuffInfo buffInfo)
-        {
-            buffInfos.Remove(buffInfo);
-            buffInfo.OnLost();
-        }
         
         public virtual void Turn()
         {
@@ -59,9 +53,9 @@ namespace Systems.Buff
             }
         }
 
-        public virtual BuffInfo GetBuff(int id)
+        public virtual BuffInfo GetBuff(int uid)
         {
-            return buffInfos.FirstOrDefault(b => b.Id == id);
+            return buffInfos.FirstOrDefault(b => b.Uid == uid);
         }
     }
     
