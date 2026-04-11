@@ -1,5 +1,6 @@
 using PurpleFlowerCore;
 using Sirenix.OdinInspector;
+using Systems.Buff.Influence;
 using UnityEngine;
 
 namespace Systems.Buff.Config
@@ -26,6 +27,13 @@ namespace Systems.Buff.Config
         Reduce,
         [InspectorName("全部清除")]
         Clear
+    }
+    
+    public enum BuffType
+    {
+        Fracture,
+        Toxicosis,
+        Blind
     }
 
     [Configurable("Buff/BuffData")]

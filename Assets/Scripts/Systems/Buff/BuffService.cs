@@ -1,159 +1,93 @@
 using System;
 using System.Collections.Generic;
+using Core.Events;
+using Core.Log;
+using Data;
+using Data.Runtime.Events.Turn;
 using Systems.Buff.Config;
-using UnityEngine;
+using Systems.Unit;
+using Object = UnityEngine.Object;
 
 namespace Systems.Buff
 {
-    public class BuffService : IBuffService
+    public class BuffService : IBuffService, IDisposable
     {
         private Dictionary<IBuffAble, BuffProxy> _buffProxies = new();
-    
-        private void Update()
+        public Dictionary<IBuffAble, BuffProxy> BuffProxies => _buffProxies;
+        
+        private readonly IEventBus _eventBus;
+        private readonly DataManager _dataManager;
+        private readonly UnitService  _unitService;
+        private int _buffCount;
+
+        public BuffService(IEventBus eventBus, DataManager dataManager, UnitService unitService)
         {
-            UpdateBuffTimer();
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
+            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            this.Log("Initialized");
+            
+            _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+        }
+        
+        public void Dispose()
+        {
+            _eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+        }
+        
+        public void Register(BuffProxy buffProxy)
+        {
+            IBuffAble target = buffProxy.Owner;
+            if (_buffProxies.ContainsKey(target))
+            {
+                this.LogError($"BuffService already has a BuffProxy for target {target}");
+                return;
+            }
+            _buffProxies.Add(target, buffProxy);
         }
 
-        private void Turn()
+        public BuffInfo CreateBuffInfo(BuffType type, IBuffAble target, Object creator)
         {
-            
-        }
-    
-        private void UpdateBuffTimer()
-        {
-            foreach (var buffInfo in _buffSet)
+            var data = _dataManager.GetBuffData(type);
+            if (data == null)
             {
-                // Update Tick Timer
-                if (buffInfo.buffData.onTurnEvents != null)
-                {
-                    if (buffInfo.tickCounter < 0)
-                    {
-                        buffInfo.tickCounter = buffInfo.buffData.tickTime;
-                        buffInfo.OnTurn();
-                    }
-                    else
-                        buffInfo.tickCounter -= Time.deltaTime;
-                }
-    
-                // Update Duration Timer
-                if (buffInfo.durationCounter < 0)
-                    _buffBufferSet.Add(buffInfo);
-                else
-                {
-                    if (buffInfo.durationCounter<10000)
-                        buffInfo.durationCounter -= Time.deltaTime;
-                }
-            }
-    
-            foreach (var buffInfo in _buffBufferSet)
-                LostBuff(buffInfo);
-            _buffBufferSet.Clear();
-        }
-    
-        private BuffInfo GetBuff(BuffInfo other)
-        {
-            // foreach (var buff in _buffSet)
-            // {
-            //     if (buff.buffData.id == other.buffData.id && buff.target.ID == other.target.ID)
-            //         return buff;
-            // }
-            // todo: 
-            
-            return null;
-        }
-    
-        #region Public Methods
-    
-        public void AttachBuff(BuffInfo buffInfo)
-        {
-            if (!_initializedBuffSet.Contains(buffInfo))
-            {
-                buffInfo.OnInit();
-                _initializedBuffSet.Add(buffInfo);
+                this.LogError($"BuffService.CreateBuffInfo: buffType {type} not exist");
+                return null;
             }
             
-            //if (_buffSet.Contains(buffInfo))
-            if (_buffSet.Contains(buffInfo)&& buffInfo.buffData.attachType != BuffAttachType.Keep)
-            {
-                // buff存在
-                var buff = GetBuff(buffInfo);
-                if (buff.currentStack < buff.buffData.maxStack)
-                {
-                    // 当前buff层数小于最大层数
-                    buff.currentStack++;
-                    buff.durationCounter = buff.buffData.attachType switch
-                    {
-                        BuffAttachType.Add => buff.durationCounter + buff.buffData.durationTime,
-                        BuffAttachType.Override => buff.buffData.durationTime,
-                        _ => buff.durationCounter
-                    };
-                    
-                    buff.OnAttach();
-                    OnAttachBuff?.Invoke(buffInfo);
-                    ResetBuff();
-                }
-                else
-                {
-                    // buff已到最大层数
-                    buff.durationCounter = buff.buffData.attachType switch
-                    {
-                        BuffAttachType.Add => buff.buffData.durationTime * buff.buffData.maxStack,
-                        BuffAttachType.Override => buff.buffData.durationTime,
-                        _ => buff.durationCounter
-                    };
-                }
-    
-                return;
-            }
-            // buff不存在
-            buffInfo.durationCounter = buffInfo.buffData.durationTime;
-            buffInfo.tickCounter = buffInfo.buffData.tickTime;
-            buffInfo.OnAttach();
-            OnAttachBuff?.Invoke(buffInfo);
-            _buffSet.Add(buffInfo);
+            _buffCount++;
+            BuffInfo info = new(data, creator, target, _buffCount);
+            return info;
         }
     
-        public void LostBuff(BuffInfo buffInfo)
+        // public void AttachBuff(BuffType buffType, IBuffAble target, Object creator)
+        // {
+        //     
+        // }
+        //
+        // public void LostBuff(BuffInfo buffInfo)
+        // {
+        //     
+        // }
+    
+        public void ResetBuff()
         {
-            if (!_buffSet.Contains(buffInfo))
-                return;
-            var buff = GetBuff(buffInfo);
-            switch (buff.buffData.lostType)
+            foreach (var buff in _buffProxies)
             {
-                case BuffLostType.Reduce:
-                    buff.currentStack--;
-                    if (buff.currentStack < 0)
-                    {
-                        _buffSet.Remove(buff);
-                        buff.OnLost();
-                        OnLostBuff?.Invoke(buff);
-                    }
-                    else
-                        buff.durationCounter = buff.buffData.durationTime;
-                    break;
-                case BuffLostType.Clear:
-                    buff.OnLost();
-                    OnLostBuff?.Invoke(buff);
-                    _buffSet.Remove(buff);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                buff.Value.Reset();
             }
-    
-            ResetBuff();
         }
-    
-        #endregion
-    
-        private void ResetBuff()
+
+        private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-            OnReset?.Invoke();
-            foreach (var buff in _buffSet)
+            var unit = _unitService.GetUnit(e.UnitId);
+            if (_buffProxies.ContainsKey(unit))
             {
-                for (int i = -1; i < buff.currentStack; i++)
-                {
-                    buff.OnReset();
-                }
+                _buffProxies[unit].Turn();
+            }
+            else
+            {
+                this.LogError($"BuffService.OnUnitTurnStarted: no BuffProxy found for unit {unit}");
             }
         }
     }

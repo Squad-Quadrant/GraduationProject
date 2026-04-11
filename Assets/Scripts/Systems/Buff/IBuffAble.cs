@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using Systems.Buff.Config;
+using Object = UnityEngine.Object;
 
 namespace Systems.Buff
 {
@@ -11,14 +12,14 @@ namespace Systems.Buff
             return BuffProxy.GetBuff(id);
         }
 
-        public void AttachBuff(BuffInfo info)
+        public void AttachBuff(BuffType type, Object creator)
         {
-            BuffProxy.Attach(info);
+            BuffProxy.Attach(type, creator);
         }
 
-        // public void LostBuff(BuffInfo info)
-        // {
-        //     BuffProxy.Lost(info);
-        // }
+        public void LostBuff(BuffInfo info)
+        {
+            BuffProxy.Lost(info);
+        }
     }
 }

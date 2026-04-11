@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Systems.Buff.Config;
 using Systems.Equipment.Config;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Data
     public class DataManager : MonoBehaviour
     {
         [SerializeField] private List<EquipmentConfig> equipmentConfigs;
+        [SerializeField] private List<BuffData> buffs;
 
         private readonly Dictionary<string, int[]> _unitEquipmentData = new(); // 局外调DataManager填充数据
 
@@ -33,6 +35,10 @@ namespace Data
             }
             return res;
         }
-        
+
+        public BuffData GetBuffData(BuffType buffType)
+        {
+            return buffs.Find(b => b.buffType == buffType);
+        }
     }
 }

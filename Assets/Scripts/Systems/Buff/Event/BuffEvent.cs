@@ -15,7 +15,10 @@ namespace Systems.Buff.Config
         public override void Trigger(BuffInfo buffInfo)
         {
             unit = (Unit.Unit)buffInfo.Target;
+            Trigger(buffInfo, unit);
         }
-        
+
+        protected abstract void Trigger(BuffInfo buffInfo, Unit.Unit unit);
+
     }
 }

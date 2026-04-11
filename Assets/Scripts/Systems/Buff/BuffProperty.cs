@@ -13,33 +13,38 @@ namespace Systems.Buff
         Count
     }
 
-    public class BuffProperty<T> where T : struct, IConvertible
+    public abstract class BuffProperty
     {
-        private PropertyType _type;
-        private T _baseValue;
-        private IBuffAble _owner;
+        protected PropertyType type;
+        protected IBuffAble owner;
         
-        public PropertyType  Type => _type;
+        public PropertyType  Type => type;
+        public IBuffAble Owner => owner;
+    }
+
+    public class BuffProperty<T> : BuffProperty where T : struct, IConvertible
+    {
+        private T _baseValue;
+        
         public T BaseValue => _baseValue;
-        public IBuffAble Owner => _owner;
         
         public BuffProperty(PropertyType propertyType, T baseValue, IBuffAble owner)
         {
-            _type = propertyType;
+            type = propertyType;
             _baseValue = baseValue;
-            _owner = owner;
+            this.owner = owner;
         }
 
-        public T Value 
+        public T buffValue; // BuffInfluence中对该值处理
+
+        public T Value
         {
             get
             {
-                var copy = _baseValue;
-                _owner.BuffProxy.Property(_type, ref copy);
-                return copy;
+                buffValue = _baseValue;
+                owner.BuffProxy.ExecutePropertyInfluence(this);
+                return buffValue;
             }
-
-            set => _baseValue = value;
         }
 
         public static implicit operator T(BuffProperty<T> property)
