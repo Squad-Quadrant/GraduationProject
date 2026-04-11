@@ -18,6 +18,8 @@ namespace Systems.Interaction.States
 		private Action<EscInputEvent> _onEsc;
 		private Action<PointerHoverEvent> _onPointerHover;
 
+		private IReadOnlyList<Vector2Int> _validTargetCells;
+
         public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
 		public override void OnEnter(InteractionContext ctx)
@@ -33,11 +35,11 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			CalculateReachableTarget(ctx);
+			_validTargetCells = CalculateAttackableTarget(ctx).Select(u => u.position).ToList();
             
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Attack,
-				ctx.validTargetCells,
+				_validTargetCells,
 				origin: ctx.selectedUnit.position,
 				sourceUnitId: ctx.selectedUnit.id));
 
@@ -68,6 +70,7 @@ namespace Systems.Interaction.States
 			_onBack = null;
 			_onEsc = null;
 			_onPointerHover = null;
+			_validTargetCells = null;
 
 			Publish(ctx, CursorInfoEvent.Hide());
 
@@ -76,7 +79,7 @@ namespace Systems.Interaction.States
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			if (!Context.validTargetCells.Contains(e.CellPosition))
+			if (!_validTargetCells.Contains(e.CellPosition))
             {
                 this.Log($"Clicked cell {e.CellPosition} is not a valid attack target.");
                 return;
@@ -112,9 +115,8 @@ namespace Systems.Interaction.States
 
 			if (e.HoveredUnitId != null
 			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out var target)
-			    && Context.validTargetCells.Contains(cell))
+			    && _validTargetCells.Contains(cell))
 			{
-				// todo: this is duplicating a lot of logic from the damage preview in the combat forecast panel. We should unify this logic in the future to avoid inconsistencies.
 				var damageContext = Context.DamageService.GetSimulatedDamage(
 					new DamageTriggeringInfo(
 						DamageType.Bullet,
@@ -124,17 +126,17 @@ namespace Systems.Interaction.States
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 
-				Publish(Context, CursorInfoEvent.ForAttack(
-					cell, e.WorldPosition, terrainName,
-					target.name, target.CurrentHp, target.maxHp, hitPercent));
+				Publish(Context, CursorInfoEvent.ForAttack(cell, e.WorldPosition, terrainName, target.name, target.CurrentHp, target.maxHp, hitPercent));
+				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent));
 			}
 			else
 			{
 				Publish(Context, CursorInfoEvent.ForTerrain(cell, e.WorldPosition, terrainName));
+				Publish(Context, DisplayHitPercentEvent.Invalid());
 			}
 		}
 
-		private void CalculateReachableTarget(InteractionContext ctx)
+		private List<Unit.Unit> CalculateAttackableTarget(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
 
@@ -148,12 +150,11 @@ namespace Systems.Interaction.States
             var visionService = ctx.VisionService;
             var visibleCells = visionService.CalculateVisibleCells(unit.position, unit.visionRange);
             List<Unit.Unit> enemyUnits = reachableEnemyUnits.Where(enemyUnit => visibleCells.Contains(enemyUnit.position)).ToList();
-
-            ctx.validTargetCells.Clear();
-            ctx.validTargetCells = enemyUnits.Select(u => u.position).ToList();
             
             this.Log($"Found {enemyUnits.Count} valid targets for attack.");
-        }
+
+            return enemyUnits;
+		}
 
 		private void CancelPreview()
 		{

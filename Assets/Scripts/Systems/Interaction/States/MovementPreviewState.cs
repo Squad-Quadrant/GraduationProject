@@ -5,10 +5,8 @@ using Core.Log;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
-using Data.Runtime.Events.Vision;
 using Systems.PathFinding;
 using Systems.PathFinding.MovementSimulation;
-using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -19,6 +17,8 @@ namespace Systems.Interaction.States
 		private Action<PointerHoverEvent> _onPointerHover;
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
+
+		private ReachableAreaResult _reachableArea;
 
 		public MovementPreviewState() : base(InteractionStates.MovementPreview) { }
 
@@ -35,21 +35,19 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			var reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisibleCells);
-			var stoppableCells = reachableArea.GetStoppableCellsList();
-			var costMap = reachableArea.CostMap;
-
-			// Cache
-			ctx.LastReachableArea = reachableArea;
-			ctx.validTargetCells.Clear();
-			ctx.validTargetCells.AddRange(stoppableCells);
+			_reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisibleCells);
+			var stoppableCells = _reachableArea.GetStoppableCellsList();
+			var apMap = _reachableArea.CostMap
+				.ToDictionary(
+					cellCost => cellCost.Key,
+					cellCost => ctx.selectedUnit.CalculateMovementApCost(cellCost.Value));
 
 			this.LogDebug($"Valid target cells: {string.Join(", ", stoppableCells)}");
 
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
 				stoppableCells,
-				costMap,
+				apMap,
 				ctx.selectedUnit.position,
 				ctx.selectedUnit.id));
 
@@ -80,13 +78,14 @@ namespace Systems.Interaction.States
 			_onPointerHover = null;
 			_onBack = null;
 			_onEsc = null;
+			_reachableArea = null;
 
 			base.OnExit(ctx);
 		}
 
 		private void OnCellClicked(CellClickedEvent e)
 		{
-			if (!Context.LastReachableArea.CanStopAt(e.CellPosition))
+			if (!_reachableArea.CanStopAt(e.CellPosition))
 			{
 				this.Log($"Invalid target: {e.CellPosition}");
 				// todo: Could play error sound or show feedback
@@ -106,8 +105,8 @@ namespace Systems.Interaction.States
 			}
 
 			var targetCell = e.CellPosition.Value;
-			var pathResult = GetPathFromCache(targetCell);
-			var isValid = Context.LastReachableArea?.CanStopAt(targetCell) ?? false;
+			var pathResult = GetPath(targetCell);
+			var isValid = _reachableArea?.CanStopAt(targetCell) ?? false;
 
 			Publish(Context, new PathPreviewEvent(
 				pathResult.Found ? pathResult.Path.ToList() : new List<Vector2Int>(),
@@ -157,8 +156,7 @@ namespace Systems.Interaction.States
 				visibleCells: visibleCells
 			);
 
-            int ap = selectedUnit.CurrentAp > 2 ? 2 : selectedUnit.CurrentAp;
-			var maxMovementPoints = selectedUnit.moveRange * ap;
+			var maxMovementPoints = selectedUnit.moveRange * selectedUnit.RemainingMovementAp;
 
 			var reachableArea = pathfinding.GetReachableArea(
 				selectedUnit.position,
@@ -172,11 +170,10 @@ namespace Systems.Interaction.States
 			return reachableArea;
 		}
 
-		private PathResult GetPathFromCache(Vector2Int target)
+		private PathResult GetPath(Vector2Int target)
 		{
-			var cachedArea = Context.LastReachableArea;
-
-			if (cachedArea != null) return cachedArea.GetPathTo(target);
+			if (_reachableArea != null)
+				return _reachableArea.GetPathTo(target);
 
 			this.LogWarning("No cached reachable area, cannot get path");
 			return PathResult.Failure();
@@ -194,7 +191,7 @@ namespace Systems.Interaction.States
 
 			Context.targetCell = targetCell;
 
-			var fullPathResult = GetPathFromCache(targetCell);
+			var fullPathResult = GetPath(targetCell);
 			if (!fullPathResult.Found)
 			{
 				this.LogError($"No path found to {targetCell}");
@@ -226,7 +223,7 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			int pathCost = Context.LastReachableArea.GetCostTo(actualDestination);
+			int pathCost = _reachableArea.GetCostTo(actualDestination);
 			int apCost = unit.CalculateMovementApCost(pathCost);
 
 			// Create and queue move command

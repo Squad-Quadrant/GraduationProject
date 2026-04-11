@@ -28,6 +28,7 @@ namespace Systems.Unit
 		public int maxHp = 100;
 		public int speed = 10;
 		public int moveRange = 2; // 每消耗一个行动点可以移动的格子数量
+		public int maxMovementAp = 2;
 		public int actionPoints = 2; // 每回合可用的行动点数
         public int visionRange = 4;
 		public EUnitFaction faction = EUnitFaction.Neutral;

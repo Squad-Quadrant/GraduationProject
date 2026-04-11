@@ -256,3 +256,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.Map.Wall.WallViewManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

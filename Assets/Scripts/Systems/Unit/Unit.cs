@@ -34,6 +34,7 @@ namespace Systems.Unit
 		public int maxHp;
 		public int speed;
 		public int moveRange;
+		public int maxMovementAp;
 		public int maxAp;
         public int visionRange;
 		public EUnitFaction faction;
@@ -50,56 +51,56 @@ namespace Systems.Unit
 		public Sprite icon;
 
 		[TitleGroup("Runtime")]
-		protected int currentHp;
-        protected int currentDefense;
-        protected int currentSan;
-		protected int currentAp;
-            
+		private int _currentHp;
+        private int _currentDefense;
+        private int _currentSan;
+		private int _currentAp;
+		public int apSpentOnMovement;
         public Vector2Int position;
-        public bool IsStunned;
+        public bool isStunned;
         
         public int CurrentHp
         {
-            get => currentHp;
+            get => _currentHp;
             set
             {
                 TriggerInfoChanged();
-                currentHp = value;
+                _currentHp = value;
             }
         }
         
         public int CurrentDefense
         {
-            get => currentDefense;
+            get => _currentDefense;
             set
             {
                 TriggerInfoChanged();
-                currentDefense = value;
+                _currentDefense = value;
             }
         }
 
         public int CurrentSan
         {
-            get => currentSan;
+            get => _currentSan;
             set
             {
                 TriggerInfoChanged();
-                currentSan = value;
+                _currentSan = value;
             }
         }
         
         public int CurrentAp
         {
-            get => currentAp;
+            get => _currentAp;
             set
             {
                 TriggerInfoChanged();
-                currentAp = value;
+                _currentAp = value;
             }
         }
 
 		public bool IsAlive => CurrentHp > 0;
-		public bool CanAct => IsAlive && !IsStunned;
+		public bool CanAct => IsAlive && !isStunned;
 		public bool HasAp => CurrentAp > 0;
 
         public bool HasAmmo
@@ -112,7 +113,9 @@ namespace Systems.Unit
             }
         }
 
-        protected IEventBus _eventBus;
+        public int RemainingMovementAp => Mathf.Min(CurrentAp, maxMovementAp - apSpentOnMovement);
+
+        protected IEventBus EventBus;
 		
 		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition, IEventBus eventBus)
 		{
@@ -126,6 +129,7 @@ namespace Systems.Unit
 				maxHp = config.maxHp,
 				speed = config.speed,
 				moveRange = config.moveRange,
+				maxMovementAp = config.maxMovementAp,
 				maxAp = config.actionPoints,
                 visionRange = config.visionRange,
 				faction = config.faction,
@@ -140,24 +144,26 @@ namespace Systems.Unit
 				defaultWeaponSkin = config.defaultWeaponSkin,
 				icon = config.icon,
 
-				CurrentHp = config.maxHp,
-                CurrentDefense = config.defense,
-                CurrentSan = config.san,
+				_currentHp = config.maxHp,
+                _currentDefense = config.defense,
+                _currentSan = config.san,
+                _currentAp = config.actionPoints,
 				position = startPosition,
-				IsStunned = false,
-				CurrentAp = config.actionPoints,
+				isStunned = false,
                 
-                _eventBus = eventBus
+                EventBus = eventBus
 			};
 		}
 
 		public List<ActionAbility> GetAvailableActions()
 		{
-			var actions = new List<ActionAbility>();
-            actions.Add(new ActionAbility(EActionType.Move, HasAp));
-            actions.Add(new ActionAbility(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo));
-			actions.Add(new ActionAbility(EActionType.Wait));
-            // todo: 使用道具
+			var actions = new List<ActionAbility>
+			{
+				new(EActionType.Move, RemainingMovementAp > 0),
+				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo),
+				new(EActionType.Wait)
+			};
+			// todo: 使用道具
             if (!TacticalItem0.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
             if (!TacticalItem1.IsNullOrEmpty())
@@ -188,7 +194,7 @@ namespace Systems.Unit
 
         public void TriggerInfoChanged()
         {
-            _eventBus?.Publish(new UnitInfoChangedEvent(this));
+            EventBus.Publish(new UnitInfoChangedEvent(this));
         }
 
 		public override string ToString() =>
@@ -200,7 +206,11 @@ namespace Systems.Unit
 		int ITurnUnit.Speed => speed;
 		bool ITurnUnit.CanAct => CanAct;
 		public int ActionPriority { get; set; }
-		void ITurnUnit.OnTurnStart() => CurrentAp = maxAp;
+		void ITurnUnit.OnTurnStart()
+		{
+			CurrentAp = maxAp;
+			apSpentOnMovement = 0;
+		}
 
 		#endregion
 
@@ -221,7 +231,7 @@ namespace Systems.Unit
             set
             {
                 _currentEquipment = value;
-                _eventBus.Publish(new UnitInfoChangedEvent(this));
+                EventBus.Publish(new UnitInfoChangedEvent(this));
             }
         }
         
@@ -238,6 +248,7 @@ namespace Systems.Unit
         public EquipmentContainer TacticalItem0 { get; set; }
         public EquipmentContainer TacticalItem1 { get; set; }
         public EquipmentContainer TacticalItem2 { get; set; }
+
         public List<EquipmentContainer> TacticalItemInfos => new()
         {
             TacticalItem0,
@@ -264,19 +275,14 @@ namespace Systems.Unit
 
         public EquipmentContainer GetEquipment(EActionType actionType)
         {
-            switch (actionType)
-            {
-                case EActionType.Attack:
-                    return CurrentEquipment;
-                case EActionType.TacticalItem0:
-                    return TacticalItem0;
-                case EActionType.TacticalItem1:
-                    return TacticalItem0;
-                case EActionType.TacticalItem2:
-                    return TacticalItem0;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
-            }
+	        return actionType switch
+	        {
+		        EActionType.Attack => CurrentEquipment,
+		        EActionType.TacticalItem0 => TacticalItem0,
+		        EActionType.TacticalItem1 => TacticalItem0,
+		        EActionType.TacticalItem2 => TacticalItem0,
+		        _ => throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null)
+	        };
         }
 
         public void SwitchWeapon()
@@ -296,12 +302,12 @@ namespace Systems.Unit
 
     public struct ActionAbility
     {
-        public EActionType actionType;
-        public bool isAvailable;
+        public readonly EActionType ActionType;
+        public readonly bool IsAvailable;
         public ActionAbility(EActionType actionType = EActionType.None, bool isAvailable = true)
         {
-            this.actionType = actionType;
-            this.isAvailable = isAvailable;
+            ActionType = actionType;
+            IsAvailable = isAvailable;
         }
     }
 }

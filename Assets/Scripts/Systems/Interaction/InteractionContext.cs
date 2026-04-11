@@ -43,12 +43,6 @@ namespace Systems.Interaction
 
 		public EActionType currentAction;
 
-		public List<Vector2Int> validTargetCells = new();
-
-		// public List<Vector2Int> currentPath = new();
-
-		public ReachableAreaResult LastReachableArea;
-
 		public HashSet<Vector2Int> VisibleCells;
 
 		public MovementSimulationResult LastSimulationResult;
@@ -78,7 +72,6 @@ namespace Systems.Interaction
 			selectedUnit = null;
 			targetCell = InvalidCell;
 			targetUnit = null;
-			validTargetCells.Clear();
 		}
 
 		public void ClearTarget()

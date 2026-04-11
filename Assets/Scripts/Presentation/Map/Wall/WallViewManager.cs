@@ -166,8 +166,8 @@ namespace Presentation.Map.Wall
 
         [TitleGroup("Editor Tools")]
         [SerializeField, LabelText("Prefab Save Path")]
-        [FolderPath(ParentFolder = "Assets/Res")]
-        private string editorPrefabFolder = "Prefabs/Map";
+        [FolderPath(ParentFolder = "Assets")]
+        private string editorPrefabFolder = "Res/Prefabs/Map";
 
         [TitleGroup("Editor Tools")]
         [Button("Generate Wall Objects", ButtonSizes.Medium), GUIColor(0.4f, 0.8f, 1f)]
