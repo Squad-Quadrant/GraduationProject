@@ -15,6 +15,7 @@ using Presentation.UI.Presenter;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Systems.AI;
+using Systems.Buff;
 using Systems.Damage;
 using Systems.GamePlay;
 using Systems.Interfaces;
@@ -154,7 +155,8 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IVisionService, VisionService>();
 			_levelContainer.Services.Register<IRegionService, RegionService>();
 			_levelContainer.Services.Register<IAIService, AIService>();
-
+			_levelContainer.Services.Register<IBuffService, BuffService>();
+			_levelContainer.Services.Resolve<IBuffService>();
 			_levelContainer.Services.RegisterInstance(interactionController);
 		}
         

@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 namespace Systems.Buff
 {
     [Serializable]
-    public abstract class BuffProxy
+    public class BuffProxy
     {
         [SerializeField]protected List<BuffInfo> buffInfos = new();
         protected readonly IBuffService buffService;
@@ -16,11 +16,11 @@ namespace Systems.Buff
         public IBuffAble Owner => owner;
         public List<BuffInfo> BuffInfos => buffInfos;
 
-        protected BuffProxy(IBuffService buffService, IBuffAble owner)
+        public BuffProxy(IBuffService buffService, IBuffAble owner)
         {
             this.buffService = buffService;
             this.owner = owner;
-            buffService.Register(this);
+            BuffPropertyInjector.Inject(owner);
         }
         
         public virtual void Attach(BuffType buffType, Object creator)
@@ -100,14 +100,14 @@ namespace Systems.Buff
             return buffInfos.Where(b => b.BuffType == type).ToList();
         }
     }
-    
-    public class UnitBuffProxy : BuffProxy
-    {
-        public Unit.Unit Owner => (Unit.Unit) owner;
-
-        public UnitBuffProxy(Unit.Unit owner, IBuffService buffService) : base(buffService, owner)
-        {
-            
-        }
-    }
+    //
+    // public class UnitBuffProxy : BuffProxy
+    // {
+    //     public Unit.Unit Owner => (Unit.Unit) owner;
+    //
+    //     public UnitBuffProxy(Unit.Unit owner, IBuffService buffService) : base(buffService, owner)
+    //     {
+    //         
+    //     }
+    // }
 }

@@ -10,23 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: BuffDataTest
+  m_Name: Fracture
   m_EditorClassIdentifier: 
-  id: 0
-  buffName: 
+  buffType: 1
+  buffName: "\u9AA8\u6298"
   description: 
   icon: {fileID: 0}
-  priority: 0
   maxStack: 0
   tags: []
-  showInUI: 0
-  willLastForever: 0
-  durationTime: 0
-  tickTime: 0
+  showInUI: 1
+  durationTurn: 2
   attachType: 0
   lostType: 0
-  onInitEvents: []
   onAttachEvents: []
   onLostEvents: []
   onTurnEvents: []
   onResetEvents: []
+  propertyInfluences:
+  - {fileID: 11400000, guid: 8ab683b4f2c5249558ebf7b76cde1947, type: 2}

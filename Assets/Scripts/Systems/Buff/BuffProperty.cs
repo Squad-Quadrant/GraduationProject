@@ -10,7 +10,8 @@ namespace Systems.Buff
         MaxHp,
         Speed,
         MaxAmmo,
-        Count
+        Count,
+        CanUseEquipment
     }
 
     public abstract class BuffProperty
@@ -20,6 +21,11 @@ namespace Systems.Buff
         
         public PropertyType  Type => type;
         public IBuffAble Owner => owner;
+
+        public void SetOwner(IBuffAble newOwner)
+        {
+            owner = newOwner;
+        }
     }
 
     public class BuffProperty<T> : BuffProperty where T : struct, IConvertible
@@ -28,11 +34,10 @@ namespace Systems.Buff
         
         public T BaseValue => _baseValue;
         
-        public BuffProperty(PropertyType propertyType, T baseValue, IBuffAble owner)
+        public BuffProperty(PropertyType propertyType, T baseValue)
         {
             type = propertyType;
             _baseValue = baseValue;
-            this.owner = owner;
         }
 
         public T buffValue; // BuffInfluence中对该值处理
@@ -51,6 +56,32 @@ namespace Systems.Buff
         {
             if (property == null) return default;
             return property.Value;
+        }
+    }
+
+    public static class BuffPropertyInjector
+    {
+        public static void Inject(IBuffAble owner)
+        {
+            if (owner == null) return;
+            var type = owner.GetType();
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            
+            foreach (var field in type.GetFields(flags))
+            {
+                if (typeof(BuffProperty).IsAssignableFrom(field.FieldType))
+                {
+                    (field.GetValue(owner) as BuffProperty)?.SetOwner(owner);
+                }
+            }
+            
+            foreach (var prop in type.GetProperties(flags))
+            {
+                if (typeof(BuffProperty).IsAssignableFrom(prop.PropertyType) && prop.CanRead)
+                {
+                    (prop.GetValue(owner) as BuffProperty)?.SetOwner(owner);
+                }
+            }
         }
     }
 }

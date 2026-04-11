@@ -31,13 +31,18 @@ namespace Systems.Buff.Config
     
     public enum BuffType
     {
+        [InspectorName("请选择类型")]
+        None,
+        [InspectorName("骨折")]
         Fracture,
+        [InspectorName("中毒")]
         Toxicosis,
+        [InspectorName("盲目")]
         Blind
     }
 
     [Configurable("Buff/BuffData")]
-    [CreateAssetMenu(fileName = "BuffData", menuName = "Game/BuffData")]
+    [CreateAssetMenu(fileName = "BuffData", menuName = "Game/Buff/BuffData")]
     public class BuffData : ScriptableObject
     {
         [Title("Base Info")]
@@ -45,7 +50,7 @@ namespace Systems.Buff.Config
         public string buffName;
         public string description;
         public Sprite icon;
-        public int maxStack;
+        public int maxStack = 1;
         public string[] tags;
         public bool showInUI;
 

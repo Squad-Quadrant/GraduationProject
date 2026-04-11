@@ -7,6 +7,7 @@ using Data;
 using Data.Config;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
+using Systems.Buff;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -15,11 +16,13 @@ namespace Systems.Unit
 	{
 		private readonly IEventBus _eventBus;
         private readonly DataManager _dataManager;
-
-		public UnitService(IEventBus eventBus, DataManager dataManager)
+        private readonly BuffService _buffService;
+        
+		public UnitService(IEventBus eventBus, DataManager dataManager, BuffService buffService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
+            _buffService = buffService ?? throw new ArgumentNullException(nameof(buffService));
 			this.Log("Initialized");
 		}
 
@@ -47,6 +50,8 @@ namespace Systems.Unit
             var equipmentConig = _dataManager.GetEquipmentConfigList(unitId);
             unit.InitEquipment(equipmentConig);
 			_units[unitId] = unit;
+			_buffService.Register(unit);
+			
 			this.Log($"Created unit: {unit}");
 			_eventBus.Publish(new UnitCreatedEvent(unit));
 			return unit;

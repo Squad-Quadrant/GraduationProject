@@ -5,7 +5,7 @@ namespace Systems.Buff
 {
     public interface IBuffAble
     {
-        public BuffProxy BuffProxy { get; }
+        public BuffProxy BuffProxy { get; set; }
 
         public BuffInfo GetBuffInfo(int id)
         {

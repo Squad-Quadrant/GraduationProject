@@ -28,22 +28,47 @@ namespace Systems.Buff
             this.Log("Initialized");
             
             _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+            // _eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
+            // _eventBus.Subscribe<UnitDestroyedEvent>(ONUnitDestroyed);
         }
         
         public void Dispose()
         {
             _eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+            // _eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
+            // _eventBus.Unsubscribe<UnitDestroyedEvent>(ONUnitDestroyed);
         }
-        
-        public void Register(BuffProxy buffProxy)
+
+        public void Register(IBuffAble target)
         {
-            IBuffAble target = buffProxy.Owner;
             if (_buffProxies.ContainsKey(target))
             {
                 this.LogError($"BuffService already has a BuffProxy for target {target}");
                 return;
             }
-            _buffProxies.Add(target, buffProxy);
+            var proxy = new BuffProxy(this, target);
+            target.BuffProxy = proxy;
+            _buffProxies.Add(target, proxy);
+            
+            // test
+
+            if (((Unit.Unit)target).id == "001")
+            {
+                target.AttachBuff(BuffType.Fracture, null);
+                target.AttachBuff(BuffType.Blind, null);
+            }
+            
+            // test end
+        }
+
+        public void Unregister(IBuffAble target)
+        {
+            if (!_buffProxies.ContainsKey(target))
+            {
+                this.LogError($"BuffService does not have a BuffProxy for target {target}");
+                return;
+            }
+            _buffProxies.Remove(target);
         }
 
         public BuffInfo CreateBuffInfo(BuffType type, IBuffAble target, Object creator)
@@ -59,16 +84,6 @@ namespace Systems.Buff
             BuffInfo info = new(data, creator, target, _buffCount);
             return info;
         }
-    
-        // public void AttachBuff(BuffType buffType, IBuffAble target, Object creator)
-        // {
-        //     
-        // }
-        //
-        // public void LostBuff(BuffInfo buffInfo)
-        // {
-        //     
-        // }
     
         public void ResetBuff()
         {
@@ -90,5 +105,25 @@ namespace Systems.Buff
                 this.LogError($"BuffService.OnUnitTurnStarted: no BuffProxy found for unit {unit}");
             }
         }
+
+        // private void OnUnitCreated(UnitCreatedEvent e)
+        // {
+        //     var unit = e.Unit;
+        //     if (unit == null)
+        //     {
+        //         return;
+        //     }
+        //     Register(unit);
+        // }
+        //
+        // private void ONUnitDestroyed(UnitDestroyedEvent e)
+        // {
+        //     var unit = e.Unit;
+        //     if (unit == null)
+        //     {
+        //         return;
+        //     }
+        //     Unregister(unit);
+        // }
     }
 }

@@ -58,6 +58,7 @@ namespace Systems.Unit
 		public int apSpentOnMovement;
         public Vector2Int position;
         public bool isStunned;
+        public BuffProperty<bool> canUseEquipment = new(PropertyType.CanUseEquipment, true);
         
         public int CurrentHp
         {
@@ -119,7 +120,7 @@ namespace Systems.Unit
 		
 		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition, IEventBus eventBus)
 		{
-			return new Unit
+			var unit = new Unit
 			{
 				id = unitId,
 				configId = config.configId,
@@ -153,6 +154,8 @@ namespace Systems.Unit
                 
                 EventBus = eventBus
 			};
+            
+            return unit;
 		}
 
 		public List<ActionAbility> GetAvailableActions()
@@ -160,10 +163,9 @@ namespace Systems.Unit
 			var actions = new List<ActionAbility>
 			{
 				new(EActionType.Move, RemainingMovementAp > 0),
-				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo),
+				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment),
 				new(EActionType.Wait)
 			};
-			// todo: 使用道具
             if (!TacticalItem0.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
             if (!TacticalItem1.IsNullOrEmpty())
@@ -171,9 +173,9 @@ namespace Systems.Unit
             if (!TacticalItem2.IsNullOrEmpty())
                 actions.Add(new ActionAbility(EActionType.TacticalItem2, false));
             if (CurrentWeapon!= null)
-                actions.Add(new ActionAbility(EActionType.Reload, HasAp));
+                actions.Add(new ActionAbility(EActionType.Reload, HasAp && canUseEquipment));
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp));
+                actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && canUseEquipment));
 			return actions;
 		}
 
@@ -295,8 +297,8 @@ namespace Systems.Unit
 
         #region IBuffable
         
-        public BuffProxy BuffProxy { get; }
-        
+        public BuffProxy BuffProxy { get; set; }
+
         #endregion
 	}
 
