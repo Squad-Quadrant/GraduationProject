@@ -16,9 +16,9 @@ namespace Systems.Unit
 	{
 		private readonly IEventBus _eventBus;
         private readonly DataManager _dataManager;
-        private readonly BuffService _buffService;
+        private readonly IBuffService _buffService;
         
-		public UnitService(IEventBus eventBus, DataManager dataManager, BuffService buffService)
+		public UnitService(IEventBus eventBus, DataManager dataManager, IBuffService buffService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));

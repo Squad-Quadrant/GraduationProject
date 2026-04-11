@@ -144,7 +144,6 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<ITurnService, TurnService>();
 			_levelContainer.Services.Register<IGameServer, GameServer>();
             _levelContainer.Services.Register<IDamageService, DamageService>();
-            // _levelContainer.Services.Resolve<IDamageService>();
 			_levelContainer.Services.Register<IPathFindingService>(container =>
 			{
 				var mapService = container.Resolve<IMapService>();
@@ -154,9 +153,8 @@ namespace Presentation.Bootstrap
 			});
 			_levelContainer.Services.Register<IVisionService, VisionService>();
 			_levelContainer.Services.Register<IRegionService, RegionService>();
-			_levelContainer.Services.Register<IAIService, AIService>();
+            _levelContainer.Services.Register<IAIService, AIService>();
 			_levelContainer.Services.Register<IBuffService, BuffService>();
-			_levelContainer.Services.Resolve<IBuffService>();
 			_levelContainer.Services.RegisterInstance(interactionController);
 		}
         

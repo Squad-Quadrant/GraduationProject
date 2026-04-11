@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data;
 using Data.Runtime.Events.Turn;
 using Systems.Buff.Config;
-using Systems.Unit;
 using Object = UnityEngine.Object;
 
 namespace Systems.Buff
@@ -17,14 +17,14 @@ namespace Systems.Buff
         
         private readonly IEventBus _eventBus;
         private readonly DataManager _dataManager;
-        private readonly UnitService  _unitService;
+        // private readonly UnitService  _unitService;
         private int _buffCount;
 
-        public BuffService(IEventBus eventBus, DataManager dataManager, UnitService unitService)
+        public BuffService(IEventBus eventBus, DataManager dataManager)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
-            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            // _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             this.Log("Initialized");
             
             _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
@@ -51,7 +51,7 @@ namespace Systems.Buff
             _buffProxies.Add(target, proxy);
             
             // test
-
+            
             if (((Unit.Unit)target).id == "001")
             {
                 target.AttachBuff(BuffType.Fracture, null);
@@ -95,8 +95,13 @@ namespace Systems.Buff
 
         private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-            var unit = _unitService.GetUnit(e.UnitId);
-            if (_buffProxies.ContainsKey(unit))
+            // var unit = _unitService.GetUnit(e.UnitId);
+            // if (_buffProxies.ContainsKey(unit))
+            // {
+            //     _buffProxies[unit].Turn();
+            // }
+            var unit = _buffProxies.Keys.FirstOrDefault(u => (u as Unit.Unit)?.id == e.UnitId);
+            if (unit != null)
             {
                 _buffProxies[unit].Turn();
             }

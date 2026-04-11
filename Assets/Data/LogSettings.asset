@@ -260,3 +260,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Buff.BuffService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Buff.BuffProxy
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

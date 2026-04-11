@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: TestBuff
+  m_Name: Blind
   m_EditorClassIdentifier: 
-  buffType: 2
-  buffName: "\u4E2D\u6BD2"
+  buffType: 3
+  buffName: "\u76F2\u76EE"
   description: 
   icon: {fileID: 0}
   maxStack: 1

@@ -81,7 +81,7 @@ MonoBehaviour:
     commandType: 3
     color: {r: 1, g: 1, b: 1, a: 1}
     lineBreak: 0
-    commandParam: Assets/Res/Perfabs/UI/TurnBanner.prefab
+    commandParam: Assets/Res/Prefabs/UI/TurnBanner.prefab
     command:
       m_PersistentCalls:
         m_Calls: []
