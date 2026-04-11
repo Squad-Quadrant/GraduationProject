@@ -82,7 +82,7 @@ namespace Presentation.Debugger
 					MaxHp = u.maxHp,
 					Speed = u.speed,
 					IsAlive = u.IsAlive,
-					IsStunned = u.IsStunned
+					IsStunned = u.isStunned
 				}).ToList();
 			}
 		}
@@ -202,8 +202,8 @@ namespace Presentation.Debugger
 			var unit = GetSelectedUnit();
 			if (unit == null) return;
 
-			unit.IsStunned = !unit.IsStunned;
-			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.IsStunned}");
+			unit.isStunned = !unit.isStunned;
+			Debug.Log($"[UnitServiceDebugger] {unit.name} Stunned: {unit.isStunned}");
 		}
 
 		[HorizontalGroup("Debug Actions/Status")]
@@ -319,7 +319,7 @@ namespace Presentation.Debugger
 				MoveRange = unit.moveRange,
 				ActionPoints = unit.maxAp,
 				IsAlive = unit.IsAlive,
-				IsStunned = unit.IsStunned
+				IsStunned = unit.isStunned
 			};
 		}
 

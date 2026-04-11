@@ -7,10 +7,10 @@ using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
+using Presentation.Map.Wall;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map;
-using Systems.Map.Config;
 using Systems.Map.Region;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -31,8 +31,6 @@ namespace Presentation.Map
 	{
 		[Title("References")]
 		[SerializeField, Required] private SpriteRenderer groundRenderer;
-        [SerializeField, Required] private Tilemap leftWallTilemap;
-        [SerializeField, Required] private Tilemap rightTilemap;
         [SerializeField, Required] private Tilemap sceneActorTilemap;
         [SerializeField, Required] private Tilemap highlightTilemap;
         [SerializeField, Required] private Tilemap pathTilemap;
@@ -69,37 +67,33 @@ namespace Presentation.Map
 
         private Dictionary<EPathSegmentType, TileBase> _pathTileDic;
 
+        private WallViewManager _wallViewManager;
+
         private void OnEnable()
         {
-            EventBus.Subscribe<MapViewInitEvent>(RenderTerrain);
+            EventBus.Subscribe<MapViewInitEvent>(InitMap);
             EventBus.Subscribe<RangeDisplayEvent>(OnRangeDisplay);
             EventBus.Subscribe<PathPreviewEvent>(OnPathPreview);
-            EventBus.Subscribe<MapCellChangedEvent>(OnMapCellChanged);
             EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
-
+            EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
             EventBus.Subscribe<UnitSelectedEvent>(OnUnitSelected);
             EventBus.Subscribe<UnitDeselectedEvent>(OnUnitDeselected);
-
-            EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 
             BuildPathTileDictionary();
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<MapViewInitEvent>(RenderTerrain);
+            EventBus.Unsubscribe<MapViewInitEvent>(InitMap);
             EventBus.Unsubscribe<RangeDisplayEvent>(OnRangeDisplay);
             EventBus.Unsubscribe<PathPreviewEvent>(OnPathPreview);
-            EventBus.Unsubscribe<MapCellChangedEvent>(OnMapCellChanged);
             EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
-
+            EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
             EventBus.Unsubscribe<UnitSelectedEvent>(OnUnitSelected);
             EventBus.Unsubscribe<UnitDeselectedEvent>(OnUnitDeselected);
-
-            EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
         }
 
-        private void RenderTerrain(MapViewInitEvent e)
+        private void InitMap(MapViewInitEvent e)
 		{
             var mapData = e.MapData;
 
@@ -111,24 +105,43 @@ namespace Presentation.Map
             else
 	            this.LogWarning("No ground sprite assigned in MapConfig.");
 
+            // init scene actor
             foreach (var cell in mapData.Cells.Values)
             {
                 if (cell.SceneActor != null && cell.SceneActor.BaseCell == cell)
 	                sceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
             }
 
-            foreach (var wall in mapData.Walls.Values)
+            foreach (var cell in mapData.Cells.Values)
             {
-	            if (!wall.Tile) continue;
+	            if (cell.SceneActor == null || cell.SceneActor.BaseCell != cell)
+		            continue;
 
-	            (Vector2Int pos, bool isLeft) wallKey = wall.Key.ToPositionAndIsLeft();
-	            if (wallKey.isLeft)
-		            leftWallTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
-	            else
-		            rightTilemap.SetTile((Vector3Int)wallKey.pos, wall.Tile);
+	            bool visible = RegionService.IsCellUnlocked(cell.Position);
+	            SetSceneActorAlpha(cell.Position, visible ? 1f : 0f);
             }
 
-            SetInitialRegionVisibility(mapData);
+            // init wall view manager
+            if (_wallViewManager) Destroy(_wallViewManager.gameObject);
+
+            var wallPrefab = e.WallVisualsPrefab;
+            if (!wallPrefab)
+            {
+	            this.LogWarning("No wall visuals prefab in MapConfig. Walls will not render.");
+	            return;
+            }
+
+            var instance = Instantiate(wallPrefab, transform);
+            instance.name = wallPrefab.name;
+
+            _wallViewManager = instance.GetComponent<WallViewManager>();
+            if (!_wallViewManager)
+            {
+	            this.LogWarning("Wall prefab is missing WallView component.");
+	            Destroy(instance);
+	            return;
+            }
+            _wallViewManager.Initialize(mapData);
 		}
 
 		private Vector3 ComputeGridOrigin(Vector2Int mapSize)
@@ -140,7 +153,6 @@ namespace Presentation.Map
 			Vector2 leftPoint = center00 - 0.5f * basisX + (mapSize.y - 0.5f) * basisY;
 			return new Vector3(leftPoint.x, bottomPoint.y, 0f);
 		}
-
 
 		#region Highlight & Path Preview
 
@@ -177,6 +189,10 @@ namespace Presentation.Map
 			}
 		}
 
+		private void OnUnitSelected(UnitSelectedEvent e) => SetTileWithColor(highlightTilemap, e.Position, highlightRuleTile, selectionHighlightColor);
+
+		private void OnUnitDeselected(UnitDeselectedEvent e) => highlightTilemap.ClearAllTiles();
+
 		private void BuildPathTileDictionary()
 		{
 			_pathTileDic = new Dictionary<EPathSegmentType, TileBase>();
@@ -190,10 +206,6 @@ namespace Presentation.Map
 				_pathTileDic[config.type] = config.tile;
 			}
 		}
-
-		private void OnUnitSelected(UnitSelectedEvent e) => SetTileWithColor(highlightTilemap, e.Position, highlightRuleTile, selectionHighlightColor);
-
-		private void OnUnitDeselected(UnitDeselectedEvent e) => highlightTilemap.ClearAllTiles();
 
 		private void ShowRangeHighlight(IReadOnlyList<Vector2Int> cells, ERangeType rangeType)
 		{
@@ -235,50 +247,12 @@ namespace Presentation.Map
 
 		#endregion
 
-
-		#region Wall Transparency
-
-		private Vector2Int? _previousHoverCellPos;
-
 		private void OnPointerHover(PointerHoverEvent e)
 		{
 			cursorHoverTilemap.ClearAllTiles();
-
 			if (!e.CellPosition.HasValue) return;
-
 			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, cursorHoverTile);
-
-			List<MapWall> walls;
-			if (_previousHoverCellPos.HasValue)
-			{
-				walls = MapService.GetWallsWhichHideCell(_previousHoverCellPos.Value);
-				foreach (var wall in walls
-					         .Where(wall => wall != null)
-					         .Where(wall => IsWallRegionVisible(wall.Key)))
-				{
-					SetWallAlpha(wall, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
-				}
-			}
-
-			walls = MapService.GetWallsWhichHideCell(e.CellPosition.Value);
-			foreach (var wall in walls)
-				SetWallAlpha(wall, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
-			_previousHoverCellPos = e.CellPosition;
 		}
-
-		private void OnMapCellChanged(MapCellChangedEvent e)
-		{
-			foreach (var wall in e.Walls)
-			{
-				if (wall == null) continue;
-				SetWallAlpha(wall, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
-			}
-		}
-
-		#endregion
-
-
-		#region Region Transparency
 
 		private void OnRegionUnlocked(RegionUnlockedEvent e)
 		{
@@ -289,84 +263,13 @@ namespace Presentation.Map
 					continue;
 				SetSceneActorAlpha(cellPos, 1f);
 			}
-
-			foreach (var wallKey in e.BoundaryWalls)
-			{
-				var wall = MapService.Data.GetWall(wallKey);
-				if (wall == null) continue;
-				bool visible = IsWallRegionVisible(wallKey);
-				SetWallAlpha(wall, visible ? 1f : 0);
-			}
-
-			foreach (var cellPos in e.Cells)
-			{
-				var cell = MapService.Data.GetCell(cellPos);
-				if (cell == null) continue;
-
-				var neighbors = new Vector2Int[]
-				{
-					new(cellPos.x + 1, cellPos.y),
-					new(cellPos.x - 1, cellPos.y),
-					new(cellPos.x, cellPos.y + 1),
-					new(cellPos.x, cellPos.y - 1)
-				};
-
-				foreach (var neighbor in neighbors)
-				{
-					var wall = MapService.Data.GetWall(new WallKey(cellPos, neighbor));
-					if (wall == null) continue;
-					bool visible = IsWallRegionVisible(wall.Key);
-					SetWallAlpha(wall, visible ? 1f : 0);
-				}
-			}
 		}
-
-		private void SetInitialRegionVisibility(MapData mapData)
-		{
-			foreach (var wall in mapData.Walls.Values)
-			{
-				if (wall == null) continue;
-				bool visible = IsWallRegionVisible(wall.Key);
-				SetWallAlpha(wall, visible ? 1f : 0f);
-			}
-
-			foreach (var cell in mapData.Cells.Values)
-			{
-				if (cell.SceneActor == null || cell.SceneActor.BaseCell != cell)
-					continue;
-
-				bool visible = RegionService.IsCellUnlocked(cell.Position);
-				SetSceneActorAlpha(cell.Position, visible ? 1f : 0f);
-			}
-		}
-
-		private bool IsWallRegionVisible(WallKey wallKey)
-		{
-			var (cellA, isLeft) = wallKey.ToPositionAndIsLeft();
-
-			var cellB = isLeft
-				? new Vector2Int(cellA.x, cellA.y + 1)
-				: new Vector2Int(cellA.x + 1, cellA.y);
-
-			return RegionService.IsCellUnlocked(cellA) || RegionService.IsCellUnlocked(cellB);
-		}
-
-		#endregion
 
 		private void SetSceneActorAlpha(Vector2Int position, float alpha)
 		{
 			var pos3 = (Vector3Int)position;
 			sceneActorTilemap.SetTileFlags(pos3, TileFlags.None);
 			sceneActorTilemap.SetColor(pos3, new Color(1f, 1f, 1f, alpha));
-		}
-
-		private void SetWallAlpha(MapWall wall, float alpha)
-		{
-			if (wall == null) return;
-			var targetTilemap = wall.Key.IsLeft() ? leftWallTilemap : rightTilemap;
-			var targetColor = new Color(1f, 1f, 1f, alpha);
-			targetTilemap.SetTileFlags((Vector3Int)wall.Key.Position, TileFlags.None);
-			targetTilemap.SetColor((Vector3Int)wall.Key.Position, targetColor);
 		}
 
 		private static void SetTileWithColor(Tilemap tilemap, Vector2Int pos, TileBase tile, Color color)

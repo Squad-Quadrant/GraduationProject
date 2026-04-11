@@ -1,6 +1,7 @@
 using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Input;
+using Data.Runtime.Events.Interaction;
 using Presentation.UI.Core;
 using Systems.Damage;
 using Systems.Equipment;
@@ -34,12 +35,12 @@ namespace Presentation.UI.Panel
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
+            EventBus.Subscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
         }
         
         protected override void OnDestroy()
         {
-            EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
+            EventBus.Unsubscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
             base.OnDestroy();
         }
 
@@ -79,21 +80,6 @@ namespace Presentation.UI.Panel
             }
         }
 
-
-
-        private void OnPointerHover(PointerHoverEvent e)
-        {
-            if (e.HoveredUnitId != null && _unitService.HasUnit(e.HoveredUnitId) && _interactionContext.validTargetCells.Contains(e.CellPosition.Value))
-            {
-                var target = _unitService.GetUnit(e.HoveredUnitId);
-                var damageContext = _damageService.GetSimulatedDamage(new DamageTriggeringInfo(DamageType.Bullet, _unit, target, EActionType.Attack));
-                hitRate.text = "命中率: " + Mathf.RoundToInt(damageContext.HitRate * 100) + "%";
-            }
-            else
-            {
-                hitRate.text = "";
-                
-            }
-        }
+        private void OnDisplayHitPercent(DisplayHitPercentEvent e) => hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
     }
 }

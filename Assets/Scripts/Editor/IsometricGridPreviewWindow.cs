@@ -20,15 +20,10 @@ namespace Editor
     /// </summary>
     public class IsometricGridPreviewWindow : EditorWindow
     {
-        #region Fields
-
-        // --- Data ---
         private MapConfig _config;
-        private Grid _sceneGrid; // Optional: scene Grid for accurate export dimensions
+        private Grid _sceneGrid;
 
-        // --- Preview Settings ---
-        // Cell dimensions in GUI pixels. For standard isometric the ratio is 2:1.
-        // Only _cellWidth is exposed; height is derived to enforce the ratio.
+        // preview settings
         private float _cellWidth = 80f;
         private bool _showTerrain = true;
         private bool _showWalls = true;
@@ -36,20 +31,19 @@ namespace Editor
         private bool _showActors = true;
         private Vector2 _scroll;
 
-        // --- Export Settings ---
+        // export settings
         private int _ppu = 400;
         private int _paddingCells = 1;
         private int _exportLineThickness = 3;
         private string _lastExportDir; // Remembers the last export directory within the session
 
-        // --- Derived ---
         private float CellHeight => _cellWidth * 0.5f;
         private float HalfW => _cellWidth * 0.5f;
         private float HalfH => CellHeight * 0.5f;
 
-        #endregion
-
-        #region Window Lifecycle
+        private float _lastWorldMinX;
+        private float _lastWorldMinY;
+        private bool _hasAtlasOrigin;
 
         [MenuItem("Tools/Isometric Grid Preview")]
         private static void OpenFromMenu()
@@ -70,15 +64,11 @@ namespace Editor
             window.Repaint();
         }
 
-        #endregion
-
-        #region OnGUI
-
         private void OnGUI()
         {
             DrawToolbar();
 
-            if (_config == null || _config.cells == null || _config.cells.Length == 0)
+            if (!_config || _config.cells == null || _config.cells.Length == 0)
             {
                 EditorGUILayout.HelpBox(
                     "Select a MapConfig with initialized cells to preview.",
@@ -132,25 +122,30 @@ namespace Editor
             _exportLineThickness = EditorGUILayout.IntSlider(_exportLineThickness, 1, 5, GUILayout.Width(120));
 
             GUILayout.Space(5);
-            GUI.enabled = _sceneGrid != null;
+            GUI.enabled = _sceneGrid;
             if (GUILayout.Button("Export PNG", GUILayout.Width(80)))
                 ExportPNG();
             GUI.enabled = true;
 
-            if (_sceneGrid == null)
+            if (!_sceneGrid)
             {
                 GUILayout.Space(5);
-                EditorGUILayout.LabelField("(Assign scene Grid to enable export)",
-                    EditorStyles.miniLabel, GUILayout.Width(200));
+                EditorGUILayout.LabelField("(Assign scene Grid to enable export)", EditorStyles.miniLabel, GUILayout.Width(200));
             }
 
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
+	        GUI.enabled = _hasAtlasOrigin;
+	        if (GUILayout.Button("Copy Origin", GUILayout.Width(80)))
+	        {
+		        GUIUtility.systemCopyBuffer = $"{_lastWorldMinX:F6},{_lastWorldMinY:F6}";
+		        Debug.Log($"[IsometricGridPreview] Copied to clipboard: {_lastWorldMinX:F6},{_lastWorldMinY:F6}");
+	        }
+	        GUI.enabled = true;
 
-            EditorGUILayout.Space(2);
+	        GUILayout.FlexibleSpace();
+	        EditorGUILayout.EndHorizontal();
+
+	        EditorGUILayout.Space(2);
         }
-
-        #endregion
 
         #region Isometric Preview Drawing
 
@@ -400,53 +395,32 @@ namespace Editor
 
         #region PNG Export
 
-        /// <summary>
-        /// Export a transparent PNG with isometric grid reference data.
-        ///
-        /// The export uses the scene Grid component to compute exact world-space
-        /// dimensions, ensuring the output matches the game's rendering pixel-perfectly.
-        ///
-        /// Process:
-        ///   1. Read basis vectors from Grid (same method as FogOfWarView)
-        ///   2. Compute world-space bounding box of the grid + padding
-        ///   3. Convert to pixel dimensions using PPU
-        ///   4. Draw layers: walkability fill → grid lines → walls → scene actors → origin dot
-        ///   5. Save as PNG via file dialog
-        /// </summary>
         private void ExportPNG()
         {
-            if (_sceneGrid == null)
+            if (!_sceneGrid)
             {
                 EditorUtility.DisplayDialog("Export Failed",
                     "Assign a scene Grid component to export.", "OK");
                 return;
             }
 
-            if (_config == null)
+            if (!_config)
             {
                 EditorUtility.DisplayDialog("Export Failed",
                     "No MapConfig selected.", "OK");
                 return;
             }
 
-            // --- Step 1: Compute basis vectors from the scene Grid ---
-            // This mirrors FogOfWarView.SetupShaderUniforms() exactly.
             var center00 = (Vector2)_sceneGrid.GetCellCenterWorld(Vector3Int.zero);
             var center10 = (Vector2)_sceneGrid.GetCellCenterWorld(new Vector3Int(1, 0, 0));
             var center01 = (Vector2)_sceneGrid.GetCellCenterWorld(new Vector3Int(0, 1, 0));
             Vector2 basisX = center10 - center00; // World offset per +1 in grid X
             Vector2 basisY = center01 - center00; // World offset per +1 in grid Y
 
-            // Use custom size if enabled, otherwise fall back to MapConfig
             var mapSize = _config.Size;
             int padCells = Mathf.Max(0, _paddingCells);
 
             // --- Step 2: Compute world-space bounding box ---
-            // Sample all diamond vertices across all cells (including padding) to find extents.
-            // Diamond half-extents in world space = half of one basis step in each direction.
-            // For isometric: cell diamond width = |basisX.x - basisY.x|, height = |basisX.y + basisY.y|
-            // But it's safer to just compute vertex positions directly.
-
             float worldMinX = float.MaxValue, worldMinY = float.MaxValue;
             float worldMaxX = float.MinValue, worldMaxY = float.MinValue;
 
@@ -604,9 +578,9 @@ namespace Editor
             var actorColor = new Color(1f, 1f, 0f, 0.9f);
             int actorDotRadius = Mathf.Max(4, thickness * 3);
 
-            foreach (var cell in _config.cells)
+            foreach (var cell in _config.cells!)
             {
-                if (cell.sceneActor == null) continue;
+                if (!cell.sceneActor) continue;
 
                 Vector2 cellCenter = center00 + cell.position.x * basisX + cell.position.y * basisY;
                 var px = WorldToPixel(cellCenter, worldMinX, worldMinY, imgH);
@@ -627,8 +601,7 @@ namespace Editor
             }
 
             // Layer 5: Origin marker — red dot at cell (0,0) for orientation
-            var originWorld = center00;
-            var originPx = WorldToPixel(originWorld, worldMinX, worldMinY, imgH);
+            var originPx = WorldToPixel(center00, worldMinX, worldMinY, imgH);
             int originDotRadius = Mathf.Max(5, thickness * 3);
             DrawDot(tex, originPx, Color.red, originDotRadius);
 
@@ -658,6 +631,10 @@ namespace Editor
 
             Debug.Log($"[IsometricGridPreview] Exported {imgW}×{imgH} grid to: {fullPath}");
             EditorUtility.RevealInFinder(fullPath);
+            Debug.Log($"[IsometricGridPreview] Atlas origin: worldMin=({worldMinX:F6}, {worldMinY:F6}), PPU={_ppu}");
+	        _lastWorldMinX = worldMinX;
+	        _lastWorldMinY = worldMinY;
+	        _hasAtlasOrigin = true;
         }
 
         #endregion

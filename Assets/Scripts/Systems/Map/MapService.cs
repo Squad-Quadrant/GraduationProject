@@ -37,9 +37,6 @@ namespace Systems.Map
                 var wall = Data.GetWall(wallConfig.WallKey);
                 if (wall == null) continue;
                 wall.Type = wallConfig.WallType;
-                wall.Tile = wallConfig.WallKey.IsLeft()
-	                ? wallConfig.wall?.leftTile
-	                : wallConfig.wall?.rightTile;
             }
             
             var sceneActorFactory = new SceneActorFactory();
@@ -59,7 +56,7 @@ namespace Systems.Map
             
 			this.Log($"Loaded map '{config.MapName}' ({config.Size.x}x{config.Size.y})");
             
-            _eventBus.Publish(new MapViewInitEvent(Data, config.groundSprite));
+            _eventBus.Publish(new MapViewInitEvent(Data, config.groundSprite, config.wallViewPrefab));
         }
 
 		public bool IsCellWalkable(Vector2Int position)
@@ -75,7 +72,7 @@ namespace Systems.Map
 			cell.UnitId = unitId;
 			var pos = cell.Position;
 			var walls = GetWallsWhichHideCell(pos);
-			_eventBus.Publish(new MapCellChangedEvent(cell, walls));
+			_eventBus.Publish(new MapCellStateChangedEvent(cell, walls));
 		}
 
 		public void ReleaseCell(Vector2Int position)
@@ -85,7 +82,7 @@ namespace Systems.Map
 			cell.UnitId = null;
 			var pos = cell.Position;
 			var walls = GetWallsWhichHideCell(pos);
-			_eventBus.Publish(new MapCellChangedEvent(cell, walls));
+			_eventBus.Publish(new MapCellStateChangedEvent(cell, walls));
 		}
 
 		public List<MapWall> GetWallsWhichHideCell(Vector2Int cellPos) // 得到可能会影响给定格子视觉效果的墙，用于墙的半透效果

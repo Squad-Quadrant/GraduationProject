@@ -41,8 +41,8 @@ namespace Presentation.UI.Panel
         {
             EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
-        
-        public void OnUnitInfoChanged(UnitInfoChangedEvent e)
+
+        private void OnUnitInfoChanged(UnitInfoChangedEvent e)
         {
             Refresh(e.Unit);
         }
@@ -53,10 +53,10 @@ namespace Presentation.UI.Panel
 
             foreach (var action in availableActions)
             {
-                var item = GetItem(action.actionType);
+                var item = GetItem(action.ActionType);
                 if (!item) continue;
                 item.Switch(true);
-                item.Interactable = action.isAvailable;
+                item.Interactable = action.IsAvailable;
             }
         }
 

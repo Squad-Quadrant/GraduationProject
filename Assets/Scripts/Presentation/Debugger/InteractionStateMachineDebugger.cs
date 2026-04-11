@@ -40,11 +40,6 @@ namespace Presentation.Debugger
 
 		[TitleGroup("Interaction Context")]
 		[ShowInInspector, ReadOnly]
-		[LabelText("Valid Targets")]
-		private int ValidTargetCount => _cachedController?.Context?.validTargetCells?.Count ?? 0;
-
-		[TitleGroup("Interaction Context")]
-		[ShowInInspector, ReadOnly]
 		private InteractionContext FullContext => _cachedController?.Context;
 
 		protected override StateMachine<InteractionContext> FindStateMachine()
