@@ -108,7 +108,8 @@ namespace Presentation.Unit
 			_views[unit.id] = viewInstance;
 			viewInstance.SetVisible(false);
 			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance));
-
+            viewInstance.SetWeaponSkin(e.Unit.CurrentEquipment.Config.SpineName);
+            viewInstance.SetGrip(e.Unit.CurrentEquipment.Config.GripType);
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
 
