@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Core.Log;
@@ -30,8 +29,6 @@ namespace Presentation.Unit
 		private IVisionService _visionService;
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
-
-		private HashSet<Vector2Int> _currentVisibleCells = new();
 
 		public void Initialize(ServiceContainer services)
 		{
@@ -174,12 +171,10 @@ namespace Presentation.Unit
 				{
 					if (e.Unit.faction != EUnitFaction.Player)
 					{
-						bool inPlayerSight = _currentVisibleCells != null && _currentVisibleCells.Contains(cell);
-						view.SetVisible(inPlayerSight);
+						view.SetVisible(_visionService.IsCellVisible(cell));
 						return;
 					}
-					var visible = _visionService.CalculateVisibleCells(cell, movingUnit.visionRange);
-					_eventBus.Publish(new VisionChangedEvent(visible, movingUnit.id));
+					_visionService.UpdateVisionAtPosition(cell, movingUnit.visionRange, movingUnit.id);
 				},
 				onComplete: () =>
 				{
@@ -310,8 +305,6 @@ namespace Presentation.Unit
 
         private void OnVisionChanged(VisionChangedEvent e)
         {
-	        _currentVisibleCells = e.VisibleCells;
-
 	        foreach (var (unitId, view) in _views)
 	        {
 		        if (!view) continue;

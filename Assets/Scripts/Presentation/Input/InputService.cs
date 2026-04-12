@@ -11,6 +11,7 @@ using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,13 +32,12 @@ namespace Presentation.Input
 		private ICoordinateConverter _coordinateConverter;
 		private IMapService _mapService;
 		private IUnitService _unitService;
+		private IVisionService _visionService;
 
 		private GameInputActions _inputActions;
 
 		private Vector2Int? _lastHoveredCell;
 		private string _lastHoveredUnitId;
-
-		private HashSet<Vector2Int> _visibleCells;
 
 		public void Initialize(ServiceContainer services)
 		{
@@ -45,12 +45,11 @@ namespace Presentation.Input
 			_coordinateConverter = services.Resolve<ICoordinateConverter>();
 			_mapService = services.Resolve<IMapService>();
 			_unitService = services.Resolve<IUnitService>();
+			_visionService = services.Resolve<IVisionService>();
 
 			if (!mainCamera) mainCamera = Camera.main;
 
 			SetupInputActions();
-
-			_eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
 
 			this.Log("Initialized");
 		}
@@ -69,8 +68,6 @@ namespace Presentation.Input
 
 		private void OnDestroy()
 		{
-			_eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
-
 			if (_inputActions == null) return;
 
 			_inputActions.Gameplay.PrimaryClick.performed -= OnPrimaryClick;
@@ -99,8 +96,6 @@ namespace Presentation.Input
 
 			this.Log($"{(enable ? "Enabled" : "Disabled")}");
 		}
-
-		private void OnVisionChanged(VisionChangedEvent e) => _visibleCells = e.VisibleCells;
 
 		private void OnPrimaryClick(InputAction.CallbackContext ctx)
 		{
@@ -212,10 +207,11 @@ namespace Presentation.Input
 
 		private string GetUnitAtCell(Vector2Int cellPosition)
 		{
-			if (_visibleCells != null && !_visibleCells.Contains(cellPosition))
+			if (!_visionService.IsCellVisible(cellPosition))
 				return null;
 
-			return (from unit in _unitService.GetAllUnits() where unit.position == cellPosition select unit.id).FirstOrDefault();
+			return (from unit in _unitService.GetAllUnits()
+				where unit.position == cellPosition select unit.id).FirstOrDefault();
 		}
 	}
 }

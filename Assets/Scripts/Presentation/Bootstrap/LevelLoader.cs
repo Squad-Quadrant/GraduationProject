@@ -151,6 +151,7 @@ namespace Presentation.Bootstrap
 				var traversalRule = new DefaultTraversalRule(unitService);
 				return new PathFindingService(mapService, traversalRule);
 			});
+			_levelContainer.Services.Register<IVisionCalculator, VisionCalculator>();
 			_levelContainer.Services.Register<IVisionService, VisionService>();
 			_levelContainer.Services.Register<IRegionService, RegionService>();
             _levelContainer.Services.Register<IAIService, AIService>();

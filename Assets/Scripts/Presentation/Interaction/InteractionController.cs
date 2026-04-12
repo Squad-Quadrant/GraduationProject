@@ -45,6 +45,7 @@ namespace Presentation.Interaction
 				services.Resolve<ICommandQueue>(),
 				services.Resolve<IPathFindingService>(),
                 services.Resolve<IVisionService>(),
+				services.Resolve<IVisionCalculator>(),
 				services.Resolve<IDamageService>());
 
 			StateMachine = new StateMachine<InteractionContext>(

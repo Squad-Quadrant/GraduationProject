@@ -29,6 +29,7 @@ namespace Systems.Interaction
 		public ICommandQueue CommandQueue { get; }
 		public IPathFindingService PathFindingService { get; }
         public IVisionService VisionService { get; }
+        public IVisionCalculator VisionCalculator { get; }
         public IDamageService DamageService { get; }
 
 		#endregion
@@ -43,8 +44,6 @@ namespace Systems.Interaction
 
 		public EActionType currentAction;
 
-		public HashSet<Vector2Int> VisibleCells;
-
 		public MovementSimulationResult LastSimulationResult;
 
 		public InteractionContext(
@@ -55,6 +54,7 @@ namespace Systems.Interaction
 			ICommandQueue commandQueue,
 			IPathFindingService pathFindingService,
             IVisionService visionService,
+			IVisionCalculator visionCalculator,
 			IDamageService damageService)
 		{
 			EventBus = eventBus;
@@ -64,6 +64,7 @@ namespace Systems.Interaction
 			CommandQueue = commandQueue;
 			PathFindingService = pathFindingService;
             VisionService = visionService;
+            VisionCalculator = visionCalculator;
             DamageService = damageService;
 		}
 

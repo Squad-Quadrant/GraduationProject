@@ -147,8 +147,7 @@ namespace Systems.Interaction.States
                 .Where(u => currentEquipment.Logic.CheckAttackable(u)).ToList();
 
             // 剔除看不见的敌人
-            var visionService = ctx.VisionService;
-            var visibleCells = visionService.CalculateVisibleCells(unit.position, unit.visionRange);
+            var visibleCells = ctx.VisionService.CurrentVisibleCells;
             List<Unit.Unit> enemyUnits = reachableEnemyUnits.Where(enemyUnit => visibleCells.Contains(enemyUnit.position)).ToList();
             
             this.Log($"Found {enemyUnits.Count} valid targets for attack.");

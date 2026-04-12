@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Commands;
-using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
-using Data.Runtime.Events.Vision;
 using Presentation.Interaction;
 using Systems.AI;
 using Systems.Interaction.States;
 using Systems.Turn;
 using Systems.Unit;
 using Systems.Vision;
-using UnityEngine;
 
 namespace Systems.GamePlay
 {
@@ -92,7 +88,7 @@ namespace Systems.GamePlay
                 return;
             }
             
-            if (aliveUnits.All(u => u.faction == EUnitFaction.Enemy || u.faction == EUnitFaction.Neutral))
+            if (aliveUnits.All(u => u.faction is EUnitFaction.Enemy or EUnitFaction.Neutral))
             {
                 this.Log("All player units defeated! You lose!");
                 _fsm.StateMachine.ChangeState<WaitingForSystemState>();
@@ -125,13 +121,11 @@ namespace Systems.GamePlay
 			bool isPlayer = unit.faction == EUnitFaction.Player;
 
 			if (isPlayer)
-			{
-				var visible = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
-				_eventBus.Publish(new VisionChangedEvent(visible, unit.id));
-				_fsm.Context.VisibleCells = visible;
-			}
+				_visionService.UpdateVisionForUnit(unit);
+			else
+				_visionService.ClearSpottedMark(unit.id);
 
-			bool visibleToPlayer = isPlayer || (_fsm.Context.VisibleCells != null && _fsm.Context.VisibleCells.Contains(unit.position));
+			bool visibleToPlayer = isPlayer || _visionService.IsCellVisible(unit.position);
 			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber, visibleToPlayer));
 
 			this.Log($"Unit '{unit.id}' ({unit.faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");

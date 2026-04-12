@@ -28,7 +28,7 @@ namespace Systems.PathFinding
 
         [ShowInInspector, ReadOnly] public readonly bool IgnoreTerrainWalkability;
 
-        public readonly HashSet<Vector2Int> VisibleCells;
+        public readonly IReadOnlyCollection<Vector2Int> VisibleCells;
 
         public PathFindingOptions(
             bool canPassThroughAllies,
@@ -38,7 +38,7 @@ namespace Systems.PathFinding
             bool canCrossLowWalls,
             bool canCrossHighWalls,
             bool ignoreTerrainWalkability,
-            HashSet<Vector2Int> visibleCells = null)
+            IReadOnlyCollection<Vector2Int> visibleCells = null)
         {
             CanPassThroughAllies = canPassThroughAllies;
             EnemiesBlockMovement = enemiesBlockMovement;

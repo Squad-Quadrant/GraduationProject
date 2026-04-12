@@ -13,14 +13,15 @@ namespace Systems.PathFinding.MovementSimulation
 		public static MovementSimulationResult Simulate(
 			IReadOnlyList<Vector2Int> path,
 			Unit.Unit movingUnit,
-			HashSet<Vector2Int> originVisible,
+			IReadOnlyCollection<Vector2Int> originVisible,
+			IVisionCalculator visionCalculator,
 			IVisionService visionService,
 			IUnitService unitService)
 		{
 			if (path == null || path.Count < 2)
 			{
 				Debug.LogWarning($"{Tag} Trivial or null path, skipping simulation");
-				var trivialVisible = visionService.CalculateVisibleCells(path?[0] ?? movingUnit.position, movingUnit.visionRange);
+				var trivialVisible = visionCalculator.CalculateVisibleCells(path?[0] ?? movingUnit.position, movingUnit.visionRange);
 				return MovementSimulationResult.Completed(path ?? new List<Vector2Int>(), trivialVisible);
 			}
 
@@ -28,19 +29,18 @@ namespace Systems.PathFinding.MovementSimulation
 
 			for (int i = 1; i < path.Count; i++)
 			{
-				var stepVisible = visionService.CalculateVisibleCells(path[i], movingUnit.visionRange);
+				var stepVisible = visionCalculator.CalculateVisibleCells(path[i], movingUnit.visionRange);
 
 				var newlyRevealed = new HashSet<Vector2Int>(stepVisible);
 				newlyRevealed.ExceptWith(everSeen);
 				everSeen.UnionWith(stepVisible);
 
-				var enemyDiscovered = new List<Unit.Unit>();
-				foreach (var cell in newlyRevealed)
-				{
-					var occupant = unitService.GetUnitAtPosition(cell);
-					if (occupant is { IsAlive: true } && movingUnit.IsHostile(occupant))
-						enemyDiscovered.Add(occupant);
-				}
+				var enemyDiscovered = newlyRevealed
+					.Select(unitService.GetUnitAtPosition)
+					.Where(occupant =>
+						occupant is { IsAlive: true } &&
+						movingUnit.IsHostile(occupant) &&
+						!visionService.IsEnemySpotted(occupant.id)).ToList();
 
 				if (enemyDiscovered.Count <= 0) continue;
 

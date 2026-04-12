@@ -73,9 +73,10 @@ namespace Systems.Interaction.States
 
 			this.Log($"Movement interrupted — {simResult.DiscoveredUnits.Count} enemies discovered");
 
-			Context.VisibleCells = simResult.FinalVisibleCells;
+			Context.VisionService.UpdateVisionByPrecomputed(simResult.FinalVisibleCells, Context.selectedUnit?.id);
+			foreach (var enemy in simResult.DiscoveredUnits)
+				Context.VisionService.MarkEnemySpotted(enemy.id, enemy.position);
 			Publish(Context, new EnemiesDiscoveredEvent(Context.selectedUnit?.id, simResult.DiscoveredUnits));
-			Publish(Context, new VisionChangedEvent(Context.VisibleCells, Context.selectedUnit?.id));
 
 			_onDiscoveryFocusComplete = OnDiscoveryFocusComplete;
 			Subscribe(Context, _onDiscoveryFocusComplete);

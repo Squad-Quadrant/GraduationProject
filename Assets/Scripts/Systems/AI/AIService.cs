@@ -23,7 +23,7 @@ namespace Systems.AI
 		private readonly IMapService _mapService;
 		private readonly ITurnService _turnService;
 		private readonly IPathFindingService _pathFinding;
-		private readonly IVisionService _visionService;
+		private readonly IVisionCalculator _visionCalculator;
 
 		private readonly List<IActionEvaluator> _evaluators;
 
@@ -38,7 +38,7 @@ namespace Systems.AI
 			IMapService mapService,
 			ITurnService turnService,
 			IPathFindingService pathFinding,
-			IVisionService visionService)
+			IVisionCalculator visionCalculator)
 		{
 			_eventBus = eventBus;
 			_commandQueue = commandQueue;
@@ -46,7 +46,7 @@ namespace Systems.AI
 			_mapService = mapService;
 			_turnService = turnService;
 			_pathFinding = pathFinding;
-			_visionService = visionService;
+			_visionCalculator = visionCalculator;
 
 			// 注册评估器
 			_evaluators = new List<IActionEvaluator>
@@ -73,7 +73,7 @@ namespace Systems.AI
 
 		private void DecisionLoop()
 		{
-			if (_currentUnit == null || !_currentUnit.IsAlive || !_currentUnit.HasAp)
+			if (_currentUnit is not { IsAlive: true } || !_currentUnit.HasAp)
 			{
 				this.Log("Unit cannot act — ending AI turn");
 				EndTurn();
@@ -112,7 +112,7 @@ namespace Systems.AI
 
 		private AIContext BuildContext(Unit.Unit unit) // 构建战场上下文
 		{
-			var visibleCells = _visionService.CalculateVisibleCells(unit.position, unit.visionRange);
+			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange);
 
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();

@@ -35,7 +35,7 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			_reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisibleCells);
+			_reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisionService.CurrentVisibleCells);
 			var stoppableCells = _reachableArea.GetStoppableCellsList();
 			var apMap = _reachableArea.CostMap
 				.ToDictionary(
@@ -143,7 +143,7 @@ namespace Systems.Interaction.States
 			Context.StateMachine.ChangeState<IdleState>();
 		}
 
-		private ReachableAreaResult CalculateReachableArea(Unit.Unit selectedUnit, IPathFindingService pathfinding, HashSet<Vector2Int> visibleCells)
+		private ReachableAreaResult CalculateReachableArea(Unit.Unit selectedUnit, IPathFindingService pathfinding, IReadOnlyCollection<Vector2Int> visibleCells)
 		{
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
@@ -202,7 +202,8 @@ namespace Systems.Interaction.States
 			var simResult = MovementSimulator.Simulate(
 				fullPathResult.Path,
 				unit,
-				Context.VisibleCells,
+				Context.VisionService.CurrentVisibleCells,
+				Context.VisionCalculator,
 				Context.VisionService,
 				Context.UnitService);
 
