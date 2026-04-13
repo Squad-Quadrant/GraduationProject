@@ -29,7 +29,7 @@ namespace Presentation.FogOfWar
 		[OnValueChanged("OnPaddingParmChange")] [SerializeField, Range(0f, 1.0f)] private float paddingStrength = 0.2f;
 
 		[Title("Animation")]
-		[SerializeField, Range(1f, 20f)] private float transitionSpeed = 8f;
+		[SerializeField, Range(0.01f, 20f)] private float transitionSpeed = 1f;
 
 		[Title("Unit Mask")]
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private float unitMaskRadiusX = 0.6f;
@@ -40,7 +40,7 @@ namespace Presentation.FogOfWar
 		[Title("Halftone")]
 		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(1f, 30f)] private float dotDensity = 8f;
 		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0.3f, 1f)] private float dotMaxRadius = 0.75f;
-		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 0.15f)] private float dotSoftness = 0.03f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 1f)] private float dotSoftness = 0.03f;
 
 		[Title("Rendering")]
 		[SerializeField] private string sortingLayerName = "Default";

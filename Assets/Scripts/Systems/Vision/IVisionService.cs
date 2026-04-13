@@ -10,17 +10,17 @@ namespace Systems.Vision
 		bool IsCellVisible(Vector2Int cell);
 
 		// Vision updates
-		void UpdateVisionForUnit(Unit.Unit unit);
+		void RecalculateSharedVision();
 
-		void UpdateVisionAtPosition(Vector2Int position, int visionRange, string unitId);
+		void UpdateUnitVision(string unitId, Vector2Int position, int visionRange);
 
-		void UpdateVisionByPrecomputed(HashSet<Vector2Int> cells, string unitId); // 防止移动模拟卡住
+		void RemoveUnitVision(string unitId);
 
 		// Temporary reveals
 		/// <returns>token</returns>
-		int AddTemporaryReveal(IReadOnlyList<Vector2Int> cells);
+		RevealToken AddTemporaryReveal(IReadOnlyList<Vector2Int> cells);
 
-		void RemoveTemporaryReveal(int token);
+		void RemoveTemporaryReveal(RevealToken token);
 
 		// Spotted enemies
 		IReadOnlyDictionary<string, Vector2Int> SpottedEnemies { get; }

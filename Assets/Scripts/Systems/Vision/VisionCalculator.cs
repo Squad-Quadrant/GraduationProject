@@ -11,13 +11,9 @@ namespace Systems.Vision
 	public class VisionCalculator : IVisionCalculator
 	{
 		private readonly IMapService _mapService;
-		private readonly IUnitService _unitService;
 
-		public VisionCalculator(IMapService mapService, IUnitService unitService)
-		{
+		public VisionCalculator(IMapService mapService, IUnitService unitService) =>
 			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
-			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
-		}
 
 		// 按曼哈顿距离遍历所有visionRange中的格子，一个个调用HasLineOfSight
 		public HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange)
@@ -35,35 +31,30 @@ namespace Systems.Vision
 					var target = new Vector2Int(origin.x + dx, origin.y + dy);
 					if (!mapData.IsInBounds(target)) continue;
 
-					if (HasLineOfSight(origin, target, mapData))
+					if (TraceRay(origin, target, mapData, null))
 						visible.Add(target);
 				}
-			}
-
-			var allUnits = _unitService.GetAllAliveUnits();
-			foreach (var unit in allUnits)
-			{
-				if (unit.faction != EUnitFaction.Player) continue;
-				visible.Add(unit.position);
 			}
 
 			return visible;
 		}
 
-		public bool HasLineOfSight(Vector2Int from, Vector2Int to) => HasLineOfSight(from, to, _mapService.Data);
+		public bool TraceRay(Vector2Int from, Vector2Int to, List<Vector2Int> passedCells = null) =>
+			TraceRay(from, to, _mapService.Data, passedCells);
+
 
 		// f(t) = from + t * to DDA步进（因为需要检测SceneActor对于视野的影响，所以需要获得视线经过的每个格子，无法单纯枚举网格线）
 		// 本质上是在沿射线方向一个个访问其与网格线的交点（沿t从0-1）的方向，核心在于确保顺序
 		// 原理上，每轮循环里，计算出和下一个x格线与下一个y格线交点的t值 -> 比较谁的小（先经过谁） -> 步进，迭代
-		private bool HasLineOfSight(Vector2Int from, Vector2Int to, MapData mapData)
+		private static bool TraceRay(Vector2Int from, Vector2Int to, MapData mapData, List<Vector2Int> passedCells)
 		{
 			if (from == to) return true;
 
 			int dx = to.x - from.x;
 			int dy = to.y - from.y;
 
-			if (dx == 0) return MarchAxis(from, to, mapData, false); // 一条直线，特殊处理
-			if (dy == 0) return MarchAxis(from, to, mapData, true);
+			if (dx == 0) return MarchAxis(from, to, mapData, false, passedCells); // 一条直线，特殊处理
+			if (dy == 0) return MarchAxis(from, to, mapData, true, passedCells);
 
 			int cellX = from.x; // 目前所在的格子
 			int cellY = from.y;
@@ -117,6 +108,8 @@ namespace Systems.Vision
 					crossY += stepCrossY;
 				}
 
+				passedCells?.Add(new Vector2Int(cellX, cellY));
+
 				if (cellX == to.x && cellY == to.y) // Arrival check
 					return true;
 
@@ -127,7 +120,7 @@ namespace Systems.Vision
 			return false;
 		}
 
-		private bool MarchAxis(Vector2Int from, Vector2Int to, MapData mapData, bool horizontal)
+		private static bool MarchAxis(Vector2Int from, Vector2Int to, MapData mapData, bool horizontal, List<Vector2Int> passedCells)
 		{
 			int start = horizontal ? from.x : from.y;
 			int end = horizontal ? to.x : to.y;
@@ -137,27 +130,17 @@ namespace Systems.Vision
 			int pos = start;
 			while (pos != end)
 			{
-				var current = horizontal
-					? new Vector2Int(pos, axis)
-					: new Vector2Int(axis, pos);
-				var next = horizontal
-					? new Vector2Int(pos + step, axis)
-					: new Vector2Int(axis, pos + step);
+				var current = horizontal ? new Vector2Int(pos, axis) : new Vector2Int(axis, pos);
+				var next = horizontal ? new Vector2Int(pos + step, axis) : new Vector2Int(axis, pos + step);
 
-				this.Log($"Checking Wall {current} to {next}: {IsWallBlocking(current, next, mapData)}");
-				if (IsWallBlocking(current, next, mapData))
-					return false;
+				if (IsWallBlocking(current, next, mapData)) return false;
 
 				pos += step;
+				var entered = horizontal ? new Vector2Int(pos, axis) : new Vector2Int(axis, pos);
+				passedCells?.Add(entered);
 
 				if (pos == end) return true;
-
-				var entered = horizontal
-					? new Vector2Int(pos, axis)
-					: new Vector2Int(axis, pos);
-				this.Log($"Checking Cell {entered}: {IsCellBlocking(entered, mapData)}");
-				if (IsCellBlocking(entered, mapData))
-					return false;
+				if (IsCellBlocking(entered, mapData)) return false;
 			}
 			return true;
 		}

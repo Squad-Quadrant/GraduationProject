@@ -494,19 +494,19 @@ MonoBehaviour:
   fogShader: {fileID: 4800000, guid: efe7a100f16e4329b29aa41b06fa4b78, type: 3}
   noiseTex: {fileID: 2800000, guid: 75b254a55f7e3f347ac8f2b5db9b11d9, type: 3}
   fogColor: {r: 0, g: 0, b: 0, a: 0.98039216}
-  noiseIntensity: 0.2
+  noiseIntensity: 0.5
   noiseScale: 0.7
-  edgeSoftness: 0.2
+  edgeSoftness: 0.9
   paddingRange: 1
   paddingStrength: 0.35
-  transitionSpeed: 8
+  transitionSpeed: 2
   unitMaskRadiusX: 0.2
   unitMaskRadiusY: 0.5
   unitCenterOffsetY: 0.15
   unitMaskSoftness: 0.4
-  dotDensity: 8
-  dotMaxRadius: 0.75
-  dotSoftness: 0.03
+  dotDensity: 20
+  dotMaxRadius: 0.9
+  dotSoftness: 0.25
   sortingLayerName: OnGround
   sortingOrder: 1000
   padding: 5

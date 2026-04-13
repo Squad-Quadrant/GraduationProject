@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Commands.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
+using Systems.Vision;
+using UnityEngine;
 
 namespace Systems.Interaction.States
 {
@@ -11,6 +14,8 @@ namespace Systems.Interaction.States
 	{
 		private Action<CommandCompletedEvent> _onQueueCompleted;
 		private Action<PresentationCompleteEvent> _onDiscoveryFocusComplete;
+
+		private RevealToken _revealToken = RevealToken.Invalid;
 
 		public ExecutingState() : base(InteractionStates.Executing) { }
 
@@ -24,7 +29,7 @@ namespace Systems.Interaction.States
 			if (ctx.CommandQueue.IsIdle)
 			{
 				this.Log("Queue already idle, transitioning immediately");
-				HandlePostCommand();
+				OnCommandsCompleted();
 				return;
 			}
 
@@ -44,6 +49,12 @@ namespace Systems.Interaction.States
 
 			CleanupDiscoverySubscription();
 
+			if (_revealToken.IsValid)
+			{
+				Context.VisionService.RemoveTemporaryReveal(_revealToken);
+				_revealToken = RevealToken.Invalid;
+			}
+
 			base.OnExit(ctx);
 		}
 
@@ -57,10 +68,10 @@ namespace Systems.Interaction.States
 		private void OnCommandsCompleted(CommandCompletedEvent commandCompletedEvent)
 		{
 			this.Log("All commands completed");
-			HandlePostCommand();
+			OnCommandsCompleted();
 		}
 
-		private void HandlePostCommand()
+		private void OnCommandsCompleted()
 		{
 			var simResult = Context.LastSimulationResult;
 			Context.LastSimulationResult = null;
@@ -73,9 +84,10 @@ namespace Systems.Interaction.States
 
 			this.Log($"Movement interrupted — {simResult.DiscoveredUnits.Count} enemies discovered");
 
-			Context.VisionService.UpdateVisionByPrecomputed(simResult.FinalVisibleCells, Context.selectedUnit?.id);
-			foreach (var enemy in simResult.DiscoveredUnits)
-				Context.VisionService.MarkEnemySpotted(enemy.id, enemy.position);
+			// 打开临时视野，让玩家知道谁打断了他的移动
+			var revealCells = new List<Vector2Int>(simResult.FinalVisibleCells);
+			_revealToken = Context.VisionService.AddTemporaryReveal(revealCells);
+
 			Publish(Context, new EnemiesDiscoveredEvent(Context.selectedUnit?.id, simResult.DiscoveredUnits));
 
 			_onDiscoveryFocusComplete = OnDiscoveryFocusComplete;
@@ -91,6 +103,13 @@ namespace Systems.Interaction.States
 
 			this.Log("Discovery focus complete, resuming");
 			CleanupDiscoverySubscription();
+
+			if (_revealToken.IsValid)
+			{
+				Context.VisionService.RemoveTemporaryReveal(_revealToken);
+				_revealToken = RevealToken.Invalid;
+			}
+
 			ResolveNextState();
 		}
 

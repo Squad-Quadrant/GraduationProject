@@ -174,7 +174,7 @@ namespace Presentation.Unit
 						view.SetVisible(_visionService.IsCellVisible(cell));
 						return;
 					}
-					_visionService.UpdateVisionAtPosition(cell, movingUnit.visionRange, movingUnit.id);
+					_visionService.UpdateUnitVision(movingUnit.id, cell, movingUnit.visionRange);
 				},
 				onComplete: () =>
 				{
@@ -308,12 +308,6 @@ namespace Presentation.Unit
 	        foreach (var (unitId, view) in _views)
 	        {
 		        if (!view) continue;
-
-		        if (unitId == e.UnitId)
-		        {
-			        view.SetVisible(true);
-			        continue;
-		        }
 
 		        if (!_unitService.TryGetUnit(unitId, out var unit))
 		        {

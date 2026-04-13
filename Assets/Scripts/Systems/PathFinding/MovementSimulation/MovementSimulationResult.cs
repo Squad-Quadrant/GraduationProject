@@ -12,7 +12,7 @@ namespace Systems.PathFinding.MovementSimulation
 
 		public IReadOnlyList<Unit.Unit> DiscoveredUnits { get; } // 新发现的Units
 
-		public HashSet<Vector2Int> FinalVisibleCells { get; } // 路径中看到的所有格子
+		public HashSet<Vector2Int> FinalVisibleCells { get; }
 
 		private MovementSimulationResult(
 			IReadOnlyList<Vector2Int> actualPath,

@@ -75,6 +75,7 @@ namespace Systems.GamePlay
 			this.Log("Starting game...");
 
 			_fsm.StartInteraction();
+			_visionService.RecalculateSharedVision();
 			StartNewTurn();
 		}
 
@@ -120,10 +121,7 @@ namespace Systems.GamePlay
 			var unit = _unitService.GetUnit(turnUnit.Id);
 			bool isPlayer = unit.faction == EUnitFaction.Player;
 
-			if (isPlayer)
-				_visionService.UpdateVisionForUnit(unit);
-			else
-				_visionService.ClearSpottedMark(unit.id);
+			if (!isPlayer) _visionService.ClearSpottedMark(unit.id);
 
 			bool visibleToPlayer = isPlayer || _visionService.IsCellVisible(unit.position);
 			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber, visibleToPlayer));
