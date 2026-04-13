@@ -59,6 +59,7 @@ namespace Systems.Unit
         public Vector2Int position;
         public bool isStunned;
         public BuffProperty<bool> canUseEquipment = new(PropertyType.CanUseEquipment, true);
+        public BuffProperty<bool> canAttack = new(PropertyType.CanAttack, false);
         
         public int CurrentHp
         {
@@ -163,7 +164,7 @@ namespace Systems.Unit
 			var actions = new List<ActionAbility>
 			{
 				new(EActionType.Move, RemainingMovementAp > 0),
-				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment),
+				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment && canAttack),
 				new(EActionType.Wait)
 			};
             if (!TacticalItem0.IsNullOrEmpty())
@@ -210,6 +211,7 @@ namespace Systems.Unit
 		public int ActionPriority { get; set; }
 		void ITurnUnit.OnTurnStart()
 		{
+			canAttack.Value = true;
 			CurrentAp = maxAp;
 			apSpentOnMovement = 0;
 		}

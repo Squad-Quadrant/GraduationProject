@@ -6,7 +6,6 @@ using Core.Log;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Systems.Unit;
-using Unity.VisualScripting;
 
 namespace Systems.Turn
 {

@@ -95,11 +95,6 @@ namespace Systems.Buff
 
         private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-            // var unit = _unitService.GetUnit(e.UnitId);
-            // if (_buffProxies.ContainsKey(unit))
-            // {
-            //     _buffProxies[unit].Turn();
-            // }
             var unit = _buffProxies.Keys.FirstOrDefault(u => (u as Unit.Unit)?.id == e.UnitId);
             if (unit != null)
             {
@@ -110,25 +105,5 @@ namespace Systems.Buff
                 this.LogError($"BuffService.OnUnitTurnStarted: no BuffProxy found for unit {unit}");
             }
         }
-
-        // private void OnUnitCreated(UnitCreatedEvent e)
-        // {
-        //     var unit = e.Unit;
-        //     if (unit == null)
-        //     {
-        //         return;
-        //     }
-        //     Register(unit);
-        // }
-        //
-        // private void ONUnitDestroyed(UnitDestroyedEvent e)
-        // {
-        //     var unit = e.Unit;
-        //     if (unit == null)
-        //     {
-        //         return;
-        //     }
-        //     Unregister(unit);
-        // }
     }
 }

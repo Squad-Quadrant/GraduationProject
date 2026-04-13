@@ -10,8 +10,9 @@ namespace Systems.Buff
         MaxHp,
         Speed,
         MaxAmmo,
+        CanUseEquipment,
+        CanAttack,
         Count,
-        CanUseEquipment
     }
 
     public abstract class BuffProperty
@@ -50,6 +51,8 @@ namespace Systems.Buff
                 owner.BuffProxy.ExecutePropertyInfluence(this);
                 return buffValue;
             }
+            
+            set => _baseValue = value;
         }
 
         public static implicit operator T(BuffProperty<T> property)

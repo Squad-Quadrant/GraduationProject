@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Systems.AI.Config;
+using Systems.AI.Evaluation;
 using Systems.PathFinding;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace Systems.AI
 		public List<Unit.Unit> Allies { get; }
 		public ReachableAreaResult ReachableArea { get; }
 		public HashSet<Vector2Int> VisibleCells { get; }
+		
+		public List<IActionEvaluator> evaluators;
         // public List<Unit.Unit> AttackableEnemies { get; }
 
 		public AIContext(
@@ -20,7 +23,8 @@ namespace Systems.AI
 			List<Unit.Unit> enemies,
 			List<Unit.Unit> allies,
 			ReachableAreaResult reachableArea,
-			HashSet<Vector2Int> visibleCells)
+			HashSet<Vector2Int> visibleCells,
+			List<IActionEvaluator> evaluators)
 		{
 			Self = self;
 			Brain = self.aiBrainConfig;
@@ -28,6 +32,7 @@ namespace Systems.AI
 			Allies = allies;
 			ReachableArea = reachableArea;
 			VisibleCells = visibleCells;
+			this.evaluators = evaluators;
             // AttackableEnemies = attackableEnemies;
 		}
 	}

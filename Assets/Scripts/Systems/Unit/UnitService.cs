@@ -4,8 +4,6 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data;
-using Data.Config;
-using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Unit;
 using Systems.Buff;
 using UnityEngine;
