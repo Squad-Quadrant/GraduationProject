@@ -169,11 +169,10 @@ namespace Systems.Interaction.States
             Context.targetUnit = Context.UnitService.GetUnitAtPosition(target);
 
 			var unit = Context.selectedUnit;
-            
 			var attackCommand = new UnitAttackCommand(
 				unit.id,
                 Context.targetUnit.id,
-				1, // todo: 计算消耗
+				1,
                 Context.currentAction,
 				Context.UnitService,
 				Context.MapService,

@@ -100,14 +100,4 @@ namespace Systems.Buff
             return buffInfos.Where(b => b.BuffType == type).ToList();
         }
     }
-    //
-    // public class UnitBuffProxy : BuffProxy
-    // {
-    //     public Unit.Unit Owner => (Unit.Unit) owner;
-    //
-    //     public UnitBuffProxy(Unit.Unit owner, IBuffService buffService) : base(buffService, owner)
-    //     {
-    //         
-    //     }
-    // }
 }
