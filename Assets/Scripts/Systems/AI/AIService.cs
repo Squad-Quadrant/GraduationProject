@@ -5,6 +5,7 @@ using Core.Commands;
 using Core.Commands.Events;
 using Core.Events;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Commands;
 using Systems.AI.Evaluation;
 using Systems.Map;
@@ -24,9 +25,7 @@ namespace Systems.AI
 		private readonly ITurnService _turnService;
 		private readonly IPathFindingService _pathFinding;
 		private readonly IVisionService _visionService;
-
-		private readonly List<IActionEvaluator> _evaluators;
-
+		
 		private Unit.Unit _currentUnit;
 		private Action _onTurnComplete;
 		private Action<CommandCompletedEvent> _onCommandCompleted;
@@ -47,16 +46,7 @@ namespace Systems.AI
 			_turnService = turnService;
 			_pathFinding = pathFinding;
 			_visionService = visionService;
-
-			// 注册评估器
-			_evaluators = new List<IActionEvaluator>
-			{
-				new WaitEvaluator(),
-				new MoveEvaluator(),
-                new AttackEvaluator(),
-                new ReloadEvaluator()
-			};
-
+			
 			this.Log("Initialized");
 		}
 
@@ -139,15 +129,17 @@ namespace Systems.AI
 			);
 			int maxMove = unit.moveRange * unit.CurrentAp;
 			var reachableArea = _pathFinding.GetReachableArea(unit.position, maxMove, options);
+			
+			var evaluators = GetActionEvaluators(unit.GetAvailableActions());
 
-			return new AIContext(unit, enemies, allies, reachableArea, visibleCells);
+			return new AIContext(unit, enemies, allies, reachableArea, visibleCells, evaluators);
 		}
 
 		private AIActionOption EvaluateAndSelect(AIContext context) // 跑一遍所有的评估器，选出当下最好的
 		{
 			var allOptions = new List<AIActionOption>();
-
-			foreach (var evaluator in _evaluators)
+			var evaluators = context.evaluators;
+			foreach (var evaluator in evaluators)
 			{
 				var options = evaluator.Evaluate(context);
 				if (options != null)
@@ -246,6 +238,28 @@ namespace Systems.AI
 			if (_onCommandCompleted == null) return;
 			_eventBus.Unsubscribe(_onCommandCompleted);
 			_onCommandCompleted = null;
+		}
+
+		private List<IActionEvaluator> GetActionEvaluators(List<ActionAbility> actions)
+		{
+			List<IActionEvaluator> evaluators = new();
+			foreach (var action in actions)
+			{
+				if (!action.IsAvailable)
+					continue;
+				
+				if (action.ActionType == EActionType.Wait)
+					evaluators.Add(new WaitEvaluator());
+				if (action.ActionType == EActionType.Move)
+					evaluators.Add(new MoveEvaluator());
+				if (action.ActionType == EActionType.Attack)
+					evaluators.Add(new AttackEvaluator());
+				if (action.ActionType == EActionType.Reload)
+					evaluators.Add(new ReloadEvaluator());
+			}
+			
+
+			return evaluators;
 		}
 	}
 }
