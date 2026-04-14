@@ -49,16 +49,6 @@ namespace Systems.Buff
             var proxy = new BuffProxy(this, target);
             target.BuffProxy = proxy;
             _buffProxies.Add(target, proxy);
-            
-            // test
-            
-            if (((Unit.Unit)target).id == "001")
-            {
-                target.AttachBuff(BuffType.Fracture, null);
-                target.AttachBuff(BuffType.Blind, null);
-            }
-            
-            // test end
         }
 
         public void Unregister(IBuffAble target)

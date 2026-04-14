@@ -143,7 +143,6 @@ namespace Systems.Unit
 				skeletonDataAsset = config.skeletonDataAsset,
 				frontBodySkin = config.frontBodySkin,
 				backBodySkin = config.backBodySkin,
-				defaultWeaponSkin = config.defaultWeaponSkin,
 				icon = config.icon,
 
 				_currentHp = config.maxHp,
@@ -155,6 +154,8 @@ namespace Systems.Unit
                 
                 EventBus = eventBus
 			};
+			
+			unit.InitEquipment(config);
             
             return unit;
 		}
@@ -260,7 +261,7 @@ namespace Systems.Unit
             TacticalItem2
         };
 
-        public void InitEquipment(List<EquipmentConfig> equipmentConfigs)
+        public void InitEquipment(UnitConfig config)
         {
             MainWeapon = new EquipmentContainer();
             SecondaryWeapon = new EquipmentContainer();
@@ -268,11 +269,11 @@ namespace Systems.Unit
             TacticalItem1 = new EquipmentContainer();
             TacticalItem2 = new EquipmentContainer();
             
-            MainWeapon.Init(equipmentConfigs[0], this);
-            SecondaryWeapon.Init(equipmentConfigs[1], this);
-            TacticalItem0.Init(equipmentConfigs[2], this);
-            TacticalItem1.Init(equipmentConfigs[3], this);
-            TacticalItem2.Init(equipmentConfigs[4], this);
+            MainWeapon.Init(config.mainWeapon, this);
+            SecondaryWeapon.Init(config.secondaryWeapon, this);
+            TacticalItem0.Init(config.item0, this);
+            TacticalItem1.Init(config.item1, this);
+            TacticalItem2.Init(config.item2, this);
 
             CurrentEquipment = MainWeapon;
         }

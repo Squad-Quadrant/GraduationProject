@@ -45,8 +45,6 @@ namespace Systems.Unit
 				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
 			var unit = Unit.LoadFromConfig(unitId, config, position, _eventBus);
-            var equipmentConig = _dataManager.GetEquipmentConfigList(unitId);
-            unit.InitEquipment(equipmentConig);
 			_units[unitId] = unit;
 			_buffService.Register(unit);
 			
