@@ -13,7 +13,7 @@ namespace Systems.Equipment
         
         public List<EquipmentContainer> TacticalItemInfos { get; }
 
-        public void InitEquipment(List<EquipmentConfig> equipments);
+        // public void InitEquipment(List<EquipmentConfig> equipments);
         // {
         //     TacticalItemInfo0,
         //     TacticalItemInfo1,

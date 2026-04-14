@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
+using Systems.Equipment.Config;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -22,7 +23,6 @@ namespace Systems.Unit
 		[Required] public SkeletonDataAsset skeletonDataAsset;
 		public string frontBodySkin = "pcb1 front";
 		public string backBodySkin = "pcb1 back";
-		public string defaultWeaponSkin = "";
 
 		[TitleGroup("单位属性")]
 		public int maxHp = 100;
@@ -35,12 +35,18 @@ namespace Systems.Unit
         public int defense = 100;
         public float defenseRate = 0f;
         public int san = 100;
+        
+        [TitleGroup("装备")]
+        public EquipmentConfig mainWeapon;
+        public EquipmentConfig secondaryWeapon;
+        public EquipmentConfig item0;
+        public EquipmentConfig item1;
+        public EquipmentConfig item2;
 
         [TitleGroup("AI")]
         [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]
         public AIBrainConfig aiBrainConfig;
         
-
 		#region Validation
 
 		[Button("验证配置", ButtonSizes.Medium), GUIColor(1f, 0.8f, 0.4f)]
