@@ -46,6 +46,7 @@ namespace Presentation.Map
 	        new(0.65f, 0.8f, 1.0f, 0.25f), // AP 4
         };
         [SerializeField] private Color attackRangeColor = new(1f, 0.3f, 0.3f, 0.5f);
+        [SerializeField] private Color interactRangeColor = new(1f, 0.8f, 0.3f, 0.5f);
 
         [Title("Path Preview")]
         [SerializeField, TableList] private List<PathTileConfig> pathTileConfigs = new();
@@ -241,6 +242,7 @@ namespace Presentation.Map
 				ERangeType.Skill       => attackRangeColor, // reuse for now
 				ERangeType.AreaOfEffect => attackRangeColor,
 				ERangeType.Movement    => moveApColors.Length > 0 ? moveApColors[0] : Color.blue,
+				ERangeType.Interact		=> interactRangeColor,
 				_ => Color.white
 			};
 		}

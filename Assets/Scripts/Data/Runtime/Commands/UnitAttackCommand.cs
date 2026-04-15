@@ -70,8 +70,6 @@ namespace Data.Runtime.Commands
                 return;
             }
 
-            _eventBus.Publish(new UnitAttackedEvent(unit));
-            
             // _eventBus.Publish(new UnitBeHitEvent(unit));
             _eventBus.Publish(new UnitAttackedDealDamageEvent(unit, targetUnit, _actionType));
             

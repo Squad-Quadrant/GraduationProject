@@ -9,7 +9,8 @@ namespace Data.Runtime.Events.Interaction
 		Movement,
 		Attack,
 		Skill,
-		AreaOfEffect
+		AreaOfEffect,
+		Interact
 	}
 
 	/// <summary>

@@ -181,15 +181,12 @@ namespace Systems.Interaction.States
 
 		private void CancelPreview()
 		{
-			Context.ClearTarget();
 			Publish(Context, PathPreviewEvent.Hide());
 		}
 
 		private void ExecuteMove(Vector2Int targetCell)
 		{
 			this.Log($"Executing move to {targetCell}");
-
-			Context.targetCell = targetCell;
 
 			var fullPathResult = GetPath(targetCell);
 			if (!fullPathResult.Found)

@@ -30,11 +30,6 @@ namespace Presentation.Debugger
 
 		[TitleGroup("Interaction Context")]
 		[ShowInInspector, ReadOnly]
-		[LabelText("Target Cell")]
-		private string TargetCellInfo => GetTargetCellInfo();
-
-		[TitleGroup("Interaction Context")]
-		[ShowInInspector, ReadOnly]
 		[LabelText("Current Action")]
 		private string CurrentActionInfo => _cachedController?.Context?.currentAction.ToString() ?? "None";
 
@@ -68,14 +63,6 @@ namespace Presentation.Debugger
 		{
 			var unit = _cachedController?.Context?.selectedUnit;
 			return unit == null ? "None" : $"{unit.name} ({unit.id}) at {unit.position}";
-		}
-
-		private string GetTargetCellInfo()
-		{
-			var ctx = _cachedController?.Context;
-			if (ctx == null) return "None";
-
-			return ctx.targetCell == InteractionContext.InvalidCell ? "None" : ctx.targetCell.ToString();
 		}
 
 		#region Debug Actions

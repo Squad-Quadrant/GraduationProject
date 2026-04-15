@@ -33,6 +33,7 @@ namespace Systems.Map.SceneActor
         Box,
         Container, // 集装箱
         Forklift,
-        WeaponCabinet
+        WeaponCabinet,
+        Door
     }
 }

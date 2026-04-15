@@ -87,6 +87,7 @@ namespace Systems.Interaction.States
 				case EActionType.Wait:
 					ExecuteWait();
 					break;
+
                 case EActionType.Reload:
                     var reloadCommand = new UnitReloadCommand(
                         Context.selectedUnit,
@@ -95,6 +96,7 @@ namespace Systems.Interaction.States
                     );
                     Context.CommandQueue.EnqueueAndExecute(reloadCommand);
                     break;
+
                 case EActionType.SwitchWeapon:
                     var switchWeaponCommand = new UnitSwitchWeaponCommand(
                         Context.selectedUnit,
@@ -103,9 +105,11 @@ namespace Systems.Interaction.States
                     );
                     Context.CommandQueue.EnqueueAndExecute(switchWeaponCommand);
                     break;
-				case EActionType.None:
+
 				case EActionType.Interact:
+				case EActionType.None:
 				case EActionType.Defend:
+				case EActionType.Count:
 				default:
 					this.LogWarning($"Unhandled action: {e.ActionType}");
 					break;

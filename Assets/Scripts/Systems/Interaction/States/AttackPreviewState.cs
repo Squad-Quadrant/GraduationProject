@@ -157,21 +157,19 @@ namespace Systems.Interaction.States
 
 		private void CancelPreview()
 		{
-			Context.ClearTarget();
 			Publish(Context, PathPreviewEvent.Hide());
 		}
 
-		private void ExecuteAttack(Vector2Int target)
+		private void ExecuteAttack(Vector2Int targetCell)
 		{
-            this.Log($"Executing attack on target cell: {target}");
+            this.Log($"Executing attack on target cell: {targetCell}");
 
-			Context.targetCell = target;
-            Context.targetUnit = Context.UnitService.GetUnitAtPosition(target);
+			var targetUnit = Context.UnitService.GetUnitAtPosition(targetCell);
 
 			var unit = Context.selectedUnit;
 			var attackCommand = new UnitAttackCommand(
 				unit.id,
-                Context.targetUnit.id,
+                targetUnit.id,
 				1,
                 Context.currentAction,
 				Context.UnitService,

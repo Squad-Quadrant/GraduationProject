@@ -105,9 +105,7 @@ namespace Presentation.Input
 			var worldPos = ScreenToWorldPosition(screenPos);
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
 
-			// First, check if we hit a unit
-			// var unitId = DetectUnitAtPosition(screenPosition);
-			var unitId = GetUnitAtCell(cellPos); // todo: physical detection has not been implemented yet
+			var unitId = GetUnitAtCell(cellPos);
 			if (unitId != null)
 			{
 				this.Log($"Unit clicked: {unitId} at {cellPos}");
@@ -117,10 +115,8 @@ namespace Presentation.Input
 					cellPos,
 					worldPos
 				));
-				return;
 			}
 
-			// No unit hit, check if cell is within map bounds
 			if (_mapService.Data.IsInBounds(cellPos))
 			{
 				this.Log($"Cell clicked: {cellPos}");

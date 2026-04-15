@@ -42,7 +42,7 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Subscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Subscribe<UnitAttackedDealDamageEvent>(OnUnitAttacked);
             _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
@@ -55,7 +55,7 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Unsubscribe<UnitAttackedEvent>(OnUnitAttacked);
+            _eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(OnUnitAttacked);
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
@@ -211,7 +211,7 @@ namespace Presentation.Unit
 			return view;
 		}
         
-        private void OnUnitAttacked(UnitAttackedEvent e)
+        private void OnUnitAttacked(UnitAttackedDealDamageEvent e)
         {
             if (e.Attacker == null)
             {

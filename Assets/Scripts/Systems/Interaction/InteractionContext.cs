@@ -18,8 +18,6 @@ namespace Systems.Interaction
 	[Serializable]
 	public class InteractionContext
 	{
-		public static readonly Vector2Int InvalidCell = new (-1, -1);
-
 		#region Services
 
 		public IEventBus EventBus { get; }
@@ -37,10 +35,6 @@ namespace Systems.Interaction
 		public StateMachine<InteractionContext> StateMachine { get; internal set; }
 
 		public Unit.Unit selectedUnit;
-
-		public Unit.Unit targetUnit;
-
-		public Vector2Int targetCell = InvalidCell;
 
 		public EActionType currentAction;
 
@@ -71,17 +65,7 @@ namespace Systems.Interaction
 		public void ClearSelection()
 		{
 			selectedUnit = null;
-			targetCell = InvalidCell;
-			targetUnit = null;
 		}
-
-		public void ClearTarget()
-		{
-			targetCell = InvalidCell;
-			targetUnit = null;
-		}
-
-		public bool HasTarget => targetCell != InvalidCell || targetUnit != null;
 
 		/// <summary>
 		/// Gets the currently acting unit from TurnService.

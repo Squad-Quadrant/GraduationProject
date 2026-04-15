@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Core.Log;
+using Data.Runtime.Commands;
+using Data.Runtime.Events.Input;
+using Data.Runtime.Events.Interaction;
+using Systems.Map.SceneActor;
+using UnityEngine;
+
+namespace Systems.Interaction.States
+{
+	public class InteractPreviewState : InteractionState
+	{
+		public InteractPreviewState() : base(InteractionStates.InteractPreview) { }
+
+		private Action<CellClickedEvent> _onCellClicked;
+
+		private IReadOnlyList<Vector2Int> _validTargetCells;
+
+		public override void OnEnter(InteractionContext ctx)
+		{
+			base.OnEnter(ctx);
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
+
+			if (ctx.selectedUnit == null)
+			{
+				this.LogError("No unit selected! Returning to Idle.");
+				ctx.StateMachine.ChangeState<IdleState>();
+				return;
+			}
+
+			_validTargetCells = CalculateInteractableTargets(ctx);
+
+			Publish(ctx, new RangeDisplayEvent(
+				ERangeType.Interact,
+				_validTargetCells,
+				origin: ctx.selectedUnit.position,
+				sourceUnitId: ctx.selectedUnit.id));
+
+			_onCellClicked = OnCellClicked;
+			Subscribe(ctx, _onCellClicked);
+		}
+
+		public override void OnExit(InteractionContext ctx)
+		{
+			this.Log("Exited");
+
+			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Interact));
+
+			Unsubscribe(ctx, _onCellClicked);
+			_onCellClicked = null;
+
+			base.OnExit(ctx);
+		}
+
+		private void OnCellClicked(CellClickedEvent e)
+		{
+			if (!_validTargetCells.Contains(e.CellPosition))
+			{
+				this.LogWarning($"Clicked cell {e.CellPosition} is not a valid interact target.");
+				return;
+			}
+
+			this.Log($"Interacting with cell {e.CellPosition}");
+
+			var actor = Context.MapService.Data.GetCell(e.CellPosition).SceneActor;
+			if (actor is not InteractableSceneActor interactableActor)
+			{
+				this.LogError($"No interactable actor found at {e.CellPosition}!");
+				return;
+			}
+
+			var selectedUnit = Context.selectedUnit;
+			var interactCommand = new InteractCommand(selectedUnit, interactableActor, Context.EventBus);
+
+			Context.CommandQueue.Enqueue(interactCommand);
+			Context.StateMachine.ChangeState<ExecutingState>();
+		}
+
+		private static List<Vector2Int> CalculateInteractableTargets(InteractionContext ctx)
+		{
+			var validTargetCells = new List<Vector2Int>();
+			var neighbors = ctx.MapService.Data.GetNeighbors(ctx.selectedUnit.position);
+
+			foreach (var actor in neighbors.Select(neighbor => neighbor.SceneActor))
+			{
+				if (actor is not InteractableSceneActor interactableActor) continue;
+				validTargetCells.Add(interactableActor.BaseCell.Position);
+			}
+
+			return validTargetCells;
+		}
+	}
+}

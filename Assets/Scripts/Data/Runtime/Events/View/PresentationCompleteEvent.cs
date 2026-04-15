@@ -8,6 +8,7 @@ namespace Data.Runtime.Events.View
 		UI,
 		Camera,
 		Audio,
+		Interact,
 		Custom
 	}
 
@@ -20,7 +21,7 @@ namespace Data.Runtime.Events.View
 
 		public PresentationCompleteEvent(
 			EPresentationCategory category,
-			string type,
+			string type = null,
 			string entityId = null,
 			string tag = null)
 		{

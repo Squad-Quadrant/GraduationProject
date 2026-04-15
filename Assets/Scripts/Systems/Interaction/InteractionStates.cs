@@ -7,6 +7,7 @@
 		public const string MovementPreview = "MovementPreview";
 		public const string AttackPreview = "AttackPreview";
 		public const string SkillPreview = "SkillPreview";
+		public const string InteractPreview = "InteractPreview";
 		public const string Executing = "Executing";
 		public const string Paused = "Paused";
 		public const string GameOver = "GameOver";

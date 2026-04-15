@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Events;
 using Data.Runtime;
 using Data.Runtime.Events.Unit;
+using Presentation.Bootstrap;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -10,6 +11,7 @@ using Systems.AI.Config;
 using Systems.Buff;
 using Systems.Equipment;
 using Systems.Equipment.Config;
+using Systems.Map;
 using Systems.Turn;
 using UnityEngine;
 
@@ -117,9 +119,13 @@ namespace Systems.Unit
 
         public int RemainingMovementAp => Mathf.Min(CurrentAp, maxMovementAp - apSpentOnMovement);
 
-        protected IEventBus EventBus;
+        private IEventBus _eventBus;
+        private IEventBus EventBus => _eventBus ??= LevelContainer.Instance.Resolve<IEventBus>();
+
+        private IMapService _mapService;
+        private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
 		
-		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition, IEventBus eventBus)
+		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
 		{
 			var unit = new Unit
 			{
@@ -151,8 +157,6 @@ namespace Systems.Unit
                 _currentAp = config.actionPoints,
 				position = startPosition,
 				isStunned = false,
-                
-                EventBus = eventBus
 			};
 			
 			unit.InitEquipment(config);
@@ -168,16 +172,23 @@ namespace Systems.Unit
 				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment && canAttack),
 				new(EActionType.Wait)
 			};
-            if (!TacticalItem0.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
-            if (!TacticalItem1.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem1, false));
-            if (!TacticalItem2.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.TacticalItem2, false));
+
+            if (!TacticalItem0.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
+            if (!TacticalItem1.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem1, false));
+            if (!TacticalItem2.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem2, false));
+
             if (CurrentWeapon!= null)
-                actions.Add(new ActionAbility(EActionType.Reload, HasAp && canUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && canUseEquipment));
+
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-                actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && canUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && canUseEquipment));
+
+            var neighbors = MapService.Data.GetNeighbors(position);
+            foreach (var neighbor in neighbors)
+            {
+	            if (neighbor.SceneActor == null) continue;
+
+            }
 			return actions;
 		}
 

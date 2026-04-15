@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Data.Config;
+using System.Linq;
 using Systems.Map.Config;
 using UnityEngine.Tilemaps;
 
@@ -13,28 +13,34 @@ namespace Systems.Map.SceneActor
         {
             _count++;
             uint uid = _count;
+
+            Tile tile = config.tiles[UnityEngine.Random.Range(0, config.tiles.Count)];
+            List<MapCell> extraCells = config.ExtraGrid
+	            .Select(offset => baseCell.Position + offset)
+	            .Select(map.GetCell)
+	            .Where(extraCell => extraCell != null).ToList();
+
             switch (config.Type)
             {
                 case SceneActorType.Box:
                 case SceneActorType.Container:
                 case SceneActorType.Forklift:
                 case SceneActorType.WeaponCabinet:
-                    // 随机换皮 
-                    Tile tile = config.tiles[UnityEngine.Random.Range(0, config.tiles.Count)];
-                    List<MapCell> extraCells = new();
-                    foreach (var offset in config.ExtraGrid)
+                    // 随机换皮
+                    var sceneActor = new GeneralSceneActor(config.Type, uid, tile, baseCell, extraCells)
                     {
-                        var extraPos = baseCell.Position + offset;
-                        var extraCell = map.GetCell(extraPos);
-                        if (extraCell != null)
-                        {
-                            extraCells.Add(extraCell);
-                        }
-                    }
-                    var sceneActor = new GeneralSceneActor(config.Type, uid, tile, baseCell, extraCells);
-                    sceneActor.BlocksVision = config.blockVision;
-                    sceneActor.BlockMovement = config.blockMovement;
+	                    BlocksVision = config.blockVision,
+	                    BlockMovement = config.blockMovement
+                    };
                     return sceneActor;
+
+                case SceneActorType.Door:
+	                var door = new DoorSceneActor(config.Type, uid, tile, baseCell, extraCells, config.regionId)
+	                {
+		                BlocksVision = config.blockVision,
+		                BlockMovement = config.blockMovement
+	                };
+	                return door;
                 default:
                     throw  new NotImplementedException();
             }

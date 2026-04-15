@@ -37,7 +37,7 @@ namespace Systems.PathFinding.TraversalRule
 			};
 		}
 
-		private bool CanCrossWall(Vector2Int from, Vector2Int to, MapData mapData, PathFindingOptions options)
+		private static bool CanCrossWall(Vector2Int from, Vector2Int to, MapData mapData, PathFindingOptions options)
 		{
 			var wall = mapData.GetWall(new WallKey(from, to));
 			if (wall == null)

@@ -16,5 +16,8 @@ namespace Systems.Map.Config
         public bool blockVision = true;
 
         public bool blockMovement = true;
+
+        [Tooltip("只有当Type为Door时才有用，定义了交互之后会显示哪块区域")]
+        public int regionId = -1;
     }
 }
