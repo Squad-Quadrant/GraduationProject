@@ -17,3 +17,11 @@ MonoBehaviour:
   inRangeBonus: 0.2
   apConservationBonus: 0.1
   waitScore: 0.1
+  attackBase: 1.6
+  fear: 0.5
+  killAwareness: 0.5
+  bluntness: 0.01
+  tacticsAttack: 0.1
+  reloadBase: 0.3
+  ammoAnxiety: 1
+  tacticsReload: 0.1
