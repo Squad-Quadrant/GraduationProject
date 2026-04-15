@@ -20,13 +20,19 @@ MonoBehaviour:
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: ru1 front
   backBodySkin: ru1 back
-  defaultWeaponSkin: weapon_akm
   maxHp: 100
   speed: 90
   moveRange: 4
+  maxMovementAp: 2
   actionPoints: 2
   visionRange: 5
   faction: 1
   defense: 40
   defenseRate: 0
-  aiBrainConfig: {fileID: 0}
+  san: 100
+  mainWeapon: {fileID: 11400000, guid: d3c075c9fa71266459f7fe277c5a3b5b, type: 2}
+  secondaryWeapon: {fileID: 11400000, guid: e54057a764aefd9439824c5f172c4703, type: 2}
+  item0: {fileID: 11400000, guid: a787d6c0d429c294d92db4790eedda9e, type: 2}
+  item1: {fileID: 0}
+  item2: {fileID: 0}
+  aiBrainConfig: {fileID: 11400000, guid: 2ab7077191b4a7f4db93eaf8ff561289, type: 2}
