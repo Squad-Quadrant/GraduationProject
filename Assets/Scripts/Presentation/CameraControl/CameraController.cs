@@ -2,6 +2,7 @@
 using System.Linq;
 using Core.Events;
 using Core.Log;
+using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
@@ -51,6 +52,7 @@ namespace Presentation.CameraControl
 			ComputeWorldBounds();
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
+			_eventBus.Subscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
 
 			_isInitialized = true;
 			this.Log("Initialized");
@@ -60,6 +62,7 @@ namespace Presentation.CameraControl
 		{
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
+			_eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
 			KillFocusTween();
 		}
 
@@ -95,6 +98,15 @@ namespace Presentation.CameraControl
 			this.Log($"Enemies discovered: {positions.Count} units, starting focus sequence");
 
 			FocusOnCellSequence(positions);
+		}
+
+		private void OnAttackDealDamage(UnitAttackedDealDamageEvent e)
+		{
+			if (e.Attacker == null) return;
+
+			var worldPos = _coordinateConverter.CellToWorld(e.Attacker.position);
+			FocusOn(worldPos);
+			this.Log($"Unit attacked: {e.Attacker.id}, focusing on attacker position");
 		}
 
 		public void FocusOn(Vector3 worldPos)
