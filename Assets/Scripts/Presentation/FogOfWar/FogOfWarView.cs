@@ -43,7 +43,7 @@ namespace Presentation.FogOfWar
 		[OnValueChanged("UpdateMaterial")] [SerializeField, Range(0f, 1f)] private float dotSoftness = 0.03f;
 
 		[Title("Rendering")]
-		[SerializeField] private string sortingLayerName = "Default";
+		[SerializeField] private string sortingLayerName = "OnGround";
 		[SerializeField] private int sortingOrder = 1000;
 		[SerializeField] private float padding = 5f;
 

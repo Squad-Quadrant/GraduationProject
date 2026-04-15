@@ -13,6 +13,7 @@ using Presentation.Map;
 using Presentation.UI.Core;
 using Presentation.UI.Presenter;
 using Presentation.Unit;
+using Presentation.Vision;
 using Sirenix.OdinInspector;
 using Systems.AI;
 using Systems.Buff;
@@ -44,6 +45,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private InteractionController interactionController;
 		[SerializeField, Required] private UnitViewManager unitViewManager;
 		[SerializeField, Required] private CameraController cameraController;
+		[SerializeField, Required] private SpottedEnemyMarkerView spottedEnemyMarkerView;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -164,6 +166,7 @@ namespace Presentation.Bootstrap
             inputService.Initialize(_levelContainer.Services);
             interactionController.Initialize(_levelContainer.Services);
             unitViewManager.Initialize(_levelContainer.Services);
+            spottedEnemyMarkerView.Initialize(_levelContainer.Services);
         }
 
         private void RegisterPresenter()
@@ -173,16 +176,15 @@ namespace Presentation.Bootstrap
             var unitService = _levelContainer.Services.Resolve<IUnitService>();
             var coordinateConverter = _levelContainer.Services.Resolve<ICoordinateConverter>();
             var damageServer = _levelContainer.Services.Resolve<IDamageService>();
+            var visionCalculator = _levelContainer.Services.Resolve<IVisionCalculator>();
+            var visionService = _levelContainer.Services.Resolve<IVisionService>();
 
-            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer,
-                unitService, interactionController.Context));
+            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer, unitService, interactionController.Context));
             _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
-            _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService,
-                unitService));
+            _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
-            _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus,
-                coordinateConverter,
-                unitService, unitViewManager));
+            _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
+            _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
         }
 
         private void LoadMap()

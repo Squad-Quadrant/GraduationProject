@@ -24,9 +24,11 @@ MonoBehaviour:
   maxHp: 100
   speed: 120
   moveRange: 6
+  maxMovementAp: 2
   actionPoints: 3
   visionRange: 6
   faction: 0
   defense: 80
   defenseRate: 0
-  aiBrainConfig: {fileID: 0}
+  san: 100
+  aiBrainConfig: {fileID: 11400000, guid: 2ab7077191b4a7f4db93eaf8ff561289, type: 2}

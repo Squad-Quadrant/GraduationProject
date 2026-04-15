@@ -272,3 +272,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.Vision.SpottedEnemyMarkerView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Vision.GunLineRevealPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
