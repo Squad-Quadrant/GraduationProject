@@ -20,7 +20,6 @@ MonoBehaviour:
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: pcb2 front
   backBodySkin: pcb2 back
-  defaultWeaponSkin: weapon_a1car
   maxHp: 100
   speed: 120
   moveRange: 6
@@ -31,4 +30,9 @@ MonoBehaviour:
   defense: 80
   defenseRate: 0
   san: 100
-  aiBrainConfig: {fileID: 11400000, guid: 2ab7077191b4a7f4db93eaf8ff561289, type: 2}
+  mainWeapon: {fileID: 11400000, guid: d3c075c9fa71266459f7fe277c5a3b5b, type: 2}
+  secondaryWeapon: {fileID: 11400000, guid: e54057a764aefd9439824c5f172c4703, type: 2}
+  item0: {fileID: 11400000, guid: a787d6c0d429c294d92db4790eedda9e, type: 2}
+  item1: {fileID: 0}
+  item2: {fileID: 0}
+  aiBrainConfig: {fileID: 0}
