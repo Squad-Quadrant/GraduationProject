@@ -10,6 +10,7 @@ namespace Systems.Damage
         public EActionType ActionType;
         public int Priority = 0; // 优先级，数值越大优先执行, 可以考虑先用枚举做粗略分级,再用整数做细分
         public DamageExecutingContext Context; 
+        public abstract DamageInfluenceType DamageInfluenceType { get; }
         public DamageInfluence(IDamageInfluencer owner, int priority = 0)
         {
             Owner = owner;
