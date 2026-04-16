@@ -115,7 +115,9 @@ namespace Systems.Equipment
                 return new List<DamageInfluence>{
                     new ShootDamageInfluence(this, 0, isOnPreciseShoot), 
                     new ShotHitRateInfluence(this, 0, isOnPreciseShoot), 
-                    new ShotDefenceDamageInfluence(this) };
+                    new ShotDefenceDamageInfluence(this),
+                    new BodyDestructionInfluence(this)
+                };
             }
 
             return null;

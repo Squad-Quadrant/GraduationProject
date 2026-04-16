@@ -14,6 +14,8 @@ namespace Systems.Damage
             _isOnPreciseShoot = isOnPreciseShoot;
         }
 
+        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.Damage;
+
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);
