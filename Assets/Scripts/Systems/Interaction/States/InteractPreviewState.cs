@@ -82,7 +82,7 @@ namespace Systems.Interaction.States
 		private static List<Vector2Int> CalculateInteractableTargets(InteractionContext ctx)
 		{
 			var validTargetCells = new List<Vector2Int>();
-			var neighbors = ctx.MapService.Data.GetNeighbors(ctx.selectedUnit.position);
+			var neighbors = ctx.MapService.Data.GetNeighborCells(ctx.selectedUnit.position);
 			neighbors.Add(ctx.MapService.Data.GetCell(ctx.selectedUnit.position)); // Include the unit's own cell for self-interaction
 
 			foreach (var actor in neighbors.Select(neighbor => neighbor.SceneActor))

@@ -59,7 +59,7 @@ namespace Systems.Map
 			position.x >= 0 && position.x < Size.x &&
 			position.y >= 0 && position.y < Size.y;
 
-		public List<MapCell> GetNeighbors(Vector2Int position)
+		public List<MapCell> GetNeighborCells(Vector2Int position)
 		{
 			var directions = new Vector2Int[]
 			{
@@ -73,6 +73,21 @@ namespace Systems.Map
 				.Select(dir => position + dir)
 				.Select(GetCell)
 				.Where(neighborCell => neighborCell != null).ToList();
+		}
+
+		public List<MapWall> GetNeighborWalls(Vector2Int position)
+		{
+			var wallKeys = new WallKey[]
+			{
+				new(new Vector2Int(position.x, position.y), new Vector2Int(position.x + 1, position.y)), // Right wall
+				new(new Vector2Int(position.x, position.y), new Vector2Int(position.x, position.y + 1)), // Up wall
+				new(new Vector2Int(position.x, position.y), new Vector2Int(position.x - 1, position.y)), // Left wall
+				new(new Vector2Int(position.x, position.y), new Vector2Int(position.x, position.y - 1)) // Down wall
+			};
+
+			return wallKeys
+				.Select(GetWall)
+				.Where(wall => wall != null).ToList();
 		}
 	}
 }

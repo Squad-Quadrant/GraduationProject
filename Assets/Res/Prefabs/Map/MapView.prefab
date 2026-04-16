@@ -229,6 +229,7 @@ MonoBehaviour:
   - {r: 0.5882353, g: 1, b: 0.5882353, a: 0.6666667}
   - {r: 0.78431374, g: 1, b: 0.78431374, a: 0.54901963}
   attackRangeColor: {r: 1, g: 0.3, b: 0.3, a: 0.5}
+  interactRangeColor: {r: 1, g: 0.8, b: 0.3, a: 0.5}
   pathTileConfigs:
   - type: 0
     tile: {fileID: 11400000, guid: fbe44318879f5524e95b0205b89d7de0, type: 2}
@@ -541,7 +542,7 @@ MonoBehaviour:
   noiseTex: {fileID: 2800000, guid: 75b254a55f7e3f347ac8f2b5db9b11d9, type: 3}
   fogColor: {r: 0, g: 0, b: 0, a: 0.98039216}
   noiseIntensity: 0.5
-  noiseScale: 0.7
+  noiseScale: 0.3
   edgeSoftness: 0.9
   paddingRange: 1
   paddingStrength: 0.35

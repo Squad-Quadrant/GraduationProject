@@ -11,6 +11,8 @@ using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Equipment;
 using Systems.Interfaces;
+using Systems.Map;
+using Systems.Map.Config;
 using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;
@@ -27,6 +29,7 @@ namespace Presentation.Unit
 		private ICoordinateConverter _coordConverter;
 		private IUnitService _unitService;
 		private IVisionService _visionService;
+		private IMapService _mapService;
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
 
@@ -36,6 +39,7 @@ namespace Presentation.Unit
 			_coordConverter = services.Resolve<ICoordinateConverter>();
 			_unitService = services.Resolve<IUnitService>();
 			_visionService = services.Resolve<IVisionService>();
+			_mapService = services.Resolve<IMapService>();
 
 			if (!unitContainer) unitContainer = transform;
 
@@ -190,6 +194,10 @@ namespace Presentation.Unit
 						entityId: e.Unit.id
 					));
 					_visionService.UpdateUnitVision(movingUnit.id, movingUnit.position, movingUnit.visionRange); // 确保结束时视野正确更新
+
+					// 移动到矮墙周围自动蹲下
+					var neighborCells = _mapService.Data.GetNeighborWalls(movingUnit.position);
+					view.SetStance(neighborCells.Any(wall => wall.Type == WallType.LowWall) ? EUnitStance.Bend : EUnitStance.Stand);
 				});
 		}
 

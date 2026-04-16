@@ -53,7 +53,7 @@ namespace Systems.PathFinding
 				var current = frontier[minIndex];
 				frontier.RemoveAt(minIndex);
 
-				var neighbors = mapData.GetNeighbors(current);
+				var neighbors = mapData.GetNeighborCells(current);
 				foreach (var neighbor in neighbors.Select(neighborCell => neighborCell.Position))
 				{
 					var traversal = _traversalRule.CheckTraversal(current, neighbor, mapData, options);

@@ -168,9 +168,9 @@ namespace Systems.Unit
 
 		public List<ActionAbility> GetAvailableActions()
 		{
-			var neighbors = MapService.Data.GetNeighbors(position);
+			var neighbors = MapService.Data.GetNeighborCells(position);
 			neighbors.Add(MapService.Data.GetCell(position));
-			bool hasInteractableNeighbor = neighbors.Any(neighbor => neighbor.SceneActor is InteractableSceneActor);
+			bool hasInteractableNeighbor = neighbors.Any(neighbor => neighbor.SceneActor is InteractableSceneActor { CanInteract: true });
 
 			var actions = new List<ActionAbility>
 			{
