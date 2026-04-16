@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Events;
 using Data.Runtime;
 using Data.Runtime.Events.Unit;
@@ -12,6 +13,7 @@ using Systems.Buff;
 using Systems.Equipment;
 using Systems.Equipment.Config;
 using Systems.Map;
+using Systems.Map.SceneActor;
 using Systems.Turn;
 using UnityEngine;
 
@@ -166,11 +168,16 @@ namespace Systems.Unit
 
 		public List<ActionAbility> GetAvailableActions()
 		{
+			var neighbors = MapService.Data.GetNeighbors(position);
+			neighbors.Add(MapService.Data.GetCell(position));
+			bool hasInteractableNeighbor = neighbors.Any(neighbor => neighbor.SceneActor is InteractableSceneActor);
+
 			var actions = new List<ActionAbility>
 			{
-				new(EActionType.Move, RemainingMovementAp > 0),
-				new(EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment && canAttack),
-				new(EActionType.Wait)
+				new (EActionType.Move, RemainingMovementAp > 0),
+				new (EActionType.Interact, hasInteractableNeighbor),
+				new (EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment && canAttack),
+				new (EActionType.Wait)
 			};
 
             if (!TacticalItem0.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
@@ -183,12 +190,6 @@ namespace Systems.Unit
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
 	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && canUseEquipment));
 
-            var neighbors = MapService.Data.GetNeighbors(position);
-            foreach (var neighbor in neighbors)
-            {
-	            if (neighbor.SceneActor == null) continue;
-
-            }
 			return actions;
 		}
 

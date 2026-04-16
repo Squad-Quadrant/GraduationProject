@@ -75,7 +75,7 @@ namespace Systems.Interaction.States
 			var selectedUnit = Context.selectedUnit;
 			var interactCommand = new InteractCommand(selectedUnit, interactableActor, Context.EventBus);
 
-			Context.CommandQueue.Enqueue(interactCommand);
+			Context.CommandQueue.EnqueueAndExecute(interactCommand);
 			Context.StateMachine.ChangeState<ExecutingState>();
 		}
 
@@ -83,6 +83,7 @@ namespace Systems.Interaction.States
 		{
 			var validTargetCells = new List<Vector2Int>();
 			var neighbors = ctx.MapService.Data.GetNeighbors(ctx.selectedUnit.position);
+			neighbors.Add(ctx.MapService.Data.GetCell(ctx.selectedUnit.position)); // Include the unit's own cell for self-interaction
 
 			foreach (var actor in neighbors.Select(neighbor => neighbor.SceneActor))
 			{

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Systems.Map.SceneActor
@@ -19,7 +20,7 @@ namespace Systems.Map.SceneActor
 
         public bool BlocksVision { get; set; }
 
-        public bool BlockMovement { get; set; }
+        public List<Vector2Int> BlockMovement { get; set; }
         
         public SceneActorBase(SceneActorType type, uint uid)
         {

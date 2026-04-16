@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.5
   animator: {fileID: 1217849529714404168}
+  sortingGroup: {fileID: 5963265314863248642}
 --- !u!210 &5963265314863248642
 SortingGroup:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core.Events;
 using Data.Runtime.Events.View;
 using Presentation.Bootstrap;
 using Systems.Map.Region;
@@ -16,6 +17,9 @@ namespace Systems.Map.SceneActor
 
 		private readonly int _regionId;
 
+		private IEventBus _eventBus;
+		private IEventBus EventBus => _eventBus ??= LevelContainer.Instance.Resolve<IEventBus>();
+
 		private IRegionService _regionService;
 		private IRegionService RegionService => _regionService ??= LevelContainer.Instance.Resolve<IRegionService>();
 
@@ -27,6 +31,8 @@ namespace Systems.Map.SceneActor
 			if (RegionService.IsRegionUnlocked(_regionId)) return;
 
 			CanInteract = false;
+			BlockMovement.Clear();
+			BlocksVision = false;
 			RegionService.UnlockRegion(_regionId);
 			EventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Interact));
 		}

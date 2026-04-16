@@ -189,6 +189,7 @@ namespace Presentation.Unit
 						type: PresentationType.Animation.Move,
 						entityId: e.Unit.id
 					));
+					_visionService.UpdateUnitVision(movingUnit.id, movingUnit.position, movingUnit.visionRange); // 确保结束时视野正确更新
 				});
 		}
 
@@ -314,6 +315,12 @@ namespace Presentation.Unit
 	        foreach (var (unitId, view) in _views)
 	        {
 		        if (!view) continue;
+
+		        if (view.IsMoving)
+		        {
+			        view.SetVisible(true);
+			        continue;
+		        }
 
 		        if (!_unitService.TryGetUnit(unitId, out var unit))
 		        {

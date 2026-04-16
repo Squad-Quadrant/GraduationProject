@@ -107,6 +107,8 @@ namespace Systems.Interaction.States
                     break;
 
 				case EActionType.Interact:
+					StateMachine(Context).ChangeState<InteractPreviewState>();
+					break;
 				case EActionType.None:
 				case EActionType.Defend:
 				case EActionType.Count:

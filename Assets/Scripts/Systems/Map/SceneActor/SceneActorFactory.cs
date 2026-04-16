@@ -30,7 +30,7 @@ namespace Systems.Map.SceneActor
                     var sceneActor = new GeneralSceneActor(config.Type, uid, tile, baseCell, extraCells)
                     {
 	                    BlocksVision = config.blockVision,
-	                    BlockMovement = config.blockMovement
+	                    BlockMovement = config.blockMovementFrom
                     };
                     return sceneActor;
 
@@ -38,7 +38,7 @@ namespace Systems.Map.SceneActor
 	                var door = new DoorSceneActor(config.Type, uid, tile, baseCell, extraCells, config.regionId)
 	                {
 		                BlocksVision = config.blockVision,
-		                BlockMovement = config.blockMovement
+		                BlockMovement = config.blockMovementFrom
 	                };
 	                return door;
                 default:

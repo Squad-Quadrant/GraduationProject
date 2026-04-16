@@ -280,3 +280,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.InteractPreviewState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.InteractCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1

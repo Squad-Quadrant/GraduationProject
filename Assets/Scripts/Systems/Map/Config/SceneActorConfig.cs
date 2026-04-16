@@ -15,7 +15,13 @@ namespace Systems.Map.Config
 
         public bool blockVision = true;
 
-        public bool blockMovement = true;
+        public List<Vector2Int> blockMovementFrom = new()
+        {
+	        new Vector2Int(0, -1),
+	        new Vector2Int(0, 1),
+	        new Vector2Int(1, 0),
+	        new Vector2Int(-1, 0)
+        };
 
         [Tooltip("只有当Type为Door时才有用，定义了交互之后会显示哪块区域")]
         public int regionId = -1;

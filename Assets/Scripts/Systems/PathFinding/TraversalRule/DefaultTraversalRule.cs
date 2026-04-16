@@ -17,14 +17,19 @@ namespace Systems.PathFinding.TraversalRule
 			if (!mapData.IsInBounds(to))
 				return TraversalCheckResult.Blocked;
 
-			var targetCell = mapData.GetCell(to);
-			if (targetCell == null ||
-			    (!options.IgnoreTerrainWalkability && !targetCell.IsWalkable) ||
-			    !CanCrossWall(from, to, mapData, options) ||
-			    targetCell.SceneActor is { BlockMovement: true })
+			var toCell = mapData.GetCell(to);
+			if (toCell == null ||
+			    (!options.IgnoreTerrainWalkability && !toCell.IsWalkable) ||
+			    !CanCrossWall(from, to, mapData, options))
 				return TraversalCheckResult.Blocked;
 
-			int baseCost = options.IgnoreTerrainWalkability ? 1 : targetCell.MoveCost;
+			var direction = to - from;
+			var fromCell = mapData.GetCell(from);
+			if (fromCell.SceneActor != null && fromCell.SceneActor.BlockMovement.Contains(direction) ||
+			    toCell.SceneActor != null && toCell.SceneActor.BlockMovement.Contains(-direction))
+				return TraversalCheckResult.Blocked;
+
+			int baseCost = options.IgnoreTerrainWalkability ? 1 : toCell.MoveCost;
 
 			var occupationResult = CheckUnitOccupation(to, options);
 			return occupationResult switch

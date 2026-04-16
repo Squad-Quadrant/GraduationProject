@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
-using Data.Config;
-using Data.Runtime.Events.Vision;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.Interfaces;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Presentation.Unit
 {
@@ -23,8 +22,9 @@ namespace Presentation.Unit
 		[TitleGroup("References")]
 		[SerializeField, Required, ChildGameObjectsOnly]
 		private UnitAnimator animator;
-		private MeshRenderer _renderer;
+		[SerializeField, Required] private SortingGroup sortingGroup;
 
+		private MeshRenderer _renderer;
 		private UnitAnimationConfig _config;
 		private ICoordinateConverter _coordConverter;
 
@@ -36,6 +36,8 @@ namespace Presentation.Unit
 		private string _backBodySkinName;
 
 		private Coroutine _moveCoroutine;
+
+		public bool IsMoving => _moveCoroutine != null;
 
 		#region IClickableUnit
 
