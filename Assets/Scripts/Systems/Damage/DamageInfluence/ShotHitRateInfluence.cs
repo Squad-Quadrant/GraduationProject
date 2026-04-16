@@ -11,6 +11,8 @@ namespace Systems.Damage
             _preciseShootSpeed = preciseShootSpeed;
         }
 
+        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.HitRate;
+
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);

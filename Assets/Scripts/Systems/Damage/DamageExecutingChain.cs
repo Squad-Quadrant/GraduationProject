@@ -11,8 +11,8 @@ namespace Systems.Damage
     {
         public DamageType DamageType;
         private DamageExecutingContext _context;
-        private readonly List<DamageInfluence> _influences = new();
-        private readonly List<IDamageInfluencer> _influencers = new();
+        private List<DamageInfluence> _influences = new();
+        private List<IDamageInfluencer> _influencers = new();
         private IEventBus _eventBus;
         
         public DamageExecutingChain(DamageType damageType)
@@ -50,6 +50,8 @@ namespace Systems.Damage
 
         public void Execute()
         {
+            _influences.RemoveAll(i => _context.ignoredInfluenceTypes.Contains(i.DamageInfluenceType));
+            
             for (int i = 0; i < _context.CalculateNum; i++)
             {
                 if (_context.HitRate > Random.Range(0f, 1f)) 
@@ -78,7 +80,7 @@ namespace Systems.Damage
                 {
                     string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
                     this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
-                             $"共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
+                             $"击中{_context.bodyPartType.ToString()}, 共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
                 }
             }
         }
@@ -87,13 +89,17 @@ namespace Systems.Damage
         {
             var defender = _context.Defender;
 
-            defender.CurrentDefense -= _context.DefenceDamage;
-            defender.CurrentSan -= _context.SanDamage;
-            defender.CurrentHp -= _context.Damage;
-            
-            _context.TotalDamage += _context.Damage;
-            _context.TotalDefenseDamage += _context.DefenceDamage;
-            _context.TotalSanDamage += _context.SanDamage;
+            int finalDamage = Mathf.RoundToInt(_context.Damage * _context.DamageModifier);
+            int finalDefenseDamage = Mathf.RoundToInt(_context.DefenceDamage * _context.DefenseDamageModifier);
+            int finalSanDamage = Mathf.RoundToInt(_context.SanDamage * _context.SanDamageModifier);
+
+            defender.CurrentHp -= finalDamage;
+            defender.CurrentDefense -= finalDefenseDamage;
+            defender.CurrentSan -= finalSanDamage;
+
+            _context.TotalDamage += finalDamage;
+            _context.TotalDefenseDamage += finalDefenseDamage;
+            _context.TotalSanDamage += finalSanDamage;
             
             this.Log($"Damage applied: type:{_context.DamageType}, {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
                 $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
@@ -131,6 +137,13 @@ namespace Systems.Damage
         public int Damage = 0;
         public int DefenceDamage = 0; // 对护甲的伤害
         public int SanDamage = 0; // San值伤害
+        
+        public float DamageModifier = 1;
+        public float DefenseDamageModifier = 1;
+        public float SanDamageModifier = 1;
+
+        public BodyPartType bodyPartType; // 击中部位
+        public List<DamageInfluenceType> ignoredInfluenceTypes; 
         
         public float HitRate = 1;
         
