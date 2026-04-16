@@ -148,7 +148,7 @@ namespace Systems.Vision
 		private static bool IsWallBlocking(Vector2Int cell1, Vector2Int cell2, MapData mapData)
 		{
 			var wall = mapData.GetWall(new WallKey(cell1, cell2));
-			return wall != null && wall.Type != WallType.None;
+			return wall != null && wall.Type != WallType.None && wall.Type != WallType.LowWall;
 		}
 
 		private static bool IsCellBlocking(Vector2Int cellPos, MapData mapData)
