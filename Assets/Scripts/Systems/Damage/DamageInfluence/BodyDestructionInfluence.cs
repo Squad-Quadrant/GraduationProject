@@ -29,7 +29,7 @@ namespace Systems.Damage
         private static readonly BodyPartHitInfo[] BodyParts = 
         {
             new() { PartType = BodyPartType.Legs, HitProbability = 20f, HasArmor = false, DamageMultiplier = 0.6f },
-            new() { PartType = BodyPartType.Arms, HitProbability = 100000f, HasArmor = false, DamageMultiplier = 0.65f },
+            new() { PartType = BodyPartType.Arms, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.65f },
             new() { PartType = BodyPartType.Head, HitProbability = 10f, HasArmor = true, DamageMultiplier = 2f },
             new() { PartType = BodyPartType.Torso, HitProbability = 50f, HasArmor = true, DamageMultiplier = 1f }
         };
@@ -78,7 +78,7 @@ namespace Systems.Damage
                         // 骨折判定等
                         break;
                     case BodyPartType.Arms:
-                        (Context.Defender as IBuffAble).AttachBuff(BuffType.Fracture, Owner);
+                        (Context.Defender as IBuffAble).AttachBuff(BuffType.HandFracture, Owner);
                         this.Log($"对{Defender.name}的造成骨折", true);
                         break;
                     case BodyPartType.Head:

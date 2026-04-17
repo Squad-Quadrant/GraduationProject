@@ -33,12 +33,20 @@ namespace Systems.Buff.Config
     {
         [InspectorName("请选择类型")]
         None,
-        [InspectorName("骨折")]
-        Fracture,
+        [InspectorName("手部骨折")]
+        HandFracture,
+        [InspectorName("腿部骨折")]
+        LegFracture,
         [InspectorName("中毒")]
         Toxicosis,
         [InspectorName("盲目")]
-        Blind
+        Blind,
+        [InspectorName("眩晕")]
+        Dizzy,
+        [InspectorName("流血")]
+        Bleed,
+        [InspectorName("虚弱")]
+        Weak
     }
 
     [Configurable("Buff/BuffData")]
