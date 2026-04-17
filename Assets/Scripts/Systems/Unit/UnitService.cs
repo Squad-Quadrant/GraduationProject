@@ -4,8 +4,10 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data;
+using Data.Config;
 using Data.Runtime.Events.Unit;
 using Systems.Buff;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -15,8 +17,12 @@ namespace Systems.Unit
 		private readonly IEventBus _eventBus;
         private readonly DataManager _dataManager;
         private readonly IBuffService _buffService;
-        
-		public UnitService(IEventBus eventBus, DataManager dataManager, IBuffService buffService)
+
+        private readonly Dictionary<string, Unit> _units = new();
+
+        public int Count => _units.Count;
+
+        public UnitService(IEventBus eventBus, DataManager dataManager, IBuffService buffService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
@@ -24,16 +30,9 @@ namespace Systems.Unit
 			this.Log("Initialized");
 		}
 
-        public void Dispose()
-        {
-            this.Log("Disposed");
-        }
+		public void Dispose() => this.Log("Disposed");
 
-		private readonly Dictionary<string, Unit> _units = new();
-
-		public int Count => _units.Count;
-
-		public Unit CreateUnit(string unitId, UnitConfig config, Vector2Int position)
+		public Unit CreateUnit(string unitId, UnitConfig config, Loadout loadout, Vector2Int position)
 		{
 			if (string.IsNullOrEmpty(unitId))
 				throw new ArgumentException("Unit ID cannot be null or empty.", nameof(unitId));
@@ -44,13 +43,30 @@ namespace Systems.Unit
 			if (_units.ContainsKey(unitId))
 				throw new InvalidOperationException($"A unit with ID '{unitId}' already exists.");
 
+			var resolvedMain = _dataManager.GetEquipment(loadout?.mainWeaponId ?? 0);
+			var resolvedSecondary = _dataManager.GetEquipment(loadout?.secondaryWeaponId ?? 0);
+			var resolvedTacticalItems = ResolveTacticalItems(loadout);
+
 			var unit = Unit.LoadFromConfig(unitId, config, position);
+			unit.InitEquipment(resolvedMain, resolvedSecondary, resolvedTacticalItems);
+
 			_units[unitId] = unit;
 			_buffService.Register(unit);
 			
 			this.Log($"Created unit: {unit}");
 			_eventBus.Publish(new UnitCreatedEvent(unit));
 			return unit;
+		}
+
+		private EquipmentConfig[] ResolveTacticalItems(Loadout loadout)
+		{
+			var result = new EquipmentConfig[Loadout.TacticalItemSlotCount];
+			if (loadout == null) return result;
+
+			loadout.NormalizeTacticalSlots();
+			for (int i = 0; i < Loadout.TacticalItemSlotCount; i++)
+				result[i] = _dataManager.GetEquipment(loadout.tacticalItemIds[i]);
+			return result;
 		}
 
 		public void DestroyUnit(string unitId, string killerUnitId = null)
@@ -61,9 +77,7 @@ namespace Systems.Unit
 				return;
 			}
 
-			this.Log($"Unit destroyed: {unit.name}({unitId})" +
-			          (killerUnitId != null ? $" by {killerUnitId}" : ""));
-            
+			this.Log($"Unit destroyed: {unit.name}({unitId})" + (killerUnitId != null ? $" by {killerUnitId}" : ""));
             this.Log($"{unit.name}死亡", true);
 
 			_eventBus.Publish(new UnitDestroyedEvent(unit, killerUnitId));
@@ -76,22 +90,18 @@ namespace Systems.Unit
 			this.Log($"Cleared {count} units");
 		}
 
-		public Unit GetUnit(string unitId)
-		{
-			if (_units.TryGetValue(unitId, out var unit))
-				return unit;
-			throw new KeyNotFoundException($"No unit found with ID: {unitId}");
-		}
+		public Unit GetUnit(string unitId) =>
+			_units.TryGetValue(unitId, out var unit)
+				? unit
+				: throw new KeyNotFoundException($"No unit found with ID: {unitId}");
 
 		public bool TryGetUnit(string unitId, out Unit unit) => _units.TryGetValue(unitId, out unit);
 
 		public bool HasUnit(string unitId) => _units.ContainsKey(unitId);
 
-		public IReadOnlyList<Unit> GetAllUnits() =>
-			_units.Values.ToList();
+		public IReadOnlyList<Unit> GetAllUnits() => _units.Values.ToList();
 
-		public IReadOnlyList<Unit> GetAllAliveUnits() =>
-			_units.Values.Where(u => u.IsAlive).ToList();
+		public IReadOnlyList<Unit> GetAllAliveUnits() => _units.Values.Where(u => u.IsAlive).ToList();
 
 		public IReadOnlyList<Unit> GetUnitsInRange(Vector2Int center, int range, bool includeCenter = true)
 		{
@@ -130,11 +140,8 @@ namespace Systems.Unit
                 .ToList();
         }
 
-        public Unit GetUnitAtPosition(Vector2Int position)
-        {
-            return _units.Values.FirstOrDefault(u => u.position == position);
-        }
-        
+        public Unit GetUnitAtPosition(Vector2Int position) => _units.Values.FirstOrDefault(u => u.position == position);
+
         public void CheckUnitDeath()
         {
             var deadUnits = _units.Values.Where(u => u.IsAlive == false).ToList();

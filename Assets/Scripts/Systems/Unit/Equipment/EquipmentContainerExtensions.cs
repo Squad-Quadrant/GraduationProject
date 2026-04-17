@@ -1,5 +1,4 @@
-
-namespace Systems.Equipment
+namespace Systems.Unit.Equipment
 {
     public static class EquipmentContainerExtensions
     {

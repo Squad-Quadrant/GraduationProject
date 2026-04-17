@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
-using Systems.Equipment.Config;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -35,13 +35,6 @@ namespace Systems.Unit
         public int defense = 100;
         public float defenseRate = 0f;
         public int san = 100;
-        
-        [TitleGroup("装备")]
-        public EquipmentConfig mainWeapon;
-        public EquipmentConfig secondaryWeapon;
-        public EquipmentConfig item0;
-        public EquipmentConfig item1;
-        public EquipmentConfig item2;
 
         [TitleGroup("AI")]
         [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]

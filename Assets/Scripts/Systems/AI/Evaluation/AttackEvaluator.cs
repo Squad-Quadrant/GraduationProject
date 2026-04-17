@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Log;
 using Data.Runtime;
-using Systems.Equipment;
+using Systems.Unit.Equipment;
 using UnityEngine;
 
 namespace Systems.AI.Evaluation

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
+using Data;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.CameraControl;
@@ -205,6 +206,7 @@ namespace Presentation.Bootstrap
 
 		private void LoadUnits()
 		{
+			var dataManager = RootContainer.Instance.Resolve<DataManager>();
 			var mapService = _levelContainer.Resolve<IMapService>();
 			var unitService = _levelContainer.Resolve<IUnitService>();
 
@@ -229,9 +231,11 @@ namespace Presentation.Bootstrap
 					continue;
 				}
 
+				var loadout = dataManager.GetLoadoutFor(placement);
 				unitService.CreateUnit(
 					placement.unitId,
 					placement.unitConfig,
+					loadout,
 					placement.startPosition);
 
 				mapService.OccupyCell(placement.startPosition, placement.unitId);

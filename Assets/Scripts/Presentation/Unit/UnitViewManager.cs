@@ -9,11 +9,11 @@ using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
-using Systems.Equipment;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Map.Config;
 using Systems.Unit;
+using Systems.Unit.Equipment;
 using Systems.Vision;
 using UnityEngine;
 
@@ -114,8 +114,8 @@ namespace Presentation.Unit
 			if (!currentEquipment.IsNullOrEmpty())
 			{
 				
-				viewInstance.SetWeaponSkin(e.Unit.CurrentEquipment?.Config.SpineName);
-				viewInstance.SetGrip(e.Unit.CurrentEquipment.Config.GripType);
+				viewInstance.SetWeaponSkin(e.Unit.CurrentEquipment?.Config.spineName);
+				viewInstance.SetGrip(e.Unit.CurrentEquipment.Config.gripType);
 			}
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -313,8 +313,8 @@ namespace Presentation.Unit
             if (!e.Unit.CurrentEquipment.IsNullOrEmpty())
             {
                 var config = e.Unit.CurrentEquipment.Config;
-                view.SetGrip(config.GripType);
-                view.SetWeaponSkin(config.SpineName);
+                view.SetGrip(config.gripType);
+                view.SetWeaponSkin(config.spineName);
             }
         }
 

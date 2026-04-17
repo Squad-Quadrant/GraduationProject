@@ -9,7 +9,7 @@ namespace Systems.Unit
 	{
 		int Count { get; }
 
-		Unit CreateUnit(string unitId, UnitConfig config, Vector2Int position);
+		Unit CreateUnit(string unitId, UnitConfig config, Loadout loadout, Vector2Int position);
 
 		void DestroyUnit(string unitId, string killerUnitId = null);
 

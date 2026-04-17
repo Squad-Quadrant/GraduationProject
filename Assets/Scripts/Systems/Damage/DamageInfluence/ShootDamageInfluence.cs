@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Systems.Equipment;
+using Systems.Unit.Equipment;
 using UnityEngine;
 
 namespace Systems.Damage

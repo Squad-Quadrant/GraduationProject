@@ -5,7 +5,7 @@ using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Systems.Equipment.Config
+namespace Systems.Unit.Equipment.Config
 {
     // 武器装备相关数值：
     // · 伤害：使用该武器攻击时能造成的基础伤害。
@@ -25,104 +25,19 @@ namespace Systems.Equipment.Config
     // · 穿透率：武器造成伤害时，穿透护甲造成伤害的能力。
     // · 射速：武器的射速，代表单位使用该武器进行攻击时，每消耗一点AP所能造成伤害的次数（发射子弹的数量）。
     // · 精确射击模式：部分自动武器在攻击时可以转换射击模式为精确射击模式。精确射击模式将降低射速，但是大幅度提高命中率。
+
+    // wzh0417: 改为装备配置的抽象基类，拆分了枪械和战术道具，删除了type，靠继承区分
     [Configurable("Equipment")]
-    [CreateAssetMenu(fileName = "EquipmentConfig", menuName = "Configs/EquipmentConfig", order = 0)]
-
-    public class EquipmentConfig : ScriptableObject
+    public abstract class EquipmentConfig : ScriptableObject
     {
-        [LabelText("ID(必要)")]
-        public int Id;
-        
-        [LabelText("名称")]
-        public string Name;
-        
-        [LabelText("描述")]
-        public string Description;
-        
-        [LabelText("图标")]
-        public Sprite Icon;
-        
-        [LabelText("伤害")]
-        public int Damage;
-
-        [LabelText("精神伤害")]
-        public int MentalDamage;
-        
-        [LabelText("重量")]
-        public float Weight;
-        
-        [Tooltip("武器类型-可精确到具体武器，也可以是更抽象的类别，只要逻辑可以统一")]
-        [LabelText("装备类型")]
-        public EquipmentType Type;
-        
-        [LabelText("Spine动画使用的名称")]
-        public string SpineName;
-        
-        [LabelText("握持方式")]
-        public EGripType GripType;
-
-        #region Weapon-specific properties
-        
-        [LabelText("射击类武器的弹容量")]
-        public int AmmoCapacity;
-        
-        [LabelText("射击类武器的攻击范围和对应的命中率")]
-        public List<ShotRange> ShotRanges;
-        
-        [LabelText("伤害衰减")]
-        public DamageAttenuation DamageAttenuation;
-
-        [LabelText("穿透率")] 
-        public float PenetrationRate;
-
-        [LabelText("射速 (发/点AP)")]
-        public int shootSpeed;
-        
-        [LabelText("是否可以精确射击")]
-        public bool canPreciseShoot;
-        
-        [LabelText("精确射击模式下的射速 (发/点AP)")]
-        public int preciseShootSpeed;
-        
-        [LabelText("精确射击模式下的命中率加成")]
-        public float preciseShootHitRateBonus;
-
-        #endregion
-
-        #region Equipment-specific properties
-        
-        [LabelText("手雷类武器的攻击范围")]
-        public int AttackRange;
-        
-        #endregion
-
-    }
-
-    public enum EquipmentType
-    {
-        [InspectorName("请选择装备类型")]
-        None = 0,
-        [InspectorName("常规射击武器")]
-        Weapon,
-        [InspectorName("常规手雷")]
-        TacticalItem,
-        [InspectorName("投掷物发射器")]
-        GrenadeLauncher,
-        [InspectorName("请选择装备类型")]
-        Count
-    }
-
-    [Serializable]
-    public struct ShotRange
-    {
-        public int min;
-        public float hitRate;
-    }
-    
-    [Serializable]
-    public struct DamageAttenuation
-    {
-        public int perGrid;
-        public float multiplier;
+        [LabelText("ID(必要)")] public int id;
+        [LabelText("名称")] public string nName;
+        [LabelText("描述")] public string description;
+        [LabelText("图标")] public Sprite icon;
+        [LabelText("伤害")] public int damage;
+        [LabelText("精神伤害")] public int mentalDamage;
+        [LabelText("重量")] public float weight;
+        [LabelText("Spine动画使用的名称")] public string spineName;
+        [LabelText("握持方式")] public EGripType gripType;
     }
 }

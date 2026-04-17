@@ -1,43 +1,28 @@
 using System;
-using Systems.Equipment.Config;
+using Systems.Unit.Equipment.Config;
 
-namespace Systems.Equipment
+namespace Systems.Unit.Equipment
 {
+	// 装备槽位容器
+	// 类型身份即分派依据，不再需要枚举字段
     public class EquipmentContainer
     {
-        private EquipmentConfig _config;
-        public EquipmentConfig Config => _config;
-        
-        private EquipmentLogic _logic;
-        public EquipmentLogic Logic => _logic;
-        
-        public Unit.Unit Owner { get; private set; }
+	    public EquipmentConfig Config { get; private set; }
+	    public EquipmentLogic Logic { get; private set; }
 
-        public EquipmentType Type
-        {
-            get
-            {
-                if (_config == null) return EquipmentType.None;
-                return _config.Type;
-            }
-        }
-        
-        public void Init(EquipmentConfig config, Unit.Unit owner)
+        public Unit Owner { get; private set; }
+
+        public void Init(EquipmentConfig config, Unit owner)
         {
             Owner = owner;
-            _config = config;
+            Config = config;
             if (!config) return;
-            switch (config.Type)
+            Logic = config switch
             {
-                case EquipmentType.Weapon:
-                    _logic = new WeaponLogic(config, Owner);
-                    break;
-                case EquipmentType.TacticalItem:
-                    _logic = new TacticalItemLogic(config, Owner); 
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+	            WeaponConfig weaponConfig => new WeaponLogic(weaponConfig, Owner),
+	            TacticalItemConfig tacticalItemConfig => new TacticalItemLogic(tacticalItemConfig, Owner),
+	            _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

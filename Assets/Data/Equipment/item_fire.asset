@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
+  m_Name: item_fire
+  m_EditorClassIdentifier: 
+  id: 3
+  nName: "\u71C3\u70E7\u5F39"
+  description: 
+  icon: {fileID: 585156107, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  damage: 0
+  mentalDamage: 0
+  weight: 0
+  spineName: 
+  gripType: 0
+  attackRange: 0

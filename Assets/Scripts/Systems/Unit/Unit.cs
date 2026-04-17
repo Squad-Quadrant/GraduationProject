@@ -10,11 +10,11 @@ using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
 using Systems.Buff;
-using Systems.Equipment;
-using Systems.Equipment.Config;
 using Systems.Map;
 using Systems.Map.SceneActor;
 using Systems.Turn;
+using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -160,8 +160,6 @@ namespace Systems.Unit
 				position = startPosition,
 				isStunned = false,
 			};
-			
-			unit.InitEquipment(config);
             
             return unit;
 		}
@@ -273,7 +271,7 @@ namespace Systems.Unit
             TacticalItem2
         };
 
-        public void InitEquipment(UnitConfig config)
+        public void InitEquipment(EquipmentConfig main, EquipmentConfig secondary, EquipmentConfig[] tacticalItems)
         {
             MainWeapon = new EquipmentContainer();
             SecondaryWeapon = new EquipmentContainer();
@@ -281,11 +279,11 @@ namespace Systems.Unit
             TacticalItem1 = new EquipmentContainer();
             TacticalItem2 = new EquipmentContainer();
             
-            MainWeapon.Init(config.mainWeapon, this);
-            SecondaryWeapon.Init(config.secondaryWeapon, this);
-            TacticalItem0.Init(config.item0, this);
-            TacticalItem1.Init(config.item1, this);
-            TacticalItem2.Init(config.item2, this);
+            MainWeapon.Init(main, this);
+            SecondaryWeapon.Init(secondary, this);
+            TacticalItem0.Init(tacticalItems[0], this);
+            TacticalItem1.Init(tacticalItems[1], this);
+            TacticalItem2.Init(tacticalItems[2], this);
 
             CurrentEquipment = MainWeapon;
         }
@@ -296,8 +294,8 @@ namespace Systems.Unit
 	        {
 		        EActionType.Attack => CurrentEquipment,
 		        EActionType.TacticalItem0 => TacticalItem0,
-		        EActionType.TacticalItem1 => TacticalItem0,
-		        EActionType.TacticalItem2 => TacticalItem0,
+		        EActionType.TacticalItem1 => TacticalItem1,
+		        EActionType.TacticalItem2 => TacticalItem2,
 		        _ => throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null)
 	        };
         }

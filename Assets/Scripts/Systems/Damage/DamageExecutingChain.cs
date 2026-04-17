@@ -78,7 +78,7 @@ namespace Systems.Damage
                     this.Log($"Attack missed! Defender ID:{_context.Defender.id}", true);
                 }else if (_context.DamageType == DamageType.Bullet)
                 {
-                    string isOnPreciseShoot = _context.Attacker.CurrentWeapon.isOnPreciseShoot ? "精准" : "";
+                    string isOnPreciseShoot = _context.Attacker.CurrentWeapon.IsOnPreciseShoot ? "精准" : "";
                     this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
                              $"击中{_context.bodyPartType.ToString()}, 共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
                 }

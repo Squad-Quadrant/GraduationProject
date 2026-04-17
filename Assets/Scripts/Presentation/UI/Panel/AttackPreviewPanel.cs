@@ -4,9 +4,9 @@ using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Presentation.UI.Core;
 using Systems.Damage;
-using Systems.Equipment;
 using Systems.Interaction;
 using Systems.Unit;
+using Systems.Unit.Equipment;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,25 +57,25 @@ namespace Presentation.UI.Panel
 
             _unit = unit;
             var config = currentEquipment.Config; 
-            equipmentIcon.sprite = config.Icon;
+            equipmentIcon.sprite = config.icon;
             var fixedRect = new Vector2
             {
-                x = config.Icon.rect.width / config.Icon.rect.height * equipmentIcon.rectTransform.sizeDelta.y,
+                x = config.icon.rect.width / config.icon.rect.height * equipmentIcon.rectTransform.sizeDelta.y,
                 y = equipmentIcon.rectTransform.sizeDelta.y
             };
             equipmentIcon.rectTransform.sizeDelta = fixedRect;
-            equipmentName.text = config.Name;
-            description.text = config.Description;
+            equipmentName.text = config.nName;
+            description.text = config.description;
 
             isPreciseShooting.onValueChanged.RemoveAllListeners();
-            isPreciseShooting.gameObject.SetActive(currentEquipment.Config.canPreciseShoot);
-            isPreciseShooting.isOn = unit.CurrentWeapon.isOnPreciseShoot;
+            isPreciseShooting.gameObject.SetActive(unit.CurrentWeapon.CanPreciseShoot());
+            isPreciseShooting.isOn = unit.CurrentWeapon.IsOnPreciseShoot;
 
             if (unit.CurrentWeapon.CanPreciseShoot())
             {
                 isPreciseShooting.onValueChanged.AddListener(isOn =>
                 {
-                    unit.CurrentWeapon.isOnPreciseShoot = isOn;
+                    unit.CurrentWeapon.IsOnPreciseShoot = isOn;
                 });
             }
         }

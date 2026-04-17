@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Systems.Equipment.Config;
 
-namespace Systems.Equipment
+namespace Systems.Unit.Equipment
 {
     public interface IEquipable
     {

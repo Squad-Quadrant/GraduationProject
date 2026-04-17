@@ -7,15 +7,13 @@ using UnityEngine;
 
 namespace Data.Config
 {
-	/// <summary>
-	/// Defines a single unit's initial placement in the level.
-	/// </summary>
+	// LevelConfig中的单位插槽
 	[Serializable]
 	public class UnitPlacement
 	{
 		[HorizontalGroup("Main")]
 		[LabelText("单位ID"), LabelWidth(60)]
-		[InfoBox("该单位实例的运行时唯一标识符", InfoMessageType.None)] // todo: 考虑自动分配局内id
+		[InfoBox("该单位实例的运行时唯一标识符", InfoMessageType.None)]
 		public string unitId;
 
 		[HorizontalGroup("Main")]
@@ -26,30 +24,27 @@ namespace Data.Config
 		[HorizontalGroup("Position")]
 		[LabelText("初始位置"), LabelWidth(60)]
 		public Vector2Int startPosition;
+
+		[LabelText("初始装备配置")]
+		[InfoBox("玩家单位在局外配装后会覆盖此值；敌人/NPC 直接使用此值", InfoMessageType.None)]
+		public Loadout initialLoadout = new();
 	}
 
 	[CreateAssetMenu(fileName = "NewLevelConfig", menuName = "Game/Level Config")]
 	public class LevelConfig : ScriptableObject
 	{
-		#region Basic Info
-
 		[Title("基础信息", bold: true)]
 		[LabelText("关卡ID")]
 		[InfoBox("关卡的唯一标识符")]
 		public string levelId = "level_001";
 
-		[Space]
 		[LabelText("关卡名称")]
 		public string levelName = "New Level";
 
-		[Space]
 		[LabelText("关卡描述")]
 		[TextArea(2, 4)]
 		public string description = "This is a new level.";
 
-		#endregion
-
-		#region Map Reference
 
 		[Title("地图配置", bold: true)]
 		[LabelText("地图配置")]
@@ -57,9 +52,6 @@ namespace Data.Config
 		[InfoBox("关卡所使用的地图配置")]
 		public MapConfig mapConfig;
 
-		#endregion
-
-		#region Unit Placements
 
 		[Title("单位配置", bold: true)]
 		[LabelText("初始单位")]
@@ -67,9 +59,6 @@ namespace Data.Config
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
 		public List<UnitPlacement> unitPlacements = new();
 
-		#endregion
-
-		#region Validation
 
 		[Button("验证配置", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
 		public void ValidateConfig()
@@ -123,8 +112,6 @@ namespace Data.Config
 			else
 				Debug.LogError($"✗ [{levelName}] Configuration has errors, please check above messages.");
 		}
-
-		#endregion
 
 		#region Editor Display
 
