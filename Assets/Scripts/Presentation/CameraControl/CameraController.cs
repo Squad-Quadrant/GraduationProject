@@ -35,6 +35,7 @@ namespace Presentation.CameraControl
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordinateConverter;
 		private IMapService _mapService;
+		private IUnitService _unitService;
 
 		private Tween _focusTween;
 		private Vector3 _dragWorldOrigin;
@@ -46,6 +47,7 @@ namespace Presentation.CameraControl
 			_eventBus = services.Resolve<IEventBus>();
 			_coordinateConverter = services.Resolve<ICoordinateConverter>();
 			_mapService = services.Resolve<IMapService>();
+			_unitService = services.Resolve<IUnitService>();
 
 			_targetZoom = mainCamera.orthographicSize;
 
@@ -79,8 +81,8 @@ namespace Presentation.CameraControl
 		{
 			if (!e.IsVisibleToPlayer) return;
 
-			var unitService = LevelContainer.Instance.TryResolve<IUnitService>();
-			var unit = unitService?.GetUnit(e.UnitId);
+			_unitService = LevelContainer.Instance.TryResolve<IUnitService>();
+			var unit = _unitService.GetUnit(e.UnitId);
 			if (unit == null) return;
 
 			var worldPos = _coordinateConverter.CellToWorld(unit.position);

@@ -142,6 +142,7 @@ namespace Systems.GamePlay
 		private ITurnController ResolveTurnController(Unit.Unit unit) => unit.faction switch
 		{
 			EUnitFaction.Player => _playerController,
+			EUnitFaction.Enemy => _aiController,
 			_ => _aiController
 		};
 
