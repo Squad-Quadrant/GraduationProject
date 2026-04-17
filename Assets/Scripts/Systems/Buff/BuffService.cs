@@ -61,7 +61,7 @@ namespace Systems.Buff
             _buffProxies.Remove(target);
         }
 
-        public BuffInfo CreateBuffInfo(BuffType type, IBuffAble target, Object creator)
+        public BuffInfo CreateBuffInfo(BuffType type, IBuffAble target, object creator)
         {
             var data = _dataManager.GetBuffData(type);
             if (data == null)

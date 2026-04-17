@@ -1,7 +1,6 @@
 ﻿using System;
 using Systems.Buff.Config;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Systems.Buff
 {
@@ -9,7 +8,7 @@ namespace Systems.Buff
     public class BuffInfo
     {
         [SerializeField]private BuffData buffData;
-        [SerializeField]private Object creator;
+        private object creator;
         [SerializeField]private int durationCounter;
         [SerializeField]private int currentStack;
         [SerializeField]private int uid; // 运行时生成的id
@@ -17,7 +16,7 @@ namespace Systems.Buff
         
         public string Name => BuffData.name;
         public BuffData BuffData => buffData;
-        public Object Creator => creator;
+        public object Creator => creator;
         public IBuffAble Target => _target;
         public float DurationCounter => durationCounter;
         public int CurrentStack => currentStack;
@@ -29,7 +28,7 @@ namespace Systems.Buff
         public int MaxStack => BuffData.maxStack;
         public int DurationTurn => BuffData.durationTurn;
 
-        public BuffInfo(BuffData buffData, Object creator, IBuffAble target, int uid)
+        public BuffInfo(BuffData buffData, object creator, IBuffAble target, int uid)
         {
             this.buffData = buffData;
             this.creator = creator;

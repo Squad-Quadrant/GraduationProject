@@ -23,7 +23,7 @@ namespace Systems.Buff
             BuffPropertyInjector.Inject(owner);
         }
         
-        public virtual void Attach(BuffType buffType, Object creator)
+        public virtual void Attach(BuffType buffType, object creator)
         {
             var sameTypeBuffs = GetBuffs(buffType);
             if (sameTypeBuffs.Count > 0 && sameTypeBuffs[0].Mergeable())

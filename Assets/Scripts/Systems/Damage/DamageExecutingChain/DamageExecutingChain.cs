@@ -70,6 +70,12 @@ namespace Systems.Damage
                 if (_context.needResetDamage) 
                     ResetDamage();
             }
+            
+            if (_context.needApplyDamage)
+                foreach (var influence in _influences)
+                {
+                    influence.Last();
+                }
 
             if (_context.needApplyDamage)
             {
@@ -80,7 +86,7 @@ namespace Systems.Damage
                 {
                     string isOnPreciseShoot = _context.Attacker.CurrentWeapon.IsOnPreciseShoot ? "精准" : "";
                     this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
-                             $"击中{_context.bodyPartType.ToString()}, 共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
+                             $"击中{_context.bodyPartType.ToStr()}, 共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
                 }
             }
         }
@@ -96,6 +102,8 @@ namespace Systems.Damage
             defender.CurrentHp -= finalDamage;
             defender.CurrentDefense -= finalDefenseDamage;
             defender.CurrentSan -= finalSanDamage;
+
+            defender.bodyPartInfo[_context.bodyPartType] += finalDamage;
 
             _context.TotalDamage += finalDamage;
             _context.TotalDefenseDamage += finalDefenseDamage;
@@ -143,7 +151,7 @@ namespace Systems.Damage
         public float SanDamageModifier = 1;
 
         public BodyPartType bodyPartType; // 击中部位
-        public List<DamageInfluenceType> ignoredInfluenceTypes; 
+        public List<DamageInfluenceType> ignoredInfluenceTypes = new(); 
         
         public float HitRate = 1;
         

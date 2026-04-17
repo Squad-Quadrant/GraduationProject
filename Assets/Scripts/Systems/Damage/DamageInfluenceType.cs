@@ -7,6 +7,7 @@ namespace Systems.Damage
         BodyDestruction,
         Damage,
         Defence,
-        HitRate
+        HitRate,
+        Buff
     }
 }

@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
 using Systems.Buff;
+using Systems.Damage;
 using Systems.Map;
 using Systems.Map.SceneActor;
 using Systems.Turn;
@@ -65,6 +66,15 @@ namespace Systems.Unit
         public BuffProperty<bool> canUseEquipment = new(PropertyType.CanUseEquipment, true);
         public BuffProperty<bool> canAttack = new(PropertyType.CanAttack, false);
         
+        public Dictionary<BodyPartType, int> bodyPartInfo = new()
+		{
+			{ BodyPartType.None, 0},
+	        { BodyPartType.Head, 0 },
+	        { BodyPartType.Torso, 0 },
+	        { BodyPartType.Arms, 0 },
+	        { BodyPartType.Legs, 0 },
+		};
+
         public int CurrentHp
         {
             get => _currentHp;

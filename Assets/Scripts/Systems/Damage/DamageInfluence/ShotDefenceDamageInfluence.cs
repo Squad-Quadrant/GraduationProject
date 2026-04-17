@@ -19,5 +19,10 @@ namespace Systems.Damage
             
             Context.DefenceDamage += defenceDamage;
         }
+
+        public override void Last()
+        {
+
+        }
     }
 }
