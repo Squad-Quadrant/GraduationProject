@@ -98,7 +98,7 @@ namespace Systems.Damage
     
     public static class BodyDestructionExtensions
     {
-        public static string ToString(this BodyPartType bodyPartType)
+        public static string ToStr(this BodyPartType bodyPartType)
         {
             switch (bodyPartType)
             {
