@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FogOfWar
+  m_Name: M_FogOfWar
   m_Shader: {fileID: 4800000, guid: efe7a100f16e4329b29aa41b06fa4b78, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

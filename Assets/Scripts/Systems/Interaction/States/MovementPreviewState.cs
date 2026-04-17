@@ -42,8 +42,6 @@ namespace Systems.Interaction.States
 					cellCost => cellCost.Key,
 					cellCost => ctx.selectedUnit.CalculateMovementApCost(cellCost.Value));
 
-			this.LogDebug($"Valid target cells: {string.Join(", ", stoppableCells)}");
-
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Movement,
 				stoppableCells,

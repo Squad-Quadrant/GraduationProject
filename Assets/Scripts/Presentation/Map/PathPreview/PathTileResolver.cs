@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Presentation.Map
+namespace Presentation.Map.PathPreview
 {
 	internal enum EDirection
 	{

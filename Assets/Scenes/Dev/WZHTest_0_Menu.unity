@@ -1066,22 +1066,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7980165080631738, guid: a3eceee03bbd4b249a55b67eb0e43322, type: 3}
-      propertyPath: equipmentConfigs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7980165080631738, guid: a3eceee03bbd4b249a55b67eb0e43322, type: 3}
-      propertyPath: equipmentConfigs.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 7e0342fdf00e11041837054768ea1c31, type: 2}
-    - target: {fileID: 7980165080631738, guid: a3eceee03bbd4b249a55b67eb0e43322, type: 3}
-      propertyPath: equipmentConfigs.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: f42c36535be6f6f41afb204ecb13f3fa, type: 2}
-    - target: {fileID: 7980165080631738, guid: a3eceee03bbd4b249a55b67eb0e43322, type: 3}
-      propertyPath: equipmentConfigs.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: 12a1176838f86c04ba7207fdf85fbd62, type: 2}
     - target: {fileID: 2877566087239663748, guid: a3eceee03bbd4b249a55b67eb0e43322, type: 3}
       propertyPath: m_Name
       value: Bootstrapper

@@ -28,7 +28,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Data.DataManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Data.Runtime.Commands.AwaitPresentationCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.InteractCommand
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -40,11 +48,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.UnitReloadCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.UnitSwitchWeaponCommand
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.CameraControl.CameraController
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.FogOfWar.BlackoutView
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -61,6 +81,10 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.Map.MapView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Map.Wall.WallViewManager
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -84,6 +108,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.AttackPreviewPanel
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.BloodSliderPanel
     enabled: 1
     minLogLevel: 0
@@ -93,6 +121,10 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Presentation.UI.Panel.DamageTextPanell
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Log.GameLogger
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -148,11 +180,35 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Presentation.Vision.GunLineRevealPresenter
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Presentation.Vision.SpottedEnemyMarkerView
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.AI.AIService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.AttackEvaluator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.AI.Evaluation.MoveEvaluator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.ReloadEvaluator
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Buff.BuffProxy
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Buff.BuffService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -188,6 +244,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.InteractPreviewState
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
   - typeName: Systems.Interaction.States.MovementPreviewState
     enabled: 1
     minLogLevel: 0
@@ -201,6 +261,10 @@ MonoBehaviour:
     minLogLevel: 0
     autoDiscovered: 1
   - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
+  - typeName: Systems.Map.Region.RegionService
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
@@ -220,75 +284,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
-  - typeName: Systems.Vision.VisionService
-    enabled: 1
-    minLogLevel: 2
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Log.GameLogger
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.FogOfWar.BlackoutView
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Map.Region.RegionService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.AttackPreviewPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.UnitReloadCommand
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.UnitSwitchWeaponCommand
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.AttackEvaluator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.ReloadEvaluator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Map.Wall.WallViewManager
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Buff.BuffService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Buff.BuffProxy
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
   - typeName: Systems.Vision.VisionCalculator
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
-  - typeName: Presentation.Vision.SpottedEnemyMarkerView
+  - typeName: Systems.Vision.VisionService
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 2
     autoDiscovered: 1
-  - typeName: Presentation.Vision.GunLineRevealPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.InteractPreviewState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.InteractCommand
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Data.DataManager
+  - typeName: Presentation.Map.Highlight.HighlightController
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
