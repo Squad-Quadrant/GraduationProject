@@ -43,5 +43,10 @@ namespace Systems.Damage
         {
 
         }
+
+        public override void Last()
+        {
+            
+        }
     }
 }

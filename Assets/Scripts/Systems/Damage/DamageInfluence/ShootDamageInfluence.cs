@@ -70,5 +70,10 @@ namespace Systems.Damage
                 Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * (1 - Defender.defenseRate));
             }
         }
+
+        public override void Last()
+        {
+            
+        }
     }
 }

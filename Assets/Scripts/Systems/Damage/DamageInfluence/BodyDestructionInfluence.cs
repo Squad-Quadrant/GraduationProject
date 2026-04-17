@@ -1,10 +1,14 @@
 using System;
+using Core.Log;
+using Systems.Buff;
+using Systems.Buff.Config;
 using Random = UnityEngine.Random;
 
 namespace Systems.Damage
 {
     public enum BodyPartType
     {
+        None,
         Legs,
         Arms,
         Head,
@@ -21,12 +25,13 @@ namespace Systems.Damage
 
     public class BodyDestructionInfluence : DamageInfluence
     {
+        protected BodyPartHitInfo hitPart;
         private static readonly BodyPartHitInfo[] BodyParts = 
         {
-            new BodyPartHitInfo { PartType = BodyPartType.Legs, HitProbability = 20f, HasArmor = false, DamageMultiplier = 0.6f },
-            new BodyPartHitInfo { PartType = BodyPartType.Arms, HitProbability = 20f, HasArmor = false, DamageMultiplier = 0.65f },
-            new BodyPartHitInfo { PartType = BodyPartType.Head, HitProbability = 10f, HasArmor = true, DamageMultiplier = 2f },
-            new BodyPartHitInfo { PartType = BodyPartType.Torso, HitProbability = 50f, HasArmor = true, DamageMultiplier = 1f }
+            new() { PartType = BodyPartType.Legs, HitProbability = 20f, HasArmor = false, DamageMultiplier = 0.6f },
+            new() { PartType = BodyPartType.Arms, HitProbability = 100000f, HasArmor = false, DamageMultiplier = 0.65f },
+            new() { PartType = BodyPartType.Head, HitProbability = 10f, HasArmor = true, DamageMultiplier = 2f },
+            new() { PartType = BodyPartType.Torso, HitProbability = 50f, HasArmor = true, DamageMultiplier = 1f }
         };
 
         public BodyDestructionInfluence(IDamageInfluencer owner, int priority = 2) : base(owner, priority)
@@ -39,7 +44,7 @@ namespace Systems.Damage
         {
             base.Init(context);
             
-            BodyPartHitInfo hitPart = GetRandomBodyPart();
+            hitPart = GetRandomBodyPart();
             
             Context.DamageModifier = hitPart.DamageMultiplier;
             Context.bodyPartType = hitPart.PartType;
@@ -52,27 +57,38 @@ namespace Systems.Damage
             {
                 Context.ignoredInfluenceTypes.Add(DamageInfluenceType.Defence);
             }
-
-            switch (hitPart.PartType)
-            {
-                case BodyPartType.Legs:
-                    // 骨折判定等
-                    break;
-                case BodyPartType.Arms:
-                    // 骨折判定等
-                    break;
-                case BodyPartType.Head:
-                    // 眩晕判定等
-                    break;
-                case BodyPartType.Torso:
-                    // 流血判定等
-                    break;
-            }
         }
 
         public override void Execute()
         {
             
+        }
+
+        public override void Last()
+        {
+            // 如果累计伤害超过50，施加效果
+            int currentPartDamage = Context.Defender.bodyPartInfo[hitPart.PartType];
+            int beforePartDamage = Context.Defender.bodyPartInfo[hitPart.PartType] - Context.TotalDamage;
+
+            if (beforePartDamage < 30 && currentPartDamage >= 30)
+            {
+                switch (hitPart.PartType)
+                {
+                    case BodyPartType.Legs:
+                        // 骨折判定等
+                        break;
+                    case BodyPartType.Arms:
+                        (Context.Defender as IBuffAble).AttachBuff(BuffType.Fracture, Owner);
+                        this.Log($"对{Defender.name}的造成骨折", true);
+                        break;
+                    case BodyPartType.Head:
+                        // 眩晕判定等
+                        break;
+                    case BodyPartType.Torso:
+                        // 流血判定等
+                        break;
+                }
+            }
         }
 
         private BodyPartHitInfo GetRandomBodyPart()

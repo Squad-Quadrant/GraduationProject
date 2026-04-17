@@ -1,4 +1,3 @@
-using System;
 using Systems.Equipment;
 using UnityEngine;
 
@@ -18,6 +17,11 @@ namespace Systems.Damage
             int defenceDamage = Mathf.FloorToInt(theWeapon.GetDamage() * Defender.defenseRate * (1 - theWeapon.PenetrationRate())); 
             
             Context.DefenceDamage += defenceDamage;
+        }
+
+        public override void Last()
+        {
+            
         }
     }
 }

@@ -26,5 +26,7 @@ namespace Systems.Damage
         }
         
         public abstract void Execute();
+        
+        public abstract void Last();
     }
 }

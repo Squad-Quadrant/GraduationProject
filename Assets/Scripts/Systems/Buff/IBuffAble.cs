@@ -1,5 +1,4 @@
 using Systems.Buff.Config;
-using Object = UnityEngine.Object;
 
 namespace Systems.Buff
 {
@@ -12,7 +11,7 @@ namespace Systems.Buff
             return BuffProxy.GetBuff(id);
         }
 
-        public void AttachBuff(BuffType type, Object creator)
+        public void AttachBuff(BuffType type, object creator)
         {
             BuffProxy.Attach(type, creator);
         }

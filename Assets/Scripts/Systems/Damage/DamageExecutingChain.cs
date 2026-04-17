@@ -70,6 +70,12 @@ namespace Systems.Damage
                 if (_context.needResetDamage) 
                     ResetDamage();
             }
+            
+            if (_context.needApplyDamage)
+                foreach (var influence in _influences)
+                {
+                    influence.Last();
+                }
 
             if (_context.needApplyDamage)
             {
@@ -96,6 +102,8 @@ namespace Systems.Damage
             defender.CurrentHp -= finalDamage;
             defender.CurrentDefense -= finalDefenseDamage;
             defender.CurrentSan -= finalSanDamage;
+
+            defender.bodyPartInfo[_context.bodyPartType] += finalDamage;
 
             _context.TotalDamage += finalDamage;
             _context.TotalDefenseDamage += finalDefenseDamage;
