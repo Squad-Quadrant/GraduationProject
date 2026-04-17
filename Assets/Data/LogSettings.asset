@@ -288,3 +288,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 0
     autoDiscovered: 1
+  - typeName: Data.DataManager
+    enabled: 1
+    minLogLevel: 0
+    autoDiscovered: 1
