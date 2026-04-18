@@ -1,5 +1,7 @@
 ﻿using Core.Events;
+using Systems.Turn;
 using Systems.Unit;
+using UnityEngine;
 
 namespace Data.Runtime.Events.Turn
 {
@@ -10,19 +12,25 @@ namespace Data.Runtime.Events.Turn
 	/// </summary>
 	public readonly struct UnitTurnStartedEvent : IEvent
 	{
-		public string UnitId { get; }
+		public string TurnUnitId { get; }
+
+		public string DisplayName { get; }
 
 		public int TurnNumber { get; }
 
 		public bool IsVisibleToPlayer { get; } // 现在这个单位在不在友方视野里
 
-		public UnitTurnStartedEvent(string unitId, int turnNumber, bool isVisibleToPlayer)
+		public Vector2Int CellPosition { get; }
+
+		public UnitTurnStartedEvent(string turnUnitId, string displayName, int turnNumber, bool isVisibleToPlayer, Vector2Int cellPosition)
 		{
-			UnitId = unitId;
+			TurnUnitId = turnUnitId;
+			DisplayName = displayName;
 			TurnNumber = turnNumber;
 			IsVisibleToPlayer = isVisibleToPlayer;
+			CellPosition = cellPosition;
 		}
 
-		public override string ToString() => $"[UnitTurnStarted] Unit '{UnitId}' on Turn {TurnNumber}";
+		public override string ToString() => $"[UnitTurnStarted] Unit '{TurnUnitId}' on Turn {TurnNumber}";
 	}
 }

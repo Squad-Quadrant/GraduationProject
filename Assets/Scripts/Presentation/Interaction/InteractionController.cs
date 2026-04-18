@@ -4,6 +4,7 @@ using Core.FSM;
 using Core.Log;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.AreaEffect;
 using Systems.Damage;
 using Systems.Interaction;
 using Systems.Interaction.States;
@@ -46,7 +47,8 @@ namespace Presentation.Interaction
 				services.Resolve<IPathFindingService>(),
                 services.Resolve<IVisionService>(),
 				services.Resolve<IVisionCalculator>(),
-				services.Resolve<IDamageService>());
+				services.Resolve<IDamageService>(),
+				services.Resolve<IAreaEffectService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

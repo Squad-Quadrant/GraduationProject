@@ -81,11 +81,7 @@ namespace Presentation.CameraControl
 		{
 			if (!e.IsVisibleToPlayer) return;
 
-			_unitService = LevelContainer.Instance.TryResolve<IUnitService>();
-			var unit = _unitService.GetUnit(e.UnitId);
-			if (unit == null) return;
-
-			var worldPos = _coordinateConverter.CellToWorld(unit.position);
+			var worldPos = _coordinateConverter.CellToWorld(e.CellPosition);
 			FocusOn(worldPos);
 		}
 

@@ -107,8 +107,8 @@ MonoBehaviour:
   titleText: {fileID: 2627926996335337498}
   subtitleText: {fileID: 9068647322261846937}
   bannerRect: {fileID: 660822141208978109}
-  fadeInDuration: 1
-  holdDuration: 1
+  fadeInDuration: 0.2
+  holdDuration: 0.5
   fadeOutDuration: 0.5
   slideOffset: 80
 --- !u!114 &-3268565358994839074

@@ -9,16 +9,16 @@ namespace Data.Runtime.Events.Turn
 	/// </summary>
 	public readonly struct UnitTurnEndedEvent : IEvent
 	{
-		public string UnitId { get; }
+		public string TurnUnitId { get; }
 
 		public int TurnNumber { get; }
 
-		public UnitTurnEndedEvent(string unitId, int turnNumber)
+		public UnitTurnEndedEvent(string turnUnitId, int turnNumber)
 		{
-			UnitId = unitId;
+			TurnUnitId = turnUnitId;
 			TurnNumber = turnNumber;
 		}
 
-		public override string ToString() => $"[UnitTurnEnded] Unit '{UnitId}' finished on Turn {TurnNumber}";
+		public override string ToString() => $"[UnitTurnEnded] Unit '{TurnUnitId}' finished on Turn {TurnNumber}";
 	}
 }

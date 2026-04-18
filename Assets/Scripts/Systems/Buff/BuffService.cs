@@ -85,15 +85,9 @@ namespace Systems.Buff
 
         private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-            var unit = _buffProxies.Keys.FirstOrDefault(u => (u as Unit.Unit)?.id == e.UnitId);
-            if (unit != null)
-            {
-                _buffProxies[unit].Turn();
-            }
-            else
-            {
-                this.LogError($"BuffService.OnUnitTurnStarted: no BuffProxy found for unit {unit}");
-            }
+	        var unit = _buffProxies.Keys.FirstOrDefault(u => (u as Unit.Unit)?.id == e.TurnUnitId);
+	        if (unit == null) return;    // 无 proxy 就静默跳过
+	        _buffProxies[unit].Turn();
         }
     }
 }

@@ -14,14 +14,12 @@ namespace Presentation.UI.Presenter
     {
         private readonly UIManager _uiManager;
         private readonly IEventBus _eventBus;
-        private readonly IUnitService _unitService;
         private TurnBannerPanel _bannerPanel;
 
-        public TurnBannerPresenter(UIManager uiManager, IEventBus eventBus, IUnitService unitService)
+        public TurnBannerPresenter(UIManager uiManager, IEventBus eventBus)
         {
             _uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 
             _eventBus.Subscribe<TurnStartedEvent>(OnTurnStarted);
             _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
@@ -50,11 +48,11 @@ namespace Presentation.UI.Presenter
 
         private void OnUnitTurnStarted(UnitTurnStartedEvent e)
         {
-	        this.Log($"Unit '{e.UnitId}' turn started — showing transition");
+	        this.Log($"TurnUnit '{e.TurnUnitId}' turn started — showing transition");
 
 	        ShowBanner(
-		        title: "Next Unit",
-		        subtitle: _unitService.TryGetUnit(e.UnitId, out var unit) ? unit.name : null,
+		        title: "Next",
+		        subtitle: e.DisplayName,
 		        presentationType: PresentationType.UI.UnitTransition
 	        );
         }

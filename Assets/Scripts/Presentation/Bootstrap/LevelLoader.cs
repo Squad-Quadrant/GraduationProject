@@ -17,6 +17,7 @@ using Presentation.Unit;
 using Presentation.Vision;
 using Sirenix.OdinInspector;
 using Systems.AI;
+using Systems.AreaEffect;
 using Systems.Buff;
 using Systems.Damage;
 using Systems.GamePlay;
@@ -159,6 +160,7 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IRegionService, RegionService>();
             _levelContainer.Services.Register<IAIService, AIService>();
 			_levelContainer.Services.Register<IBuffService, BuffService>();
+			_levelContainer.Services.Register<IAreaEffectService, AreaEffectService>();
 			_levelContainer.Services.RegisterInstance(interactionController);
 			_levelContainer.Services.RegisterInstance(unitViewManager);
 		}
@@ -182,7 +184,7 @@ namespace Presentation.Bootstrap
             var visionService = _levelContainer.Services.Resolve<IVisionService>();
 
             _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer, unitService, interactionController.Context));
-            _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus, unitService));
+            _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));

@@ -227,9 +227,21 @@ namespace Systems.Unit
 		#region ITurnUnit
 
 		string ITurnUnit.Id => id;
+
+		string ITurnUnit.DisplayName => name;
+
 		int ITurnUnit.Speed => speed;
+
 		bool ITurnUnit.CanAct => CanAct;
-		public int ActionPriority { get; set; }
+
+		int ITurnUnit.ActionPriority { get; set; }
+
+		EUnitFaction ITurnUnit.Faction => faction;
+
+		Sprite ITurnUnit.DisplayIcon => icon;
+
+		Vector2Int ITurnUnit.CellPosition => position;
+
 		void ITurnUnit.OnTurnStart()
 		{
 			CanAttack.Value = true;

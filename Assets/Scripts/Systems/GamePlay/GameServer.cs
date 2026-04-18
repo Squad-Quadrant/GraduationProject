@@ -47,7 +47,7 @@ namespace Systems.GamePlay
 			_fsm = interactionController;
 			_visionService = visionService;
 
-			_playerController = new PlayerTurnController(_eventBus, _fsm);
+			_playerController = new PlayerTurnController(_eventBus, _turnService, _fsm);
 			_aiController = new AITurnController(_turnService, aiService);
 
 			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
@@ -118,37 +118,60 @@ namespace Systems.GamePlay
 				return;
 			}
 
-			var unit = _unitService.GetUnit(turnUnit.Id);
-			bool isPlayer = unit.faction == EUnitFaction.Player;
+			bool visibleToPlayer;
+			var faction = turnUnit.Faction;
 
-			if (!isPlayer) _visionService.ClearSpottedMark(unit.id);
+			switch (faction)
+			{
+				case EUnitFaction.Player:
+					visibleToPlayer = true;
+					break;
 
-			bool visibleToPlayer = isPlayer || _visionService.IsCellVisible(unit.position);
-			_eventBus.Publish(new UnitTurnStartedEvent(unit.id, _turnService.TurnNumber, visibleToPlayer));
+				case EUnitFaction.Enemy:
+				case EUnitFaction.Neutral:
+					_visionService.ClearSpottedMark(turnUnit.Id);
+					visibleToPlayer = _visionService.IsCellVisible(turnUnit.CellPosition);
+					break;
 
-			this.Log($"Unit '{unit.id}' ({unit.faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
+				case EUnitFaction.None:
+				default:
+					this.LogWarning($"Unexpected Faction '{faction}' for turnUnit '{turnUnit.Id}', treating as not visible");
+					visibleToPlayer = false;
+					break;
+			}
 
-			AwaitThen(() => StartNewUnitTurn(unit), cmd => cmd
-				.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
+			_eventBus.Publish(new UnitTurnStartedEvent(
+				turnUnit.Id,
+				turnUnit.DisplayName,
+				_turnService.TurnNumber,
+				visibleToPlayer,
+				turnUnit.CellPosition));
+
+			this.Log($"TurnUnit '{turnUnit.DisplayName}'({turnUnit.Id}, {turnUnit.Faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
+
+			AwaitThen(() => StartNewUnitTurn(turnUnit), cmd => cmd
+				.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
 			);
 		}
 
-		private void StartNewUnitTurn(Systems.Unit.Unit unit) // 实际开始一个新的单位回合
+		private void StartNewUnitTurn(ITurnUnit turnUnit) // 实际开始一个新的单位回合
 		{
-			this.Log($"Unit '{unit.id}' is now acting");
-			ResolveTurnController(unit).BeginTurn(unit);
+			this.Log($"Unit '{turnUnit.Id}' is now acting");
+			ResolveTurnController(turnUnit).BeginTurn(turnUnit);
 		}
 
-		private ITurnController ResolveTurnController(Unit.Unit unit) => unit.faction switch
+		private ITurnController ResolveTurnController(ITurnUnit turnUnit) => turnUnit.Faction switch
 		{
 			EUnitFaction.Player => _playerController,
 			EUnitFaction.Enemy => _aiController,
-			_ => _aiController
+			EUnitFaction.Neutral => throw new ArgumentOutOfRangeException(nameof(turnUnit), turnUnit.Faction, "Unsupported faction"),
+			EUnitFaction.None => throw new ArgumentOutOfRangeException(nameof(turnUnit), turnUnit.Faction, "Unsupported faction"),
+			_ => throw new ArgumentOutOfRangeException(nameof(turnUnit), turnUnit.Faction, "Unsupported faction")
 		};
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
-			this.Log($"Unit '{e.UnitId}' finished acting");
+			this.Log($"Unit '{e.TurnUnitId}' finished acting");
 
 			_fsm.StateMachine.ChangeState<WaitingForSystemState>();
 

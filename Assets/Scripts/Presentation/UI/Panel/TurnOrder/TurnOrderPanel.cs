@@ -12,7 +12,6 @@ namespace Presentation.UI.Panel.TurnOrder
 		Acted, Current, Upcoming
 	}
 
-	// TurnOrder接收到的Unit会是ITurnUnit的，只有UnitId，Icon和FactionColor需要手动从UnitService中查询，所以这里打包一个数据结构，方便TurnOrderPanel使用
 	public readonly struct SlotData
 	{
 		public readonly string UnitId;

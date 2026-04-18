@@ -15,8 +15,15 @@ namespace Systems.GamePlay
 			_aiService = aiService;
 		}
 
-		public void BeginTurn(Unit.Unit unit)
+		public void BeginTurn(ITurnUnit turnUnit)
 		{
+			if (turnUnit is not Unit.Unit unit)
+			{
+				this.LogError("TurnUnit is not 'Unit.Unit', skipping turn");
+				_turnService.EndUnitTurn();
+				return;
+			}
+
 			this.Log($"AI control: '{unit.name}'");
 			_aiService.ExecuteTurn(unit, () =>
 			{

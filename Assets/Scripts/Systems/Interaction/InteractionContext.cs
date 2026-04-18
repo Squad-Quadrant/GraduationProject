@@ -4,6 +4,7 @@ using Core.Commands;
 using Core.Events;
 using Core.FSM;
 using Data.Runtime;
+using Systems.AreaEffect;
 using Systems.Damage;
 using Systems.Interaction.Targeting;
 using Systems.Map;
@@ -30,6 +31,7 @@ namespace Systems.Interaction
         public IVisionService VisionService { get; }
         public IVisionCalculator VisionCalculator { get; }
         public IDamageService DamageService { get; }
+        public IAreaEffectService AreaEffectService { get; }
 
 		#endregion
 
@@ -52,7 +54,8 @@ namespace Systems.Interaction
 			IPathFindingService pathFindingService,
             IVisionService visionService,
 			IVisionCalculator visionCalculator,
-			IDamageService damageService)
+			IDamageService damageService,
+			IAreaEffectService areaEffectService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -63,6 +66,7 @@ namespace Systems.Interaction
             VisionService = visionService;
             VisionCalculator = visionCalculator;
             DamageService = damageService;
+            AreaEffectService = areaEffectService;
 		}
 
 		public void ClearSelection()
