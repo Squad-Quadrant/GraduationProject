@@ -15,7 +15,6 @@ namespace Presentation.UI.Presenter
     public class CommonPanelPresenter : IDisposable
     {
         private readonly UIManager _uiManager;
-        private readonly IEventBus _eventBus;
         private readonly ICoordinateConverter  _coordinateConverter;
         private readonly IUnitService _unitService;
         private readonly UnitViewManager _unitViewManager;
@@ -24,23 +23,24 @@ namespace Presentation.UI.Presenter
         private DamageTextPanel _damageTextPanel;
         private GameLogger _gameLogger;
         
-        public CommonPanelPresenter(UIManager uiManager, IEventBus eventBus, ICoordinateConverter coordinateConverter,
-            IUnitService unitService, UnitViewManager unitViewManager)
+        public CommonPanelPresenter(
+	        UIManager uiManager,
+	        IEventBus eventBus,
+	        ICoordinateConverter coordinateConverter,
+            IUnitService unitService,
+	        UnitViewManager unitViewManager)
         {
-            _uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+	        _uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
             _coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
             _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             _unitViewManager =  unitViewManager ?? throw new ArgumentNullException(nameof(unitViewManager));
-            _eventBus.Subscribe<LevelLoadedEvent>(OnLevelLoaded);
+
+            eventBus.Subscribe<LevelLoadedEvent>(OnLevelLoaded);
 
             this.Log("Initialized");
         }
         
-        public void Dispose()
-        {
-
-        }
+        public void Dispose() { }
 
         private void OnLevelLoaded(LevelLoadedEvent e)
         {
@@ -50,7 +50,6 @@ namespace Presentation.UI.Presenter
             _damageTextPanel  = _uiManager.Open<DamageTextPanel>();
             _damageTextPanel.Init(_coordinateConverter, _unitService);
             _gameLogger = _uiManager.Open<GameLogger>();
-            
         }
 
         private void OnGameOver()

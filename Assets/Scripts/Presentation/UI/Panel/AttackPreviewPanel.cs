@@ -32,17 +32,9 @@ namespace Presentation.UI.Panel
             _interactionContext = interactionContext;
         }
 
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-            EventBus.Subscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
-        }
-        
-        protected override void OnDestroy()
-        {
-            EventBus.Unsubscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
-            base.OnDestroy();
-        }
+        protected override void OnOpen() => EventBus.Subscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
+
+        protected override void OnClose() => EventBus.Unsubscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {

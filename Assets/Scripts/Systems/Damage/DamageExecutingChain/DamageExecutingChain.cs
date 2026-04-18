@@ -28,7 +28,7 @@ namespace Systems.Damage
             
             if (_context.DamageType == DamageType.Bullet)
             {
-                _influencers.Add(_context.Attacker.GetEquipment(_context.ActionType).Logic as IDamageInfluencer);
+                _influencers.Add(_context.Attacker.CurrentEquipment.Logic as IDamageInfluencer);
             }
 
             InitInfluences();
@@ -103,7 +103,7 @@ namespace Systems.Damage
             defender.CurrentDefense -= finalDefenseDamage;
             defender.CurrentSan -= finalSanDamage;
 
-            defender.bodyPartInfo[_context.bodyPartType] += finalDamage;
+            defender.BodyPartInfo[_context.bodyPartType] += finalDamage;
 
             _context.TotalDamage += finalDamage;
             _context.TotalDefenseDamage += finalDefenseDamage;

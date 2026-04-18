@@ -30,19 +30,15 @@ namespace Presentation.UI.Panel
         {
             _coordinateConverter = coordinateConverter;
             _unitService = unitService;
-            EventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
         }
 
-        protected override void OnDestroy()
-        {
-            EventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
-            base.OnDestroy();
-        }
+        protected override void OnOpen() => EventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
+
+        protected override void OnClose() => EventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
 
         private void OnDamageApplied(DamageAppliedEvent e)
         {
             // 制造e的浅拷贝
-            
             _damageEventQueue.Enqueue(e);
             if (!_isProcessingDamageEvents)
             {

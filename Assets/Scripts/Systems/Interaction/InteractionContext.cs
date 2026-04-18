@@ -5,6 +5,7 @@ using Core.Events;
 using Core.FSM;
 using Data.Runtime;
 using Systems.Damage;
+using Systems.Interaction.Targeting;
 using Systems.Map;
 using Systems.PathFinding;
 using Systems.PathFinding.MovementSimulation;
@@ -40,6 +41,8 @@ namespace Systems.Interaction
 
 		public MovementSimulationResult LastSimulationResult;
 
+		public ITargeted PendingTargeting;
+
 		public InteractionContext(
 			IEventBus eventBus,
 			IUnitService unitService,
@@ -65,6 +68,7 @@ namespace Systems.Interaction
 		public void ClearSelection()
 		{
 			selectedUnit = null;
+			PendingTargeting = null;
 		}
 
 		/// <summary>

@@ -12,287 +12,303 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cbd17dc887f7a4c9a2103da13bb5ae, type: 3}
   m_Name: LogSettings
   m_EditorClassIdentifier: 
-  globalLogLevel: 0
+  globalLogLevel: 1
   enableAllLogs: 1
   rules:
   - typeName: Core.Commands.CommandQueue
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Core.Events.EventBus
     enabled: 1
-    minLogLevel: 2
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Core.FSM.StateMachine`1[[Systems.Interaction.InteractionContext, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.DataManager
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.AwaitPresentationCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.InteractCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.MoveUnitCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.UnitAttackCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.UnitReloadCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Data.Runtime.Commands.UnitSwitchWeaponCommand
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.CameraControl.CameraController
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.FogOfWar.BlackoutView
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.FogOfWar.FogOfWarView
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Input.InputService
     enabled: 1
-    minLogLevel: 2
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Interaction.InteractionController
     enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Map.MapView
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Map.Wall.WallViewManager
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.LevelCanvasProvider
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UIFactory
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UIManager
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Core.UINavigator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.ActionMenuPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.AttackPreviewPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.BloodSliderPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.DamageTextPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.DamageTextPanell
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Log.GameLogger
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnBanner
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnBannerPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnOrder.TurnOrderPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TurnPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.UnitInfoPanel
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.ActionMenuPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.CommonPanelPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TurnBannerPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TurnOrderPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.UnitInfoPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Unit.UnitAnimator
-    enabled: 1
-    minLogLevel: 2
-    autoDiscovered: 1
-  - typeName: Presentation.Unit.UnitView
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Unit.UnitViewManager
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Vision.GunLineRevealPresenter
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Presentation.Vision.SpottedEnemyMarkerView
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.AIService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.AttackEvaluator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.MoveEvaluator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.AI.Evaluation.ReloadEvaluator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Buff.BuffProxy
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Buff.BuffService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Damage.DamageExecutingChain
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Damage.DamageService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.AITurnController
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.GameServer
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.GamePlay.PlayerTurnController
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.AttackPreviewState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.ExecutingState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.IdleState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.InteractPreviewState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.MovementPreviewState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.UnitSelectedState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.WaitingForSystemState
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Map.MapService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Map.Region.RegionService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.PathFinding.PathFindingService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnQueue
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Turn.TurnService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Unit.UnitService
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Vision.VisionCalculator
-    enabled: 1
-    minLogLevel: 0
-    autoDiscovered: 1
-  - typeName: Systems.Vision.VisionService
-    enabled: 1
-    minLogLevel: 2
+    minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Map.Highlight.HighlightController
     enabled: 1
-    minLogLevel: 0
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Map.MapView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Map.Wall.WallViewManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.LevelCanvasProvider
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIFactory
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UIManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Core.UINavigator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.AttackPreviewPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.BloodSliderPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.DamageTextPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.DamageTextPanell
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Log.GameLogger
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnBanner
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnBannerPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnOrder.TurnOrderPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TurnPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.UnitInfoPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.ActionMenuPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.CommonPanelPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnBannerPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TurnOrderPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.UnitInfoPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitAnimator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Unit.UnitViewManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vision.GunLineRevealPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vision.SpottedEnemyMarkerView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AI.AIService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.AttackEvaluator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.MoveEvaluator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AI.Evaluation.ReloadEvaluator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Buff.BuffProxy
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Buff.BuffService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Damage.DamageExecutingChain
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Damage.DamageService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.AITurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.GameServer
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.GamePlay.PlayerTurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AttackPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.ExecutingState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.IdleState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.InteractPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.MovementPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.UnitSelectedState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.WaitingForSystemState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Map.MapService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Map.Region.RegionService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.PathFinding.PathFindingService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnQueue
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Turn.TurnService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.UnitService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Vision.VisionCalculator
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Vision.VisionService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenu.ActionMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TacticalItemMenuPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.ItemSelectionState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TacticalItemMenu.TacticalItemMenuPanel
+    enabled: 1
+    minLogLevel: 1
     autoDiscovered: 1

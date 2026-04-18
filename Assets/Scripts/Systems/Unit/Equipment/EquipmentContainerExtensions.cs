@@ -4,7 +4,7 @@ namespace Systems.Unit.Equipment
     {
         public static bool IsNullOrEmpty(this EquipmentContainer container)
         {
-            return container == null || container.Config == null;
+            return container == null || !container.Config;
         }
     }
 }

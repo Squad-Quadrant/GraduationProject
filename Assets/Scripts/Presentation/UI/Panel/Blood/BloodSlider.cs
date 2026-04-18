@@ -1,5 +1,6 @@
 using Core.Events;
 using Data.Runtime.Events.Damage;
+using DG.Tweening;
 using Presentation.Unit;
 using PurpleFlowerCore.Utility;
 using Systems.Interfaces;
@@ -81,14 +82,14 @@ namespace Presentation.UI.Panel
             if (e.Context.Defender != _owner) return;
             hpTarget1 = (float)_owner.CurrentHp / _owner.maxHp;
             defenseTarget1 = (float)_owner.CurrentDefense / _owner.defense;
-            DelayUtility.Delay(2f, () =>
+            DOVirtual.DelayedCall(2f, () =>
             {
-                hpTarget = hpTarget1;
-                hpSpeed = Mathf.Abs(hpTarget - bloodSliderImage.fillAmount) / duration;
-                hpSpeed = Mathf.Max(hpSpeed, minSpeed);
-                defenseTarget = defenseTarget1;
-                defenseSpeed = Mathf.Abs(defenseTarget - defenseSliderImage.fillAmount) / duration;
-                defenseSpeed = Mathf.Max(defenseSpeed, minSpeed);
+	            hpTarget = hpTarget1;
+	            hpSpeed = Mathf.Abs(hpTarget - bloodSliderImage.fillAmount) / duration;
+	            hpSpeed = Mathf.Max(hpSpeed, minSpeed);
+	            defenseTarget = defenseTarget1;
+	            defenseSpeed = Mathf.Abs(defenseTarget - defenseSliderImage.fillAmount) / duration;
+	            defenseSpeed = Mathf.Max(defenseSpeed, minSpeed);
             });
         }
     }

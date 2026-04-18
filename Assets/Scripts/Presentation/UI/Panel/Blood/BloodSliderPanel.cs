@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Core.Events;
-using Core.Log;
 using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
 using Presentation.Unit;
@@ -17,21 +14,13 @@ namespace Presentation.UI.Panel
         private IUnitService _unitService;
         private UnitViewManager _unitViewManager;
         [SerializeField] private BloodSlider bloodSliderPrototype;
-        private Dictionary<Systems.Unit.Unit ,BloodSlider> _bloodSliders = new();
-        
-        
-        protected override void OnInitialize()
-        {
-            this.Log("OnInitialize");
-        }
+        private readonly Dictionary<Systems.Unit.Unit ,BloodSlider> _bloodSliders = new();
         
         public void Init(ICoordinateConverter coordinateConverter, IUnitService unitService, UnitViewManager unitViewManager)
         {
             _coordinateConverter = coordinateConverter;
             _unitService = unitService;
             _unitViewManager = unitViewManager;
-            EventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
-            EventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 
             var allUnits = _unitService.GetAllUnits();
             foreach (var unit in allUnits)
@@ -40,11 +29,16 @@ namespace Presentation.UI.Panel
             }
         }
 
-        protected override void OnDestroy()
+        protected override void OnOpen()
         {
-            EventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
-            EventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
-            base.OnDestroy();
+	        EventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
+	        EventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+        }
+
+        protected override void OnClose()
+        {
+	        EventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
+	        EventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
         }
         
         private void OnUnitCreated(UnitCreatedEvent e)

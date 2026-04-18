@@ -15,6 +15,7 @@ namespace Systems.Interaction.States
 		public InteractPreviewState() : base(InteractionStates.InteractPreview) { }
 
 		private Action<CellClickedEvent> _onCellClicked;
+		private Action<UnitClickedEvent> _onUnitClicked;
 
 		private IReadOnlyList<Vector2Int> _validTargetCells;
 
@@ -40,7 +41,9 @@ namespace Systems.Interaction.States
 				sourceUnitId: ctx.selectedUnit.id));
 
 			_onCellClicked = OnCellClicked;
+			_onUnitClicked = OnUnitClicked;
 			Subscribe(ctx, _onCellClicked);
+			Subscribe(ctx, _onUnitClicked);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -50,25 +53,31 @@ namespace Systems.Interaction.States
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Interact));
 
 			Unsubscribe(ctx, _onCellClicked);
+			Unsubscribe(ctx, _onUnitClicked);
 			_onCellClicked = null;
+			_onUnitClicked = null;
 
 			base.OnExit(ctx);
 		}
 
-		private void OnCellClicked(CellClickedEvent e)
+		private void OnCellClicked(CellClickedEvent e) => ConfirmInteraction(e.CellPosition);
+
+		private void OnUnitClicked(UnitClickedEvent e) => ConfirmInteraction(e.CellPosition);
+
+		private void ConfirmInteraction(Vector2Int cellPosition)
 		{
-			if (!_validTargetCells.Contains(e.CellPosition))
+			if (!_validTargetCells.Contains(cellPosition))
 			{
-				this.LogWarning($"Clicked cell {e.CellPosition} is not a valid interact target.");
+				this.LogWarning($"Clicked cell {cellPosition} is not a valid interact target.");
 				return;
 			}
 
-			this.Log($"Interacting with cell {e.CellPosition}");
+			this.Log($"Interacting with cell {cellPosition}");
 
-			var actor = Context.MapService.Data.GetCell(e.CellPosition).SceneActor;
+			var actor = Context.MapService.Data.GetCell(cellPosition).SceneActor;
 			if (actor is not InteractableSceneActor interactableActor)
 			{
-				this.LogError($"No interactable actor found at {e.CellPosition}!");
+				this.LogError($"No interactable actor found at {cellPosition}!");
 				return;
 			}
 

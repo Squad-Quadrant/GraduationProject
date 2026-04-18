@@ -52,9 +52,6 @@ namespace Presentation.UI.Component
 			OnHoverExit?.Invoke(description);
 		}
 
-        public void Switch(bool enable)
-        {
-            gameObject.SetActive(enable);
-        }
+        public void SetActive(bool enable) => gameObject.SetActive(enable);
 	}
 }

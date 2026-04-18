@@ -6,11 +6,10 @@ namespace Data.Runtime.Events.Interaction
 {
 	public enum ERangeType
 	{
+		Selection,
 		Movement,
 		Attack,
-		Skill,
 		Interact,
-		Selection,
 		AreaEffectPreview,
 		AreaEffectOverlay
 	}

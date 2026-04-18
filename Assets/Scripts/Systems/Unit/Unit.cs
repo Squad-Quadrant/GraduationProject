@@ -27,7 +27,7 @@ namespace Systems.Unit
 	}
 
 	[Serializable]
-	public class Unit : ITurnUnit, IEquipable, IBuffAble
+	public class Unit : ITurnUnit, IBuffAble
 	{
 		[TitleGroup("Identity")]
 		public string id;		// id for runtime instance
@@ -63,10 +63,10 @@ namespace Systems.Unit
 		public int apSpentOnMovement;
         public Vector2Int position;
         public bool isStunned;
-        public BuffProperty<bool> canUseEquipment = new(PropertyType.CanUseEquipment, true);
-        public BuffProperty<bool> canAttack = new(PropertyType.CanAttack, false);
+        public BuffProperty<bool> CanUseEquipment = new(PropertyType.CanUseEquipment, true);
+        public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
         
-        public Dictionary<BodyPartType, int> bodyPartInfo = new()
+        public Dictionary<BodyPartType, int> BodyPartInfo = new()
 		{
 			{ BodyPartType.None, 0},
 	        { BodyPartType.Head, 0 },
@@ -184,19 +184,19 @@ namespace Systems.Unit
 			{
 				new (EActionType.Move, RemainingMovementAp > 0),
 				new (EActionType.Interact, hasInteractableNeighbor),
-				new (EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && canUseEquipment && canAttack),
+				new (EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && CanUseEquipment && CanAttack),
 				new (EActionType.Wait)
 			};
 
-            if (!TacticalItem0.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem0, false));
-            if (!TacticalItem1.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem1, false));
-            if (!TacticalItem2.IsNullOrEmpty()) actions.Add(new ActionAbility(EActionType.TacticalItem2, false));
+			bool hasAnyTacticalItem = TacticalItems != null && TacticalItems.Any(t => !t.IsNullOrEmpty());
+			if (hasAnyTacticalItem)
+				actions.Add(new ActionAbility(EActionType.UseTacticalItem, HasAp));
 
             if (CurrentWeapon!= null)
-	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && canUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment));
 
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && canUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && CanUseEquipment));
 
 			return actions;
 		}
@@ -232,17 +232,21 @@ namespace Systems.Unit
 		public int ActionPriority { get; set; }
 		void ITurnUnit.OnTurnStart()
 		{
-			canAttack.Value = true;
+			CanAttack.Value = true;
 			CurrentAp = maxAp;
 			apSpentOnMovement = 0;
 		}
 
 		#endregion
 
-        #region IEquipable
+        #region Equipment
 
-        public EquipmentContainer MainWeapon { get; set; }
-        public EquipmentContainer SecondaryWeapon { get; set; }
+        public EquipmentContainer MainWeapon { get; private set; }
+        public EquipmentContainer SecondaryWeapon { get; private set; }
+
+        public EquipmentContainer[] TacticalItems { get; private set; }
+
+        public IReadOnlyList<EquipmentContainer> TacticalItemInfos => TacticalItems;
 
         private EquipmentContainer _currentEquipment;
 
@@ -270,44 +274,31 @@ namespace Systems.Unit
                 return null;
             }
         }
-        public EquipmentContainer TacticalItem0 { get; set; }
-        public EquipmentContainer TacticalItem1 { get; set; }
-        public EquipmentContainer TacticalItem2 { get; set; }
-
-        public List<EquipmentContainer> TacticalItemInfos => new()
-        {
-            TacticalItem0,
-            TacticalItem1,
-            TacticalItem2
-        };
 
         public void InitEquipment(EquipmentConfig main, EquipmentConfig secondary, EquipmentConfig[] tacticalItems)
         {
             MainWeapon = new EquipmentContainer();
             SecondaryWeapon = new EquipmentContainer();
-            TacticalItem0 = new EquipmentContainer();
-            TacticalItem1 = new EquipmentContainer();
-            TacticalItem2 = new EquipmentContainer();
-            
             MainWeapon.Init(main, this);
             SecondaryWeapon.Init(secondary, this);
-            TacticalItem0.Init(tacticalItems[0], this);
-            TacticalItem1.Init(tacticalItems[1], this);
-            TacticalItem2.Init(tacticalItems[2], this);
+
+            TacticalItems = new EquipmentContainer[tacticalItems.Length];
+            for (int i = 0; i < tacticalItems.Length; i++)
+            {
+	            TacticalItems[i] = new EquipmentContainer();
+	            TacticalItems[i].Init(tacticalItems[i], this);
+            }
 
             CurrentEquipment = MainWeapon;
         }
 
-        public EquipmentContainer GetEquipment(EActionType actionType)
+        public EquipmentContainer GetTacticalItem(int slotIndex)
         {
-	        return actionType switch
-	        {
-		        EActionType.Attack => CurrentEquipment,
-		        EActionType.TacticalItem0 => TacticalItem0,
-		        EActionType.TacticalItem1 => TacticalItem1,
-		        EActionType.TacticalItem2 => TacticalItem2,
-		        _ => throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null)
-	        };
+	        if (TacticalItems == null)
+		        throw new InvalidOperationException("TacticalItems not initialized. Call InitEquipment first.");
+	        if (slotIndex < 0 || slotIndex >= TacticalItems.Length)
+		        throw new ArgumentOutOfRangeException(nameof(slotIndex), slotIndex, $"Slot index must be in [0, {TacticalItems.Length}).");
+	        return TacticalItems[slotIndex];
         }
 
         public void SwitchWeapon()

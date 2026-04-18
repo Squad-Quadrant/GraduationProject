@@ -78,9 +78,6 @@ namespace Systems.Interaction.States
 					break;
 
 				case EActionType.Attack:
-                case EActionType.TacticalItem0:
-                case EActionType.TacticalItem1:
-                case EActionType.TacticalItem2:
                     StateMachine(Context).ChangeState<AttackPreviewState>();
 					break;
 
@@ -108,6 +105,10 @@ namespace Systems.Interaction.States
 
 				case EActionType.Interact:
 					StateMachine(Context).ChangeState<InteractPreviewState>();
+					break;
+
+				case EActionType.UseTacticalItem:
+					StateMachine(Context).ChangeState<ItemSelectionState>();
 					break;
 				case EActionType.None:
 				case EActionType.Defend:

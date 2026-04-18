@@ -160,6 +160,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.Register<IAIService, AIService>();
 			_levelContainer.Services.Register<IBuffService, BuffService>();
 			_levelContainer.Services.RegisterInstance(interactionController);
+			_levelContainer.Services.RegisterInstance(unitViewManager);
 		}
         
         private void InitializeComponents()
@@ -186,6 +187,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
+            _levelContainer.Services.RegisterInstance(new TacticalItemMenuPresenter(uiManager, _eventBus));
         }
 
         private void LoadMap()

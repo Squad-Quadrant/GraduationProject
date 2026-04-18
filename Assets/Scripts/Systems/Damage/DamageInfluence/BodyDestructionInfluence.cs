@@ -67,8 +67,8 @@ namespace Systems.Damage
         public override void Last()
         {
             // 如果累计伤害超过50，施加效果
-            int currentPartDamage = Context.Defender.bodyPartInfo[hitPart.PartType];
-            int beforePartDamage = Context.Defender.bodyPartInfo[hitPart.PartType] - Context.TotalDamage;
+            int currentPartDamage = Context.Defender.BodyPartInfo[hitPart.PartType];
+            int beforePartDamage = Context.Defender.BodyPartInfo[hitPart.PartType] - Context.TotalDamage;
 
             if (beforePartDamage < 30 && currentPartDamage >= 30)
             {

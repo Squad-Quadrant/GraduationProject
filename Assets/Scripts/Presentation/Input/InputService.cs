@@ -115,6 +115,8 @@ namespace Presentation.Input
 					cellPos,
 					worldPos
 				));
+
+				return;
 			}
 
 			if (_mapService.Data.IsInBounds(cellPos))

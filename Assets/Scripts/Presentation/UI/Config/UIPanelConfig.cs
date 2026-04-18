@@ -13,8 +13,7 @@ namespace Presentation.UI.Config
         private string panelId;
 
         [TitleGroup("Identity")]
-        [SerializeField, Required]
-        [PreviewField(50, ObjectFieldAlignment.Left)]
+        [SerializeField, Required, AssetsOnly]
         private UIPanel prefab;
 
         [TitleGroup("Rendering")]

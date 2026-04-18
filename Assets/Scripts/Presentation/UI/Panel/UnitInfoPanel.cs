@@ -25,18 +25,14 @@ namespace Presentation.UI.Panel
 			if (unit == null) return;
             _currentUnit = unit;
 			Refresh(unit);
-            EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
 		}
-        
-        protected override void OnDestroy()
-        {
-            EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
-        }
-        
-        private void OnUnitAttacked(UnitInfoChangedEvent e)
+
+		protected override void OnOpen() => EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+		protected override void OnClose() => EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+
+		private void OnUnitAttacked(UnitInfoChangedEvent e)
         {
             if (e.Unit != _currentUnit) return;
-            // DelayUtility.DelayFrame(1, () => );
             Refresh(e.Unit);
         }
 
