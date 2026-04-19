@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Events;
 using Systems.Buff.Config;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace Systems.Buff
         [SerializeField]private int currentStack;
         [SerializeField]private int uid; // 运行时生成的id
         private IBuffAble _target;
+        private IEventBus _eventBus;
+        public IEventBus EventBus => _eventBus;
         
         public string Name => BuffData.name;
         public BuffData BuffData => buffData;
@@ -28,12 +31,13 @@ namespace Systems.Buff
         public int MaxStack => BuffData.maxStack;
         public int DurationTurn => BuffData.durationTurn;
 
-        public BuffInfo(BuffData buffData, object creator, IBuffAble target, int uid)
+        public BuffInfo(BuffData buffData, object creator, IBuffAble target, IEventBus eventBus, int uid)
         {
             this.buffData = buffData;
             this.creator = creator;
             _target = target;
             this.uid = uid;
+            _eventBus = eventBus;
         }
 
         public bool Mergeable()
@@ -93,6 +97,10 @@ namespace Systems.Buff
                 else if (LostType == BuffLostType.Clear)
                 {
                     currentStack = 0;
+                }
+                else if (LostType == BuffLostType.None)
+                {
+                    // 什么也不做
                 }
             }
             

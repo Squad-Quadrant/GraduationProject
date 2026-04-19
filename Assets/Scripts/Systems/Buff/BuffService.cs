@@ -71,7 +71,7 @@ namespace Systems.Buff
             }
             
             _buffCount++;
-            BuffInfo info = new(data, creator, target, _buffCount);
+            BuffInfo info = new(data, creator, target, _eventBus, _buffCount);
             return info;
         }
     

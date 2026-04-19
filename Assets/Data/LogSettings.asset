@@ -320,3 +320,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Damage.BodyDestructionInfluence
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

@@ -23,6 +23,8 @@ namespace Systems.Buff.Config
     /// </summary>
     public enum BuffLostType
     {
+        [InspectorName("不消失")]
+        None,
         [InspectorName("减少一层")]
         Reduce,
         [InspectorName("全部清除")]
@@ -39,7 +41,7 @@ namespace Systems.Buff.Config
         LegFracture,
         [InspectorName("中毒")]
         Toxicosis,
-        [InspectorName("盲目")]
+        [InspectorName("失明")]
         Blind,
         [InspectorName("眩晕")]
         Dizzy,
@@ -64,7 +66,7 @@ namespace Systems.Buff.Config
 
         [Title("Time Info")]
         // public bool willLastForever;
-        public int durationTurn = -1; // 大于等于10000则认为持续时间无限
+        public int durationTurn = -1; // 大于等于100则认为持续时间无限
         // public float tickTime;
 
         [Title("Update Type")]

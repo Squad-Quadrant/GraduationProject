@@ -71,3 +71,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTextPrototype: {fileID: 6074478703984050673, guid: 1d35d6dcf367947418a9c1260c4d5cfe, type: 3}
+  bodyPartDamageTextPrototype: {fileID: 2395362029346980951, guid: 84a4cd528c9f4bb46ae8344746068bdd, type: 3}
+  interval: 0.1
