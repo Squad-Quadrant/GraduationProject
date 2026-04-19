@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerId: Movement
-  servingRangeTypes: 00000000
+  servingRangeTypes: 01000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
   color: {r: 0, g: 1, b: 0.016897917, a: 0.5}
   movementApColors:
@@ -344,7 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerId: AreaEffectOverlay
-  servingRangeTypes: 06000000
+  servingRangeTypes: 05000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
   color: {r: 1, g: 1, b: 1, a: 0.5}
   movementApColors:
@@ -760,6 +760,7 @@ Transform:
   - {fileID: 1330473037959472875}
   - {fileID: 4008642102945408093}
   - {fileID: 5998393018435642012}
+  - {fileID: 7860715482398984443}
   - {fileID: 1945878203429015378}
   - {fileID: 6325182767783368852}
   - {fileID: 7290246446138427104}
@@ -841,6 +842,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70fde18a2af347b982432efba4820b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5674341262632171744
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7860715482398984443}
+  - component: {fileID: 6049875866259291005}
+  m_Layer: 0
+  m_Name: AreaEffectView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7860715482398984443
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5674341262632171744}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6600589940686590176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6049875866259291005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5674341262632171744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7181e18b0a84e71804acd235d69a0e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5780918916674935639
@@ -1011,7 +1056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerId: Selection
-  servingRangeTypes: 04000000
+  servingRangeTypes: 00000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
   color: {r: 0.9738562, g: 1, b: 0, a: 0.5}
   movementApColors:
@@ -1428,7 +1473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerId: Attack
-  servingRangeTypes: 01000000
+  servingRangeTypes: 02000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
   color: {r: 1, g: 0.11492197, b: 0, a: 0.5}
   movementApColors:
@@ -1604,7 +1649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerId: AreaEffectPreview
-  servingRangeTypes: 05000000
+  servingRangeTypes: 04000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
   color: {r: 1, g: 0.46176243, b: 0, a: 0.5}
   movementApColors:

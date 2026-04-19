@@ -312,3 +312,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.AreaEffect.AreaEffectService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.AreaEffect.AreaEffectView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

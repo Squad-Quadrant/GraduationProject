@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: AttackPreviewPanel
   m_EditorClassIdentifier: 
   panelId: AttackPreviewPanel
-  prefab: {fileID: 2257226280098405890, guid: 9a122835d1570db4690b597f261a0c53, type: 3}
+  prefab: {fileID: 7596009529970201705, guid: a478780ab1de42d44b8e6af0682fa107, type: 3}
   layer: 2
-  cacheOnClose: 1
+  cacheOnClose: 0

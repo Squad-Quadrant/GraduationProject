@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Systems.AreaEffect
 {
-	// 地图上的持续效果实例，作为 ITurnUnit 插入 TurnQueue 与 Unit 共用回合推进
 	public class AreaEffect
 	{
 		public string Id { get; }

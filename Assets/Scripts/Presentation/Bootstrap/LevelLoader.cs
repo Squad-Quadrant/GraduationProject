@@ -7,6 +7,7 @@ using Core.Log;
 using Data;
 using Data.Config;
 using Data.Runtime.Events;
+using Presentation.AreaEffect;
 using Presentation.CameraControl;
 using Presentation.Input;
 using Presentation.Interaction;
@@ -48,6 +49,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private UnitViewManager unitViewManager;
 		[SerializeField, Required] private CameraController cameraController;
 		[SerializeField, Required] private SpottedEnemyMarkerView spottedEnemyMarkerView;
+		[SerializeField, Required] private AreaEffectView areaEffectView;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -83,7 +85,7 @@ namespace Presentation.Bootstrap
 		{
 			if (!_levelContainer) return;
 
-			this.Log("====================================", false);
+			this.Log("====================================", format: false);
 			this.Log("Unloading level...");
 
 			_levelContainer.TryResolve<ITurnService>()?.Clear();
@@ -95,7 +97,7 @@ namespace Presentation.Bootstrap
 
 			_loadStatus = "Idle";
 			this.Log("Level unloaded.");
-			this.Log("====================================", false);
+			this.Log("====================================", format: false);
 		}
 
 		private void BuildSteps()
@@ -118,16 +120,16 @@ namespace Presentation.Bootstrap
 		{
 			_stepResults.Clear();
 			_loadStatus = "Loading...";
-			this.Log("============ Level Loading ============", false);
+			this.Log("============ Level Loading ============", format: false);
 			foreach (var step in _steps)
 			{
 				step.Execute();
 				var result = $"SUCCESS: {step.Desc}";
 				_stepResults.Add(result);
-				this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", false);
+				this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", format: false);
 			}
 			_loadStatus = "Loaded";
-			this.Log($"============ Level Loaded ============", false);
+			this.Log("============ Level Loaded ============", format: false);
 		}
 
 		private void SetupLevelContainer()
@@ -161,6 +163,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.Register<IAIService, AIService>();
 			_levelContainer.Services.Register<IBuffService, BuffService>();
 			_levelContainer.Services.Register<IAreaEffectService, AreaEffectService>();
+
 			_levelContainer.Services.RegisterInstance(interactionController);
 			_levelContainer.Services.RegisterInstance(unitViewManager);
 		}
@@ -171,6 +174,7 @@ namespace Presentation.Bootstrap
             interactionController.Initialize(_levelContainer.Services);
             unitViewManager.Initialize(_levelContainer.Services);
             spottedEnemyMarkerView.Initialize(_levelContainer.Services);
+            areaEffectView.Initialize(_levelContainer.Services);
         }
 
         private void RegisterPresenter()

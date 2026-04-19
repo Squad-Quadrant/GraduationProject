@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TacticalItemMenu
   m_EditorClassIdentifier: 
   panelId: TacticalItemMenu
-  prefab: {fileID: 6552741338846052319, guid: 136e8d1f3120aec4e963893212f7ff3a, type: 3}
+  prefab: {fileID: 2257226280098405890, guid: 9a122835d1570db4690b597f261a0c53, type: 3}
   layer: 2
   cacheOnClose: 0

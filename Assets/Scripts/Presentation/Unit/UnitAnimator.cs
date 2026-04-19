@@ -163,17 +163,14 @@ namespace Presentation.Unit
 			if (loop && anim.Duration > 0f) // 错开循环动画
 				_currentEntry.TrackTime = UnityEngine.Random.Range(0f, anim.Duration);
 
-			if (onComplete != null)
-			{
-				_pendingCallback = _ =>
-				{
-					_pendingCallback = null;
-					onComplete.Invoke();
-				};
-				_currentEntry.Complete += _pendingCallback;
-			}
+			if (onComplete == null) return;
 
-			this.Log($"Playing animation: '{animName}', loop: {loop}");
+			_pendingCallback = _ =>
+			{
+				_pendingCallback = null;
+				onComplete.Invoke();
+			};
+			_currentEntry.Complete += _pendingCallback;
 		}
 
 		private IEnumerator FidgetCycleCoroutine(AnimationResult[] baseClips, AnimationResult[] fidgetClips,
