@@ -106,20 +106,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}
+      objectReference: {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
+      objectReference: {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: eb5bfe135a578499db52333fc2e89296, type: 2}
+      objectReference: {fileID: 11400000, guid: 91f8d131957f3b04d9f45fd0c7cac47c, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: buffs.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 40de9741ccf60024b8628937e5982b42, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.data[0]
       value: 

@@ -28,9 +28,9 @@ namespace Systems.Damage
         protected BodyPartHitInfo hitPart;
         private static readonly BodyPartHitInfo[] BodyParts = 
         {
-            new() { PartType = BodyPartType.Legs, HitProbability = 20f, HasArmor = false, DamageMultiplier = 0.6f },
+            new() { PartType = BodyPartType.Legs, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.6f },
             new() { PartType = BodyPartType.Arms, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.65f },
-            new() { PartType = BodyPartType.Head, HitProbability = 10f, HasArmor = true, DamageMultiplier = 2f },
+            new() { PartType = BodyPartType.Head, HitProbability = 10, HasArmor = true, DamageMultiplier = 2f },
             new() { PartType = BodyPartType.Torso, HitProbability = 50f, HasArmor = true, DamageMultiplier = 1f }
         };
 
@@ -70,19 +70,21 @@ namespace Systems.Damage
             int currentPartDamage = Context.Defender.BodyPartInfo[hitPart.PartType];
             int beforePartDamage = Context.Defender.BodyPartInfo[hitPart.PartType] - Context.TotalDamage;
 
-            if (beforePartDamage < 30 && currentPartDamage >= 30)
+            if (beforePartDamage < 1 && currentPartDamage >= 1)
             {
                 switch (hitPart.PartType)
                 {
                     case BodyPartType.Legs:
-                        // 骨折判定等
+                        (Context.Defender as IBuffAble).AttachBuff(BuffType.LegFracture, Owner);
+                        this.Log($"对{Defender.name}的造成腿部骨折", true);
                         break;
                     case BodyPartType.Arms:
                         (Context.Defender as IBuffAble).AttachBuff(BuffType.HandFracture, Owner);
-                        this.Log($"对{Defender.name}的造成骨折", true);
+                        this.Log($"对{Defender.name}的造成手部骨折", true);
                         break;
                     case BodyPartType.Head:
-                        // 眩晕判定等
+                        (Context.Defender as IBuffAble).AttachBuff(BuffType.Dizzy, Owner);
+                        this.Log($"对{Defender.name}的造成眩晕", true);
                         break;
                     case BodyPartType.Torso:
                         // 流血判定等

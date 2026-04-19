@@ -28,7 +28,7 @@ namespace Systems.Unit
 	}
 
 	[Serializable]
-	public class Unit : ITurnUnit, IBuffAble
+	public class Unit : ITurnUnit, IBuffAble, IDamageInfluencer
 	{
 		[TitleGroup("Identity")]
 		public string id;		// id for runtime instance
@@ -38,11 +38,11 @@ namespace Systems.Unit
 
 		[TitleGroup("Config")]
 		public int maxHp;
-		public int speed;
-		public int moveRange;
+		public BuffProperty<int> speed;
+		public BuffProperty<int> moveRange;
 		public int maxMovementAp;
 		public int maxAp;
-        public int visionRange;
+        public BuffProperty<int> visionRange;
 		public EUnitFaction faction;
         public int defense;
         public float defenseRate;
@@ -66,6 +66,8 @@ namespace Systems.Unit
         public bool isStunned;
         public BuffProperty<bool> CanUseEquipment = new(PropertyType.CanUseEquipment, true);
         public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
+        
+        public List<DamageInfluence> DamageInfluences { get; } = new();
         
         public Dictionary<BodyPartType, int> BodyPartInfo = new()
 		{
@@ -148,11 +150,11 @@ namespace Systems.Unit
 				description = config.description,
 
 				maxHp = config.maxHp,
-				speed = config.speed,
-				moveRange = config.moveRange,
+				speed = new BuffProperty<int>(PropertyType.Speed ,config.speed),
+				moveRange = new BuffProperty<int>(PropertyType.MoveRange, config.moveRange),
 				maxMovementAp = config.maxMovementAp,
 				maxAp = config.actionPoints,
-                visionRange = config.visionRange,
+                visionRange = new BuffProperty<int>(PropertyType.VisionRange, config.visionRange),
 				faction = config.faction,
                 defense = config.defense,
                 defenseRate = config.defenseRate,
@@ -229,7 +231,17 @@ namespace Systems.Unit
 		public override string ToString() =>
 			$"[Unit] {name}({id}) HP:{CurrentHp}/{maxHp} AP:{CurrentAp}/{maxAp} Pos:{position}";
 
-		#region ITurnUnit
+        #region IDamageInfluencer
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            DamageInfluences.RemoveAll(influence => influence == null);
+            return DamageInfluences;
+        }
+
+        #endregion
+
+        #region ITurnUnit
 
 		string ITurnUnit.Id => id;
 
