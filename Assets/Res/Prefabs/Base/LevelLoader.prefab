@@ -206,7 +206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3337339289356212280}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -219,7 +219,7 @@ Transform:
   - {fileID: 2940763418171517185}
   - {fileID: 7945908196038522086}
   - {fileID: 6420159491680394225}
-  - {fileID: 3338205908198214755}
+  - {fileID: 589517926863088327}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8703371654886146183
@@ -237,7 +237,7 @@ MonoBehaviour:
   grid: {fileID: 3151344390847574379}
   inputService: {fileID: 2514949855392810389}
   interactionController: {fileID: 2896801275664559522}
-  unitViewManager: {fileID: 468175976161134610}
+  unitViewManager: {fileID: 2306573539216535222}
   cameraController: {fileID: 4861230316251291547}
   spottedEnemyMarkerView: {fileID: 6068211755330682449}
   areaEffectView: {fileID: 5870308615348662380}
@@ -451,7 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dcf210ef4a4ce7aa70ae133c9d5d99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 1
+  layer: 3
   canvas: {fileID: 697006975987670223}
 --- !u!1 &7018134288146357964
 GameObject:
@@ -933,7 +933,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f22af50b8416d264ca4dfc6959204594, type: 3}
---- !u!114 &468175976161134610 stripped
+--- !u!4 &589517926863088327 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3229446009022154610, guid: f22af50b8416d264ca4dfc6959204594, type: 3}
+  m_PrefabInstance: {fileID: 2665901622621089205}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2306573539216535222 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 359644822243803907, guid: f22af50b8416d264ca4dfc6959204594, type: 3}
   m_PrefabInstance: {fileID: 2665901622621089205}
@@ -944,8 +949,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f8bd9191cf4d7cb53f41b0150bf96b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &3338205908198214755 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3229446009022154610, guid: f22af50b8416d264ca4dfc6959204594, type: 3}
-  m_PrefabInstance: {fileID: 2665901622621089205}
-  m_PrefabAsset: {fileID: 0}

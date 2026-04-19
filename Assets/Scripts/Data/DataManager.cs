@@ -32,8 +32,6 @@ namespace Data
 	    [ShowInInspector, ReadOnly]
 	    public LevelConfig SelectedLevel { get; set; }
 
-	    public IReadOnlyList<LevelConfig> Levels => levels;
-
 	    private Dictionary<int, EquipmentConfig> _equipmentLookup;
 	    private Dictionary<BuffType, BuffData> _buffLookup;
 	    private bool _isInitialized;
