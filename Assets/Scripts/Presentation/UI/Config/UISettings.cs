@@ -13,8 +13,7 @@ namespace Presentation.UI.Config
 	public class UISettings : ScriptableObject
 	{
 		[TitleGroup("Panel Registry")]
-		[SerializeField, InlineEditor]
-		[ListDrawerSettings(ShowFoldout = true, DraggableItems = true)]
+		[SerializeField, AssetList(Path = "Data/UI")]
 		[Tooltip("All panel configurations in the game.")]
 		private List<UIPanelConfig> panelConfigs = new();
 

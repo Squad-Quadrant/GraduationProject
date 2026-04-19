@@ -4,15 +4,16 @@ using Data;
 using Data.Config;
 using Presentation.Logger;
 using Presentation.UI.Core;
+using Presentation.UI.Panel.Menu;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Presentation.Bootstrap
 {
 	public class Bootstrapper : MonoBehaviour
 	{
 		[TitleGroup("Settings")]
-		[SerializeField] private bool autoInitialize = true;
 		[SerializeField] private bool enableLogs = true;
 
 		[TitleGroup("Configuration")]
@@ -26,18 +27,19 @@ namespace Presentation.Bootstrap
         [SerializeField, Required]
         private DataManager dataManager;
 
+        [SerializeField, Required]
+        private MenuFlowController menuFlowController;
+
 		[TitleGroup("Prefabs")]
-		[SerializeField]
+		[SerializeField, ReadOnly]
 		private RootContainer rootContainerPrefab;
 
-		private static bool _initialized;
+		private bool _initialized;
 		private RootContainer _rootContainerInstance;
 
-		private void Awake()
-		{
-			if (autoInitialize)
-				Initialize();
-		}
+		private void Awake() => Initialize();
+
+		private void Start() => DispatchStartupFlow();
 
 		private void Initialize()
 		{
@@ -52,8 +54,6 @@ namespace Presentation.Bootstrap
 
 			RegisterGlobalServices();
 
-			OnBootstrapComplete();
-
 			Log("[Bootstrapper] Initialization complete.");
 			Log("====================================");
 		}
@@ -61,22 +61,12 @@ namespace Presentation.Bootstrap
 		private void InitializeRootContainer()
 		{
 			Log("[Bootstrapper] Initializing RootContainer...");
-			_rootContainerInstance = FindObjectOfType<RootContainer>();
-			if (!_rootContainerInstance)
-			{
-				if (rootContainerPrefab)
-				{
-					_rootContainerInstance = Instantiate(rootContainerPrefab);
-					_rootContainerInstance.name = "RootContainer";
-					Log("[Bootstrapper] RootContainer instantiated from prefab.");
-				}
-				else
-				{
-					var rootObj = new GameObject("RootContainer");
-					_rootContainerInstance = rootObj.AddComponent<RootContainer>();
-					Log("[Bootstrapper] RootContainer created as new GameObject.");
-				}
-			}
+
+			var rootObj = new GameObject("RootContainer");
+			rootObj.transform.SetParent(transform);
+			_rootContainerInstance = rootObj.AddComponent<RootContainer>();
+			Log("[Bootstrapper] RootContainer created as new GameObject.");
+
 			_rootContainerInstance.Initialize();
 			Log("[Bootstrapper] RootContainer initialized.");
 		}
@@ -93,13 +83,26 @@ namespace Presentation.Bootstrap
 			uiManager.Initialize(_rootContainerInstance.Resolve<IEventBus>());
             
             _rootContainerInstance.Services.RegisterInstance(dataManager);
+
+            _rootContainerInstance.Services.RegisterInstance(menuFlowController);
             
 			Log("[Bootstrapper] Global services registered.");
 		}
 
-		private void OnBootstrapComplete()
+		private void DispatchStartupFlow()
 		{
-			// Notify other systems that bootstrap is complete
+			var devScene = BootstrapEnsure.ConsumeDevStartScene();
+			if (!string.IsNullOrEmpty(devScene))
+			{
+				Log($"[Bootstrapper] Dev scene '{devScene}' detected; skipping main menu");
+				SceneManager.LoadScene(devScene);
+				return;
+			}
+
+			menuFlowController.Initialize(
+				_rootContainerInstance.Resolve<UIManager>(),
+				_rootContainerInstance.Resolve<DataManager>());
+			menuFlowController.ShowMainMenu();
 		}
 
 		#region Debug

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
-  m_Name: TurnOrder
+  m_Name: UnitInfoPanel
   m_EditorClassIdentifier: 
-  panelId: TurnOrder
-  prefab: {fileID: 7602274337007928540, guid: eb5789d3b9b594748bccaf566f300096, type: 3}
+  panelId: UnitInfoPanel
+  prefab: {fileID: 1581058548187276017, guid: c0a80b5b5c206a54d82d7a9df27d692c, type: 3}
   layer: 2
-  cacheOnClose: 0
+  cacheOnClose: 1

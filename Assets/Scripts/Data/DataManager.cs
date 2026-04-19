@@ -13,14 +13,26 @@ namespace Data
     public class DataManager : MonoBehaviour
     {
 	    [Title("装备配置")]
-	    [SerializeField, AssetList(Path = "Data/Equipment")] private List<EquipmentConfig> equipmentConfigs = new();
+	    [SerializeField, AssetList(Path = "Data/Equipment")]
+	    private List<EquipmentConfig> equipmentConfigs = new();
 
 	    [Title("Buff 配置")]
-	    [SerializeField] private List<BuffData> buffs = new();
+	    [SerializeField]
+	    private List<BuffData> buffs = new();
+
+	    [Title("关卡配置")]
+	    [SerializeField, AssetList(Path = "Data/Levels")]
+	    private List<LevelConfig> levels = new();
 
 	    [Title("玩家装备覆盖 (Runtime)")]
 	    [ShowInInspector, ReadOnly, DictionaryDrawerSettings(KeyLabel = "configId", ValueLabel = "loadout")]
 	    public Dictionary<string, Loadout> PlayerLoadouts { get; } = new();
+
+	    [Title("当前选中关卡 (Runtime)")]
+	    [ShowInInspector, ReadOnly]
+	    public LevelConfig SelectedLevel { get; set; }
+
+	    public IReadOnlyList<LevelConfig> Levels => levels;
 
 	    private Dictionary<int, EquipmentConfig> _equipmentLookup;
 	    private Dictionary<BuffType, BuffData> _buffLookup;

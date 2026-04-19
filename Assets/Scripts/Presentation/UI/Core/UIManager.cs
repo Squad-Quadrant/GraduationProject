@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
 using Core.Log;
-using Data.Config;
 using Data.Runtime.Events.UI;
 using Presentation.UI.Config;
 using Sirenix.OdinInspector;
@@ -25,10 +24,9 @@ namespace Presentation.UI.Core
 		private IEventBus _eventBus;
 
 		// Scene-owned canvas references (registered by LevelCanvasProvider)
-		private Canvas _screenCanvas;
-        public Canvas ScreenCanvas => _screenCanvas;
 		private Canvas _overlayCanvas;
-        public Canvas OverlayCanvas => _overlayCanvas;
+		private Canvas _screenCanvas;
+		private Canvas _worldCanvas;
 
 		private readonly Dictionary<string, UIPanel> _openPanels = new();
 		private readonly Dictionary<string, UIPanel> _cache = new(); // closed but not destroyed panels
@@ -240,8 +238,9 @@ namespace Presentation.UI.Core
 		private Transform GetCanvasRoot(EUICanvasLayer layer) => layer switch
 		{
 			EUICanvasLayer.Ddol => ddolCanvas ? ddolCanvas.transform : null,
-			EUICanvasLayer.Screen  => _screenCanvas ? _screenCanvas.transform : null,
-			EUICanvasLayer.Overlay   => _overlayCanvas  ? _overlayCanvas.transform  : null,
+			EUICanvasLayer.Screen => _screenCanvas ? _screenCanvas.transform : null,
+			EUICanvasLayer.Overlay => _overlayCanvas  ? _overlayCanvas.transform  : null,
+			EUICanvasLayer.World => _worldCanvas ? _worldCanvas.transform    : null,
 			_ => null
 		};
 
@@ -249,14 +248,23 @@ namespace Presentation.UI.Core
 		{
 			switch (layer)
 			{
-				case EUICanvasLayer.Screen:
-					_screenCanvas = canvas;
-					this.Log($"Registered Screen canvas: {canvas.name}");
+				case EUICanvasLayer.Ddol:
+					ddolCanvas = canvas;
 					break;
 				case EUICanvasLayer.Overlay:
 					_overlayCanvas = canvas;
 					this.Log($"Registered World canvas: {canvas.name}");
 					break;
+				case EUICanvasLayer.Screen:
+					_screenCanvas = canvas;
+					this.Log($"Registered Screen canvas: {canvas.name}");
+					break;
+				case EUICanvasLayer.World:
+					_worldCanvas = canvas;
+					this.Log($"Registered World canvas: {canvas.name}");
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(layer), layer, null);
 			}
 		}
 
@@ -264,14 +272,23 @@ namespace Presentation.UI.Core
 		{
 			switch (layer)
 			{
-				case EUICanvasLayer.Screen:
-					_screenCanvas = null;
-					this.Log("Unregistered Screen canvas");
+				case EUICanvasLayer.Ddol:
+					ddolCanvas = null;
 					break;
 				case EUICanvasLayer.Overlay:
 					_overlayCanvas = null;
 					this.Log("Unregistered World canvas");
 					break;
+				case EUICanvasLayer.Screen:
+					_screenCanvas = null;
+					this.Log("Unregistered Screen canvas");
+					break;
+				case EUICanvasLayer.World:
+					_worldCanvas = null;
+					this.Log("Unregistered World canvas");
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(layer), layer, null);
 			}
 		}
 
@@ -288,12 +305,20 @@ namespace Presentation.UI.Core
 		private int CachedPanelCount => _cache.Count;
 
 		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Overlay Canvas")]
+		private string DdolCanvasName => ddolCanvas ? ddolCanvas.name : "Not registered";
+
+		[TitleGroup("Runtime Status")]
+		[ShowInInspector, ReadOnly, LabelText("Overlay Canvas")]
+		private string OverlayCanvasName => _overlayCanvas ? _overlayCanvas.name : "Not registered";
+
+		[TitleGroup("Runtime Status")]
 		[ShowInInspector, ReadOnly, LabelText("Screen Canvas")]
 		private string ScreenCanvasName => _screenCanvas ? _screenCanvas.name : "Not registered";
 
 		[TitleGroup("Runtime Status")]
-		[ShowInInspector, ReadOnly, LabelText("World Canvas")]
-		private string WorldCanvasName => _overlayCanvas ? _overlayCanvas.name : "Not registered";
+		[ShowInInspector, ReadOnly, LabelText("Screen Canvas")]
+		private string WorldCanvasName => _worldCanvas ? _worldCanvas.name : "Not registered";
 
 		[TitleGroup("Runtime Status")]
 		[ShowInInspector, ReadOnly, LabelText("Open Panel List")]

@@ -332,3 +332,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.MenuFlowController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Menu.MainMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Menu.LevelSelectPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
