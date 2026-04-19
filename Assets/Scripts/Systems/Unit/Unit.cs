@@ -16,6 +16,7 @@ using Systems.Map.SceneActor;
 using Systems.Turn;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
+using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -190,7 +191,11 @@ namespace Systems.Unit
 
 			bool hasAnyTacticalItem = TacticalItems != null && TacticalItems.Any(t => !t.IsNullOrEmpty());
 			if (hasAnyTacticalItem)
-				actions.Add(new ActionAbility(EActionType.UseTacticalItem, HasAp));
+			{
+				bool hasAnyUsable = TacticalItems.Any(t =>
+					!t.IsNullOrEmpty() && t.Logic is TacticalItemLogic { CanUse: true });
+				actions.Add(new ActionAbility(EActionType.UseTacticalItem, HasAp && hasAnyUsable));
+			}
 
             if (CurrentWeapon!= null)
 	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment));

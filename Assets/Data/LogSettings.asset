@@ -320,3 +320,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.TargetingState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.ThrowAreaEffectCommand
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AreaEffect.Behaviors.AttachBuffAreaBehavior
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

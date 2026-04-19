@@ -1,5 +1,6 @@
 using System;
 using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Systems.Damage

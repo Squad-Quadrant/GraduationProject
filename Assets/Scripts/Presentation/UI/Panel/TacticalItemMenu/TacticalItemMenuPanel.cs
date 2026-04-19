@@ -3,6 +3,7 @@ using Data.Runtime.Events.Unit;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Presentation.UI.Panel.TacticalItemMenu
@@ -32,7 +33,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 
 		private void Refresh(Systems.Unit.Unit unit)
 		{
-			bool canUse = unit.HasAp && unit.CanUseEquipment; // todo: 没有加入剩余数量判断
+			bool unitCanAct = unit.HasAp && unit.CanUseEquipment;
 
 			for (int i = 0; i < slots.Count; i++)
 			{
@@ -46,8 +47,10 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 					continue;
 				}
 
+				bool slotCanUse = unitCanAct && equipmentContainer.Logic is TacticalItemLogic { CanUse: true };
+
 				slot.gameObject.SetActive(true);
-				slot.Bind(i, equipmentContainer, interactable: canUse);
+				slot.Bind(i, equipmentContainer, interactable: slotCanUse);
 			}
 		}
 	}

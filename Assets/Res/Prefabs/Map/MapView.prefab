@@ -718,7 +718,7 @@ MonoBehaviour:
   layerId: Interaction
   servingRangeTypes: 03000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
-  color: {r: 1, g: 0.47070253, b: 0, a: 0.5}
+  color: {r: 0.6764116, g: 1, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
@@ -1651,7 +1651,7 @@ MonoBehaviour:
   layerId: AreaEffectPreview
   servingRangeTypes: 04000000
   baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
-  color: {r: 1, g: 0.46176243, b: 0, a: 0.5}
+  color: {r: 1, g: 0.37588555, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}

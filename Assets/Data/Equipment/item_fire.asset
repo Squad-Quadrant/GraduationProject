@@ -21,4 +21,18 @@ MonoBehaviour:
   weight: 0
   spineName: 
   gripType: 0
-  attackRange: 0
+  kind: 2
+  maxUsesPerBattle: 3
+  apCost: 1
+  throwRange: 5
+  coverageOffsets:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: -1, y: 0}
+  - {x: 0, y: -1}
+  healAmount: 30
+  directDamage: 50
+  appliedBuff: 3
+  persistTurns: 2
+  visionReach: 5
