@@ -23,9 +23,15 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[Title("Highlight")]
 		[SerializeField, ChildGameObjectsOnly] private GameObject highlightOverlay;
 
+		private EquipmentConfig _currentConfig;
+		private EquipmentDetailView _detail;
+
 		// config 为 null 时表示"卸下装备"
-		public void Bind(EquipmentConfig config, Action onClick)
+		public void Bind(EquipmentConfig config, EquipmentDetailView detail, Action onClick)
 		{
+			_currentConfig = config;
+			_detail = detail;
+
 			if (config)
 			{
 				if (iconImage)
@@ -56,8 +62,24 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				highlightOverlay.SetActive(highlight);
 		}
 
-		public void OnPointerEnter(PointerEventData eventData) => SetHighlight(true);
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			SetHighlight(true);
+			if (_detail && _currentConfig)
+				_detail.Show(_currentConfig);
+		}
 
-		public void OnPointerExit(PointerEventData eventData) => SetHighlight(false);
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			SetHighlight(false);
+			if (_detail)
+				_detail.Hide();
+		}
+
+		private void OnDisable()
+		{
+			SetHighlight(false);
+			if (_detail) _detail.Hide();
+		}
 	}
 }

@@ -22,25 +22,21 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[Title("Highlight")]
 		[SerializeField, ChildGameObjectsOnly] private GameObject highlightOverlay;
 
-		[Title("Detail View")]
-		[SerializeField, ChildGameObjectsOnly] private GameObject detail;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailName;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailLine1;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailLine2;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailLine3;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailLine4;
-		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI detailDescription;
-
 		public ELoadoutSlotKind SlotKind { get; private set; }
 		public int SlotIndex { get; private set; }
 
 		// 暴露 RectTransform 供 Dropdown 锚定
 		public RectTransform RectTransform => (RectTransform)transform;
 
-		public void Bind(ELoadoutSlotKind slotKind, int slotIndex, EquipmentConfig config, Action onClick)
+		private EquipmentConfig _currentConfig;
+
+		private EquipmentDetailView _detail;
+
+		public void Bind(ELoadoutSlotKind slotKind, int slotIndex, EquipmentConfig config, EquipmentDetailView detail, Action onClick)
 		{
 			SlotKind = slotKind;
 			SlotIndex = slotIndex;
+			_detail = detail;
 
 			Refresh(config);
 
@@ -53,6 +49,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		// LoadoutPanel 在装备变更后调用，刷新显示
 		public void Refresh(EquipmentConfig config)
 		{
+			_currentConfig = config;
+
 			bool hasEquipment = config;
 
 			if (iconImage)
@@ -64,21 +62,32 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			if (nameText) nameText.text = hasEquipment ? config.nName : "";
 			if (subtitleText) subtitleText.text = hasEquipment ? config.type : "";
 			if (emptyPlaceholder) emptyPlaceholder.SetActive(!hasEquipment);
-
-			// todo: 细节界面可以展示更多信息（如伤害、重量等），目前先简单展示描述
-			if (detailName) detailName.text = hasEquipment ? config.nName : "";
 		}
 
 		private void SetHighlight(bool highlight)
 		{
 			if (highlightOverlay)
 				highlightOverlay.SetActive(highlight);
-			if (detail)
-				detail.SetActive(highlight);
 		}
 
-		public void OnPointerEnter(PointerEventData eventData) => SetHighlight(true);
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			SetHighlight(true);
+			if (_detail && _currentConfig)
+				_detail.Show(_currentConfig);
+		}
 
-		public void OnPointerExit(PointerEventData eventData) => SetHighlight(false);
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			SetHighlight(false);
+			if (_detail)
+				_detail.Hide();
+		}
+
+		private void OnDisable()
+		{
+			SetHighlight(false);
+			if (_detail) _detail.Hide();
+		}
 	}
 }

@@ -40,6 +40,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[SerializeField, ChildGameObjectsOnly] private Slider visionSlider;
 		[SerializeField, ChildGameObjectsOnly] private Transform apRoot;
 		[SerializeField, AssetsOnly] private GameObject apPrefab;
+		[SerializeField, ChildGameObjectsOnly] private Button leftButton;
+		[SerializeField, ChildGameObjectsOnly] private Button rightButton;
 
 		[Title("装备槽")]
 		[SerializeField, Required, ChildGameObjectsOnly] private EquipmentSlotView mainWeaponSlot;
@@ -50,6 +52,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 		[Title("装备选择下拉菜单")]
 		[SerializeField, Required, ChildGameObjectsOnly] private EquipmentPickerDropdown dropdown;
+		[SerializeField, Required, ChildGameObjectsOnly] private EquipmentDetailView equipmentDetailView;
 
 		[Title("Buttons")]
 		[SerializeField, Required, ChildGameObjectsOnly] private Button startBattleButton;
@@ -79,12 +82,52 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			WireButtons();
 			RefreshStartButtonState();
 
-			dropdown.Hide();
-
 			// 默认选中第一个单位
-			var firstUnit = data.DataManager.GetPlayerUnitConfigs(data.Level);
-			if (firstUnit.Count > 0)
-				SelectUnit(firstUnit[0]);
+			var units = data.DataManager.GetPlayerUnitConfigs(data.Level);
+			if (units.Count > 0)
+				SelectUnit(units[0]);
+
+			leftButton.onClick.RemoveAllListeners();
+			leftButton.onClick.AddListener(() =>
+			{
+				if (units.Count == 0) return;
+				if (!_currentUnit)
+				{
+					SelectUnit(units[0]);
+					return;
+				}
+
+				int currentIndex = 0;
+				for (int i = 0; i < units.Count; i++)
+				{
+					if (units[i].configId != _currentUnit.configId) continue;
+					currentIndex = i;
+					break;
+				}
+				int prevIndex = (currentIndex - 1) < 0 ? units.Count - 1 : currentIndex - 1;
+				SelectUnit(units[prevIndex]);
+			});
+
+			rightButton.onClick.RemoveAllListeners();
+			rightButton.onClick.AddListener(() =>
+			{
+				if (units.Count == 0) return;
+				if (!_currentUnit)
+				{
+					SelectUnit(units[0]);
+					return;
+				}
+
+				int currentIndex = 0;
+				for (int i = 0; i < units.Count; i++)
+				{
+					if (units[i].configId != _currentUnit.configId) continue;
+					currentIndex = i;
+					break;
+				}
+				int nextIndex = (currentIndex + 1) >= units.Count ? 0 : currentIndex + 1;
+				SelectUnit(units[nextIndex]);
+			});
 		}
 
 		protected override void OnClose()
@@ -196,6 +239,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				ELoadoutSlotKind.MainWeapon,
 				slotIndex: 0,
 				mainCfg,
+				equipmentDetailView,
 				onClick: () => OpenDropdownForSlot(mainWeaponSlot));
 
 			// 副武器
@@ -204,6 +248,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				ELoadoutSlotKind.SecondaryWeapon,
 				slotIndex: 0,
 				secondaryCfg,
+				equipmentDetailView,
 				onClick: () => OpenDropdownForSlot(secondaryWeaponSlot));
 
 			// 道具槽 x3
@@ -219,6 +264,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 					ELoadoutSlotKind.TacticalItem,
 					slotIndex: captured,
 					itemCfg,
+					equipmentDetailView,
 					onClick: () => OpenDropdownForSlot(slot));
 			}
 		}
@@ -240,6 +286,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				anchorSlot: slot,
 				options: options,
 				allowEmpty: allowEmpty,
+				equipmentDetailView,
 				onSelect: selected => ApplyEquipmentChange(slot, selected),
 				onDismiss: null);
 		}

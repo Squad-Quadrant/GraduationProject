@@ -22,6 +22,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 		private readonly List<EquipmentPickerItem> _spawnedItems = new();
 		private Action _onDismiss;
+		private EquipmentDetailView _detail;
 
 		private void Awake() => gameObject.SetActive(false);
 
@@ -30,17 +31,19 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			EquipmentSlotView anchorSlot,
 			IReadOnlyList<EquipmentConfig> options,
 			bool allowEmpty,
+			EquipmentDetailView detail,
 			Action<EquipmentConfig> onSelect,
 			Action onDismiss)
 		{
 			ClearItems();
 			_onDismiss = onDismiss;
+			_detail = detail;
 
 			// "卸下"选项（放最前面）
 			if (allowEmpty)
 			{
 				var emptyItem = Instantiate(itemPrefab, itemContainer);
-				emptyItem.Bind(null, () => HandleSelect(null, onSelect));
+				emptyItem.Bind(null, detail, () => HandleSelect(null, onSelect));
 				_spawnedItems.Add(emptyItem);
 			}
 
@@ -49,7 +52,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				if (!config) continue;
 				var captured = config;
 				var item = Instantiate(itemPrefab, itemContainer);
-				item.Bind(captured, () => HandleSelect(captured, onSelect));
+				item.Bind(captured, detail, () => HandleSelect(captured, onSelect));
 				_spawnedItems.Add(item);
 			}
 
@@ -61,11 +64,14 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		{
 			if (!gameObject.activeSelf) return;
 
+			if (_detail) _detail.Hide();
+
 			gameObject.SetActive(false);
 			ClearItems();
 
 			_onDismiss?.Invoke();
 			_onDismiss = null;
+			_detail = null;
 		}
 
 		// 点击透明背景 / 任何非 item 区域 → 关闭
@@ -97,6 +103,10 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				0f);
 
 			rootRect.position = anchorWorldPos + worldOffset;
+
+			float worldWidth = anchorRect.rect.width * anchorRect.lossyScale.x;
+			float rootLocalWidth = worldWidth / Mathf.Max(rootRect.lossyScale.x, 0.0001f);
+			rootRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rootLocalWidth);
 		}
 	}
 }
