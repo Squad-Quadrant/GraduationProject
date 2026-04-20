@@ -15,6 +15,8 @@ namespace Systems.Unit
 		public string unitName = "New Unit";
 		[TextArea(2, 4)]
 		public string description = "This is a new unit.";
+		[InfoBox("局外配装页展示用")]
+		public string unitClass = "";
 
 		[TitleGroup("视觉表现")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]

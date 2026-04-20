@@ -18,16 +18,16 @@ MonoBehaviour:
   mapConfig: {fileID: 11400000, guid: e0c8004fb376e8e42a7c89ac2147cab2, type: 2}
   unitPlacements:
   - unitId: 001
-    unitConfig: {fileID: 11400000, guid: 9086bee10a790d940a1b6ed09845b6cf, type: 2}
+    unitConfig: {fileID: 11400000, guid: 3a567b98cf519e44fa8d4ad213860ca5, type: 2}
     startPosition: {x: 2, y: 2}
     initialLoadout:
       mainWeaponId: 1
-      secondaryWeaponId: 2
-      tacticalItemIds: 030000000300000003000000
+      secondaryWeaponId: 101
+      tacticalItemIds: e9030000ea030000eb030000
   - unitId: 002
-    unitConfig: {fileID: 11400000, guid: 29a558215c001cc4dbb634812ebbcc54, type: 2}
+    unitConfig: {fileID: 11400000, guid: 01c2acc6e6f787249b6b55d7df29c891, type: 2}
     startPosition: {x: 3, y: 3}
     initialLoadout:
       mainWeaponId: 1
-      secondaryWeaponId: 2
-      tacticalItemIds: 030000000000000000000000
+      secondaryWeaponId: 101
+      tacticalItemIds: e9030000ea030000eb030000

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
+  m_Name: main_weapon_m16a1
+  m_EditorClassIdentifier: 
+  id: 1
+  nName: M16A1
+  type: "\u7A81\u51FB\u6B65\u67AA"
+  description: 
+  icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  damage: 38
+  mentalDamage: 0
+  weight: 0
+  spineName: weapon_m177
+  gripType: 0
+  ammoCapacity: 30
+  shotRanges:
+  - min: 0
+    hitRate: 1
+  - min: 15
+    hitRate: 90
+  - min: 30
+    hitRate: 80
+  damageAttenuation:
+    perGrid: 20
+    multiplier: 0.95
+  penetrationRate: 0.7
+  shootSpeed: 5
+  canPreciseShoot: 1
+  preciseShootSpeed: 2
+  preciseShootHitRateBonus: 0.15

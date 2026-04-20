@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 using Data.Config;
+using Presentation.UI.Panel.Menu.Loadout;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Systems.Buff.Config;
 using Systems.Unit;
@@ -128,6 +131,7 @@ namespace Data
 	    // 玩家单位 > UnitPlacement 初始配置 > null
 	    public Loadout GetLoadoutFor(UnitPlacement placement)
 	    {
+		    EnsureInitialized();
 		    if (placement == null || !placement.unitConfig)
 			    return null;
 
@@ -136,6 +140,81 @@ namespace Data
 			    return custom;
 
 		    return placement.initialLoadout;
+	    }
+
+	    // 从 LevelConfig 提取所有需要玩家配装的单位配置
+	    public IReadOnlyList<UnitConfig> GetPlayerUnitConfigs(LevelConfig level)
+	    {
+		    EnsureInitialized();
+
+		    if (level)
+			    return (from placement in level.unitPlacements
+				    select placement?.unitConfig
+				    into unitConfig
+				    where unitConfig
+				    where unitConfig.faction == EUnitFaction.Player
+				    select unitConfig).ToList();
+
+		    this.LogError("GetPlayerUnitConfigs: level is null");
+		    return System.Array.Empty<UnitConfig>();
+	    }
+
+	    // 按槽类型列出所有可装备项
+	    public IReadOnlyList<EquipmentConfig> GetEquipmentsForSlot(ELoadoutSlotKind slotKind)
+	    {
+		    EnsureInitialized();
+
+		    return slotKind switch
+		    {
+			    ELoadoutSlotKind.MainWeapon
+				    => equipmentConfigs
+					    .OfType<WeaponConfig>()
+					    .Cast<EquipmentConfig>()
+					    .ToList(),
+
+			    ELoadoutSlotKind.SecondaryWeapon
+				    => equipmentConfigs
+					    .OfType<WeaponConfig>()
+					    .Where(w => w.gripType == EGripType.HandGun)
+					    .Cast<EquipmentConfig>()
+					    .ToList(),
+
+			    ELoadoutSlotKind.TacticalItem
+				    => equipmentConfigs
+					    .OfType<TacticalItemConfig>()
+					    .Cast<EquipmentConfig>()
+					    .ToList(),
+
+			    _ => System.Array.Empty<EquipmentConfig>()
+		    };
+	    }
+
+	    public Loadout GetPlayerLoadoutForEditing(UnitConfig unitConfig, LevelConfig level)
+	    {
+		    EnsureInitialized();
+
+		    if (!unitConfig) return null;
+
+		    // 已有覆盖，直接返回
+		    if (PlayerLoadouts.TryGetValue(unitConfig.configId, out var existing))
+			    return existing;
+
+		    // 没有覆盖，基于 placement.initialLoadout 克隆一份作为起点
+		    var placement = level?.unitPlacements?.FirstOrDefault(p => p?.unitConfig == unitConfig);
+		    var baseline = placement?.initialLoadout;
+
+		    var cloned = new Loadout
+		    {
+			    mainWeaponId = baseline?.mainWeaponId ?? 0,
+			    secondaryWeaponId = baseline?.secondaryWeaponId ?? 0,
+			    tacticalItemIds = baseline?.tacticalItemIds != null
+				    ? (int[])baseline.tacticalItemIds.Clone()
+				    : new int[Loadout.TacticalItemSlotCount]
+		    };
+		    cloned.NormalizeTacticalSlots();
+
+		    PlayerLoadouts[unitConfig.configId] = cloned;
+		    return cloned;
 	    }
     }
 }

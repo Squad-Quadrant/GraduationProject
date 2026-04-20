@@ -4,6 +4,7 @@ using Data;
 using Data.Config;
 using Presentation.UI.Core;
 using Presentation.UI.Panel.Menu;
+using Presentation.UI.Panel.Menu.Loadout;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,7 +27,6 @@ namespace Presentation.Bootstrap
 			this.Log("Initialized");
 		}
 
-		// 入口：主菜单
 		public void ShowMainMenu()
 		{
 			_uiManager.CloseAll();
@@ -37,30 +37,46 @@ namespace Presentation.Bootstrap
 			});
 		}
 
-		// 入口：选关
 		private void ShowLevelSelect()
 		{
 			_uiManager.CloseAll();
 			_uiManager.Open<LevelSelectPanel, LevelSelectPanelData>(new LevelSelectPanelData
 			{
-				OnLevelSelected = StartBattle,
+				OnLevelSelected = ShowLoadout,
 				OnBack = ShowMainMenu,
 			});
 		}
 
-		// 入口：开始游戏
-		private void StartBattle(LevelConfig level)
+		public void ShowLoadout(LevelConfig level)
 		{
 			if (!level)
 			{
-				this.LogError("Cannot start battle: level is null");
+				this.LogError("Cannot show loadout: level is null");
 				return;
 			}
 
 			_dataManager.SelectedLevel = level;
-			_uiManager.CloseAll();
 
-			this.Log($"Loading Battle scene for level '{level.levelId}'");
+			_uiManager.CloseAll();
+			_uiManager.Open<LoadoutPanel, LoadoutPanelData>(new LoadoutPanelData
+			{
+				Level = level,
+				DataManager = _dataManager,
+				OnStartBattle = StartBattle,
+				OnBack = ShowLevelSelect,
+			});
+		}
+
+		public void StartBattle()
+		{
+			if (!_dataManager.SelectedLevel)
+			{
+				this.LogError("Cannot start battle: SelectedLevel is null");
+				return;
+			}
+
+			_uiManager.CloseAll();
+			this.Log($"Loading Battle scene for level '{_dataManager.SelectedLevel.levelId}'");
 			SceneManager.LoadScene(battleSceneName);
 		}
 

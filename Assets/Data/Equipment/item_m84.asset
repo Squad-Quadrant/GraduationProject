@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
+  m_Name: item_m84
+  m_EditorClassIdentifier: 
+  id: 1003
+  nName: "M84\u95EA\u5149\u5F39"
+  type: "\u6218\u672F\u9053\u5177"
+  description: 
+  icon: {fileID: -2111100431, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  damage: 0
+  mentalDamage: 0
+  weight: 0
+  spineName: 
+  gripType: 0
+  kind: 1
+  maxUsesPerBattle: 3
+  apCost: 1
+  throwRange: 5
+  coverageOffsets:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: -1, y: 0}
+  - {x: 0, y: -1}
+  healAmount: 30
+  directDamage: 50
+  appliedBuff: 3
+  persistTurns: 2
+  visionReach: 5

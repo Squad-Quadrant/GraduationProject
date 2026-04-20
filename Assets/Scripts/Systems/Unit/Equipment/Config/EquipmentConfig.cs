@@ -32,6 +32,7 @@ namespace Systems.Unit.Equipment.Config
     {
         [LabelText("ID(必要)")] public int id;
         [LabelText("名称")] public string nName;
+        [LabelText("类型")] public string type;
         [LabelText("描述")] public string description;
         [LabelText("图标")] public Sprite icon;
         [LabelText("伤害")] public int damage;

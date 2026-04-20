@@ -168,7 +168,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: eb5bfe135a578499db52333fc2e89296, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.size
-      value: 3
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.data[0]
@@ -185,7 +185,27 @@ PrefabInstance:
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: 73dd29eea629dc44381f86ebf1133e92, type: 2}
+      objectReference: {fileID: 11400000, guid: 416140b131cdc5a4c8f28603ae97f60a, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: f31e9b1b3e1d3344ab5f74075a586fdc, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3e884907751a0f74bb6f66432dcca3d5, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e0e36309344ff447b558215ab2b429a, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: 585a605f4f75b6e40a8cf0bfe95d8370, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[8]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9e8d7582e6f4556448fced961da1e535, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
