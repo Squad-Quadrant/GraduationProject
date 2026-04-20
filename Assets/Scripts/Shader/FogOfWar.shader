@@ -7,6 +7,7 @@
 		_NoiseIntensity	("Noise Intensity", Float)			= 0.15
 		_NoiseScale		("Noise Scale", Float)				= 0.5
 		_EdgeSoftness   ("Edge Softness", Range(0.01, 1))   = 0.35
+		_ClipExtent ("Clip Soft Extend (in grid cells)", Range(0, 10)) = 5
 
 		[Header(Halftone)]
 		_DotDensity     ("Dot Density", Float)              = 8.0
@@ -61,6 +62,7 @@
                 float  _NoiseIntensity;
                 float  _NoiseScale;
                 float  _EdgeSoftness;
+				float _ClipExtent;
 
 				// Halftone parameters
                 float  _DotDensity;
@@ -99,10 +101,12 @@
 				);
                 float2 visUV = gridCoords * _MapParams.xy;
 
-                float inside = step(0.0, visUV.x) * step(0.0, visUV.y) * step(visUV.x, 1.0) * step(visUV.y, 1.0);
+                 float2 extent = _ClipExtent * _MapParams.xy;
+            	float ix = smoothstep(-extent.x, 0.0, visUV.x) - smoothstep(1.0, 1.0 + extent.x, visUV.x);
+            	float iy = smoothstep(-extent.y, 0.0, visUV.y) - smoothstep(1.0, 1.0 + extent.y, visUV.y);
+            	float inside = ix * iy;
 
             	float visibility = SAMPLE_TEXTURE2D(_VisibilityTex, sampler_VisibilityTex, visUV).r;
-                visibility *= inside;
 
                 float noise = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, IN.worldPos * _NoiseScale).r;
                 noise = (noise - 0.5) * _NoiseIntensity;
@@ -133,7 +137,7 @@
             	float dotRadius = (1.0 - totalClear) * _DotMaxRadius;
 				float dotAlpha = 1.0 - smoothstep(dotRadius - _DotSoftness, dotRadius + _DotSoftness, distToCenter);
 
-                float fogAlpha = dotAlpha * _FogColor.a;
+                float fogAlpha = dotAlpha * _FogColor.a * inside;
 
 				return half4(_FogColor.rgb, fogAlpha);
             }

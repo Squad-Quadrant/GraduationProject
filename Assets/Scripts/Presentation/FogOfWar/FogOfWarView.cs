@@ -25,6 +25,7 @@ namespace Presentation.FogOfWar
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private float noiseIntensity = 0.15f;
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private float noiseScale = 0.5f;
 		[OnValueChanged("UpdateMaterial")] [SerializeField] private float edgeSoftness = 0.35f;
+		[OnValueChanged("UpdateMaterial")] [SerializeField] private float clipExtent = 5f;
 		[OnValueChanged("OnPaddingParmChange")] [SerializeField, Range(0f, 3.0f)] private int paddingRange = 1;
 		[OnValueChanged("OnPaddingParmChange")] [SerializeField, Range(0f, 1.0f)] private float paddingStrength = 0.2f;
 
@@ -80,6 +81,7 @@ namespace Presentation.FogOfWar
 		private static readonly int PropDotDensity   = Shader.PropertyToID("_DotDensity");
 		private static readonly int PropDotMaxRadius = Shader.PropertyToID("_DotMaxRadius");
 		private static readonly int PropDotSoftness  = Shader.PropertyToID("_DotSoftness");
+		private static readonly int PropClipExtent   = Shader.PropertyToID("_ClipExtent");
 
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -211,6 +213,7 @@ namespace Presentation.FogOfWar
 			_material.SetFloat(PropDotDensity, dotDensity);
 			_material.SetFloat(PropDotMaxRadius, dotMaxRadius);
 			_material.SetFloat(PropDotSoftness, dotSoftness);
+			_material.SetFloat(PropClipExtent, clipExtent);
 		}
 
 		private void SetupShaderUniforms()
