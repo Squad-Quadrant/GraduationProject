@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1849914443680330892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3926655975960564675}
+  - component: {fileID: 3613130242161373779}
+  m_Layer: 0
+  m_Name: MenuFlowController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3926655975960564675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849914443680330892}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3132017716888302795}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3613130242161373779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849914443680330892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3908be16c6e14582b189c98bdae73705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleSceneName: 1_Battle
 --- !u!1 &2877566087239663748
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,6 +77,7 @@ Transform:
   m_Children:
   - {fileID: 3559556107017559467}
   - {fileID: 9188899905410317582}
+  - {fileID: 3926655975960564675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1396654946115819425
@@ -46,11 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a146dbb517a74cec8f47e1c20a444c65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoInitialize: 1
   enableLogs: 1
   logSettings: {fileID: 11400000, guid: 731d1a68061b8304d9778fdd60b7fa58, type: 2}
   uiManager: {fileID: 1090293761091075710}
   dataManager: {fileID: 7980165080631738}
+  menuFlowController: {fileID: 3613130242161373779}
   rootContainerPrefab: {fileID: 0}
 --- !u!1001 &2362113483427255645
 PrefabInstance:
@@ -125,6 +171,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 40de9741ccf60024b8628937e5982b42, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 7e0342fdf00e11041837054768ea1c31, type: 2}
@@ -136,6 +186,10 @@ PrefabInstance:
       propertyPath: equipmentConfigs.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: 12a1176838f86c04ba7207fdf85fbd62, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: equipmentConfigs.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 73dd29eea629dc44381f86ebf1133e92, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -205,9 +259,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2227163942090914657, guid: 0808f1aa8411cff4ebbc4c286d8e0132, type: 3}
+      propertyPath: m_ReferencePixelsPerUnit
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 4032893277507057801, guid: 0808f1aa8411cff4ebbc4c286d8e0132, type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242328793331719801, guid: 0808f1aa8411cff4ebbc4c286d8e0132, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863464754105063567, guid: 0808f1aa8411cff4ebbc4c286d8e0132, type: 3}
+      propertyPath: m_Name
+      value: Canvas_DDOL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

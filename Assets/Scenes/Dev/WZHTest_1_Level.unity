@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dcf210ef4a4ce7aa70ae133c9d5d99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layer: 1
+  layer: 3
   canvas: {fileID: 464366652}
 --- !u!114 &464366650
 MonoBehaviour:
@@ -729,7 +729,6 @@ MonoBehaviour:
   spottedEnemyMarkerView: {fileID: 625750540}
   areaEffectView: {fileID: 625750542}
   levelConfig: {fileID: 11400000, guid: be21afb0f8021324e9b3805bd906f324, type: 2}
-  autoLoadLevel: 1
 --- !u!4 &1138979030
 Transform:
   m_ObjectHideFlags: 0

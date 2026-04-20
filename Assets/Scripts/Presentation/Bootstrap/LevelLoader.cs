@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Core.Commands;
 using Core.Events;
 using Core.Log;
 using Data;
@@ -53,7 +51,6 @@ namespace Presentation.Bootstrap
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
-		[SerializeField] private bool autoLoadLevel;
 
 		private LevelContainer _levelContainer;
 		private IEventBus _eventBus;
@@ -62,8 +59,23 @@ namespace Presentation.Bootstrap
 
 		private void Start()
 		{
-			if (autoLoadLevel && levelConfig)
+			var dataManager = RootContainer.Instance
+				? RootContainer.Instance.TryResolve<DataManager>()
+				: null;
+
+			if (dataManager && dataManager.SelectedLevel)
+			{
+				LoadLevel(dataManager.SelectedLevel);
+				return;
+			}
+
+			if (levelConfig)
+			{
 				LoadLevel(levelConfig);
+				return;
+			}
+
+			this.LogWarning("No level to load: SelectedLevel is null and autoLoadLevel is false (or levelConfig empty).");
 		}
 
 		private void OnDestroy() => UnloadLevel();
@@ -95,7 +107,6 @@ namespace Presentation.Bootstrap
 			Destroy(_levelContainer.gameObject);
 			_levelContainer = null;
 
-			_loadStatus = "Idle";
 			this.Log("Level unloaded.");
 			this.Log("====================================", format: false);
 		}
@@ -119,7 +130,6 @@ namespace Presentation.Bootstrap
 		private void RunAllSteps()
 		{
 			_stepResults.Clear();
-			_loadStatus = "Loading...";
 			this.Log("============ Level Loading ============", format: false);
 			foreach (var step in _steps)
 			{
@@ -128,7 +138,6 @@ namespace Presentation.Bootstrap
 				_stepResults.Add(result);
 				this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", format: false);
 			}
-			_loadStatus = "Loaded";
 			this.Log("============ Level Loaded ============", format: false);
 		}
 
@@ -260,10 +269,6 @@ namespace Presentation.Bootstrap
 		}
 
 		#region Debug
-
-		[TitleGroup("Debug")]
-		[ShowInInspector, ReadOnly, LabelText("Status")]
-		private string _loadStatus = "Idle";
 
 		[ShowInInspector, ReadOnly, LabelText("Steps")]
 		[ListDrawerSettings(IsReadOnly = true)]

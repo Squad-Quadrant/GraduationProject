@@ -10,7 +10,6 @@ namespace Presentation.UI.Core
 	{
 		[SerializeField]
 		[LabelText("Layer")]
-		[Tooltip("Screen or World. Overlay should use UIManager's built-in canvas.")]
 		private EUICanvasLayer layer = EUICanvasLayer.Screen;
 
 		[SerializeField, ReadOnly]
