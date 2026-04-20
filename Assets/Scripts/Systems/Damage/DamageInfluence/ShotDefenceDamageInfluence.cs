@@ -16,7 +16,7 @@ namespace Systems.Damage
         public override void Execute()
         {
             var theWeapon = (WeaponLogic)Owner;
-            int defenceDamage = Mathf.FloorToInt(theWeapon.GetDamage() * Defender.defenseRate * (1 - theWeapon.PenetrationRate())); 
+            int defenceDamage = Mathf.FloorToInt(theWeapon.GetDamage() * (1 - Defender.defenseRate) * (1 - theWeapon.PenetrationRate())); 
             
             Context.DefenceDamage += defenceDamage;
         }

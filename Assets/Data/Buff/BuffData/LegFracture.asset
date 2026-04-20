@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: Blind
+  m_Name: LegFracture
   m_EditorClassIdentifier: 
-  buffType: 4
-  buffName: "\u5931\u660E"
+  buffType: 2
+  buffName: "\u817F\u90E8\u9AA8\u6298"
   description: 
   icon: {fileID: 0}
-  maxStack: 1
+  maxStack: 0
   tags: []
-  showInUI: 0
-  durationTurn: 3
+  showInUI: 1
+  durationTurn: 2
   attachType: 0
   lostType: 0
   onAttachEvents: []
   onLostEvents: []
   onTurnEvents: []
   onResetEvents: []
-  propertyInfluences: []
+  propertyInfluences:
+  - {fileID: 11400000, guid: 7002f3f9f17a6124798322f87763ce72, type: 2}
+  - {fileID: 11400000, guid: c2589a81476b2d54db96bfd20d4e108b, type: 2}

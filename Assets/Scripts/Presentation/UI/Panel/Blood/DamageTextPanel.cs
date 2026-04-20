@@ -16,10 +16,12 @@ namespace Presentation.UI.Panel
         private ICoordinateConverter  _coordinateConverter;
         private IUnitService _unitService;
         [SerializeField] private DamageText damageTextPrototype;
+        [SerializeField] private BodyPartDamageText bodyPartDamageTextPrototype; 
         [SerializeField] private float interval = 0.1f;
         
         private readonly Queue<DamageAppliedEvent> _damageEventQueue = new();
         private bool _isProcessingDamageEvents;
+        
         
         protected override void OnInitialize()
         {
@@ -44,6 +46,8 @@ namespace Presentation.UI.Panel
             {
                 StartCoroutine(ProcessDamageEvents());
             }
+            var bodyPartDamageText = Instantiate(bodyPartDamageTextPrototype, transform);
+            bodyPartDamageText.Init(e.Context, _coordinateConverter);
         }
 
         private IEnumerator ProcessDamageEvents()

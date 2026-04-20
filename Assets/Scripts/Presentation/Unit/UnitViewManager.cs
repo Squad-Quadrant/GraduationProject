@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
@@ -51,6 +52,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
             _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+            _eventBus.Subscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
 			this.Log("Initialized");
 		}
 
@@ -64,6 +66,7 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
             _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+            _eventBus.Unsubscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -201,7 +204,24 @@ namespace Presentation.Unit
 				});
 		}
 
-		private UnitView CreateUnitViewInstance(Systems.Unit.Unit unit)
+        private void OnNoticeUnitVisionToUpdate(NoticeUnitVisionToUpdateEvent e)
+        {
+            if (e.Unit == null)
+            {
+                this.LogError("NoticeUnitVisionToChangeEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(e.Unit.id, out var view))
+            {
+                this.LogWarning($"No view found for visionChanging unit '{e.Unit.id}'.");
+                return;
+            }
+            _visionService.UpdateUnitVision(e.Unit.id, e.Unit.position, e.Unit.visionRange);
+        }
+        
+
+        private UnitView CreateUnitViewInstance(Systems.Unit.Unit unit)
 		{
 			var viewObj = Instantiate(unitViewPrefab.gameObject, unitContainer);
 			viewObj.name = $"UnitView_{unit.name}_{unit.id}";

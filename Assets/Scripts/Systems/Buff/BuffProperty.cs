@@ -5,13 +5,17 @@ namespace Systems.Buff
     public enum PropertyType
     {
         None = 0,
+        // ---------------------------------
         Attack,
         Defense,
         MaxHp,
         Speed,
+        MoveRange,
         MaxAmmo,
         CanUseEquipment,
         CanAttack,
+        VisionRange,
+        // ---------------------------------
         Count,
     }
 

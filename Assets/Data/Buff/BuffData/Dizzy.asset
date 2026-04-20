@@ -10,20 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: Blind
+  m_Name: Dizzy
   m_EditorClassIdentifier: 
-  buffType: 4
-  buffName: "\u5931\u660E"
+  buffType: 5
+  buffName: "\u7729\u6655"
   description: 
   icon: {fileID: 0}
-  maxStack: 1
+  maxStack: 0
   tags: []
-  showInUI: 0
-  durationTurn: 3
-  attachType: 0
+  showInUI: 1
+  durationTurn: 2
+  attachType: 2
   lostType: 0
-  onAttachEvents: []
+  onAttachEvents:
+  - {fileID: 11400000, guid: cc5d6b2733d7fff40ae07fddf748cbc8, type: 2}
+  - {fileID: 11400000, guid: e05885801fcde7d4eb9949b6fa448da8, type: 2}
   onLostEvents: []
   onTurnEvents: []
   onResetEvents: []
-  propertyInfluences: []
+  propertyInfluences:
+  - {fileID: 11400000, guid: 09329d69970ecf44ca4518abbf4c852a, type: 2}

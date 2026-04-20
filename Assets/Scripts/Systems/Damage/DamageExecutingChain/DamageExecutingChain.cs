@@ -29,6 +29,7 @@ namespace Systems.Damage
             if (_context.DamageType == DamageType.Bullet)
             {
                 _influencers.Add(_context.Attacker.CurrentEquipment.Logic as IDamageInfluencer);
+                _influencers.Add(context.Attacker);
             }
 
             InitInfluences();

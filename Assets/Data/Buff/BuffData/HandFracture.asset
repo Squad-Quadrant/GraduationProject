@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: Fracture
+  m_Name: HandFracture
   m_EditorClassIdentifier: 
   buffType: 1
-  buffName: "\u9AA8\u6298"
+  buffName: "\u624B\u90E8\u9AA8\u6298"
   description: 
   icon: {fileID: 0}
   maxStack: 0

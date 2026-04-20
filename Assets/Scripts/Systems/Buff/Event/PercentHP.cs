@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Systems.Buff.Config
 {
-	[CreateAssetMenu(fileName = "UnitBuffEventTest1", menuName = "Game/Buff/BuffEvent/UnitBuffEventTest1")]
+	[CreateAssetMenu(fileName = "PercentHp", menuName = "Game/Buff/BuffEvent/PercentHp")]
 	public class PercentHp : UnitBuffEvent
 	{
 		public float percentage;

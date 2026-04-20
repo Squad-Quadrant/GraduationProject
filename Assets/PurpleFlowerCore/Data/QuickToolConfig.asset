@@ -85,3 +85,11 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
+  - name: BuffConfig
+    commandType: 3
+    color: {r: 1, g: 1, b: 1, a: 1}
+    lineBreak: 0
+    commandParam: Assets/Data/Buff/BuffInfluence
+    command:
+      m_PersistentCalls:
+        m_Calls: []
