@@ -26,14 +26,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState<IdleState>();
-				return;
-			}
+				throw new InvalidOperationException("Entered MovementPreviewState without a selected unit.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisionService.CurrentVisibleCells);
 			var stoppableCells = _reachableArea.GetStoppableCellsList();
@@ -129,16 +125,16 @@ namespace Systems.Interaction.States
 
 		private void OnBack(BackInputEvent e)
 		{
-			this.Log("Back input → returning to UnitSelected");
+			this.Log("Back → UnitSelected");
 			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
-			this.Log("ESC input → resetting to Idle");
+			this.Log("ESC → UnitSelected");
 			CancelPreview();
-			Context.StateMachine.ChangeState<IdleState>();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private ReachableAreaResult CalculateReachableArea(Unit.Unit selectedUnit, IPathFindingService pathfinding, IReadOnlyCollection<Vector2Int> visibleCells)
@@ -180,6 +176,7 @@ namespace Systems.Interaction.States
 		private void CancelPreview()
 		{
 			Publish(Context, PathPreviewEvent.Hide());
+			Publish(Context, RangeDisplayEvent.Clear(ERangeType.Movement));
 		}
 
 		private void ExecuteMove(Vector2Int targetCell)

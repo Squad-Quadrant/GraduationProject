@@ -25,14 +25,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState<IdleState>();
-				return;
-			}
+				throw new InvalidOperationException("Entered TargetingState without a selected unit.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			if (ctx.PendingTargeting == null)
 			{
@@ -147,8 +143,8 @@ namespace Systems.Interaction.States
 
 		private void OnEsc(EscInputEvent e)
 		{
-			this.Log("Esc → Idle");
-			StateMachine(Context).ChangeState<IdleState>();
+			this.Log("Esc → UnitSelected");
+			StateMachine(Context).ChangeState<UnitSelectedState>();
 		}
 	}
 }

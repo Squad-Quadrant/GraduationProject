@@ -37,7 +37,7 @@ namespace Systems.Interaction
 
 		public StateMachine<InteractionContext> StateMachine { get; internal set; }
 
-		public Unit.Unit selectedUnit;
+		public Unit.Unit selectedUnit; // 现在的selectedUnit在绝大多数情况下都不应该为空
 
 		public EActionType currentAction;
 
@@ -75,10 +75,6 @@ namespace Systems.Interaction
 			PendingTargeting = null;
 		}
 
-		/// <summary>
-		/// Gets the currently acting unit from TurnService.
-		/// Returns null if no unit is currently acting.
-		/// </summary>
 		public Unit.Unit GetCurrentTurnUnit()
 		{
 			var turnUnit = TurnService.ActiveUnit;
@@ -86,9 +82,6 @@ namespace Systems.Interaction
 			return UnitService.TryGetUnit(turnUnit.Id, out var unit) ? unit : null;
 		}
 
-		/// <summary>
-		/// Checks if the given unit belongs to the current player and can act.
-		/// </summary>
 		public bool CanControlUnit(Unit.Unit unit)
 		{
 			if (unit == null) return false;

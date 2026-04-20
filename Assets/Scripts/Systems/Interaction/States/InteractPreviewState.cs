@@ -16,6 +16,8 @@ namespace Systems.Interaction.States
 
 		private Action<CellClickedEvent> _onCellClicked;
 		private Action<UnitClickedEvent> _onUnitClicked;
+		private Action<BackInputEvent> _onBack;
+		private Action<EscInputEvent> _onEsc;
 
 		private IReadOnlyList<Vector2Int> _validTargetCells;
 
@@ -23,14 +25,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState<IdleState>();
-				return;
-			}
+				throw new InvalidOperationException("No unit selected when entering InteractPreviewState.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_validTargetCells = CalculateInteractableTargets(ctx);
 
@@ -42,8 +40,12 @@ namespace Systems.Interaction.States
 
 			_onCellClicked = OnCellClicked;
 			_onUnitClicked = OnUnitClicked;
+			_onBack = OnBack;
+			_onEsc = OnEsc;
 			Subscribe(ctx, _onCellClicked);
 			Subscribe(ctx, _onUnitClicked);
+			Subscribe(ctx, _onBack);
+			Subscribe(ctx, _onEsc);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -54,8 +56,12 @@ namespace Systems.Interaction.States
 
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onUnitClicked);
+			Unsubscribe(ctx, _onBack);
+			Unsubscribe(ctx, _onEsc);
 			_onCellClicked = null;
 			_onUnitClicked = null;
+			_onBack = null;
+			_onEsc = null;
 
 			base.OnExit(ctx);
 		}
@@ -63,6 +69,20 @@ namespace Systems.Interaction.States
 		private void OnCellClicked(CellClickedEvent e) => ConfirmInteraction(e.CellPosition);
 
 		private void OnUnitClicked(UnitClickedEvent e) => ConfirmInteraction(e.CellPosition);
+
+		private void OnBack(BackInputEvent e)
+		{
+			this.Log("Back -> UnitSelected");
+			CancelPreview();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
+		}
+
+		private void OnEsc(EscInputEvent e)
+		{
+			this.Log("ESC → UnitSelected");
+			CancelPreview();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
+		}
 
 		private void ConfirmInteraction(Vector2Int cellPosition)
 		{
@@ -102,5 +122,7 @@ namespace Systems.Interaction.States
 
 			return validTargetCells;
 		}
+
+		private void CancelPreview() => Publish(Context, RangeDisplayEvent.Clear(ERangeType.Interact));
 	}
 }

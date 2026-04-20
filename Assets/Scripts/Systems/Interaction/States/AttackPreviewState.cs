@@ -26,14 +26,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState<IdleState>();
-				return;
-			}
+				throw new InvalidOperationException("No unit selected when entering AttackPreviewState.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_validTargetCells = CalculateAttackableTarget(ctx).Select(u => u.position).ToList();
             
@@ -90,16 +86,16 @@ namespace Systems.Interaction.States
 
 		private void OnBack(BackInputEvent e)
 		{
-			this.Log("Back input → returning to UnitSelected");
+			this.Log("Back -> UnitSelected");
 			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
-			this.Log("ESC input → resetting to Idle");
+			this.Log("ESC → UnitSelected");
 			CancelPreview();
-			Context.StateMachine.ChangeState<IdleState>();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private void OnPointerHover(PointerHoverEvent e)
@@ -155,10 +151,7 @@ namespace Systems.Interaction.States
             return enemyUnits;
 		}
 
-		private void CancelPreview()
-		{
-			Publish(Context, PathPreviewEvent.Hide());
-		}
+		private void CancelPreview() => Publish(Context, PathPreviewEvent.Hide());
 
 		private void ExecuteAttack(Vector2Int targetCell)
 		{

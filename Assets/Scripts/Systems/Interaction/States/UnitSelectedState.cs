@@ -22,14 +22,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState(new IdleState());
-				return;
-			}
+				throw new InvalidOperationException("Entered UnitSelectedState without a selected unit.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_onActionSelected = OnActionSelected;
 			_onUnitClicked = OnUnitClicked;
@@ -121,55 +117,20 @@ namespace Systems.Interaction.States
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			if (e.UnitId == Context.selectedUnit?.id)
-				return;
 
-			if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
-			{
-				this.LogWarning($"Clicked unit with ID {e.UnitId} not found.");
-				return;
-			}
-
-			if (Context.CanControlUnit(unit))
-				SwitchToUnit(unit);
-			else
-			{
-				this.Log($"Cannot control unit with ID {e.UnitId}.");
-				// todo: provide feedback to the player here
-			}
 		}
 
 		private void OnBack(BackInputEvent e)
 		{
-			this.Log("Back input received - Deselecting unit and going idle");
-			DeselectUnit();
-			StateMachine(Context).ChangeState<IdleState>();
+
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
-			this.Log("Esc input received - Deselecting unit and going idle");
-			DeselectUnit();
-			StateMachine(Context).ChangeState<IdleState>();
+
 		}
 
 		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);
-
-		private void SwitchToUnit(Unit.Unit newUnit)
-		{
-			this.Log($"Switching to unit: {newUnit.name}");
-
-            DeselectUnit();
-
-			// Update selection
-			Context.selectedUnit = newUnit;
-
-			// Publish new selection
-			Publish(Context, new UnitSelectedEvent(
-				newUnit.id,
-				newUnit.position
-			));
-		}
 
 		private void ExecuteWait()
 		{

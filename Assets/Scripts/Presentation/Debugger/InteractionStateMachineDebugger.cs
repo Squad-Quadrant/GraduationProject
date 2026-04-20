@@ -78,15 +78,6 @@ namespace Presentation.Debugger
 		}
 
 		[HorizontalGroup("Debug Actions/Row1")]
-		[Button("Force Idle", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
-		[EnableIf("@IsApplicationPlaying && IsConnected")]
-		private void ForceIdle()
-		{
-			StateMachine?.ChangeState<Systems.Interaction.States.IdleState>();
-			Debug.Log("[InteractionDebugger] Forced to Idle state");
-		}
-
-		[HorizontalGroup("Debug Actions/Row1")]
 		[Button("Pause/Resume", ButtonSizes.Large), GUIColor(0.8f, 0.8f, 0.4f)]
 		[EnableIf("@IsApplicationPlaying && _cachedController != null")]
 		private void TogglePause()

@@ -20,14 +20,10 @@ namespace Systems.Interaction.States
 		{
 			base.OnEnter(ctx);
 
-			this.Log($"Entered - Unit: {ctx.selectedUnit?.name}");
-
 			if (ctx.selectedUnit == null)
-			{
-				this.LogError("No unit selected! Returning to Idle.");
-				ctx.StateMachine.ChangeState<IdleState>();
-				return;
-			}
+				throw new InvalidOperationException("No unit selected when entering ItemSelectionState.");
+
+			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_onTacticalItemSelected = OnTacticalItemSelected;
 			_onBack = OnBack;
@@ -53,6 +49,8 @@ namespace Systems.Interaction.States
 			_onBack = null;
 			_onEsc = null;
 			_onPointerHover = null;
+
+			Context.PendingTargeting = null;
 
 			base.OnExit(ctx);
 		}
@@ -99,8 +97,8 @@ namespace Systems.Interaction.States
 
 		private void OnEsc(EscInputEvent e)
 		{
-			this.Log("Esc → Idle");
-			StateMachine(Context).ChangeState<IdleState>();
+			this.Log("Esc → UnitSelected");
+			StateMachine(Context).ChangeState<UnitSelectedState>();
 		}
 
 		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);
