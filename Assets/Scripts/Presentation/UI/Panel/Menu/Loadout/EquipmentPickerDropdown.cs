@@ -89,9 +89,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			if (!anchor) return;
 
 			var anchorRect = anchor.RectTransform;
-			var anchorWorldPos = anchorRect.position;
-
 			var scale = rootRect.lossyScale;
+			var anchorWorldPos = anchorRect.position + new Vector3(0, -anchorRect.rect.height, 0f) * scale.y;
 			var worldOffset = new Vector3(
 				anchorOffset.x * scale.x,
 				anchorOffset.y * scale.y,

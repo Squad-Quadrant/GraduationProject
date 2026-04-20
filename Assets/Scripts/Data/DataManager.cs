@@ -169,6 +169,7 @@ namespace Data
 			    ELoadoutSlotKind.MainWeapon
 				    => equipmentConfigs
 					    .OfType<WeaponConfig>()
+					    .Where(w => w.gripType == EGripType.Default)
 					    .Cast<EquipmentConfig>()
 					    .ToList(),
 

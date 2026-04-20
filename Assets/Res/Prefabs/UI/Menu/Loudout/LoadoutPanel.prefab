@@ -377,7 +377,7 @@ MonoBehaviour:
   secondaryWeaponSlot: {fileID: 3920556110279060790}
   tacticalItemSlots:
   - {fileID: 5307092785854719690}
-  - {fileID: 3452040972264660536}
+  - {fileID: 7660271239273590552}
   - {fileID: 193242838858855809}
   dropdown: {fileID: 6134837641179958939}
   startBattleButton: {fileID: 5034582247654046453}
@@ -1379,7 +1379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3431417948577648868
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1421,7 +1421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.003921569}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1893,7 +1893,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000015258789}
-  m_SizeDelta: {x: 0, y: 10}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &5828801928667095937
 MonoBehaviour:
@@ -2010,7 +2010,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 374, y: 332}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7441972003171764199
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2068,7 +2068,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 10
   m_Viewport: {fileID: 4225115556891799359}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -2870,9 +2870,9 @@ RectTransform:
   - {fileID: 8153395731383929797}
   - {fileID: 682294035598956895}
   - {fileID: 1257123088182889844}
-  - {fileID: 8555140583482282659}
-  - {fileID: 3452040972264660535}
+  - {fileID: 6147875109867543409}
   - {fileID: 4445592260083712488}
+  - {fileID: 8555140583482282659}
   m_Father: {fileID: 5186766439482716115}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4522,12 +4522,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a39e26ebb35fa94abf40e131dda4d7d, type: 3}
---- !u!224 &3452040972264660535 stripped
+--- !u!224 &6147875109867543409 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8843309554368447815, guid: 6a39e26ebb35fa94abf40e131dda4d7d, type: 3}
   m_PrefabInstance: {fileID: 3452040972264660534}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3452040972264660536 stripped
+--- !u!114 &7660271239273590552 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5018941699211587886, guid: 6a39e26ebb35fa94abf40e131dda4d7d, type: 3}
   m_PrefabInstance: {fileID: 3452040972264660534}
