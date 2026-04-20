@@ -79,7 +79,11 @@ namespace Presentation.CameraControl
 
 		private void OnUnitTurnStarted(UnitTurnStartedEvent e)
 		{
-			if (!e.IsVisibleToPlayer) return;
+			if (!e.IsVisibleToPlayer)
+			{
+				_eventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Camera, PresentationType.Camera.Focus)); // 没有焦点事件，但仍需通知流程继续，防止游戏卡死
+				return;
+			}
 
 			var worldPos = _coordinateConverter.CellToWorld(e.CellPosition);
 			FocusOn(worldPos);
