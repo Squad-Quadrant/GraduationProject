@@ -5,7 +5,7 @@ namespace Systems.Damage
     public abstract class DamageInfluence
     {
         public IDamageInfluencer Owner;
-        public Unit.Unit Attacker;
+        public object Attacker;
         public Unit.Unit Defender;
         public EActionType ActionType;
         public int Priority = 0; // 优先级，数值越大优先执行, 可以考虑先用枚举做粗略分级,再用整数做细分

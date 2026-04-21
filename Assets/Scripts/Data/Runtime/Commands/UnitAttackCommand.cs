@@ -6,6 +6,7 @@ using Core.Log;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
+using Systems.Damage;
 using Systems.Map;
 using Systems.Unit;
 
@@ -71,7 +72,8 @@ namespace Data.Runtime.Commands
             }
 
             // _eventBus.Publish(new UnitBeHitEvent(unit));
-            _eventBus.Publish(new UnitAttackedDealDamageEvent(unit, targetUnit, _actionType));
+            var info = new BulletDamageTriggeringInfo(unit, targetUnit, _actionType);
+            _eventBus.Publish(new DealDamageEvent(info));
             
 			unit.CanAttack.Value = false;
             unit.CurrentAp -= _apCost;

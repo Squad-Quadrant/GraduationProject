@@ -5,6 +5,7 @@ using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Damage;
 using DG.Tweening;
+using Systems.Damage;
 using Systems.Vision;
 using UnityEngine;
 
@@ -30,14 +31,14 @@ namespace Presentation.Vision
 			_visionService = visionService ?? throw new ArgumentNullException(nameof(visionService));
 			_revealDuration = revealDuration;
 
-			_eventBus.Subscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Subscribe<DealDamageEvent>(OnAttackDealDamage);
 
 			this.Log("Initialized");
 		}
 
 		public void Dispose()
 		{
-			_eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Unsubscribe<DealDamageEvent>(OnAttackDealDamage);
 
 			// Kill all pending tweens and remove reveals from VisionService
 			foreach (var (tokenId, tween) in _activeReveals)
@@ -48,12 +49,17 @@ namespace Presentation.Vision
 			_activeReveals.Clear();
 		}
 
-		private void OnAttackDealDamage(UnitAttackedDealDamageEvent e)
+		private void OnAttackDealDamage(DealDamageEvent e)
 		{
-			if (e.Attacker == null || e.Target == null || e.ActionType != EActionType.Attack) return;
+			var info = e.Info;
+			if (info.DamageType != DamageType.Bullet) return;
 
-			var from = e.Attacker.position;
-			var to = e.Target.position;
+			var attacker = info.Attacker as Systems.Unit.Unit;
+			
+			if (attacker == null || info.Defender == null) return;
+
+			var from = attacker.position;
+			var to = info.Defender.position;
 
 			var cells = new List<Vector2Int>();
 			_visionCalculator.TraceRay(from, to, cells);

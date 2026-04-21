@@ -18,59 +18,59 @@ namespace Systems.Damage
             _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             this.Log("Initialized");
             
-            _eventBus.Subscribe<UnitAttackedDealDamageEvent>(DealDamage);
+            _eventBus.Subscribe<DealDamageEvent>(DealDamage);
         }
 
         public void Dispose()
         {
-            _eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(DealDamage);
+            _eventBus.Unsubscribe<DealDamageEvent>(DealDamage);
             this.Log("Disposed");
         }
         
-        // todo: 通用伤害触发事件
-        private void DealDamage(UnitAttackedDealDamageEvent e)
+        private void DealDamage(DealDamageEvent e)
         {
-            var damageChain = new DamageExecutingChain(DamageType.Bullet);
-            DamageExecutingContext context =
-                new DamageExecutingContext(e.Attacker, e.Target, e.ActionType, damageChain);
-            damageChain.Init(context, _eventBus);
+            var damageChain = GetDamageChain(e.Info);
+            damageChain.Init();
             damageChain.Execute();
 
             _unitService.CheckUnitDeath();
         }
 
-        public DamageExecutingContext GetSimulatedDamage(DamageTriggeringInfo info)
+        public DamageExecutingContext GetSimulatedDamage(BulletDamageTriggeringInfo info)
         {
-            var damageChain = new DamageExecutingChain(info.DamageType);
-            DamageExecutingContext context =
-                new DamageExecutingContext(info.Attacker, info.Defender, info.ActionType, damageChain);
-            context.needApplyDamage = false;
-            damageChain.Init(context, _eventBus);
+            var damageChain = GetDamageChain(info);
+            damageChain.Context.needApplyDamage = false;
+            damageChain.Init();
             damageChain.Execute();
 
-            return context;
+            return damageChain.Context;
         }
-    }
-
-    public struct DamageTriggeringInfo
-    {
-        public DamageType DamageType;
-        public Unit.Unit Attacker;
-        public Unit.Unit Defender;
-        public EActionType ActionType;
-        public DamageTriggeringInfo(DamageType damageType, Unit.Unit attacker, Unit.Unit defender, EActionType actionType)
+        
+        public DamageExecutingChain GetDamageChain(DamageTriggeringInfo info)
         {
-            DamageType = damageType;
-            Attacker = attacker;
-            Defender = defender;
-            ActionType = actionType;
+            var context = new DamageExecutingContext(info.Attacker, info.Defender);
+            DamageExecutingChain damageChain;
+            switch (info.DamageType)
+            {
+                case DamageType.General:
+                    return new GeneralDamageExecutingChain(context, _eventBus);
+                
+                case DamageType.Bullet:
+                    var bulletInfo = info as BulletDamageTriggeringInfo;
+                    context.ActionType = bulletInfo.ActionType;
+                    damageChain = new BulletDamageExecutingChain(context, _eventBus);
+                    return damageChain;
+                
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(info.DamageType), info.DamageType, null);
+            }
         }
-    }
 
+    }
+    
     public enum DamageType
     {
-        Buff,
+        General,
         Bullet,
-        Boom
     }
 }

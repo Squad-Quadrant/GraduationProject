@@ -114,8 +114,7 @@ namespace Systems.Interaction.States
 			    && _validTargetCells.Contains(cell))
 			{
 				var damageContext = Context.DamageService.GetSimulatedDamage(
-					new DamageTriggeringInfo(
-						DamageType.Bullet,
+					new BulletDamageTriggeringInfo(
 						Context.selectedUnit,
 						target,
 						Context.currentAction));

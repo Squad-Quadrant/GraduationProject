@@ -9,6 +9,7 @@ using Data.Runtime.Events.Vision;
 using DG.Tweening;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Damage;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Unit;
@@ -54,7 +55,7 @@ namespace Presentation.CameraControl
 			ComputeWorldBounds();
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
-			_eventBus.Subscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Subscribe<DealDamageEvent>(OnAttackDealDamage);
 
 			_isInitialized = true;
 			this.Log("Initialized");
@@ -64,7 +65,7 @@ namespace Presentation.CameraControl
 		{
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
-			_eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Unsubscribe<DealDamageEvent>(OnAttackDealDamage);
 			KillFocusTween();
 		}
 
@@ -102,13 +103,17 @@ namespace Presentation.CameraControl
 			FocusOnCellSequence(positions);
 		}
 
-		private void OnAttackDealDamage(UnitAttackedDealDamageEvent e)
+		private void OnAttackDealDamage(DealDamageEvent e)
 		{
-			if (e.Attacker == null) return;
+			var info = e.Info;
+			if (info.DamageType != DamageType.Bullet) return;
 
-			var worldPos = _coordinateConverter.CellToWorld(e.Attacker.position);
+			var unit = info.Attacker as Systems.Unit.Unit;
+			if (unit == null) return;
+
+			var worldPos = _coordinateConverter.CellToWorld(unit.position);
 			FocusOn(worldPos);
-			this.Log($"Unit attacked: {e.Attacker.id}, focusing on attacker position");
+			this.Log($"Unit attacked: {unit.id}, focusing on attacker position");
 		}
 
 		public void FocusOn(Vector3 worldPos)
