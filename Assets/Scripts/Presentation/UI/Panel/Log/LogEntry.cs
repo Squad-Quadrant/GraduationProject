@@ -15,8 +15,6 @@ namespace Presentation.UI.Panel.Log
             logText.text = message;
             logText.color = GetLogLevelColor(level);
             layoutElement.preferredHeight = logText.preferredHeight + padding;
-            // todo: 变成最下层的条目
-            
         }
         
         private static Color GetLogLevelColor(LogLevel level)

@@ -93,3 +93,11 @@ MonoBehaviour:
     command:
       m_PersistentCalls:
         m_Calls: []
+  - name: "Battle\u573A\u666F"
+    commandType: 0
+    color: {r: 0, g: 0.9073796, b: 1, a: 1}
+    lineBreak: 1
+    commandParam: Assets/Scenes/Release/1_Battle.unity
+    command:
+      m_PersistentCalls:
+        m_Calls: []
