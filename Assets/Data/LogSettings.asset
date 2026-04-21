@@ -352,3 +352,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Postprocessing.OutlineFeature
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

@@ -83,8 +83,8 @@ namespace Systems.Unit
             get => _currentHp;
             set
             {
+	            _currentHp = value;
                 TriggerInfoChanged();
-                _currentHp = value;
             }
         }
         
@@ -93,8 +93,8 @@ namespace Systems.Unit
             get => _currentDefense;
             set
             {
+	            _currentDefense = value;
                 TriggerInfoChanged();
-                _currentDefense = value;
             }
         }
 
@@ -103,8 +103,8 @@ namespace Systems.Unit
             get => _currentSan;
             set
             {
+	            _currentSan = value;
                 TriggerInfoChanged();
-                _currentSan = value;
             }
         }
         
@@ -113,8 +113,8 @@ namespace Systems.Unit
             get => _currentAp;
             set
             {
+	            _currentAp = value;
                 TriggerInfoChanged();
-                _currentAp = value;
             }
         }
 

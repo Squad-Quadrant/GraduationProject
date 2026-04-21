@@ -193,6 +193,14 @@ namespace Presentation.Unit
 		public void SetVisible(bool visible) => _renderer.enabled = visible;
 		public bool GetVisible() => _renderer.enabled;
 
+		public void SetOutline(bool outlineEnabled)
+		{
+			if (outlineEnabled)
+				_renderer.renderingLayerMask |= 1 << 1;
+			else
+				_renderer.renderingLayerMask &= ~((uint)1 << 1);
+		}
+
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)
 		{
 			if (path == null || path.Count < 2)
