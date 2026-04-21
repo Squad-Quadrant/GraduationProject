@@ -43,14 +43,18 @@ Material:
     m_Floats:
     - _ColorBreathAmount: 0.1
     - _ColorBreathSpeed: 1
+    - _ContourElevationMod: 0.4
     - _ContourEvolveSpeed: 0.01
     - _ContourLevels: 39.5
+    - _ContourMajorEvery: 5
+    - _ContourMajorScale: 2.5
+    - _ContourMinorIntensity: 0.55
     - _ContourScale: 2.09
     - _ContourThickness: 1.5
     - _EnableExternalAlpha: 0
-    - _GradDriftRadius: 0.323
+    - _GradDriftRadius: 0.5
     - _GradDriftSpeed: 0.18
-    - _GradFalloff: 3
+    - _GradFalloff: 5
     - _GridDashCount: 7.5
     - _GridDensity: 6.2
     - _GridLineThickness: 0.006
