@@ -93,7 +93,7 @@ namespace Systems.Interaction.States
                 case EActionType.SwitchWeapon:
                     var switchWeaponCommand = new UnitSwitchWeaponCommand(
                         Context.selectedUnit,
-                        1,
+                        0,
                         Context.EventBus
                     );
                     Context.CommandQueue.EnqueueAndExecute(switchWeaponCommand);

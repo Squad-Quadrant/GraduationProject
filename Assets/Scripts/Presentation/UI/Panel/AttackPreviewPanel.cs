@@ -72,6 +72,9 @@ namespace Presentation.UI.Panel
             }
         }
 
-        private void OnDisplayHitPercent(DisplayHitPercentEvent e) => hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
+        private void OnDisplayHitPercent(DisplayHitPercentEvent e)
+        {
+            hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
+        }
     }
 }

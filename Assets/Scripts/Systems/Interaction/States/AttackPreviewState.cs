@@ -121,6 +121,7 @@ namespace Systems.Interaction.States
 						Context.currentAction));
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
+				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
 
 				Publish(Context, CursorInfoEvent.ForAttack(cell, e.WorldPosition, terrainName, target.name, target.CurrentHp, target.maxHp, hitPercent));
 				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent));
