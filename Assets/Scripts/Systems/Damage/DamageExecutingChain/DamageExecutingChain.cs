@@ -7,142 +7,92 @@ using UnityEngine;
 
 namespace Systems.Damage
 {
-    public class DamageExecutingChain
+    public abstract class DamageExecutingChain
     {
-        public DamageType DamageType;
-        private DamageExecutingContext _context;
-        private List<DamageInfluence> _influences = new();
-        private List<IDamageInfluencer> _influencers = new();
-        private IEventBus _eventBus;
+        public abstract DamageType DamageType { get; }
+        protected DamageExecutingContext context;
+        public DamageExecutingContext Context => context;
+        protected List<DamageInfluence> influences = new();
+        protected List<IDamageInfluencer> influencers = new();
+        protected IEventBus eventBus;
         
-        public DamageExecutingChain(DamageType damageType)
+        public DamageExecutingChain(DamageExecutingContext context, IEventBus eventBus)
         {
-            DamageType = damageType;
-        }
-
-        public void Init(DamageExecutingContext context, IEventBus eventBus)
-        {
-            _eventBus = eventBus;
+            this.eventBus = eventBus;
+            this.context = context;
             context.Owner = this;
-            _context = context;
-            
-            if (_context.DamageType == DamageType.Bullet)
-            {
-                _influencers.Add(_context.Attacker.CurrentEquipment.Logic as IDamageInfluencer);
-                _influencers.Add(context.Attacker);
-            }
-
+        }
+        
+        public void Init()
+        {
+            InitInfluencers();
             InitInfluences();
         }
 
-        private void InitInfluences()
-        {
-            foreach (var influencer in _influencers)
-            {
-                _influences.AddRange(influencer.GetDamageInfluences(_context));
-            }
-            _influences.Sort((a, b) => b.Priority - a.Priority);
+        protected abstract void InitInfluencers();
 
-            foreach (var influence in _influences)
+        protected virtual void InitInfluences()
+        {
+            foreach (var influencer in influencers)
             {
-                influence.Init(_context);
+                influences.AddRange(influencer.GetDamageInfluences(context));
+            }
+            influences.Sort((a, b) => b.Priority - a.Priority);
+
+            foreach (var influence in influences)
+            {
+                influence.Init(context);
             }
         }
 
-        public void Execute()
+        public abstract void Execute();
+
+        protected virtual void ApplyDamage()
         {
-            _influences.RemoveAll(i => _context.ignoredInfluenceTypes.Contains(i.DamageInfluenceType));
-            
-            for (int i = 0; i < _context.CalculateNum; i++)
-            {
-                if (_context.HitRate > Random.Range(0f, 1f)) 
-                    _context.FinalCalculatedNum++;
-            }
+            var defender = context.Defender;
 
-            for (int i = 0; i < _context.FinalCalculatedNum; i++)
-            {
-                _context.CurrentDamageIndex = i;
-                foreach (var influence in _influences)
-                {
-                    influence.Execute();
-                }
-                if (_context.needApplyDamage)
-                    ApplyDamage();
-                if (_context.needResetDamage) 
-                    ResetDamage();
-            }
-            
-            if (_context.needApplyDamage)
-                foreach (var influence in _influences)
-                {
-                    influence.Last();
-                }
-
-            if (_context.needApplyDamage)
-            {
-                if(_context.isMiss)
-                {
-                    this.Log($"Attack missed! Defender ID:{_context.Defender.id}", true);
-                }else if (_context.DamageType == DamageType.Bullet)
-                {
-                    string isOnPreciseShoot = _context.Attacker.CurrentWeapon.IsOnPreciseShoot ? "精准" : "";
-                    this.Log($"{_context.Attacker.name}使用{_context.Attacker.CurrentWeapon.Name()}对{_context.Defender.name}进行{isOnPreciseShoot}攻击，命中{_context.FinalCalculatedNum}发子弹，" +
-                             $"击中{_context.bodyPartType.ToStr()}, 共造成伤害{_context.TotalDamage}，护甲减少{_context.TotalDefenseDamage}", true);
-                }
-            }
-        }
-
-        private void ApplyDamage()
-        {
-            var defender = _context.Defender;
-
-            int finalDamage = Mathf.RoundToInt(_context.Damage * _context.DamageModifier);
-            int finalDefenseDamage = Mathf.RoundToInt(_context.DefenceDamage * _context.DefenseDamageModifier);
-            int finalSanDamage = Mathf.RoundToInt(_context.SanDamage * _context.SanDamageModifier);
+            int finalDamage = Mathf.RoundToInt(context.Damage * context.DamageModifier);
+            int finalDefenseDamage = Mathf.RoundToInt(context.DefenceDamage * context.DefenseDamageModifier);
+            int finalSanDamage = Mathf.RoundToInt(context.SanDamage * context.SanDamageModifier);
 
             defender.CurrentHp -= finalDamage;
             defender.CurrentDefense -= finalDefenseDamage;
             defender.CurrentSan -= finalSanDamage;
 
-            defender.BodyPartInfo[_context.bodyPartType] += finalDamage;
+            defender.BodyPartInfo[context.bodyPartType] += finalDamage;
 
-            _context.TotalDamage += finalDamage;
-            _context.TotalDefenseDamage += finalDefenseDamage;
-            _context.TotalSanDamage += finalSanDamage;
+            context.TotalDamage += finalDamage;
+            context.TotalDefenseDamage += finalDefenseDamage;
+            context.TotalSanDamage += finalSanDamage;
             
-            this.Log($"Damage applied: type:{_context.DamageType}, {_context.Damage} damage, {_context.DefenceDamage} defense damage," +
-                $" {_context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
+            this.Log($"Damage applied: type:{context.DamageType}, {context.Damage} damage, {context.DefenceDamage} defense damage," +
+                $" {context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
 
-            _eventBus.Publish(new DamageAppliedEvent(_context.GetSnapshot()));
+            eventBus.Publish(new DamageAppliedEvent(context.GetSnapshot()));
         }
 
-        private void ResetDamage()
+        protected virtual void ResetDamage()
         {
-            _context.Damage = 0;
-            _context.DefenceDamage = 0;
-            _context.SanDamage = 0;
+            context.Damage = 0;
+            context.DefenceDamage = 0;
+            context.SanDamage = 0;
         }
     }
-
+    
     public record DamageExecutingContext
     {
-        public Unit.Unit Attacker;
+        public object Attacker;
         public Unit.Unit Defender;
         public EActionType ActionType;
-        public DamageType DamageType;
+        public DamageType DamageType => Owner.DamageType;
 
         public DamageExecutingChain Owner;
-
-        public DamageExecutingContext(Unit.Unit attacker, Unit.Unit defender, EActionType actionType,  
-            DamageExecutingChain owner)
+        public DamageExecutingContext(object attacker, Unit.Unit defender)
         {
             Attacker = attacker;
             Defender = defender;
-            ActionType = actionType;
-            Owner = owner;
-            DamageType = owner.DamageType;
         }
-
+        
         public int Damage = 0;
         public int DefenceDamage = 0; // 对护甲的伤害
         public int SanDamage = 0; // San值伤害

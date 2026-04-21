@@ -10,6 +10,7 @@ using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
+using Systems.Damage;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Map.Config;
@@ -47,7 +48,7 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Subscribe<UnitAttackedDealDamageEvent>(OnUnitAttacked);
+            _eventBus.Subscribe<DealDamageEvent>(OnUnitAttacked);
             _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
@@ -61,7 +62,7 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Unsubscribe<UnitAttackedDealDamageEvent>(OnUnitAttacked);
+            _eventBus.Unsubscribe<DealDamageEvent>(OnUnitAttacked);
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
@@ -240,17 +241,21 @@ namespace Presentation.Unit
 			return view;
 		}
         
-        private void OnUnitAttacked(UnitAttackedDealDamageEvent e)
+        private void OnUnitAttacked(DealDamageEvent e)
         {
-            if (e.Attacker == null)
+	        var info = e.Info;
+	        if (info.DamageType != DamageType.Bullet) return;
+
+	        var attacker = info.Attacker as Systems.Unit.Unit;
+            if (attacker == null)
             {
                 this.LogError("UnitAttackedEvent has null Unit");
                 return;
             }
 
-            if (!_views.TryGetValue(e.Attacker.id, out var view))
+            if (!_views.TryGetValue(attacker.id, out var view))
             {
-                this.LogWarning($"No view found for attacked unit '{e.Attacker.id}'.");
+                this.LogWarning($"No view found for attacked unit '{attacker.id}'.");
                 return;
             }
 
@@ -259,7 +264,7 @@ namespace Presentation.Unit
                 _eventBus.Publish(new PresentationCompleteEvent(
                     category: EPresentationCategory.Animation,
                     type: PresentationType.Animation.Attack,
-                    entityId: e.Attacker.id
+                    entityId: attacker.id
                 ));
                 view.PlayAction("idle");
             });

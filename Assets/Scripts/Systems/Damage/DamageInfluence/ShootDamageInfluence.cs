@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
@@ -8,6 +6,7 @@ namespace Systems.Damage
     // 常规射击伤害
     public class ShootDamageInfluence : DamageInfluence
     {
+        public Unit.Unit UnitAttacker => Attacker as Unit.Unit;
         private bool _isOnPreciseShoot;
         public ShootDamageInfluence(IDamageInfluencer owner, int priority = 0, bool isOnPreciseShoot = false) : base(
             owner, priority)
@@ -44,7 +43,7 @@ namespace Systems.Damage
             var theWeapon = (WeaponLogic)Owner;
             
             // 获得两个单位的距离
-            float distance = Vector2Int.Distance(Attacker.position, Defender.position);
+            float distance = Vector2Int.Distance(UnitAttacker.position, Defender.position);
 
             // 伤害衰减
             float damageMultiplier = 1f;
