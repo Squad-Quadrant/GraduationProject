@@ -107,7 +107,6 @@ namespace Systems.Interaction.States
 			}
 
 			var cell = e.CellPosition.Value;
-			var terrainName = Context.MapService.Data.GetCell(cell)?.Terrain.ToString() ?? "";
 
 			if (e.HoveredUnitId != null
 			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out var target)
@@ -122,12 +121,14 @@ namespace Systems.Interaction.States
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
 
-				Publish(Context, CursorInfoEvent.ForAttack(cell, e.WorldPosition, terrainName, target.name, target.CurrentHp, target.maxHp, hitPercent));
+				Publish(Context, CursorInfoEvent.ForAttack(
+					cell, e.WorldPosition,
+					hitPercent, target.name, target.CurrentHp, target.maxHp));
 				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent));
 			}
 			else
 			{
-				Publish(Context, CursorInfoEvent.ForTerrain(cell, e.WorldPosition, terrainName));
+				PublishBasicCursorInfo(Context, e);
 				Publish(Context, DisplayHitPercentEvent.Invalid());
 			}
 		}

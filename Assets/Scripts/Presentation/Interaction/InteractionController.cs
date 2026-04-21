@@ -9,6 +9,7 @@ using Systems.Damage;
 using Systems.Interaction;
 using Systems.Interaction.States;
 using Systems.Map;
+using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
@@ -48,7 +49,8 @@ namespace Presentation.Interaction
                 services.Resolve<IVisionService>(),
 				services.Resolve<IVisionCalculator>(),
 				services.Resolve<IDamageService>(),
-				services.Resolve<IAreaEffectService>());
+				services.Resolve<IAreaEffectService>(),
+				services.Resolve<IRegionService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

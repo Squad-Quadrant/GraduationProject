@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1920391814714203784}
   - component: {fileID: 5963265314863248642}
   - component: {fileID: 3865304360173294767}
-  m_Layer: 0
+  - component: {fileID: 413258362264477338}
+  m_Layer: 6
   m_Name: UnitView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +60,7 @@ SortingGroup:
   m_GameObject: {fileID: 4984962927497487194}
   m_Enabled: 1
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!212 &3865304360173294767
@@ -114,6 +115,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!70 &413258362264477338
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984962927497487194}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.021718085, y: 0.20591283}
+  m_Size: {x: 0.26528287, y: 0.51594234}
+  m_Direction: 0
 --- !u!1 &6560378402288978153
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +163,6 @@ GameObject:
   - component: {fileID: 6047513051579512413}
   - component: {fileID: 6435499065462257557}
   - component: {fileID: 1217849529714404168}
-  - component: {fileID: 3022947976612118577}
   m_Layer: 0
   m_Name: SpineRoot
   m_TagString: Untagged
@@ -197,7 +232,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6435499065462257557
@@ -249,38 +284,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b467d7cfdc4b54a30025698ecf52a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!70 &3022947976612118577
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6560378402288978153}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.0327451, y: 0.18413693}
-  m_Size: {x: 0.21453477, y: 0.39922366}
-  m_Direction: 0

@@ -232,7 +232,7 @@ namespace Editor
                 DrawActorCross(baseRect, cellSize, actorColor);
 
                 // Draw cross on extra cells
-                foreach (var offset in cell.sceneActor.ExtraGrid)
+                foreach (var offset in cell.sceneActor.extraGrid)
                 {
                     var extraPos = cell.position + offset;
                     if (extraPos.x < 0 || extraPos.x >= size.x ||

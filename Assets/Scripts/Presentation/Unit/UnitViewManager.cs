@@ -3,6 +3,7 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Damage;
+using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
@@ -35,6 +36,8 @@ namespace Presentation.Unit
 
 		private readonly Dictionary<string, UnitView> _views = new(); // [unitId, view]
 
+		private string _lastHoveredUnitId;
+
 		public void Initialize(ServiceContainer services)
 		{
 			_eventBus = services.Resolve<IEventBus>();
@@ -54,6 +57,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
             _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
             _eventBus.Subscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
+            _eventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
 			this.Log("Initialized");
 		}
 
@@ -68,6 +72,7 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
             _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
             _eventBus.Unsubscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
+            _eventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -133,6 +138,14 @@ namespace Presentation.Unit
 			}
 
 			var unitId = e.Unit.id;
+
+			if (_lastHoveredUnitId == unitId)
+			{
+				if (_views.TryGetValue(unitId, out var hoveredView) && hoveredView)
+					hoveredView.SetOutline(false);
+				_lastHoveredUnitId = null;
+			}
+
 
 			if (!_views.Remove(unitId, out var view))
 			{
@@ -363,6 +376,21 @@ namespace Presentation.Unit
 
 		        view.SetVisible(e.VisibleCells.Contains(unit.position));
 	        }
+        }
+
+        private void OnPointerHover(PointerHoverEvent e)
+        {
+	        if (e.HoveredUnitId == _lastHoveredUnitId) return;
+
+	        if (_lastHoveredUnitId != null
+	            && _views.TryGetValue(_lastHoveredUnitId, out var oldView) && oldView)
+		        oldView.SetOutline(false);
+
+	        if (e.HoveredUnitId != null
+	            && _views.TryGetValue(e.HoveredUnitId, out var newView) && newView)
+		        newView.SetOutline(true);
+
+	        _lastHoveredUnitId = e.HoveredUnitId;
         }
 
 		#region Odin Debug

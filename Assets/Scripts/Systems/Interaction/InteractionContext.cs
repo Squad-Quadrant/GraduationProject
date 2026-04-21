@@ -8,6 +8,7 @@ using Systems.AreaEffect;
 using Systems.Damage;
 using Systems.Interaction.Targeting;
 using Systems.Map;
+using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.PathFinding.MovementSimulation;
 using Systems.Turn;
@@ -33,6 +34,8 @@ namespace Systems.Interaction
         public IDamageService DamageService { get; }
         public IAreaEffectService AreaEffectService { get; }
 
+        public IRegionService RegionService { get; }
+
 		#endregion
 
 		public StateMachine<InteractionContext> StateMachine { get; internal set; }
@@ -55,7 +58,8 @@ namespace Systems.Interaction
             IVisionService visionService,
 			IVisionCalculator visionCalculator,
 			IDamageService damageService,
-			IAreaEffectService areaEffectService)
+			IAreaEffectService areaEffectService,
+			IRegionService regionService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -67,6 +71,7 @@ namespace Systems.Interaction
             VisionCalculator = visionCalculator;
             DamageService = damageService;
             AreaEffectService = areaEffectService;
+            RegionService = regionService;
 		}
 
 		public void ClearSelection()

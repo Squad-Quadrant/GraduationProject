@@ -123,6 +123,7 @@ namespace Presentation.Map
 		{
 			cursorHoverTilemap.ClearAllTiles();
 			if (!e.CellPosition.HasValue) return;
+			if (e.HoveredUnitId != null) return;
 			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, cursorHoverTile);
 		}
 

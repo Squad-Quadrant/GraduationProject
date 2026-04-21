@@ -4,6 +4,7 @@ using Data.Runtime.Events.Interaction;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
+using Systems.Unit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,14 @@ namespace Presentation.UI.CursorTooltip
 		[SerializeField, Required] private CanvasGroup canvasGroup;
 		[SerializeField, Required] private TextMeshProUGUI headerText;
 		[SerializeField, Required] private TextMeshProUGUI detailText;
+		[SerializeField] private Camera mainCamera;
+
+		[Title("Timing")]
+		[SerializeField] private float showDelay = 0.4f;
+
+		[Title("Cursor Follow")]
+		[SerializeField] private bool followCursor = true;
+		[SerializeField] private Vector2 cursorOffset = new(16f, -16f);
 
 		[Title("Positioning")]
 		[SerializeField] private Vector3 offset = new(0f, 0.6f, 0f);
@@ -33,9 +42,19 @@ namespace Presentation.UI.CursorTooltip
 		private ICoordinateConverter _coordinateConverter;
 		private ICoordinateConverter CoordinateConverter => _coordinateConverter ??= LevelContainer.Instance.Resolve<ICoordinateConverter>();
 
-		private bool _isVisible;
+		private CursorInfoEvent _pendingEvent;
+		private float _pendingSince;
+		private bool _isShown;
 
-		private void Awake() => Hide();
+		private void Awake()
+		{
+			if (!mainCamera) mainCamera = Camera.main;
+
+			canvasGroup.blocksRaycasts = false;
+			canvasGroup.interactable = false;
+			canvasGroup.alpha = 0f;
+			_isShown = false;
+		}
 
 		private void OnEnable()
 		{
@@ -44,73 +63,138 @@ namespace Presentation.UI.CursorTooltip
 
 		private void OnDisable()
 		{
+			if (!RootContainer.Instance) return;
 			EventBus.Unsubscribe<CursorInfoEvent>(OnCursorInfo);
+			ClearPending();
 			Hide();
+		}
+
+		private void Update()
+		{
+			if (!_isShown && _pendingEvent.Target != ECursorInfoTarget.None)
+			{
+				if (Time.unscaledTime - _pendingSince >= showDelay)
+				{
+					ApplyContent(_pendingEvent);
+					Show();
+				}
+			}
+
+			if (_isShown) UpdatePosition();
 		}
 
 		private void OnCursorInfo(CursorInfoEvent e)
 		{
-			if (!e.Cell.HasValue)
+			if (e.Target == ECursorInfoTarget.None || !e.Cell.HasValue)
 			{
+				ClearPending();
 				Hide();
 				return;
 			}
 
-			UpdateContent(e);
-			UpdatePosition(e.Cell.Value);
-			Show();
+			if (_isShown)
+			{
+				ApplyContent(e);
+				UpdatePosition();
+				return;
+			}
+
+			_pendingEvent = e;
+			_pendingSince = Time.unscaledTime;
 		}
+
+		private void ClearPending() => _pendingEvent = default; // Target == None
 
 		private void Show()
 		{
-			if (_isVisible) return;
-			_isVisible = true;
+			if (_isShown) return;
+			_isShown = true;
 			canvasGroup.alpha = 1f;
+			UpdatePosition();
 		}
 
 		private void Hide()
 		{
-			if (!_isVisible && canvasGroup.alpha == 0f) return;
-			_isVisible = false;
+			if (!_isShown && canvasGroup.alpha == 0f) return;
+			_isShown = false;
 			canvasGroup.alpha = 0f;
 		}
 
-		private void UpdatePosition(Vector2Int cell)
+		private void UpdatePosition()
 		{
-			var worldPos = CoordinateConverter.CellToWorld(cell);
-			transform.position = worldPos + offset;
+			if (!mainCamera) return;
+			var mouse = Mouse.current;
+			if (mouse == null) return;
+
+			if (followCursor)
+			{
+				var screenPos = mouse.position.ReadValue();
+				var worldPos = mainCamera.ScreenToWorldPoint(
+					new Vector3(screenPos.x, screenPos.y, -mainCamera.transform.position.z));
+				transform.position = new Vector3(worldPos.x, worldPos.y, 0f) + (Vector3)cursorOffset;
+			}
+			else
+			{
+				if (_pendingEvent.Cell == null) return;
+				transform.position = CoordinateConverter.CellToWorld(_pendingEvent.Cell.Value) + offset;
+			}
 		}
 
-		private void UpdateContent(CursorInfoEvent e)
+		private void ApplyContent(CursorInfoEvent e)
 		{
-			// Movement info
-			if (e.MovementApCost.HasValue)
+			switch (e.Target)
 			{
-				BuildMovementContent(e);
-				return;
+				case ECursorInfoTarget.Cell:
+					BuildCellContent(e);
+					break;
+				case ECursorInfoTarget.Unit:
+					BuildUnitContent(e);
+					break;
+				case ECursorInfoTarget.Movement:
+					BuildMovementContent(e);
+					break;
+				case ECursorInfoTarget.Attack:
+					BuildAttackContent(e);
+					break;
+				case ECursorInfoTarget.None:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
-
-			// Attack info
-			if (e.HitChance.HasValue)
-			{
-				BuildAttackContent(e);
-				return;
-			}
-
-			// Unit info (hovering a unit in Idle/UnitSelected)
-			if (e.UnitName != null)
-			{
-				BuildUnitContent(e);
-				return;
-			}
-
-			// Terrain only (empty cell in Idle/UnitSelected)
-			BuildTerrainContent(e);
 		}
 
+		private void BuildCellContent(CursorInfoEvent e)
+		{
+			headerText.text = e.CellStatusLine ?? "";
+			headerText.color = Color.white;
+			detailText.gameObject.SetActive(false);
+		}
+
+		// Target == Unit：单位名 + HP + 护甲；spotted 敌人只显示"已发现敌人"
+		private void BuildUnitContent(CursorInfoEvent e)
+		{
+			if (e.UnitIsSpottedHidden)
+			{
+				headerText.text = "已发现敌人";
+				headerText.color = enemyColor;
+				detailText.gameObject.SetActive(false);
+				return;
+			}
+
+			headerText.text = e.UnitName ?? "";
+			headerText.color = GetFactionColor(e.UnitFaction);
+
+			// 护甲为 0 时不显示护甲段（和 UnitInfoPanel 的处理一致）
+			detailText.text = e.UnitDefense > 0
+				? $"HP: {e.UnitHp}/{e.UnitMaxHp}  护甲: {e.UnitDefense}"
+				: $"HP: {e.UnitHp}/{e.UnitMaxHp}";
+			detailText.gameObject.SetActive(true);
+		}
+
+		// Target == Movement：AP cost + 剩余 AP；不可停时只提示 "Cannot Stop"
 		private void BuildMovementContent(CursorInfoEvent e)
 		{
-			if (e.CanStopHere == true)
+			if (e.CanStopHere)
 			{
 				headerText.text = $"AP Cost: {e.MovementApCost}";
 				headerText.color = Color.white;
@@ -119,54 +203,29 @@ namespace Presentation.UI.CursorTooltip
 			}
 			else
 			{
-				// Path exists but unit can't end turn here (occupied, etc.)
 				headerText.text = "Cannot Stop";
 				headerText.color = unreachableColor;
-				detailText.text = e.TerrainName ?? "";
-				detailText.gameObject.SetActive(!string.IsNullOrEmpty(detailText.text));
-			}
-		}
-
-		private void BuildAttackContent(CursorInfoEvent e)
-		{
-			headerText.text = $"Hit: {e.HitChance}%";
-			headerText.color = Color.white;
-
-			if (e.UnitName != null)
-			{
-				detailText.text = $"{e.UnitName}  HP: {e.UnitHp}/{e.UnitMaxHp}";
-				detailText.gameObject.SetActive(true);
-			}
-			else
-			{
 				detailText.gameObject.SetActive(false);
 			}
 		}
 
-		private void BuildUnitContent(CursorInfoEvent e)
+		// Target == Attack：命中率 + 目标简要信息
+		private void BuildAttackContent(CursorInfoEvent e)
 		{
-			headerText.text = e.UnitName;
-			headerText.color = GetFactionColor(e.UnitFaction);
-
-			detailText.text = $"HP: {e.UnitHp}/{e.UnitMaxHp}";
+			headerText.text = $"Hit: {e.HitChance}%";
+			headerText.color = Color.white;
+			detailText.text = $"{e.TargetName}  HP: {e.TargetHp}/{e.TargetMaxHp}";
 			detailText.gameObject.SetActive(true);
 		}
 
-		private void BuildTerrainContent(CursorInfoEvent e)
-		{
-			headerText.text = e.TerrainName ?? "";
-			headerText.color = Color.white;
-			detailText.gameObject.SetActive(false);
-		}
-
-		private Color GetFactionColor(string faction)
+		private Color GetFactionColor(EUnitFaction faction)
 		{
 			return faction switch
 			{
-				"Enemy"   => enemyColor,
-				"Player"  => allyColor,
-				"Neutral" => neutralColor,
-				_         => Color.white
+				EUnitFaction.Enemy   => enemyColor,
+				EUnitFaction.Player  => allyColor,
+				EUnitFaction.Neutral => neutralColor,
+				_                    => Color.white
 			};
 		}
 	}

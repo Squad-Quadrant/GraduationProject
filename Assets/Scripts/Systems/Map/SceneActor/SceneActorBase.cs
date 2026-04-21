@@ -9,6 +9,7 @@ namespace Systems.Map.SceneActor
     {
         protected SceneActorType _type;
         public SceneActorType Type => _type;
+
         protected uint _uid;
         public uint Uid => _uid;
         
@@ -21,6 +22,8 @@ namespace Systems.Map.SceneActor
         public bool BlocksVision { get; set; }
 
         public List<Vector2Int> BlockMovement { get; set; }
+
+        public string DisplayName { get; set; }
         
         public SceneActorBase(SceneActorType type, uint uid)
         {
@@ -31,10 +34,7 @@ namespace Systems.Map.SceneActor
 
     public enum SceneActorType
     {
-        Box,
-        Container, // 集装箱
-        Forklift,
-        WeaponCabinet,
+        Normal,
         Door
     }
 }

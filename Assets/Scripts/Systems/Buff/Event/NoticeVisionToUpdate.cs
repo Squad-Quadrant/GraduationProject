@@ -1,7 +1,8 @@
 using Data.Runtime.Events.Vision;
+using Systems.Buff.Config;
 using UnityEngine;
 
-namespace Systems.Buff.Config
+namespace Systems.Buff.Event
 {
     [CreateAssetMenu(fileName = "NoticeVisionToUpdate", menuName = "Game/Buff/BuffEvent/NoticeVisionToUpdate")]
     public class NoticeVisionToUpdate : UnitBuffEvent

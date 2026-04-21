@@ -1,100 +1,121 @@
 ﻿using Core.Events;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Data.Runtime.Events.Interaction
 {
+	public enum ECursorInfoTarget
+	{
+		None,      // 不显示 (Hide)
+		Cell,      // 地块状态行："状态: xx" / "物体: xx" / "无视野" / "未解锁" / "状态: 空"
+		Unit,      // 单位简要信息：名字 + HP + 护甲。若 UnitIsSpottedHidden 则只显示"已发现敌人"
+		Movement,  // 移动预览：AP cost + 剩余 AP + 是否可停留
+		Attack,    // 攻击预览：命中率 + 目标简要信息
+	}
+
 	public readonly struct CursorInfoEvent : IEvent
 	{
-		// ── Common ──────────────────────────────────────────────
+		public ECursorInfoTarget Target { get; }
+
+		// Cell 为 null 时表示 Hide；其余情况代表该 tooltip 语境所在的格子
 		public Vector2Int? Cell { get; }
 		public Vector3 WorldPosition { get; }
 
-		// ── Terrain (present whenever Cell != null) ─────────────
-		public string TerrainName { get; }
+		// Target == Cell
+		public string CellStatusLine { get; }
 
-		// ── Unit info (when hovering a unit) ────────────────────
+		// Target == Unit
 		public string UnitName { get; }
-		public int? UnitHp { get; }
-		public int? UnitMaxHp { get; }
-		public string UnitFaction { get; }
+		public int UnitHp { get; }
+		public int UnitMaxHp { get; }
+		public int UnitDefense { get; }
+		public EUnitFaction UnitFaction { get; }
+		public bool UnitIsSpottedHidden { get; }
 
-		// ── Movement context (MovementPreview only) ────────────
-		public int? MovementApCost { get; }
-		public int? RemainingAp { get; }
-		/// <summary>False if the unit can pass through but cannot stop on this cell.</summary>
-		public bool? CanStopHere { get; }
+		// Target == Movement
+		public int MovementApCost { get; }
+		public int RemainingAp { get; }
+		public bool CanStopHere { get; }
 
-		// ── Attack context (AttackPreview only) ─────────────────
-		public int? HitChance { get; }
+		// Target == Attack
+		public int HitChance { get; }
+		public string TargetName { get; }
+		public int TargetHp { get; }
+		public int TargetMaxHp { get; }
 
 		private CursorInfoEvent(
-			Vector2Int? cell, Vector3 worldPosition,
-			string terrainName,
-			string unitName, int? unitHp, int? unitMaxHp, string unitFaction,
-			int? movementApCost, int? remainingAp, bool? canStopHere,
-			int? hitChance)
+			ECursorInfoTarget target, Vector2Int? cell, Vector3 worldPosition,
+			string cellStatusLine = null,
+			string unitName = null, int unitHp = 0, int unitMaxHp = 0, int unitDefense = 0, EUnitFaction unitFaction = default, bool unitIsSpottedHidden = false,
+			int movementApCost = 0, int remainingAp = 0, bool canStopHere = false,
+			int hitChance = 0, string targetName = null, int targetHp = 0, int targetMaxHp = 0)
 		{
+			Target = target;
 			Cell = cell;
 			WorldPosition = worldPosition;
-			TerrainName = terrainName;
+			CellStatusLine = cellStatusLine;
 			UnitName = unitName;
 			UnitHp = unitHp;
 			UnitMaxHp = unitMaxHp;
+			UnitDefense = unitDefense;
 			UnitFaction = unitFaction;
+			UnitIsSpottedHidden = unitIsSpottedHidden;
 			MovementApCost = movementApCost;
 			RemainingAp = remainingAp;
 			CanStopHere = canStopHere;
 			HitChance = hitChance;
+			TargetName = targetName;
+			TargetHp = targetHp;
+			TargetMaxHp = targetMaxHp;
 		}
 
-		// ── Factory methods ────────────────────────────────────
-
-		/// <summary>Hides the tooltip. Published on state exit or when pointer leaves map.</summary>
 		public static CursorInfoEvent Hide() => default;
 
-		/// <summary>Idle / UnitSelected: hovering an empty cell.</summary>
-		public static CursorInfoEvent ForTerrain(Vector2Int cell, Vector3 worldPos, string terrainName)
-			=> new(cell, worldPos, terrainName,
-				null, null, null, null,
-				null, null, null,
-				null);
+		// 地块状态行
+		public static CursorInfoEvent ForCell(Vector2Int cell, Vector3 worldPos, string statusLine)
+			=> new(ECursorInfoTarget.Cell, cell, worldPos,
+				statusLine);
 
-		/// <summary>Idle / UnitSelected: hovering a cell occupied by a unit.</summary>
+		// 有视野下 hover 到单位
 		public static CursorInfoEvent ForUnit(
-			Vector2Int cell, Vector3 worldPos, string terrainName,
-			string unitName, int hp, int maxHp, string faction)
-			=> new(cell, worldPos, terrainName,
-				unitName, hp, maxHp, faction,
-				null, null, null,
-				null);
+			Vector2Int cell, Vector3 worldPos,
+			string name, int hp, int maxHp, int defense, EUnitFaction faction)
+			=> new(ECursorInfoTarget.Unit, cell, worldPos,
+				null,
+				name, hp, maxHp, defense, faction);
 
-		/// <summary>MovementPreview: hovering a reachable cell with known path cost.</summary>
+		// 雾中 spotted 的敌人（不泄露具体数值）
+		public static CursorInfoEvent ForSpottedHiddenEnemy(Vector2Int cell, Vector3 worldPos)
+			=> new(ECursorInfoTarget.Unit, cell, worldPos,
+				unitFaction: EUnitFaction.Enemy, unitIsSpottedHidden: true);
+
+		// 移动预览
 		public static CursorInfoEvent ForMovement(
-			Vector2Int cell, Vector3 worldPos, string terrainName,
+			Vector2Int cell, Vector3 worldPos,
 			int apCost, int remainingAp, bool canStopHere)
-			=> new(cell, worldPos, terrainName,
-				null, null, null, null,
-				apCost, remainingAp, canStopHere,
-				null);
+			=> new(ECursorInfoTarget.Movement, cell, worldPos,
+				 movementApCost: apCost, remainingAp: remainingAp, canStopHere: canStopHere);
 
-		/// <summary>AttackPreview: hovering a valid attack target.</summary>
+		// 攻击预览
 		public static CursorInfoEvent ForAttack(
-			Vector2Int cell, Vector3 worldPos, string terrainName,
-			string targetName, int targetHp, int targetMaxHp, int hitChance)
-			=> new(cell, worldPos, terrainName,
-				targetName, targetHp, targetMaxHp, null,
-				null, null, null,
-				hitChance);
+			Vector2Int cell, Vector3 worldPos,
+			int hitChance, string targetName, int targetHp, int targetMaxHp)
+			=> new(ECursorInfoTarget.Attack, cell, worldPos,
+				hitChance: hitChance, targetName: targetName, targetHp: targetHp, targetMaxHp: targetMaxHp);
 
 		public override string ToString()
 		{
-			if (!Cell.HasValue) return "[CursorInfo] Hidden";
-			var info = $"[CursorInfo] Cell:{Cell}";
-			if (TerrainName != null) info += $" Terrain:{TerrainName}";
-			if (UnitName != null) info += $" Unit:{UnitName}";
-			if (MovementApCost.HasValue) info += $" AP:{MovementApCost}";
-			if (HitChance.HasValue) info += $" Hit:{HitChance}%";
-			return info;
+			return Target switch
+			{
+				ECursorInfoTarget.None     => "[CursorInfo] Hidden",
+				ECursorInfoTarget.Cell     => $"[CursorInfo] Cell:{Cell} '{CellStatusLine}'",
+				ECursorInfoTarget.Unit     => UnitIsSpottedHidden
+					? $"[CursorInfo] SpottedHidden Cell:{Cell}"
+					: $"[CursorInfo] Unit:{UnitName} HP:{UnitHp}/{UnitMaxHp} Def:{UnitDefense}",
+				ECursorInfoTarget.Movement => $"[CursorInfo] Move AP:{MovementApCost} Remain:{RemainingAp} Stop:{CanStopHere}",
+				ECursorInfoTarget.Attack   => $"[CursorInfo] Attack Hit:{HitChance}% Target:{TargetName}",
+				_                          => "[CursorInfo] Unknown"
+			};
 		}
 	}
 }

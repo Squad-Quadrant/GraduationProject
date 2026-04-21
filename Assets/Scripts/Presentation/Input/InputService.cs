@@ -105,7 +105,7 @@ namespace Presentation.Input
 			var worldPos = ScreenToWorldPosition(screenPos);
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
 
-			var unitId = GetUnitAtCell(cellPos);
+			var unitId = DetectUnitAtPosition(screenPos);
 			if (unitId != null)
 			{
 				this.Log($"Unit clicked: {unitId} at {cellPos}");
@@ -160,8 +160,7 @@ namespace Presentation.Input
 			if (_mapService.Data.IsInBounds(cellPos))
 			{
 				currentCell = cellPos;
-				// currentUnitId = DetectUnitAtPosition(screenPos);
-				currentUnitId = GetUnitAtCell(cellPos); // todo: physical detection has not been implemented yet
+				currentUnitId = DetectUnitAtPosition(screenPos);
 			}
 
 			// Only publish if something changed
@@ -177,9 +176,7 @@ namespace Presentation.Input
 			));
 
 			if (currentCell.HasValue)
-			{
 				this.LogDebug($"Hover: Cell={currentCell}, Unit={currentUnitId ?? "none"}");
-			}
 		}
 
 		private Vector3 ScreenToWorldPosition(Vector2 screenPosition)

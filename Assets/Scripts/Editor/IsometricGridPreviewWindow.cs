@@ -345,8 +345,8 @@ namespace Editor
                     V3(center + new Vector2(-markSize, markSize)));
 
                 // Draw extra cells for multi-cell actors
-                if (cell.sceneActor.ExtraGrid == null) continue;
-                foreach (var offset in cell.sceneActor.ExtraGrid)
+                if (cell.sceneActor.extraGrid == null) continue;
+                foreach (var offset in cell.sceneActor.extraGrid)
                 {
                     int ex = cell.position.x + offset.x;
                     int ey = cell.position.y + offset.y;
@@ -587,8 +587,8 @@ namespace Editor
                 DrawDot(tex, px, actorColor, actorDotRadius);
 
                 // Extra cells for multi-cell actors
-                if (cell.sceneActor.ExtraGrid == null) continue;
-                foreach (var offset in cell.sceneActor.ExtraGrid)
+                if (cell.sceneActor.extraGrid == null) continue;
+                foreach (var offset in cell.sceneActor.extraGrid)
                 {
                     int ex = cell.position.x + offset.x;
                     int ey = cell.position.y + offset.y;

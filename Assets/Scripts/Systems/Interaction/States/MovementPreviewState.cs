@@ -109,18 +109,17 @@ namespace Systems.Interaction.States
 				Context.selectedUnit.id
 			));
 
-			var terrainName = Context.MapService.Data.GetCell(targetCell)?.Terrain.ToString() ?? "";
 			if (pathResult.Found)
 			{
 				var unit = Context.selectedUnit;
 				int apCost = unit.CalculateMovementApCost(pathResult.TotalCost);
 
 				Publish(Context, CursorInfoEvent.ForMovement(
-					targetCell, e.WorldPosition, terrainName,
+					targetCell, e.WorldPosition,
 					apCost, unit.CurrentAp - apCost, isValid));
 			}
 			else
-				Publish(Context, CursorInfoEvent.ForTerrain(targetCell, e.WorldPosition, terrainName));
+				PublishBasicCursorInfo(Context, e);
 		}
 
 		private void OnBack(BackInputEvent e)

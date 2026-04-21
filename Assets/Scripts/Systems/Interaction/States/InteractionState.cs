@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Core.Events;
 using Core.FSM;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Systems.AreaEffect;
+using Systems.Map;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -36,17 +39,59 @@ namespace Systems.Interaction.States
 			}
 
 			var cell = e.CellPosition.Value;
-			var terrainName = ctx.MapService.Data.GetCell(cell)?.Terrain.ToString() ?? "";
+			var worldPos = e.WorldPosition;
 
-			if (e.HoveredUnitId != null && ctx.UnitService.TryGetUnit(e.HoveredUnitId, out var unit))
+			if (!ctx.RegionService.IsCellUnlocked(cell)) // 未解锁
 			{
-				Publish(ctx, CursorInfoEvent.ForUnit(
-					cell, e.WorldPosition, terrainName,
-					unit.name, unit.CurrentHp, unit.maxHp, unit.faction.ToString()));
+				Publish(ctx, CursorInfoEvent.ForCell(cell, worldPos, "未解锁"));
 				return;
 			}
 
-			Publish(ctx, CursorInfoEvent.ForTerrain(cell, e.WorldPosition, terrainName));
+			if (!ctx.VisionService.IsCellVisible(cell)) // 无视野
+			{
+				if (e.HoveredUnitId != null && ctx.VisionService.IsEnemySpotted(e.HoveredUnitId))
+				{
+					Publish(ctx, CursorInfoEvent.ForSpottedHiddenEnemy(cell, worldPos));
+					return;
+				}
+				Publish(ctx, CursorInfoEvent.ForCell(cell, worldPos, "无视野"));
+				return;
+			}
+
+			if (e.HoveredUnitId != null && ctx.UnitService.TryGetUnit(e.HoveredUnitId, out var unit)) // 单位
+			{
+				Publish(ctx, CursorInfoEvent.ForUnit(
+					cell, worldPos,
+					unit.name, unit.CurrentHp, unit.maxHp, unit.CurrentDefense, unit.faction));
+				return;
+			}
+
+			// 普通格
+			var mapCell = ctx.MapService.Data.GetCell(cell);
+			var statusLine = BuildCellStatusLine(mapCell, ctx.AreaEffectService);
+			Publish(ctx, CursorInfoEvent.ForCell(cell, worldPos, statusLine));
+		}
+
+		private static string BuildCellStatusLine(MapCell mapCell, IAreaEffectService areaEffectService)
+		{
+			if (mapCell == null) return "状态: 空";
+
+			var effects = areaEffectService?.GetAt(mapCell.Position);
+			if (effects is { Count: > 0 })
+			{
+				var names = string.Join(", ", effects.Select(ae => ae.Behavior.DisplayName));
+				return $"状态: {names}";
+			}
+
+			if (mapCell.SceneActor != null)
+			{
+				var name = !string.IsNullOrEmpty(mapCell.SceneActor.DisplayName)
+					? mapCell.SceneActor.DisplayName
+					: mapCell.SceneActor.Type.ToString();
+				return $"物体: {name}";
+			}
+
+			return "状态: 空";
 		}
 	}
 }

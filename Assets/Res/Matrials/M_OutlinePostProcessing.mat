@@ -60,7 +60,7 @@ Material:
     - _GridDashCount: 12
     - _GridDensity: 6
     - _GridLineThickness: 0.006
-    - _OutlineWidth: 0.00253
+    - _OutlineWidth: 0.002
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ContourColor: {r: 0.55, g: 0.7, b: 0.85, a: 0.22}

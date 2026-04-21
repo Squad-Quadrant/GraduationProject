@@ -15,35 +15,21 @@ namespace Systems.Map.SceneActor
             uint uid = _count;
 
             Tile tile = config.tiles[UnityEngine.Random.Range(0, config.tiles.Count)];
-            List<MapCell> extraCells = config.ExtraGrid
+            List<MapCell> extraCells = config.extraGrid
 	            .Select(offset => baseCell.Position + offset)
 	            .Select(map.GetCell)
 	            .Where(extraCell => extraCell != null).ToList();
 
-            switch (config.Type)
+            SceneActorBase sceneActor = config.type switch
             {
-                case SceneActorType.Box:
-                case SceneActorType.Container:
-                case SceneActorType.Forklift:
-                case SceneActorType.WeaponCabinet:
-                    // 随机换皮
-                    var sceneActor = new GeneralSceneActor(config.Type, uid, tile, baseCell, extraCells)
-                    {
-	                    BlocksVision = config.blockVision,
-	                    BlockMovement = config.blockMovementFrom
-                    };
-                    return sceneActor;
-
-                case SceneActorType.Door:
-	                var door = new DoorSceneActor(config.Type, uid, tile, baseCell, extraCells, config.regionId)
-	                {
-		                BlocksVision = config.blockVision,
-		                BlockMovement = config.blockMovementFrom
-	                };
-	                return door;
-                default:
-                    throw  new NotImplementedException();
-            }
+	            SceneActorType.Normal => new GeneralSceneActor(config.type, uid, tile, baseCell, extraCells),
+	            SceneActorType.Door   => new DoorSceneActor(config.type, uid, tile, baseCell, extraCells, config.regionId),
+	            _ => throw new NotImplementedException()
+            };
+            sceneActor.BlocksVision = config.blockVision;
+			sceneActor.BlockMovement = config.blockMovementFrom;
+			sceneActor.DisplayName = config.displayName;
+			return sceneActor;
         }
     }
 }
