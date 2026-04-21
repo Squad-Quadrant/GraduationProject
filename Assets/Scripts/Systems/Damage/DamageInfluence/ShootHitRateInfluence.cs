@@ -1,19 +1,20 @@
+using System.Collections.Generic;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Systems.Damage
 {
-    public class ShotHitRateInfluence : DamageInfluence
+    public class ShootHitRateInfluence : DamageInfluence
     {
         public Unit.Unit UnitAttacker => Attacker as Unit.Unit;
         private bool _preciseShootSpeed;
-        public ShotHitRateInfluence(IDamageInfluencer owner, int priority = 0, bool preciseShootSpeed = false) : base(owner, priority)
+        public ShootHitRateInfluence(IDamageInfluencer owner, int priority = 0, bool preciseShootSpeed = false) : base(owner, priority)
         {
             _preciseShootSpeed = preciseShootSpeed;
         }
 
-        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.HitRate;
+        public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.HitRate };
 
         public override void Init(DamageExecutingContext context)
         {

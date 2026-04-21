@@ -356,3 +356,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Damage.BulletDamageExecutingChain
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Damage.GeneralDamageExecutingChain
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

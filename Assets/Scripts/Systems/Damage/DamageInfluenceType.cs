@@ -6,7 +6,7 @@ namespace Systems.Damage
     {
         BodyDestruction,
         Damage,
-        Defence,
+        Defense,
         HitRate,
         Buff
     }

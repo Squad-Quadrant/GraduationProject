@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Systems.Buff.Config
 {
     [CreateAssetMenu(fileName = "AddHitRateInfluence", menuName = "Game/Buff/BuffEvent/AddHitRateInfluence")]
-    public class AddHitRateInfluence : UnitBuffEvent
+    public class HitRateInfluence : UnitBuffEvent
     {
         public float changer = 0;
         public float multiplier = 1;

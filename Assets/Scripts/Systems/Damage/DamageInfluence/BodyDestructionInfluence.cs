@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.Log;
 using Systems.Buff;
 using Systems.Buff.Config;
@@ -38,7 +39,7 @@ namespace Systems.Damage
         { }
 
 
-        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.BodyDestruction;
+        public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.BodyDestruction };
 
         public override void Init(DamageExecutingContext context)
         {
@@ -55,7 +56,7 @@ namespace Systems.Damage
             }
             else
             {
-                Context.ignoredInfluenceTypes.Add(DamageInfluenceType.Defence);
+                Context.ignoredInfluenceTypes.Add(DamageInfluenceType.Defense);
             }
         }
 
@@ -87,7 +88,8 @@ namespace Systems.Damage
                         this.Log($"对{Defender.name}的造成眩晕", true);
                         break;
                     case BodyPartType.Torso:
-                        // 流血判定等
+                        (Context.Defender as IBuffAble).AttachBuff(BuffType.Bleed, Owner);
+                        this.Log($"对{Defender.name}的造成流血", true);
                         break;
                 }
             }
@@ -128,6 +130,8 @@ namespace Systems.Damage
                     return "头部";
                 case BodyPartType.Torso:
                     return "躯干";
+                case BodyPartType.None:
+                    return "无";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(bodyPartType), bodyPartType, null);
             }

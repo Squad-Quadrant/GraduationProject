@@ -17,7 +17,7 @@ namespace Systems.Buff
         private IEventBus _eventBus;
         public IEventBus EventBus => _eventBus;
         
-        public string Name => BuffData.name;
+        public string Name => BuffData.buffName;
         public BuffData BuffData => buffData;
         public object Creator => creator;
         public IBuffAble Target => _target;

@@ -4,7 +4,7 @@ namespace Systems.Damage
 {
     public abstract class DamageTriggeringInfo
     {
-        public object Attacker;
+        public IDamageInfluencer Attacker;
         public Unit.Unit Defender;
         public abstract DamageType DamageType { get; }
     }
@@ -25,9 +25,6 @@ namespace Systems.Damage
 
     public class GeneralDamageTriggeringInfo : DamageTriggeringInfo
     {
-        public IDamageInfluencer Attacker;
-        public Unit.Unit Defender;
-
         public GeneralDamageTriggeringInfo(IDamageInfluencer attacker, Unit.Unit defender)
         {
             Attacker = attacker;

@@ -81,13 +81,13 @@ namespace Systems.Damage
     
     public record DamageExecutingContext
     {
-        public object Attacker;
+        public IDamageInfluencer Attacker;
         public Unit.Unit Defender;
         public EActionType ActionType;
         public DamageType DamageType => Owner.DamageType;
 
         public DamageExecutingChain Owner;
-        public DamageExecutingContext(object attacker, Unit.Unit defender)
+        public DamageExecutingContext(IDamageInfluencer attacker, Unit.Unit defender)
         {
             Attacker = attacker;
             Defender = defender;

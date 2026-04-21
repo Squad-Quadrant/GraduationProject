@@ -20,7 +20,7 @@ namespace Data
 	    private List<EquipmentConfig> equipmentConfigs = new();
 
 	    [Title("Buff 配置")]
-	    [SerializeField]
+	    [SerializeField, AssetList(Path = "Data/Buff/BuffData")]
 	    private List<BuffData> buffs = new();
 
 	    [Title("关卡配置")]

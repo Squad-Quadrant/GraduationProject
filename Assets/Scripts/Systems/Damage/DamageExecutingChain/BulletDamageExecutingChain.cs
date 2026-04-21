@@ -1,3 +1,4 @@
+using System.Linq;
 using Core.Events;
 using Core.Log;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Systems.Damage
 
         public override void Execute()
         {
-            influences.RemoveAll(i => context.ignoredInfluenceTypes.Contains(i.DamageInfluenceType));
+            influences.RemoveAll(i => context.ignoredInfluenceTypes.Any(t => i.DamageInfluenceTypes.Contains(t)));
             
             for (int i = 0; i < context.CalculateNum; i++)
             {
@@ -52,11 +53,12 @@ namespace Systems.Damage
                 if(context.isMiss)
                 {
                     this.Log($"Attack missed! Defender ID:{context.Defender.id}", true);
-                }else if (context.DamageType == DamageType.Bullet)
+                }
+                else
                 {
                     var theAttacker = context.Attacker as Unit.Unit;
                     string isOnPreciseShoot = theAttacker.CurrentWeapon.IsOnPreciseShoot ? "精准" : "";
-                    this.Log($"{theAttacker.name}使用{theAttacker.CurrentWeapon.Name()}对{context.Defender.name}进行{isOnPreciseShoot}攻击，命中{context.FinalCalculatedNum}发子弹，" +
+                    this.Log($"{theAttacker.DisplayName}使用{theAttacker.CurrentWeapon.DisplayName}对{context.Defender.DisplayName}进行{isOnPreciseShoot}攻击，命中{context.FinalCalculatedNum}发子弹，" +
                              $"击中{context.bodyPartType.ToStr()}, 共造成伤害{context.TotalDamage}，护甲减少{context.TotalDefenseDamage}", true);
                 }
             }

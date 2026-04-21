@@ -233,6 +233,8 @@ namespace Systems.Unit
 
         #region IDamageInfluencer
 
+        public string DisplayName => name;
+
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
             DamageInfluences.RemoveAll(influence => influence == null);

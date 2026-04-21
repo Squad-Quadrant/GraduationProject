@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Systems.Buff;
 
 namespace Systems.Damage
@@ -6,9 +7,8 @@ namespace Systems.Damage
     {
         private float _hitRateMultiplier;
         private float _hitRateChanger;
-        private BuffInfo _realOwner;
+        private BuffInfo _realOwner; // 用于未来识别哪个Buff的影响
         public BuffInfo RealOwner => _realOwner;
-        // todo: owner不一定是IDamageInfluencer
         public BuffHitRateInfluence(float multiplier, float changer, BuffInfo realOwner, IDamageInfluencer owner, int priority = 0) : base(owner, priority)
         {
             _hitRateMultiplier = multiplier;
@@ -16,7 +16,7 @@ namespace Systems.Damage
             _hitRateChanger = changer;
         }
 
-        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.HitRate;
+        public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.HitRate, DamageInfluenceType.Buff };
 
         public override void Init(DamageExecutingContext context)
         {

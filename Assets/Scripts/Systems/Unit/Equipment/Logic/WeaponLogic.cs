@@ -11,6 +11,7 @@ namespace Systems.Unit.Equipment.Logic
 
 	    protected int Ammo;
 	    public bool IsOnPreciseShoot = false;
+        public string DisplayName => _weaponConfig.name;
 
         public WeaponLogic(WeaponConfig config, Unit owner) : base(config, owner)
         {
@@ -53,14 +54,15 @@ namespace Systems.Unit.Equipment.Logic
             return Vector2Int.Distance(Owner.position, target.position) <= Range() && CurrentAmmo() > 0;
         }
 
+
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
             if (context.DamageType == DamageType.Bullet)
             {
                 return new List<DamageInfluence>{
                     new ShootDamageInfluence(this, 0, IsOnPreciseShoot),
-                    new ShotHitRateInfluence(this, 0, IsOnPreciseShoot),
-                    new ShotDefenceDamageInfluence(this),
+                    new ShootHitRateInfluence(this, 0, IsOnPreciseShoot),
+                    new ShootDefenceDamageInfluence(this),
                     new BodyDestructionInfluence(this)
                 };
             }

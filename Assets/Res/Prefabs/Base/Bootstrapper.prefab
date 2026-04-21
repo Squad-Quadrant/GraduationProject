@@ -152,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: buffs.Array.data[0]
@@ -170,6 +170,10 @@ PrefabInstance:
       propertyPath: buffs.Array.data[3]
       value: 
       objectReference: {fileID: 11400000, guid: 40de9741ccf60024b8628937e5982b42, type: 2}
+    - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
+      propertyPath: buffs.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 676619e6240a6554bb2f568ccaac0a40, type: 2}
     - target: {fileID: 2367679922227829991, guid: 70e34de7ed7a3474cafbe9ecd99403a0, type: 3}
       propertyPath: equipmentConfigs.Array.size
       value: 9

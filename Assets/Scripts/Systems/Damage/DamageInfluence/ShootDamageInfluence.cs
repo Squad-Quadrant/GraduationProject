@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Systems.Damage
             _isOnPreciseShoot = isOnPreciseShoot;
         }
 
-        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.Damage;
+        public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.Damage };
 
         public override void Init(DamageExecutingContext context)
         {

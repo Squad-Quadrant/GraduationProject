@@ -1,17 +1,18 @@
 using System;
+using System.Collections.Generic;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Systems.Damage
 {
-    public class ShotDefenceDamageInfluence : DamageInfluence
+    public class ShootDefenceDamageInfluence : DamageInfluence
     {
-        public ShotDefenceDamageInfluence(IDamageInfluencer owner, int priority = 1) : base(owner, priority)
+        public ShootDefenceDamageInfluence(IDamageInfluencer owner, int priority = 1) : base(owner, priority)
         {
         }
 
-        public override DamageInfluenceType DamageInfluenceType => DamageInfluenceType.Defence;
+        public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.Defense };
 
         public override void Execute()
         {

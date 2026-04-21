@@ -22,7 +22,7 @@ namespace Presentation.UI.Panel
             _context = context;
             _coordinateConverter = coordinateConverter;
             
-            if (context.isMiss)
+            if (context.isMiss || context.bodyPartType == BodyPartType.None)
             {
                 damageText.text = "";
             }
