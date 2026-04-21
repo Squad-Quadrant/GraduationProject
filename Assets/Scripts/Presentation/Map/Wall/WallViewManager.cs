@@ -286,6 +286,24 @@ namespace Presentation.Map.Wall
                 current = next;
             }
         }
+
+        [TitleGroup("Editor Tools")]
+        [Button("Check Wall Visuals", ButtonSizes.Medium), GUIColor(1f, 1f, 0.4f)]
+        private void CheckWallVisuals()
+		{
+	        if (!editorMapConfig)
+	        {
+		        Debug.LogError("[WallView] MapConfig is not assigned.");
+		        return;
+	        }
+
+	        var views = GetComponentsInChildren<WallView>();
+	        Selection.objects = views
+		        .Where(v => !v.Renderer.sprite)
+		        .Select(v => v.gameObject)
+		        .ToArray<Object>();
+
+		}
 #endif
 	}
 }
