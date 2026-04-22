@@ -10,25 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: secondary_weapon_m1911
+  m_Name: 105-Secondary_Weapon_Heavy P_AMT Hardballer
   m_EditorClassIdentifier: 
-  id: 102
-  nName: M1911
-  type: "\u624B\u67AA"
-  description: "\u6807\u51C6\u3001\u666E\u901A\u7684\u624B\u67AA"
-  icon: {fileID: 2077321407, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  damage: 25
+  id: 105
+  nName: AMT Hardballer
+  type: "\u91CD\u578B\u624B\u67AA"
+  description: "\u9887\u5177\u4F20\u5947\u8272\u5F69\u7684\u786C\u6C49\u624B\u67AA\uFF0C\u5C5E\u4E8E\u91CD\u578B\u624B\u67AA"
+  icon: {fileID: 1452205263, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  damage: 40
   mentalDamage: 0
   weight: 0
   spineName: weapon_glock
   gripType: 1
-  ammoCapacity: 15
-  shotRanges: []
+  ammoCapacity: 8
+  shotRanges:
+  - min: 0
+    hitRate: 1
+  - min: 3
+    hitRate: 0.6
+  - min: 7
+    hitRate: 0.4
   damageAttenuation:
-    perGrid: 0
-    multiplier: 0
-  penetrationRate: 0
-  shootSpeed: 3
+    perGrid: 10
+    multiplier: 0.8
+  penetrationRate: 0.75
+  shootSpeed: 2
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
-  m_Name: item_m84
+  m_Name: 1003-T Item_Flash-Bang Grenade M84
   m_EditorClassIdentifier: 
   id: 1003
   nName: "M84\u95EA\u5149\u5F39"
