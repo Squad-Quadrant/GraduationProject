@@ -1155,15 +1155,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fogShader: {fileID: 4800000, guid: efe7a100f16e4329b29aa41b06fa4b78, type: 3}
   noiseTex: {fileID: 2800000, guid: 75b254a55f7e3f347ac8f2b5db9b11d9, type: 3}
-  fogColor: {r: 0, g: 0, b: 0, a: 0.98039216}
+  fogColor: {r: 0, g: 0, b: 0, a: 0.5882353}
   noiseIntensity: 0.5
   noiseScale: 0.3
   edgeSoftness: 0.9
+  clipExtent: 5
   paddingRange: 1
   paddingStrength: 0.35
   transitionSpeed: 2
-  unitMaskRadiusX: 0.2
-  unitMaskRadiusY: 0.5
+  unitMaskRadiusX: 0.3
+  unitMaskRadiusY: 0.7
   unitCenterOffsetY: 0.15
   unitMaskSoftness: 0.4
   dotDensity: 20

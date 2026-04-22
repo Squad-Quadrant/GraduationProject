@@ -693,10 +693,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7970668273690025067}
     m_Modifications:
-    - target: {fileID: 2330306044948344000, guid: bb098f4952a097c4b89edce9f2e7420c, type: 3}
-      propertyPath: fogColor.a
-      value: 0.5882353
-      objectReference: {fileID: 0}
     - target: {fileID: 4713970211982079851, guid: bb098f4952a097c4b89edce9f2e7420c, type: 3}
       propertyPath: m_Name
       value: MapView

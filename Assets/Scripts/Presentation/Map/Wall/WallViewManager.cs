@@ -211,6 +211,7 @@ namespace Presentation.Map.Wall
 	            // RequireComponent on WallVisual auto-adds SpriteRenderer.
 	            var visual = go.AddComponent<WallView>();
 	            visual.Setup(wallConfig.position1, wallConfig.position2);
+	            visual.Renderer.spriteSortPoint = SpriteSortPoint.Pivot;
 
 	            Undo.RegisterCreatedObjectUndo(go, "Create WallVisual");
 	            created++;
