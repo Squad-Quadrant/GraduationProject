@@ -13,6 +13,7 @@ namespace Presentation.UI.Panel
     {
         private Systems.Unit.Unit _owner;
         private UnitView _unitView;
+        [SerializeField] private Text nameText;
         [SerializeField] private Image bloodSliderImage;
         [SerializeField] private Image bloodSliderImage1;
         [SerializeField] private Image bloodSliderImage2;
@@ -48,6 +49,7 @@ namespace Presentation.UI.Panel
             _unitView = unitView;
             _coordinateConverter = coordinateConverter;
             _eventBus = eventBus;
+            nameText.text = _owner.name;
             Refresh();
             
             _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);

@@ -27,7 +27,7 @@ MonoBehaviour:
   maxMovementAp: 2
   actionPoints: 3
   visionRange: 6
-  faction: 0
+  faction: 1
   defense: 150
   defenseRate: 0.4
   san: 100

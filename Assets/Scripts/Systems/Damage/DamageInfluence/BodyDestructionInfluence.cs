@@ -32,7 +32,7 @@ namespace Systems.Damage
             new() { PartType = BodyPartType.Legs, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.6f },
             new() { PartType = BodyPartType.Arms, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.65f },
             new() { PartType = BodyPartType.Head, HitProbability = 10, HasArmor = true, DamageMultiplier = 2f },
-            new() { PartType = BodyPartType.Torso, HitProbability = 50f, HasArmor = true, DamageMultiplier = 1f }
+            new() { PartType = BodyPartType.Torso, HitProbability = 500f, HasArmor = true, DamageMultiplier = 1f }
         };
 
         public BodyDestructionInfluence(IDamageInfluencer owner, int priority = 2) : base(owner, priority)
