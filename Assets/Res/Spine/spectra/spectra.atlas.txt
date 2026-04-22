@@ -1,0 +1,181 @@
+
+spectra.png
+size: 5112,3409
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Body/Body
+  rotate: true
+  xy: 2, 1756
+  size: 1651, 4550
+  orig: 1874, 4550
+  offset: 163, 0
+  index: -1
+Body/Body_2
+  rotate: false
+  xy: 4554, 2176
+  size: 431, 764
+  orig: 436, 766
+  offset: 2, 1
+  index: -1
+Body/带子
+  rotate: false
+  xy: 2288, 73
+  size: 1195, 1414
+  orig: 1197, 1417
+  offset: 1, 1
+  index: -1
+Body/道具
+  rotate: false
+  xy: 2, 2
+  size: 2284, 1752
+  orig: 2287, 1767
+  offset: 2, 2
+  index: -1
+Body/领子
+  rotate: false
+  xy: 3485, 1051
+  size: 840, 703
+  orig: 840, 703
+  offset: 0, 0
+  index: -1
+Head/1
+  rotate: true
+  xy: 5097, 2837
+  size: 37, 13
+  orig: 40, 15
+  offset: 1, 1
+  index: -1
+Head/2
+  rotate: false
+  xy: 5063, 2322
+  size: 35, 19
+  orig: 38, 21
+  offset: 2, 1
+  index: -1
+Head/3
+  rotate: true
+  xy: 5063, 2262
+  size: 58, 30
+  orig: 60, 33
+  offset: 1, 2
+  index: -1
+Head/4
+  rotate: false
+  xy: 4987, 2556
+  size: 95, 52
+  orig: 103, 59
+  offset: 3, 2
+  index: -1
+Head/Brow_L
+  rotate: true
+  xy: 5084, 2421
+  size: 187, 25
+  orig: 187, 25
+  offset: 0, 0
+  index: -1
+Head/Brow_R
+  rotate: true
+  xy: 4987, 2382
+  size: 172, 75
+  orig: 172, 75
+  offset: 0, 0
+  index: -1
+Head/Face_Base
+  rotate: true
+  xy: 4554, 2942
+  size: 465, 547
+  orig: 467, 549
+  offset: 1, 1
+  index: -1
+Head/Hair_Back
+  rotate: false
+  xy: 3485, 358
+  size: 819, 691
+  orig: 821, 693
+  offset: 1, 1
+  index: -1
+Head/Hair_Front
+  rotate: true
+  xy: 4327, 810
+  size: 677, 734
+  orig: 677, 735
+  offset: 0, 1
+  index: -1
+Head/Nose
+  rotate: true
+  xy: 4925, 2111
+  size: 63, 54
+  orig: 67, 63
+  offset: 2, 7
+  index: -1
+Head/右上
+  rotate: true
+  xy: 4987, 2610
+  size: 186, 103
+  orig: 198, 108
+  offset: 12, 5
+  index: -1
+Head/右眼
+  rotate: false
+  xy: 4987, 2798
+  size: 108, 76
+  orig: 111, 78
+  offset: 1, 1
+  index: -1
+Head/右眼白
+  rotate: true
+  xy: 4987, 2241
+  size: 139, 74
+  orig: 139, 74
+  offset: 0, 0
+  index: -1
+Head/右角
+  rotate: true
+  xy: 5063, 2343
+  size: 25, 47
+  orig: 27, 50
+  offset: 1, 1
+  index: -1
+Head/左上
+  rotate: true
+  xy: 4987, 2045
+  size: 194, 73
+  orig: 194, 74
+  offset: 0, 1
+  index: -1
+Head/左眼
+  rotate: false
+  xy: 4987, 2876
+  size: 109, 64
+  orig: 111, 66
+  offset: 1, 1
+  index: -1
+Head/左眼白
+  rotate: false
+  xy: 4925, 1974
+  size: 138, 69
+  orig: 138, 69
+  offset: 0, 0
+  index: -1
+Head/左角
+  rotate: true
+  xy: 5064, 2370
+  size: 49, 38
+  orig: 54, 40
+  offset: 4, 1
+  index: -1
+Head/耳机
+  rotate: true
+  xy: 4306, 98
+  size: 710, 715
+  orig: 713, 719
+  offset: 1, 3
+  index: -1
+Head/马尾
+  rotate: false
+  xy: 4554, 1489
+  size: 369, 685
+  orig: 369, 685
+  offset: 0, 0
+  index: -1
