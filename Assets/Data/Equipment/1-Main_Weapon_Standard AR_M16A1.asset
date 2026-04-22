@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: main_weapon_m16a1
+  m_Name: 1-Main_Weapon_Standard AR_M16A1
   m_EditorClassIdentifier: 
   id: 1
   nName: M16A1
-  type: "\u7A81\u51FB\u6B65\u67AA"
-  description: 
+  type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
+  description: "\u5317\u7EA6\u5236\u5F0F\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
   icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  damage: 38
+  damage: 33
   mentalDamage: 0
   weight: 0
   spineName: weapon_m177
@@ -26,12 +26,12 @@ MonoBehaviour:
   shotRanges:
   - min: 0
     hitRate: 1
-  - min: 15
-    hitRate: 90
-  - min: 30
-    hitRate: 80
+  - min: 5
+    hitRate: 0.9
+  - min: 10
+    hitRate: 0.8
   damageAttenuation:
-    perGrid: 20
+    perGrid: 5
     multiplier: 0.95
   penetrationRate: 0.7
   shootSpeed: 5

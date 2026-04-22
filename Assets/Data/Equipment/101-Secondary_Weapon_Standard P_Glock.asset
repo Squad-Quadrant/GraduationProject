@@ -10,24 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: secondary_weapon_mk22
+  m_Name: 101-Secondary_Weapon_Standard P_Glock
   m_EditorClassIdentifier: 
-  id: 103
-  nName: MK22
-  type: "\u624B\u67AA"
-  description: "\u6807\u51C6\u3001\u666E\u901A\u7684\u624B\u67AA"
-  icon: {fileID: 733355011, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  id: 101
+  nName: Glock
+  type: "\u6807\u51C6\u624B\u67AA"
+  description: "\u5317\u7EA6\u5C11\u6570\u56FD\u5BB6\u914D\u5907\u7684\u65B0\u9510\u6807\u51C6\u624B\u67AA"
+  icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
   damage: 25
   mentalDamage: 0
   weight: 0
   spineName: weapon_glock
   gripType: 1
   ammoCapacity: 15
-  shotRanges: []
+  shotRanges:
+  - min: 0
+    hitRate: 1
+  - min: 3
+    hitRate: 0.7
+  - min: 8
+    hitRate: 0.45
   damageAttenuation:
-    perGrid: 0
-    multiplier: 0
-  penetrationRate: 0
+    perGrid: 5
+    multiplier: 0.75
+  penetrationRate: 0.5
   shootSpeed: 3
   canPreciseShoot: 0
   preciseShootSpeed: 0
