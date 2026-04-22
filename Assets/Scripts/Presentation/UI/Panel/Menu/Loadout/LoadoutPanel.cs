@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Log;
 using Data;
 using Data.Config;
+using Presentation.UI.Component.UnitPortrait;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit;
@@ -29,7 +30,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[SerializeField, Required, AssetsOnly] private UnitListItem unitListItemPrefab;
 
 		[Title("角色信息")]
-		[SerializeField, Required, ChildGameObjectsOnly] private Image unitPortraitImage;
+		[SerializeField, Required, ChildGameObjectsOnly] private Transform portraitContainer;
+		[SerializeField, Required, AssetsOnly] private UnitPortraitView defaultPortraitPrefab;
 		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI unitNameText;
 		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI unitClassText;
 		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI unitDescriptionText;
@@ -136,6 +138,10 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			if (dropdown) dropdown.Hide();
 			ClearUnitList();
 			_currentUnit = null;
+
+			if (!_currentPortrait) return;
+			Destroy(_currentPortrait.gameObject);
+			_currentPortrait = null;
 		}
 
 		#region 单位选择
@@ -186,11 +192,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 		private void RefreshUnitDetail(UnitConfig unit)
 		{
-			if (unitPortraitImage)
-			{
-				unitPortraitImage.sprite = unit.icon;
-				unitPortraitImage.enabled = unit.icon;
-			}
+			RefreshPortrait(unit);
+
 			if (unitNameText) unitNameText.text = unit.unitName;
 			if (unitClassText)
 			{
@@ -210,6 +213,19 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				Destroy(apRoot.GetChild(i).gameObject);
 			for (int i = 0; i < unit.actionPoints; i++)
 				Instantiate(apPrefab, apRoot);
+		}
+
+		private UnitPortraitView _currentPortrait;
+
+		private void RefreshPortrait(UnitConfig unit)
+		{
+			if (_currentPortrait) Destroy(_currentPortrait.gameObject);
+
+			var prefab = unit.portraitPrefab ? unit.portraitPrefab : defaultPortraitPrefab;
+			if (!prefab) return; // 连占位符也没挂时跳过,不抛错
+
+			_currentPortrait = Instantiate(prefab, portraitContainer);
+			_currentPortrait.Init();
 		}
 
 		private static void SetSliderValue(Slider slider, int value, int scaleMax)

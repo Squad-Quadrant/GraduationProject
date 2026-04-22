@@ -1,4 +1,5 @@
-﻿using Presentation.Unit;
+﻿using Presentation.UI.Component.UnitPortrait;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
@@ -22,6 +23,7 @@ namespace Systems.Unit
 		[TitleGroup("视觉表现")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]
 		public Sprite icon;
+		public UnitPortraitView portraitPrefab;
 		[Required] public UnitAnimationConfig animationConfig;
 		[Required] public SkeletonDataAsset skeletonDataAsset;
 		public string frontBodySkin = "pcb1 front";

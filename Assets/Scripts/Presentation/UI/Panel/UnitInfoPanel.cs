@@ -1,5 +1,6 @@
 ﻿using Core.Events;
 using Data.Runtime.Events.Unit;
+using Presentation.UI.Component.UnitPortrait;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -11,7 +12,8 @@ namespace Presentation.UI.Panel
 	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[TitleGroup("References")]
-		[SerializeField, Required] private Image portraitImage;
+		[SerializeField, Required] private Transform portraitContainer;
+		[SerializeField, Required] private UnitPortraitView defaultPortraitPrefab;
 		[SerializeField, Required] private TextMeshProUGUI nameText;
 		[SerializeField, Required] private TextMeshProUGUI bulletAmountText;
 		[SerializeField, Required] private Image hpImage;
@@ -28,7 +30,13 @@ namespace Presentation.UI.Panel
 		}
 
 		protected override void OnOpen() => EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitAttacked);
-		protected override void OnClose() => EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+		protected override void OnClose()
+		{
+			EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitAttacked);
+			if (!_currentPortrait) return;
+			Destroy(_currentPortrait.gameObject);
+			_currentPortrait = null;
+		}
 
 		private void OnUnitAttacked(UnitInfoChangedEvent e)
         {
@@ -38,7 +46,7 @@ namespace Presentation.UI.Panel
 
         public void Refresh(Systems.Unit.Unit unit)
 		{
-			portraitImage.sprite = unit.icon;
+			RefreshPortrait(unit);
 			nameText.text = unit.name;
 
 			var currentHp = unit.CurrentHp;
@@ -53,6 +61,19 @@ namespace Presentation.UI.Panel
 				Instantiate(actionPointsPrefab, actionPointsParent);
 
             RefreshAmmo(unit);
+        }
+
+        private UnitPortraitView _currentPortrait;
+
+        private void RefreshPortrait(Systems.Unit.Unit unit)
+        {
+	        if (_currentPortrait) Destroy(_currentPortrait.gameObject);
+
+	        var prefab = unit.portraitPrefab ? unit.portraitPrefab : defaultPortraitPrefab;
+	        if (!prefab) return;
+
+	        _currentPortrait = Instantiate(prefab, portraitContainer);
+	        _currentPortrait.Init();
         }
 
         private void RefreshAmmo(Systems.Unit.Unit unit)

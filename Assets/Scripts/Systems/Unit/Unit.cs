@@ -5,6 +5,7 @@ using Core.Events;
 using Data.Runtime;
 using Data.Runtime.Events.Unit;
 using Presentation.Bootstrap;
+using Presentation.UI.Component.UnitPortrait;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -56,6 +57,7 @@ namespace Systems.Unit
 		public string backBodySkin;
 		public string defaultWeaponSkin;
 		public Sprite icon;
+		public UnitPortraitView portraitPrefab;
 
 		[TitleGroup("Runtime")]
 		private int _currentHp;
@@ -166,6 +168,7 @@ namespace Systems.Unit
 				frontBodySkin = config.frontBodySkin,
 				backBodySkin = config.backBodySkin,
 				icon = config.icon,
+				portraitPrefab = config.portraitPrefab,
 
 				_currentHp = config.maxHp,
                 _currentDefense = config.defense,

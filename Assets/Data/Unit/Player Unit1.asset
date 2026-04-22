@@ -17,6 +17,7 @@ MonoBehaviour:
   description: "\u7CBE\u9510\u7A81\u51FB\u6218\u58EB"
   unitClass: ASSULT
   icon: {fileID: 1099909247, guid: e7566045ea5de764a8445f499e7bf4e6, type: 3}
+  portraitPrefab: {fileID: 869929250345767584, guid: ce9cb87816784e64faea7414bb6b2945, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: pcb2 front

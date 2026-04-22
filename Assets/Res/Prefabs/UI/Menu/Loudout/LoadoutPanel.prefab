@@ -363,7 +363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitListRoot: {fileID: 840745282238902828}
   unitListItemPrefab: {fileID: 5168559941560312246, guid: dbe0ebbefb5896a4d86160f6bec514fb, type: 3}
-  unitPortraitImage: {fileID: 7547565934659407149}
+  portraitContainer: {fileID: 6003724634455288070}
+  defaultPortraitPrefab: {fileID: -7329017297306985217, guid: 4ad57aeb5b458d944b1f7f2bb224309e, type: 3}
   unitNameText: {fileID: 6661392076163336095}
   unitClassText: {fileID: 1498080064314258085}
   unitDescriptionText: {fileID: 1150914338556498331}
@@ -3100,7 +3101,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6003724634455288070}
-  - {fileID: 6074107324646644484}
   - {fileID: 3790687286886139587}
   - {fileID: 4577927492556579804}
   - {fileID: 3099653848228433151}
@@ -3661,81 +3661,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 0d69b29da8fa11c4d915383bd5eeb556, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!1 &6718778313344049209
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6074107324646644484}
-  - component: {fileID: 8528480927202432293}
-  - component: {fileID: 7547565934659407149}
-  m_Layer: 5
-  m_Name: img_portrait
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6074107324646644484
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6718778313344049209}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3576549969989857219}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 10}
-  m_SizeDelta: {x: -22, y: -119}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8528480927202432293
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6718778313344049209}
-  m_CullTransparentMesh: 1
---- !u!114 &7547565934659407149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6718778313344049209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 1099909247, guid: e7566045ea5de764a8445f499e7bf4e6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4965,6 +4890,7 @@ GameObject:
   - component: {fileID: 6003724634455288070}
   - component: {fileID: 546439321448913732}
   - component: {fileID: 5594280016652275287}
+  - component: {fileID: 6520626074000812784}
   m_Layer: 5
   m_Name: img_portrait_bg
   m_TagString: Untagged
@@ -5029,6 +4955,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6520626074000812784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9025652010553004275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 0, y: 0}
 --- !u!1001 &837406848488328834
 PrefabInstance:
   m_ObjectHideFlags: 0
