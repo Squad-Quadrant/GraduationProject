@@ -10,24 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: secondary_weapon_glock
+  m_Name: 102-Secondary_Weapon_Standard P_M1911
   m_EditorClassIdentifier: 
-  id: 101
-  nName: Glock
-  type: "\u624B\u67AA"
-  description: "\u6807\u51C6\u3001\u666E\u901A\u7684\u624B\u67AA"
-  icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  id: 102
+  nName: M1911
+  type: "\u6807\u51C6\u624B\u67AA"
+  description: "\u7F8E\u56FD\u7684\u6807\u51C6\u5236\u5F0F\u624B\u67AA"
+  icon: {fileID: 2077321407, guid: d723e6b88f967c846a38343439950a03, type: 3}
   damage: 25
   mentalDamage: 0
   weight: 0
   spineName: weapon_glock
   gripType: 1
-  ammoCapacity: 15
-  shotRanges: []
+  ammoCapacity: 12
+  shotRanges:
+  - min: 0
+    hitRate: 1
+  - min: 3
+    hitRate: 0.65
+  - min: 7
+    hitRate: 0.45
   damageAttenuation:
-    perGrid: 0
-    multiplier: 0
-  penetrationRate: 0
+    perGrid: 5
+    multiplier: 0.8
+  penetrationRate: 0.6
   shootSpeed: 3
   canPreciseShoot: 0
   preciseShootSpeed: 0
