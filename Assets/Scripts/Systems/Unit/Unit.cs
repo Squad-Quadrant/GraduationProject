@@ -200,10 +200,10 @@ namespace Systems.Unit
 			}
 
             if (CurrentWeapon!= null)
-	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment && !CurrentWeapon.FullAmmo));
 
             if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, HasAp && CanUseEquipment));
+	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
 
 			return actions;
 		}
