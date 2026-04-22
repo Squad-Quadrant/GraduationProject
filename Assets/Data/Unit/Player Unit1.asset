@@ -32,3 +32,4 @@ MonoBehaviour:
   defenseRate: 0
   san: 100
   aiBrainConfig: {fileID: 0}
+  skillConfig: {fileID: 11400000, guid: ce1582cd063e8004ab3a7d8491fba83f, type: 2}

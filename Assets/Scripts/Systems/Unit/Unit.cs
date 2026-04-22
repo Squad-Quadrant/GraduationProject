@@ -17,6 +17,7 @@ using Systems.Turn;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
 using Systems.Unit.Equipment.Logic;
+using Systems.Unit.Skill.Logic;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -173,7 +174,10 @@ namespace Systems.Unit
 				position = startPosition,
 				isStunned = false,
 			};
-            
+
+			if (config.skillConfig)
+				unit.Skill = SkillLogicFactory.Create(config.skillConfig, unit);
+
             return unit;
 		}
 
@@ -194,16 +198,20 @@ namespace Systems.Unit
 			bool hasAnyTacticalItem = TacticalItems != null && TacticalItems.Any(t => !t.IsNullOrEmpty());
 			if (hasAnyTacticalItem)
 			{
-				bool hasAnyUsable = TacticalItems.Any(t =>
-					!t.IsNullOrEmpty() && t.Logic is TacticalItemLogic { CanUse: true });
+				bool hasAnyUsable = TacticalItems.Any(container => !container.IsNullOrEmpty() && container.Logic is TacticalItemLogic { CanUse: true });
 				actions.Add(new ActionAbility(EActionType.UseTacticalItem, HasAp && hasAnyUsable));
 			}
 
-            if (CurrentWeapon!= null)
+			if (Skill != null)
+				actions.Add(new ActionAbility(EActionType.UseSkill, Skill.CanUse));
+
+			if (CurrentWeapon!= null)
 	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment && !CurrentWeapon.FullAmmo));
 
-            if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-	            actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
+			if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
+				actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
+
+
 
 			return actions;
 		}
@@ -266,9 +274,12 @@ namespace Systems.Unit
 			CanAttack.Value = true;
 			CurrentAp = maxAp;
 			apSpentOnMovement = 0;
+			Skill?.OnOwnerTurnStart();
 		}
 
 		#endregion
+
+		public SkillLogic Skill { get; private set; }
 
         #region Equipment
 

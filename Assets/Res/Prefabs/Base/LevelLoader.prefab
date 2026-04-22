@@ -241,7 +241,7 @@ MonoBehaviour:
   cameraController: {fileID: 4861230316251291547}
   spottedEnemyMarkerView: {fileID: 6068211755330682449}
   areaEffectView: {fileID: 5870308615348662380}
-  levelConfig: {fileID: 11400000, guid: be21afb0f8021324e9b3805bd906f324, type: 2}
+  levelConfig: {fileID: 11400000, guid: 44bf4b13b6ff80b4ba314e69af55a726, type: 2}
 --- !u!1 &4713525320309487735
 GameObject:
   m_ObjectHideFlags: 0

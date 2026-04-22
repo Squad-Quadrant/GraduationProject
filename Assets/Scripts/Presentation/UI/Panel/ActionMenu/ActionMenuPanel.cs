@@ -14,11 +14,15 @@ namespace Presentation.UI.Panel.ActionMenu
     public class ActionMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
         [SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI currentActionText;
-        [SerializeField] private List<ActionMenuItem> items;
+        [SerializeField, Required, ChildGameObjectsOnly] private Transform itemsParent;
+
+        private List<ActionMenuItem> _items;
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-            foreach (var item in items)
+	        _items = itemsParent.GetComponentsInChildren<ActionMenuItem>(false).ToList();
+
+            foreach (var item in _items)
             {
                 item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
                 
@@ -52,6 +56,6 @@ namespace Presentation.UI.Panel.ActionMenu
         private void ClearDescription(string _) => currentActionText.text = "";
 
         private ActionMenuItem GetItem(EActionType actionType) =>
-	        items.FirstOrDefault(item => item.ActionType == actionType);
+	        _items.FirstOrDefault(item => item.ActionType == actionType);
     }
 }

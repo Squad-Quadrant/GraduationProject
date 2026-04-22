@@ -30,14 +30,14 @@ namespace Systems.Interaction.States
 
 			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
-			if (ctx.PendingTargeting == null)
+			if (ctx.PendingTarget == null)
 			{
-				this.LogError("pendingTargeting is null! Expected ItemSelectionState to set this before transitioning. Returning to UnitSelected.");
+				this.LogError("pendingTargeting is null! Expected AbilitySelectionState to set this before transitioning. Returning to UnitSelected.");
 				ctx.StateMachine.ChangeState<UnitSelectedState>();
 				return;
 			}
 
-			_validCells = ctx.PendingTargeting.GetValidCells(ctx) ?? Array.Empty<Vector2Int>();
+			_validCells = ctx.PendingTarget.GetValidCells(ctx) ?? Array.Empty<Vector2Int>();
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Interact,
 				_validCells,
@@ -79,7 +79,7 @@ namespace Systems.Interaction.States
 			_validCells = null;
 			_lastAoEHoverCell = null;
 
-			ctx.PendingTargeting = null;
+			ctx.PendingTarget = null;
 
 			base.OnExit(ctx);
 		}
@@ -96,11 +96,11 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			var targeted = Context.PendingTargeting;
+			var targeted = Context.PendingTarget;
 			if (!targeted.ValidateTarget(cellPosition, Context))
 			{
 				this.Log($"Cell {cellPosition} failed ValidateTarget. Ignoring.");
-				// todo: UI 反馈玩家（命中率 0 / 落点无效等具体原因，M5 补）
+				// todo: 反馈
 				return;
 			}
 
@@ -125,7 +125,7 @@ namespace Systems.Interaction.States
 			if (_lastAoEHoverCell == hoverCell) return;    // 同格不重复发
 			_lastAoEHoverCell = hoverCell;
 
-			var aoeCells = Context.PendingTargeting.GetAreaEffectPreview(hoverCell);
+			var aoeCells = Context.PendingTarget.GetAreaEffectPreview(hoverCell);
 			if (aoeCells == null || aoeCells.Count == 0)
 			{
 				Publish(Context, RangeDisplayEvent.Clear(ERangeType.AreaEffectPreview));
@@ -138,7 +138,7 @@ namespace Systems.Interaction.States
 		private void OnBack(BackInputEvent e)
 		{
 			this.Log("Back → ItemSelection (reselect item)");
-			StateMachine(Context).ChangeState<ItemSelectionState>();
+			StateMachine(Context).ChangeState<AbilitySelectionState>();
 		}
 
 		private void OnEsc(EscInputEvent e)

@@ -364,3 +364,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.AbilitySelectionPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AbilitySelectionState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.SkillMenu.SkillMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

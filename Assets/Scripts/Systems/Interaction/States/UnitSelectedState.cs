@@ -104,7 +104,8 @@ namespace Systems.Interaction.States
 					break;
 
 				case EActionType.UseTacticalItem:
-					StateMachine(Context).ChangeState<ItemSelectionState>();
+				case EActionType.UseSkill:
+					StateMachine(Context).ChangeState<AbilitySelectionState>();
 					break;
 				case EActionType.None:
 				case EActionType.Defend:

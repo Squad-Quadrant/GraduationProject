@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.AI.Config;
 using Systems.Unit.Equipment.Config;
+using Systems.Unit.Skill;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -41,6 +42,10 @@ namespace Systems.Unit
         [TitleGroup("AI")]
         [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]
         public AIBrainConfig aiBrainConfig;
+
+        [TitleGroup("Skill")]
+        [Tooltip("技能配置（可空）。M8 阶段为玩家专属，AI 即使挂上也不会使用。留空表示该单位无主动技能。")]
+        public SkillConfig skillConfig;
         
 		#region Validation
 

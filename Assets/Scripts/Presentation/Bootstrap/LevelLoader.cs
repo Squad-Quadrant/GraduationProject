@@ -202,7 +202,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
-            _levelContainer.Services.RegisterInstance(new TacticalItemMenuPresenter(uiManager, _eventBus));
+            _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus));
         }
 
         private void LoadMap()
