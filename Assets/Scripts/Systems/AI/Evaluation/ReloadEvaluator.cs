@@ -15,7 +15,7 @@ namespace Systems.AI.Evaluation
 			var results = new List<AIActionOption>();
 			var unit = context.Self;
 			var brain = context.Brain;
-            var currentWeapon = unit.CurrentWeapon;
+            var currentWeapon = unit.CurrentWeaponLogic;
             
             if (currentWeapon == null) return results;
 

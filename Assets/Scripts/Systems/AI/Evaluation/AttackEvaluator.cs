@@ -19,7 +19,7 @@ namespace Systems.AI.Evaluation
 			var results = new List<AIActionOption>();
 			var unit = context.Self;
 			var brain = context.Brain;
-            var currentEquipment = unit.CurrentEquipment;
+            var currentEquipment = unit.CurrentWeaponContainer;
             
             if (currentEquipment.IsNullOrEmpty()) return results;
 			if (context.Enemies.Count == 0) return results;

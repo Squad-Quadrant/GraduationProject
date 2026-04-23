@@ -45,7 +45,7 @@ namespace Data.Runtime.Commands
 			}
 
             _unit.CurrentAp -= _apCost;
-            _unit.CurrentWeapon.CurrentAmmo(1000);
+            _unit.CurrentWeaponLogic.CurrentAmmo(1000);
 
             _eventBus.Publish(new UnitReloadedEvent(_unit));
             

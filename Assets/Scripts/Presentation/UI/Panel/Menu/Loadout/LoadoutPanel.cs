@@ -221,7 +221,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		{
 			if (_currentPortrait) Destroy(_currentPortrait.gameObject);
 
-			var prefab = unit.portraitPrefab ? unit.portraitPrefab : defaultPortraitPrefab;
+			var prefab = unit.portraitPrefabLoadout ? unit.portraitPrefabLoadout : defaultPortraitPrefab;
 			if (!prefab) return; // 连占位符也没挂时跳过,不抛错
 
 			_currentPortrait = Instantiate(prefab, portraitContainer);

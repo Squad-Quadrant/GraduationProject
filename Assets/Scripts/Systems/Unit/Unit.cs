@@ -36,6 +36,7 @@ namespace Systems.Unit
 		public string id;		// id for runtime instance
 		public string configId;	// id for config so
 		public string name;
+		public string unitClass;
 		public string description;
 
 		[TitleGroup("Config")]
@@ -46,7 +47,7 @@ namespace Systems.Unit
 		public int maxAp;
         public BuffProperty<int> visionRange;
 		public EUnitFaction faction;
-        public int defense;
+        public int maxDefense;
         public float defenseRate;
         public AIBrainConfig aiBrainConfig;
 
@@ -57,7 +58,8 @@ namespace Systems.Unit
 		public string backBodySkin;
 		public string defaultWeaponSkin;
 		public Sprite icon;
-		public UnitPortraitView portraitPrefab;
+		public UnitPortraitView portraitPrefabLoadout;
+		public UnitPortraitView portraitPrefabUnitInfo;
 
 		[TitleGroup("Runtime")]
 		private int _currentHp;
@@ -129,9 +131,9 @@ namespace Systems.Unit
         {
             get
             {
-                if (CurrentWeapon == null) return false;
+                if (CurrentWeaponLogic == null) return false;
                 
-                return CurrentWeapon.CurrentAmmo() > 0;
+                return CurrentWeaponLogic.CurrentAmmo() > 0;
             }
         }
 
@@ -150,6 +152,7 @@ namespace Systems.Unit
 				id = unitId,
 				configId = config.configId,
 				name = config.unitName,
+				unitClass = config.unitClass,
 				description = config.description,
 
 				maxHp = config.maxHp,
@@ -159,7 +162,7 @@ namespace Systems.Unit
 				maxAp = config.actionPoints,
                 visionRange = new BuffProperty<int>(PropertyType.VisionRange, config.visionRange),
 				faction = config.faction,
-                defense = config.defense,
+                maxDefense = config.defense,
                 defenseRate = config.defenseRate,
                 aiBrainConfig = config.aiBrainConfig,
 
@@ -168,7 +171,8 @@ namespace Systems.Unit
 				frontBodySkin = config.frontBodySkin,
 				backBodySkin = config.backBodySkin,
 				icon = config.icon,
-				portraitPrefab = config.portraitPrefab,
+				portraitPrefabLoadout = config.portraitPrefabLoadout,
+				portraitPrefabUnitInfo = config.portraitPrefabUnitInfo,
 
 				_currentHp = config.maxHp,
                 _currentDefense = config.defense,
@@ -194,7 +198,7 @@ namespace Systems.Unit
 			{
 				new (EActionType.Move, RemainingMovementAp > 0),
 				new (EActionType.Interact, hasInteractableNeighbor),
-				new (EActionType.Attack, !CurrentEquipment.IsNullOrEmpty() && HasAp && HasAmmo && CanUseEquipment && CanAttack),
+				new (EActionType.Attack, !CurrentWeaponContainer.IsNullOrEmpty() && HasAp && HasAmmo && CanUseEquipment && CanAttack),
 				new (EActionType.Wait)
 			};
 
@@ -208,8 +212,8 @@ namespace Systems.Unit
 			if (Skill != null)
 				actions.Add(new ActionAbility(EActionType.UseSkill, Skill.CanUse));
 
-			if (CurrentWeapon!= null)
-	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment && !CurrentWeapon.FullAmmo));
+			if (CurrentWeaponLogic!= null)
+	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment && !CurrentWeaponLogic.FullAmmo));
 
 			if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
 				actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
@@ -293,28 +297,28 @@ namespace Systems.Unit
 
         public IReadOnlyList<EquipmentContainer> TacticalItemInfos => TacticalItems;
 
-        private EquipmentContainer _currentEquipment;
+        private EquipmentContainer _currentWeaponContainer;
 
-        public EquipmentContainer CurrentEquipment
+        public EquipmentContainer CurrentWeaponContainer
         {
             get
             {
-                _currentEquipment ??= MainWeapon.IsNullOrEmpty() ? SecondaryWeapon : MainWeapon;
-                return _currentEquipment;
+                _currentWeaponContainer ??= MainWeapon.IsNullOrEmpty() ? SecondaryWeapon : MainWeapon;
+                return _currentWeaponContainer;
             }
             set
             {
-                _currentEquipment = value;
+                _currentWeaponContainer = value;
                 EventBus.Publish(new UnitInfoChangedEvent(this));
             }
         }
         
-        public WeaponLogic CurrentWeapon
+        public WeaponLogic CurrentWeaponLogic
         {
             get
             {
-                if (CurrentEquipment.IsNullOrEmpty()) return null;
-                if (CurrentEquipment.Logic is WeaponLogic weaponLogic)
+                if (CurrentWeaponContainer.IsNullOrEmpty()) return null;
+                if (CurrentWeaponContainer.Logic is WeaponLogic weaponLogic)
                     return weaponLogic;
                 return null;
             }
@@ -334,7 +338,7 @@ namespace Systems.Unit
 	            TacticalItems[i].Init(tacticalItems[i], this);
             }
 
-            CurrentEquipment = MainWeapon;
+            CurrentWeaponContainer = MainWeapon;
         }
 
         public EquipmentContainer GetTacticalItem(int slotIndex)
@@ -348,7 +352,7 @@ namespace Systems.Unit
 
         public void SwitchWeapon()
         {
-            CurrentEquipment = _currentEquipment == MainWeapon ? SecondaryWeapon : MainWeapon;
+            CurrentWeaponContainer = _currentWeaponContainer == MainWeapon ? SecondaryWeapon : MainWeapon;
             TriggerInfoChanged();
         }
         

@@ -137,7 +137,7 @@ namespace Systems.Interaction.States
 		{
 			var unit = ctx.selectedUnit;
 
-            var currentEquipment = unit.CurrentEquipment;
+            var currentEquipment = unit.CurrentWeaponContainer;
             
             // 搜索范围内的敌人
             var reachableEnemyUnits = ctx.UnitService.GetAllAliveUnits()

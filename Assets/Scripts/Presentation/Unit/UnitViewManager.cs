@@ -119,12 +119,12 @@ namespace Presentation.Unit
 			viewInstance.SetVisible(false);
 			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance));
 			
-			var currentEquipment = e.Unit.CurrentEquipment;
+			var currentEquipment = e.Unit.CurrentWeaponContainer;
 			if (!currentEquipment.IsNullOrEmpty())
 			{
 				
-				viewInstance.SetWeaponSkin(e.Unit.CurrentEquipment?.Config.spineName);
-				viewInstance.SetGrip(e.Unit.CurrentEquipment.Config.gripType);
+				viewInstance.SetWeaponSkin(e.Unit.CurrentWeaponContainer?.Config.spineName);
+				viewInstance.SetGrip(e.Unit.CurrentWeaponContainer.Config.gripType);
 			}
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -348,9 +348,9 @@ namespace Presentation.Unit
                 return;
             }
 
-            if (!e.Unit.CurrentEquipment.IsNullOrEmpty())
+            if (!e.Unit.CurrentWeaponContainer.IsNullOrEmpty())
             {
-                var config = e.Unit.CurrentEquipment.Config;
+                var config = e.Unit.CurrentWeaponContainer.Config;
                 view.SetGrip(config.gripType);
                 view.SetWeaponSkin(config.spineName);
             }

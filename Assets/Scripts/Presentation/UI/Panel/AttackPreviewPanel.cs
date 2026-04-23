@@ -38,7 +38,7 @@ namespace Presentation.UI.Panel
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-            var currentEquipment = unit.CurrentEquipment;
+            var currentEquipment = unit.CurrentWeaponContainer;
             if (currentEquipment.IsNullOrEmpty())
             {
                 this.LogError("当前武器为空");
@@ -60,14 +60,14 @@ namespace Presentation.UI.Panel
             description.text = config.description;
 
             isPreciseShooting.onValueChanged.RemoveAllListeners();
-            isPreciseShooting.gameObject.SetActive(unit.CurrentWeapon.CanPreciseShoot());
-            isPreciseShooting.isOn = unit.CurrentWeapon.IsOnPreciseShoot;
+            isPreciseShooting.gameObject.SetActive(unit.CurrentWeaponLogic.CanPreciseShoot());
+            isPreciseShooting.isOn = unit.CurrentWeaponLogic.IsOnPreciseShoot;
 
-            if (unit.CurrentWeapon.CanPreciseShoot())
+            if (unit.CurrentWeaponLogic.CanPreciseShoot())
             {
                 isPreciseShooting.onValueChanged.AddListener(isOn =>
                 {
-                    unit.CurrentWeapon.IsOnPreciseShoot = isOn;
+                    unit.CurrentWeaponLogic.IsOnPreciseShoot = isOn;
                 });
             }
         }

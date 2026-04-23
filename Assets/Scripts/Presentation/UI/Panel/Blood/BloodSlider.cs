@@ -66,7 +66,7 @@ namespace Presentation.UI.Panel
             bloodSliderImage.enabled = bloodSliderOn;
             bloodSliderImage1.enabled = bloodSliderOn;
             bloodSliderImage2.enabled = bloodSliderOn;
-            bool defenseSliderOn = _unitView.GetVisible() && _owner.defense > 0;
+            bool defenseSliderOn = _unitView.GetVisible() && _owner.maxDefense > 0;
             defenseSliderImage.enabled = defenseSliderOn;
             defenseSliderImage1.enabled = defenseSliderOn;
             defenseSliderImage2.enabled = defenseSliderOn;
@@ -83,7 +83,7 @@ namespace Presentation.UI.Panel
         {
             if (e.Context.Defender != _owner) return;
             hpTarget1 = (float)_owner.CurrentHp / _owner.maxHp;
-            defenseTarget1 = (float)_owner.CurrentDefense / _owner.defense;
+            defenseTarget1 = (float)_owner.CurrentDefense / _owner.maxDefense;
             DOVirtual.DelayedCall(2f, () =>
             {
 	            hpTarget = hpTarget1;

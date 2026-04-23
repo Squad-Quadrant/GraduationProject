@@ -75,7 +75,7 @@ namespace Systems.AI.Evaluation
 
 		private static int GetEffectiveAttackRange(Unit.Unit unit) // 计算有效攻击距离
 		{
-			var weapon = unit.CurrentEquipment;
+			var weapon = unit.CurrentWeaponContainer;
 			return weapon.IsNullOrEmpty() ? 0 : Mathf.Min(weapon.Logic.Range(), unit.visionRange);
 		}
 

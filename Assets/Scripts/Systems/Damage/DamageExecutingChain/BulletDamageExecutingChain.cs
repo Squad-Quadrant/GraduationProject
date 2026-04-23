@@ -15,7 +15,7 @@ namespace Systems.Damage
         protected override void InitInfluencers()
         {
             var theAttacker = context.Attacker as Unit.Unit;
-            influencers.Add(theAttacker.CurrentEquipment.Logic as IDamageInfluencer);
+            influencers.Add(theAttacker.CurrentWeaponContainer.Logic as IDamageInfluencer);
             influencers.Add(theAttacker);
         }
 
@@ -57,8 +57,8 @@ namespace Systems.Damage
                 else
                 {
                     var theAttacker = context.Attacker as Unit.Unit;
-                    string isOnPreciseShoot = theAttacker.CurrentWeapon.IsOnPreciseShoot ? "精准" : "";
-                    this.Log($"{theAttacker.DisplayName}使用{theAttacker.CurrentWeapon.DisplayName}对{context.Defender.DisplayName}进行{isOnPreciseShoot}攻击，命中{context.FinalCalculatedNum}发子弹，" +
+                    string isOnPreciseShoot = theAttacker.CurrentWeaponLogic.IsOnPreciseShoot ? "精准" : "";
+                    this.Log($"{theAttacker.DisplayName}使用{theAttacker.CurrentWeaponLogic.DisplayName}对{context.Defender.DisplayName}进行{isOnPreciseShoot}攻击，命中{context.FinalCalculatedNum}发子弹，" +
                              $"击中{context.bodyPartType.ToStr()}, 共造成伤害{context.TotalDamage}，护甲减少{context.TotalDefenseDamage}", true);
                 }
             }

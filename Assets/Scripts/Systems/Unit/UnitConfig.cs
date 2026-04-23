@@ -23,7 +23,8 @@ namespace Systems.Unit
 		[TitleGroup("视觉表现")]
 		[PreviewField(80, ObjectFieldAlignment.Left)]
 		public Sprite icon;
-		public UnitPortraitView portraitPrefab;
+		public UnitPortraitView portraitPrefabLoadout;
+		public UnitPortraitView portraitPrefabUnitInfo;
 		[Required] public UnitAnimationConfig animationConfig;
 		[Required] public SkeletonDataAsset skeletonDataAsset;
 		public string frontBodySkin = "pcb1 front";

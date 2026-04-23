@@ -12,14 +12,20 @@ namespace Presentation.UI.Panel
 	public class UnitInfoPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
 		[TitleGroup("References")]
-		[SerializeField, Required] private Transform portraitContainer;
+		[SerializeField, Required, ChildGameObjectsOnly] private Transform portraitContainer;
 		[SerializeField, Required] private UnitPortraitView defaultPortraitPrefab;
-		[SerializeField, Required] private TextMeshProUGUI nameText;
-		[SerializeField, Required] private TextMeshProUGUI bulletAmountText;
-		[SerializeField, Required] private Image hpImage;
-		[SerializeField, Required] private Image defenseImage;
-		[SerializeField, Required] private RectTransform actionPointsParent;
-		[SerializeField, Required] private GameObject actionPointsPrefab;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI unitNameText;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI unitClassText;
+		[SerializeField, Required, ChildGameObjectsOnly] private Slider hpSlider;
+		[SerializeField, Required, ChildGameObjectsOnly] private Slider defenseSlider;
+		[SerializeField, Required, ChildGameObjectsOnly] private Transform weaponRoot;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI weaponText;
+		[SerializeField, Required, ChildGameObjectsOnly] private Image weaponIcon;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI remainingAmmoText;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI maxAmmoText;
+		[SerializeField, Required, ChildGameObjectsOnly] private Transform apRoot;
+		[SerializeField, AssetsOnly] private GameObject apPrefab;
+
         private Systems.Unit.Unit _currentUnit;
 
 		public void DataInitialize(Systems.Unit.Unit unit)
@@ -47,21 +53,28 @@ namespace Presentation.UI.Panel
         public void Refresh(Systems.Unit.Unit unit)
 		{
 			RefreshPortrait(unit);
-			nameText.text = unit.name;
+			unitNameText.text = unit.name;
+			bool hasClass = !string.IsNullOrEmpty(unit.unitClass);
+			unitClassText.gameObject.SetActive(hasClass);
+			if (hasClass) unitClassText.text = unit.unitClass;
 
-			var currentHp = unit.CurrentHp;
-			var maxHp = unit.maxHp;
-			hpImage.fillAmount = maxHp > 0 ? (float)currentHp / maxHp : 0f;
-            defenseImage.enabled = unit.defense > 0;
-            defenseImage.fillAmount = (float)unit.CurrentDefense / unit.defense;
+			SetSliderValue(hpSlider, unit.CurrentHp, unit.maxHp);
+			SetSliderValue(defenseSlider, unit.CurrentDefense, unit.maxDefense);
 
-			foreach (Transform child in actionPointsParent)
-				Destroy(child.gameObject);
+			for (int i = apRoot.childCount - 1; i >= 0; i--)
+				Destroy(apRoot.GetChild(i).gameObject);
 			for (int i = 0; i < unit.CurrentAp; i++)
-				Instantiate(actionPointsPrefab, actionPointsParent);
+				Instantiate(apPrefab, apRoot);
 
-            RefreshAmmo(unit);
-        }
+			bool hasWeapon = unit.CurrentWeaponContainer != null && unit.CurrentWeaponLogic != null;
+			weaponRoot.gameObject.SetActive(hasWeapon);
+			if (!hasWeapon) return;
+			weaponText.text = unit.CurrentWeaponContainer.Config.nName;
+			weaponIcon.sprite = unit.CurrentWeaponContainer.Config.icon;
+			weaponIcon.SetNativeSize();
+			remainingAmmoText.text = $"{unit.CurrentWeaponLogic.CurrentAmmo()}";
+			maxAmmoText.text = $"{unit.CurrentWeaponLogic.AmmoCapacity()}";
+		}
 
         private UnitPortraitView _currentPortrait;
 
@@ -69,26 +82,19 @@ namespace Presentation.UI.Panel
         {
 	        if (_currentPortrait) Destroy(_currentPortrait.gameObject);
 
-	        var prefab = unit.portraitPrefab ? unit.portraitPrefab : defaultPortraitPrefab;
+	        var prefab = unit.portraitPrefabUnitInfo ? unit.portraitPrefabUnitInfo : defaultPortraitPrefab;
 	        if (!prefab) return;
 
 	        _currentPortrait = Instantiate(prefab, portraitContainer);
 	        _currentPortrait.Init();
         }
 
-        private void RefreshAmmo(Systems.Unit.Unit unit)
+        private static void SetSliderValue(Slider slider, int value, int scaleMax)
         {
-            var currentWeapon = unit.CurrentWeapon;
-            if (currentWeapon != null)
-            {
-                bulletAmountText.enabled = true;
-                bulletAmountText.text =
-                    $"{currentWeapon.CurrentAmmo()}/{currentWeapon.AmmoCapacity()}";
-            }
-            else
-            {
-                bulletAmountText.enabled = false;
-            }
+	        if (!slider) return;
+	        slider.minValue = 0f;
+	        slider.maxValue = 1f;
+	        slider.value = Mathf.Clamp01((float)value / Mathf.Max(1, scaleMax));
         }
     }
 }

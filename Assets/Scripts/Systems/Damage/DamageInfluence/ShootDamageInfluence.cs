@@ -62,7 +62,7 @@ namespace Systems.Damage
             // 1.若对护甲伤害<护甲当前护甲值，则对生命值造成: 伤害*命中部位伤害倍率*(1-护甲减伤率)*武器穿透率的伤害。
             // 2.若对护甲伤害>护甲当前护甲值，则对生命值造成: 伤害*命中部位伤害倍率*(1-护甲减伤率)*武器穿透率+(对护甲伤害-当前护甲值)的伤害。
             
-            if (Context.DefenceDamage > Defender.defense)
+            if (Context.DefenceDamage > Defender.maxDefense)
             {
                 Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * (1 - Defender.defenseRate) + (Context.DefenceDamage - Defender.CurrentDefense));
             }
