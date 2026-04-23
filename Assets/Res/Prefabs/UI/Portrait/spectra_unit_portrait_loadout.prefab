@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 3065556111320197700}
   - component: {fileID: 869929250345767584}
   m_Layer: 0
-  m_Name: spectra_unit_portrait
+  m_Name: spectra_unit_portrait_loadout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonGraphic: {fileID: 3065556111320197700}
-  animationName: act
+  animationName: idle
   skinName: 
