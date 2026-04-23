@@ -32,6 +32,16 @@ namespace Systems.Interaction.States
 
 		protected static void PublishBasicCursorInfo(InteractionContext ctx, PointerHoverEvent e)
 		{
+			var worldPos = e.WorldPosition;
+
+			if (e.HoveredUnitId != null && ctx.UnitService.TryGetUnit(e.HoveredUnitId, out var unit)) // 单位
+			{
+				Publish(ctx, CursorInfoEvent.ForUnit(
+					unit.position, worldPos,
+					unit.name, unit.CurrentHp, unit.maxHp, unit.CurrentDefense, unit.faction));
+				return;
+			}
+
 			if (!e.CellPosition.HasValue)
 			{
 				Publish(ctx, CursorInfoEvent.Hide());
@@ -39,7 +49,6 @@ namespace Systems.Interaction.States
 			}
 
 			var cell = e.CellPosition.Value;
-			var worldPos = e.WorldPosition;
 
 			if (!ctx.RegionService.IsCellUnlocked(cell)) // 未解锁
 			{
@@ -55,14 +64,6 @@ namespace Systems.Interaction.States
 					return;
 				}
 				Publish(ctx, CursorInfoEvent.ForCell(cell, worldPos, "无视野"));
-				return;
-			}
-
-			if (e.HoveredUnitId != null && ctx.UnitService.TryGetUnit(e.HoveredUnitId, out var unit)) // 单位
-			{
-				Publish(ctx, CursorInfoEvent.ForUnit(
-					cell, worldPos,
-					unit.name, unit.CurrentHp, unit.maxHp, unit.CurrentDefense, unit.faction));
 				return;
 			}
 

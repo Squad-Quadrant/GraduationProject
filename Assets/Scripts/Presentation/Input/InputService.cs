@@ -154,15 +154,8 @@ namespace Presentation.Input
 			var worldPos = ScreenToWorldPosition(screenPos);
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
 
-			Vector2Int? currentCell = null;
-			string currentUnitId = null;
-
-			if (_mapService.Data.IsInBounds(cellPos))
-			{
-				currentCell = cellPos;
-				currentUnitId = DetectUnitAtPosition(screenPos);
-			}
-
+			Vector2Int? currentCell = _mapService.Data.IsInBounds(cellPos) ? cellPos : null;
+			string currentUnitId = DetectUnitAtPosition(screenPos);
 			// Only publish if something changed
 			if (currentCell == _lastHoveredCell && currentUnitId == _lastHoveredUnitId) return;
 
