@@ -101,6 +101,7 @@ namespace Presentation.FogOfWar
 
 		private void OnDisable()
 		{
+			if (!RootContainer.Instance) return;
 			EventBus.Unsubscribe<MapViewInitEvent>(OnMapInitialized);
 			EventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
 			EventBus.Unsubscribe<UnitViewSpawnedEvent>(OnUnitViewSpawned);
