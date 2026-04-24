@@ -15,7 +15,7 @@ MonoBehaviour:
   buffType: 5
   buffName: "\u7729\u6655"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 957059444, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
   maxStack: 0
   tags: []
   showInUI: 1

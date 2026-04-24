@@ -109,6 +109,8 @@ namespace Systems.Damage
         public int CalculateNum = 1; // 该伤害流程的重复计算次数
         public int FinalCalculatedNum = 0; // 添加命中率影响后的实际应用数量
         public int CurrentDamageIndex = 0; // 当前正在计算的伤害序号（用于多次伤害的情况）
+        public bool IsFinalCalculated => CurrentDamageIndex == FinalCalculatedNum - 1; // 是否是最后一次伤害计算
+        
         public bool isMiss => FinalCalculatedNum == 0;
         public bool needApplyDamage = true;
         public bool needResetDamage = true; // 在每次重新计算伤害之前是否需要重置伤害

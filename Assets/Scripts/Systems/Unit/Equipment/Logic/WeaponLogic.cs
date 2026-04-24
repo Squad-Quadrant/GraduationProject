@@ -11,7 +11,7 @@ namespace Systems.Unit.Equipment.Logic
 
 	    protected int Ammo;
 	    public bool IsOnPreciseShoot = false;
-        public string DisplayName => _weaponConfig.name;
+        public string DisplayName => Name();
         public bool FullAmmo => Ammo >= AmmoCapacity();
 
         public WeaponLogic(WeaponConfig config, Unit owner) : base(config, owner)

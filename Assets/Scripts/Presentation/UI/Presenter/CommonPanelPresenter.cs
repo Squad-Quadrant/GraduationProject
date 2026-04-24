@@ -2,9 +2,10 @@ using System;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events;
-using Presentation.Interaction;
+using Data.Runtime.Events.Damage;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Presentation.UI.Panel.BodyPartPrompt;
 using Presentation.UI.Panel.Log;
 using Presentation.Unit;
 using Systems.Interfaces;
@@ -22,6 +23,7 @@ namespace Presentation.UI.Presenter
         private BloodSliderPanel _bloodSliderPanel;
         private DamageTextPanel _damageTextPanel;
         private GameLogger _gameLogger;
+        private BodyPartPromptPanel _bodyPartPromptPanel;
         
         public CommonPanelPresenter(
 	        UIManager uiManager,
@@ -36,7 +38,6 @@ namespace Presentation.UI.Presenter
             _unitViewManager =  unitViewManager ?? throw new ArgumentNullException(nameof(unitViewManager));
 
             eventBus.Subscribe<LevelLoadedEvent>(OnLevelLoaded);
-
             this.Log("Initialized");
         }
         
@@ -49,8 +50,12 @@ namespace Presentation.UI.Presenter
             
             _damageTextPanel  = _uiManager.Open<DamageTextPanel>();
             _damageTextPanel.Init(_coordinateConverter, _unitService);
+            
             _gameLogger = _uiManager.Open<GameLogger>();
+            
+            _bodyPartPromptPanel = _uiManager.Open<BodyPartPromptPanel>();
         }
+        
 
         private void OnGameOver()
         {

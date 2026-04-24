@@ -593,8 +593,9 @@ GameObject:
   - component: {fileID: 5059150846476539139}
   - component: {fileID: 1942254167792456852}
   - component: {fileID: 2367570077204131368}
+  - component: {fileID: 8438663624477343274}
   m_Layer: 5
-  m_Name: BodyPrompt
+  m_Name: BodyPartPrompt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -670,6 +671,228 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8438663624477343274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506328955908956295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99b94fb0ffb64bbb8e77cb16d5e0ac0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 2558360943374188523}
+    - {fileID: 2274858495913192897}
+    - {fileID: 8348519310124540096}
+    - {fileID: 1139990570141818424}
+    - {fileID: 3757800963865029600}
+    - {fileID: 488978981385870424}
+    - {fileID: 6321968340014432355}
+    - {fileID: 8243130232172326386}
+    - {fileID: 5124577523581601972}
+    - {fileID: 4475952932476854293}
+    - {fileID: 742584206836100433}
+    - {fileID: 4012517704511855958}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: scopes
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Systems.Damage.BodyPartType,
+        Assembly-CSharp],[System.Collections.Generic.List`1[[Presentation.UI.Panel.BodyPartPrompt.Scope,
+        Assembly-CSharp]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Systems.Damage.BodyPartType,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[Presentation.UI.Panel.BodyPartPrompt.Scope,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 0
+    - Name: rightDown
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 2
+    - Name: rightDown
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 3|System.Collections.Generic.List`1[[Presentation.UI.Panel.BodyPartPrompt.Scope,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 4
+    - Name: rightDown
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 6
+    - Name: rightDown
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Presentation.UI.Panel.BodyPartPrompt.Scope,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 8
+    - Name: rightDown
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[Presentation.UI.Panel.BodyPartPrompt.Scope,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Presentation.UI.Panel.BodyPartPrompt.Scope, Assembly-CSharp
+    - Name: leftUp
+      Entry: 10
+      Data: 10
+    - Name: rightDown
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  StrongHit: {fileID: 1519559378954932631, guid: 0e0f19f422ef3fd4fa737d2ed69c7949, type: 3}
+  WeakHit: {fileID: 3728190326678455618, guid: 63b78891584127243b122ba6b4375e6b, type: 3}
 --- !u!1 &7723531147260041074
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,12 @@ namespace Systems.Buff
         public IBuffAble Owner => owner;
         public List<BuffInfo> BuffInfos => buffInfos;
 
+        public event Action<BuffInfo> OnAttach;
+        public event Action<BuffInfo> OnMerge;
+        public event Action<BuffInfo> OnLost;
+        public event Action<BuffInfo> OnTurn;
+        public event Action<BuffInfo> OnReset;
+
         public BuffProxy(IBuffService buffService, IBuffAble owner)
         {
             this.buffService = buffService;
@@ -31,6 +37,7 @@ namespace Systems.Buff
                 var theBuff =  sameTypeBuffs[0];
                 // creator 的信息会在此处消失，需要注意未来是否有功能依赖
                 theBuff.Merge(1);
+                OnMerge.Invoke(theBuff);
             }
             else
             {
@@ -42,6 +49,7 @@ namespace Systems.Buff
                 }
                 buffInfos.Add(buffInfo);
                 buffInfo.OnAttach();
+                OnAttach?.Invoke(buffInfo);
             }
         }
         
@@ -50,6 +58,7 @@ namespace Systems.Buff
             if (!buffInfos.Contains(buffInfo)) return;
             buffInfos.Remove(buffInfo);
             buffInfo.OnLost();
+            OnLost?.Invoke(buffInfo);
         }
         
         public virtual void Turn()
@@ -71,6 +80,7 @@ namespace Systems.Buff
             foreach (var buffInfo in lostBuffs)
             {
                 Lost(buffInfo);
+                OnLost?.Invoke(buffInfo);
             }
         }
 
@@ -79,6 +89,7 @@ namespace Systems.Buff
             foreach (var buffInfo in buffInfos)
             {
                 buffInfo.OnReset();
+                OnReset?.Invoke(buffInfo);
             }
         }
 
