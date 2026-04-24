@@ -19,7 +19,13 @@ namespace Presentation.UI.Panel.BodyPartPrompt
         [SerializeField] private RectTransform StrongHit;
         [SerializeField] private RectTransform WeakHit;
 
+        [SerializeField] private Transform left;
+        [SerializeField] private Transform right;
+        [SerializeField] private float waitTime = 3f;
+        [SerializeField] private float duration = 0.3f;
+
         private List<RectTransform> _hitCache = new();
+        private Coroutine _animCoroutine;
 
         public void Hit(BodyPartType bodyPartType, bool isStrong, int bulletCount)
         {
@@ -52,6 +58,41 @@ namespace Presentation.UI.Panel.BodyPartPrompt
                 _hitCache.Add(hitObj);
                 hitObj.position = new Vector3(randomX, randomY, hitObj.position.z);
             }
+
+            if (_animCoroutine != null)
+            {
+                StopCoroutine(_animCoroutine);
+            }
+            _animCoroutine = StartCoroutine(AnimRoutine());
+        }
+
+        private System.Collections.IEnumerator AnimRoutine()
+        {
+            float time = 0;
+            Vector3 startPos = transform.position;
+            Vector3 targetPos = left.position;
+            
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                transform.position = Vector3.Lerp(startPos, targetPos, time / duration);
+                yield return null;
+            }
+            transform.position = targetPos;
+            
+            yield return new WaitForSeconds(waitTime);
+            
+            time = 0;
+            startPos = transform.position;
+            targetPos = right.position;
+            
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                transform.position = Vector3.Lerp(startPos, targetPos, time / duration);
+                yield return null;
+            }
+            transform.position = targetPos;
         }
     }
 }
