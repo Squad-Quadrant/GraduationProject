@@ -4,10 +4,8 @@ using Data;
 using Data.Config;
 using Presentation.Logger;
 using Presentation.UI.Core;
-using Presentation.UI.Panel.Menu;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Presentation.Bootstrap
 {
@@ -27,9 +25,6 @@ namespace Presentation.Bootstrap
         [SerializeField, Required]
         private DataManager dataManager;
 
-        [SerializeField, Required]
-        private MenuFlowController menuFlowController;
-
 		[TitleGroup("Prefabs")]
 		[SerializeField, ReadOnly]
 		private RootContainer rootContainerPrefab;
@@ -38,8 +33,6 @@ namespace Presentation.Bootstrap
 		private RootContainer _rootContainerInstance;
 
 		private void Awake() => Initialize();
-
-		private void Start() => DispatchStartupFlow();
 
 		private void Initialize()
 		{
@@ -83,26 +76,8 @@ namespace Presentation.Bootstrap
 			uiManager.Initialize(_rootContainerInstance.Resolve<IEventBus>());
             
             _rootContainerInstance.Services.RegisterInstance(dataManager);
-
-            _rootContainerInstance.Services.RegisterInstance(menuFlowController);
             
 			Log("[Bootstrapper] Global services registered.");
-		}
-
-		private void DispatchStartupFlow()
-		{
-			var devScene = BootstrapEnsure.ConsumeDevStartScene();
-			if (!string.IsNullOrEmpty(devScene))
-			{
-				Log($"[Bootstrapper] Dev scene '{devScene}' detected; skipping main menu");
-				SceneManager.LoadScene(devScene);
-				return;
-			}
-
-			menuFlowController.Initialize(
-				_rootContainerInstance.Resolve<UIManager>(),
-				_rootContainerInstance.Resolve<DataManager>());
-			menuFlowController.ShowMainMenu();
 		}
 
 		#region Debug

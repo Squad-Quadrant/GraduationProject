@@ -26,7 +26,6 @@ namespace Presentation.Bootstrap
 			}
 
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
 			Services = new ServiceContainer();
 			Debug.Log("[RootContainer] Initialized");
 		}

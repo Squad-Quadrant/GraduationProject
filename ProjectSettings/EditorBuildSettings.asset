@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Dev/CommonTest_1_Level.unity
     guid: d3955d82398aaee439fe61df60dcb25e
   - enabled: 1
-    path: Assets/Scenes/Release/0_Bootstrapper.unity
+    path: Assets/Scenes/Release/0_MainMenu.unity
     guid: 79274aa400f07f94c898fb07dbd7de60
   - enabled: 1
     path: Assets/Scenes/Release/1_Battle.unity
