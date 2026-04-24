@@ -23,6 +23,7 @@ namespace Presentation.Map.Wall
 			cellA = a;
 			cellB = b;
 			Renderer.sortingLayerName = "OnGround";
+			Renderer.renderingLayerMask |= 1u << 3;
 		}
 	}
 }

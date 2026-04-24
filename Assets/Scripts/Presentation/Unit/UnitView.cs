@@ -20,11 +20,10 @@ namespace Presentation.Unit
 		[SerializeField] private float moveSpeed = 3f;
 
 		[TitleGroup("References")]
-		[SerializeField, Required, ChildGameObjectsOnly]
-		private UnitAnimator animator;
-		[SerializeField, Required] private SortingGroup sortingGroup;
-
-		private MeshRenderer _renderer;
+		[SerializeField, Required, ChildGameObjectsOnly] private UnitAnimator animator;
+		[SerializeField, Required, ChildGameObjectsOnly] private SortingGroup sortingGroup;
+		[SerializeField, Required, ChildGameObjectsOnly] private MeshRenderer meshRenderer;
+		[SerializeField, Required, ChildGameObjectsOnly] private Collider2D clickCollider;
 		private UnitAnimationConfig _config;
 		private ICoordinateConverter _coordConverter;
 
@@ -62,7 +61,6 @@ namespace Presentation.Unit
 			_backBodySkinName = backBodySkinName;
 
 			animator.Initialize(skeletonDataAsset, frontBodySkinName, weaponSkinName);
-			_renderer = animator.GetComponent<MeshRenderer>();
 
 			_stance = config.DefaultStance;
 			_grip = config.DefaultGrip;
@@ -190,15 +188,20 @@ namespace Presentation.Unit
 		public void Pause() => animator.Pause();
 		public void Resume() => animator.Resume();
 
-		public void SetVisible(bool visible) => _renderer.enabled = visible;
-		public bool GetVisible() => _renderer.enabled;
+		public void SetVisible(bool visible)
+		{
+			meshRenderer.enabled = visible;
+			clickCollider.enabled = visible;
+		}
+
+		public bool GetVisible() => meshRenderer.enabled;
 
 		public void SetOutline(bool outlineEnabled)
 		{
 			if (outlineEnabled)
-				_renderer.renderingLayerMask |= 1 << 1;
+				meshRenderer.renderingLayerMask |= 1 << 1;
 			else
-				_renderer.renderingLayerMask &= ~((uint)1 << 1);
+				meshRenderer.renderingLayerMask &= ~((uint)1 << 1);
 		}
 
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)

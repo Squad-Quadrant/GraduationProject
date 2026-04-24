@@ -26,21 +26,15 @@ namespace Presentation.Map.Wall
 		private IRegionService RegionService => _regionService ??= LevelContainer.Instance.Resolve<IRegionService>();
 
 		private Dictionary<WallKey, WallView> _wallLookup;
-		private Vector2Int? _previousHoverCellPos;
 
 		private void OnEnable()
 		{
-			EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
-			EventBus.Subscribe<MapCellStateChangedEvent>(OnMapCellChanged);
 			EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 		}
 
 		private void OnDisable()
 		{
-			EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
-			EventBus.Unsubscribe<MapCellStateChangedEvent>(OnMapCellChanged);
 			EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
-
 			_wallLookup = null;
 		}
 
@@ -71,35 +65,6 @@ namespace Presentation.Map.Wall
 			{
 				if (wall == null) continue;
 				SetWallAlpha(wall.Key, IsWallRegionVisible(wall.Key) ? 1f : 0f);
-			}
-		}
-
-		private void OnPointerHover(PointerHoverEvent e)
-		{
-			if (!e.CellPosition.HasValue) return;
-
-			if (_previousHoverCellPos.HasValue)
-			{
-				var previousWalls = MapService.GetWallsWhichHideCell(_previousHoverCellPos.Value);
-				foreach (var wall in previousWalls
-					         .Where(wall => wall != null)
-					         .Where(wall => IsWallRegionVisible(wall.Key)))
-					SetWallAlpha(wall.Key, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
-			}
-
-			var walls = MapService.GetWallsWhichHideCell(e.CellPosition.Value);
-			foreach (var wall in walls.Where(wall => wall != null))
-				SetWallAlpha(wall.Key, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
-
-			_previousHoverCellPos = e.CellPosition;
-		}
-
-		private void OnMapCellChanged(MapCellStateChangedEvent e)
-		{
-			foreach (var wall in e.Walls)
-			{
-				if (wall == null) continue;
-				SetWallAlpha(wall.Key, MapService.CheckWallTransparency(wall) ? 0.5f : 1f);
 			}
 		}
 
