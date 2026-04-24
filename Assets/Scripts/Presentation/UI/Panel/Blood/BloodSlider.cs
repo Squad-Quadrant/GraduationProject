@@ -1,9 +1,11 @@
 using Core.Events;
 using Data.Runtime.Events.Damage;
 using DG.Tweening;
+using Presentation.UI.Component.Buff;
 using Presentation.Unit;
 using PurpleFlowerCore.Utility;
 using Systems.Interfaces;
+using Systems.Unit;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,13 +15,21 @@ namespace Presentation.UI.Panel
     {
         private Systems.Unit.Unit _owner;
         private UnitView _unitView;
+        
         [SerializeField] private Text nameText;
+        
         [SerializeField] private Image bloodSliderImage;
         [SerializeField] private Image bloodSliderImage1;
         [SerializeField] private Image bloodSliderImage2;
         [SerializeField] private Image defenseSliderImage;
         [SerializeField] private Image defenseSliderImage1;
         [SerializeField] private Image defenseSliderImage2;
+
+        [SerializeField] private Image playerBackground;
+        [SerializeField] private Image enemyBackground;
+        
+        [SerializeField] private BuffList buffList;
+        
         [SerializeField] private float duration = 0.5f;
         [SerializeField] private float minSpeed = 0.01f;
         [SerializeField] private float speed1 = 0.05f;
@@ -49,7 +59,19 @@ namespace Presentation.UI.Panel
             _unitView = unitView;
             _coordinateConverter = coordinateConverter;
             _eventBus = eventBus;
+            
             nameText.text = _owner.name;
+            if (owner.faction == EUnitFaction.Player)
+            {
+                enemyBackground.enabled = false;
+            }
+            else
+            {
+                playerBackground.enabled = false;
+            }
+            
+            buffList.Init(owner);
+            
             Refresh();
             
             _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
