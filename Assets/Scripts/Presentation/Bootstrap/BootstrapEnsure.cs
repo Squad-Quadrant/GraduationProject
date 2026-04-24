@@ -5,27 +5,30 @@ namespace Presentation.Bootstrap
 {
 	public static class BootstrapEnsure
 	{
-		public const string BootstrapperSceneName = "0_Bootstrapper";
+		private const string BootstrapperResourcePath = "Bootstrapper";
 
-		private static string _devStartScene;
+		private static bool _instantiated;
+
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		private static void Reset() => _instantiated = false;
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static void Ensure()
+		private static void AutoBootstrap()
 		{
-			var activeScene = SceneManager.GetActiveScene();
-			if (activeScene.name == BootstrapperSceneName) return;
+			if (_instantiated) return;
+			_instantiated = true;
 
-			_devStartScene = activeScene.name;
-			Debug.Log($"[BootstrapEnsure] Dev scene '{_devStartScene}' detected; rerouting via Bootstrapper.");
-			SceneManager.LoadScene(BootstrapperSceneName);
-		}
+			var prefab = Resources.Load<GameObject>(BootstrapperResourcePath);
+			if (!prefab)
+			{
+				Debug.LogError(
+					$"[BootstrapEnsure] Prefab not found: Resources/{BootstrapperResourcePath}.prefab. " +
+					"Global services will NOT be initialized.");
+				return;
+			}
+			Object.Instantiate(prefab);
 
-		// 非空返回值表示"从该场景启动"，Bootstrapper 应 LoadScene 回那个场景而非进主菜单
-		public static string ConsumeDevStartScene()
-		{
-			var s = _devStartScene;
-			_devStartScene = null;
-			return s;
+			Debug.Log("[BootstrapEnsure] Bootstrapper instantiated from prefab.");
 		}
 	}
 }

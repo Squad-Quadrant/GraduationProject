@@ -14,20 +14,24 @@ namespace Presentation.Bootstrap
 	public class MenuFlowController : MonoBehaviour
 	{
 		[Title("Scene")]
+		[SerializeField, Tooltip("主菜单场景名，必须与 Build Settings 中的名字一致")]
+		private string mainMenuSceneName = "0_MainMenu";
+
 		[SerializeField, Tooltip("关卡场景名，必须与 Build Settings 中的名字一致")]
 		private string battleSceneName = "1_Battle";
 
 		private UIManager _uiManager;
 		private DataManager _dataManager;
 
-		public void Initialize(UIManager uiManager, DataManager dataManager)
+		private void Awake()
 		{
-			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
-			_dataManager = dataManager ?? throw new ArgumentNullException(nameof(dataManager));
-			this.Log("Initialized");
+			_uiManager = RootContainer.Instance.Resolve<UIManager>();
+			_dataManager = RootContainer.Instance.Resolve<DataManager>();
 		}
 
-		public void ShowMainMenu()
+		private void Start() => ShowMainMenu();
+
+		private void ShowMainMenu()
 		{
 			_uiManager.CloseAll();
 			_uiManager.Open<MainMenuPanel, MainMenuPanelData>(new MainMenuPanelData
@@ -47,7 +51,7 @@ namespace Presentation.Bootstrap
 			});
 		}
 
-		public void ShowLoadout(LevelConfig level)
+		private void ShowLoadout(LevelConfig level)
 		{
 			if (!level)
 			{
@@ -67,7 +71,7 @@ namespace Presentation.Bootstrap
 			});
 		}
 
-		public void StartBattle()
+		private void StartBattle()
 		{
 			if (!_dataManager.SelectedLevel)
 			{
@@ -84,17 +88,7 @@ namespace Presentation.Bootstrap
 		{
 			this.Log("Returning to main menu");
 			_dataManager.SelectedLevel = null;
-
-			SceneManager.sceneLoaded += ShowMainMenu;
-			SceneManager.LoadScene(BootstrapEnsure.BootstrapperSceneName);
-		}
-
-		private void ShowMainMenu(Scene scene, LoadSceneMode mode)
-		{
-			if (scene.name != BootstrapEnsure.BootstrapperSceneName) return;
-
-			SceneManager.sceneLoaded -= ShowMainMenu;
-			ShowMainMenu();
+			SceneManager.LoadScene(mainMenuSceneName);
 		}
 
 		private void QuitGame()

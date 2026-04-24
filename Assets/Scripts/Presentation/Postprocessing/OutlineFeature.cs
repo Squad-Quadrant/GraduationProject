@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Core.Log;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -13,6 +12,7 @@ namespace Presentation.Postprocessing
 		{
 			private static readonly List<ShaderTagId> ShaderTags = new()
 			{
+				new ShaderTagId("Universal2D"),
 				new ShaderTagId("SRPDefaultUnlit"),
 				new ShaderTagId("UniversalForward"),
 				new ShaderTagId("UniversalForwardOnly"),
@@ -55,10 +55,13 @@ namespace Presentation.Postprocessing
 
 				cmd.SetRenderTarget(_outlineMaskRT);
 				cmd.ClearRenderTarget(true, true, Color.clear);
-				var drawSettings = CreateDrawingSettings(ShaderTags, ref renderingData, SortingCriteria.None);
-				var renderListParams = new RendererListParams(renderingData.cullResults, drawSettings, _filteringSettings);
-				var list = context.CreateRendererList(ref renderListParams);
-				cmd.DrawRendererList(list);
+				{
+					var drawSettings = CreateDrawingSettings(ShaderTags, ref renderingData, SortingCriteria.None);
+					var renderListParams =
+						new RendererListParams(renderingData.cullResults, drawSettings, _filteringSettings);
+					var list = context.CreateRendererList(ref renderListParams);
+					cmd.DrawRendererList(list);
+				}
 
 				cmd.SetRenderTarget(renderingData.cameraData.renderer.cameraColorTargetHandle);
 				_propertyBlock.SetTexture(PropOutlineMask, _outlineMaskRT);

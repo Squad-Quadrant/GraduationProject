@@ -338,7 +338,7 @@ namespace Systems.Unit
 	            TacticalItems[i].Init(tacticalItems[i], this);
             }
 
-            CurrentWeaponContainer = MainWeapon;
+            _currentWeaponContainer = MainWeapon;
         }
 
         public EquipmentContainer GetTacticalItem(int slotIndex)

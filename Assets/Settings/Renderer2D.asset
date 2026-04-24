@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5268703903949396980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a03e5878b154b4aa1f5e3c489bcd84d, type: 3}
+  m_Name: WallOcclusionFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  composeMaterial: {fileID: 2100000, guid: 45b677331773d394798371bc137e3054, type: 2}
 --- !u!114 &-4656366918588613717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31,7 +45,8 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -4656366918588613717}
-  m_RendererFeatureMap: ab3ba541f54261bf
+  - {fileID: -5268703903949396980}
+  m_RendererFeatureMap: ab3ba541f54261bf0ce461d2b6cde1b6
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 3
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
