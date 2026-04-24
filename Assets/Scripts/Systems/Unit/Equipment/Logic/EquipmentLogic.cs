@@ -1,4 +1,5 @@
 using Systems.Unit.Equipment.Config;
+using UnityEngine;
 
 namespace Systems.Unit.Equipment.Logic
 {
@@ -21,6 +22,8 @@ namespace Systems.Unit.Equipment.Logic
         public virtual string Name() => Config.nName;
 
         public virtual int GetDamage() => Config.damage;
+        public virtual Sprite Icon() => Config.icon;
+        public virtual string Description() => Config.description;
 
         public abstract int Range();
 

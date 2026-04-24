@@ -64,7 +64,7 @@ namespace Systems.Unit.Equipment.Logic
                     new ShootDamageInfluence(this, 0, IsOnPreciseShoot),
                     new ShootHitRateInfluence(this, 0, IsOnPreciseShoot),
                     new ShootDefenceDamageInfluence(this),
-                    new BodyDestructionInfluence(this)
+                    new BodyDestructionInfluence(this, IsOnPreciseShoot)
                 };
             }
             return null;

@@ -19,24 +19,47 @@ namespace Systems.Damage
     public struct BodyPartHitInfo
     {
         public BodyPartType PartType;
-        public float HitProbability;
+        // public float HitProbability;
         public bool HasArmor;
         public float DamageMultiplier;
+    }
+
+    public static class BodyDestructionConst
+    {
+        public static Dictionary<BodyPartType, float> Rate = new()
+        {
+            { BodyPartType.Legs, 0.2f },
+            { BodyPartType.Arms, 0.2f },
+            { BodyPartType.Head, 0.1f },
+            { BodyPartType.Torso, 0.5f },
+        };
+
+        public static Dictionary<BodyPartType, float> PreciseRate = new()
+        {
+            { BodyPartType.Legs, 0.1f },
+            { BodyPartType.Arms, 0.1f },
+            { BodyPartType.Head, 0.3f },
+            { BodyPartType.Torso, 0.5f },
+        };
     }
 
     public class BodyDestructionInfluence : DamageInfluence
     {
         protected BodyPartHitInfo hitPart;
+        public bool _isOnPreciseShoot;
         private static readonly BodyPartHitInfo[] BodyParts = 
         {
-            new() { PartType = BodyPartType.Legs, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.6f },
-            new() { PartType = BodyPartType.Arms, HitProbability = 20, HasArmor = false, DamageMultiplier = 0.65f },
-            new() { PartType = BodyPartType.Head, HitProbability = 10, HasArmor = true, DamageMultiplier = 2f },
-            new() { PartType = BodyPartType.Torso, HitProbability = 500f, HasArmor = true, DamageMultiplier = 1f }
+            new() { PartType = BodyPartType.Legs, HasArmor = false, DamageMultiplier = 0.6f },
+            new() { PartType = BodyPartType.Arms, HasArmor = false, DamageMultiplier = 0.65f },
+            new() { PartType = BodyPartType.Head, HasArmor = true, DamageMultiplier = 2f },
+            new() { PartType = BodyPartType.Torso, HasArmor = true, DamageMultiplier = 1f }
         };
 
-        public BodyDestructionInfluence(IDamageInfluencer owner, int priority = 2) : base(owner, priority)
-        { }
+        public BodyDestructionInfluence(IDamageInfluencer owner, bool isOnPreciseShoot = false, int priority = 2) :
+            base(owner, priority)
+        {
+            _isOnPreciseShoot = isOnPreciseShoot;
+        }
 
 
         public override List<DamageInfluenceType> DamageInfluenceTypes => new() { DamageInfluenceType.BodyDestruction };
@@ -97,15 +120,16 @@ namespace Systems.Damage
 
         private BodyPartHitInfo GetRandomBodyPart()
         {
+            var rateDic = _isOnPreciseShoot ? BodyDestructionConst.PreciseRate : BodyDestructionConst.Rate;
             float totalWeight = 0;
-            foreach (var part in BodyParts) totalWeight += part.HitProbability;
+            foreach (var part in BodyParts) totalWeight += rateDic[part.PartType];
 
             float randomValue = Random.Range(0, totalWeight);
             float currentWeight = 0;
 
             foreach (var part in BodyParts)
             {
-                currentWeight += part.HitProbability;
+                currentWeight += rateDic[part.PartType];
                 if (randomValue <= currentWeight)
                 {
                     return part;
