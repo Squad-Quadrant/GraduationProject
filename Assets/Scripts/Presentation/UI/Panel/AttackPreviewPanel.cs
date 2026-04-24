@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Presentation.UI.Core;
-using Sirenix.Serialization;
 using Systems.Damage;
 using Systems.Interaction;
 using Systems.Unit;

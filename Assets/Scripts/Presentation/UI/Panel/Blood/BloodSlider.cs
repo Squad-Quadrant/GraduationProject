@@ -35,6 +35,8 @@ namespace Presentation.UI.Panel
         [SerializeField] private float speed1 = 0.05f;
         [SerializeField] private float xOffset;
         [SerializeField] private float yOffset;
+        
+        [SerializeField] private CanvasGroup canvasGroup;
         private ICoordinateConverter _coordinateConverter;
         private IEventBus _eventBus;
         private float _originCameraSize;
@@ -84,11 +86,9 @@ namespace Presentation.UI.Panel
 
         private void Refresh()
         {
-            bool bloodSliderOn = _unitView.GetVisible();
-            bloodSliderImage.enabled = bloodSliderOn;
-            bloodSliderImage1.enabled = bloodSliderOn;
-            bloodSliderImage2.enabled = bloodSliderOn;
-            bool defenseSliderOn = _unitView.GetVisible() && _owner.maxDefense > 0;
+            canvasGroup.alpha = _unitView.GetVisible() ? 1 : 0;
+            
+            bool defenseSliderOn = _owner.maxDefense > 0;
             defenseSliderImage.enabled = defenseSliderOn;
             defenseSliderImage1.enabled = defenseSliderOn;
             defenseSliderImage2.enabled = defenseSliderOn;
