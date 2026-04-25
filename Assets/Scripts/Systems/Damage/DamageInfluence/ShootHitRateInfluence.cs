@@ -34,11 +34,13 @@ namespace Systems.Damage
                 }
             }
             
-            Context.HitRate *= hitRateMultiplier;
+            // Context.HitRate *= hitRateMultiplier;
+            Context.AddHitRateInfluence("射程修正", 0, hitRateMultiplier);
 
             if (_preciseShootSpeed)
             {
-                Context.HitRate += theWeapon.PreciseShootHitRateBonus();
+                Context.AddHitRateInfluence("精准射击", theWeapon.PreciseShootHitRateBonus());
+                // Context.HitRate += theWeapon.PreciseShootHitRateBonus();
             }
         }
 

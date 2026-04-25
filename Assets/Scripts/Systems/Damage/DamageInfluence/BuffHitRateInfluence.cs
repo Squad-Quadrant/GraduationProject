@@ -21,8 +21,9 @@ namespace Systems.Damage
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);
-            Context.HitRate += _hitRateChanger;
-            Context.HitRate *= _hitRateMultiplier;
+            // Context.HitRate += _hitRateChanger;
+            // Context.HitRate *= _hitRateMultiplier;
+            Context.AddHitRateInfluence(RealOwner.Name, _hitRateChanger, _hitRateMultiplier);
         }
 
         public override void Execute()

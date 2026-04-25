@@ -102,9 +102,10 @@ namespace Systems.Damage
         public float SanDamageModifier = 1;
 
         public BodyPartType bodyPartType; // 击中部位
-        public List<DamageInfluenceType> ignoredInfluenceTypes = new(); 
+        public List<DamageInfluenceType> ignoredInfluenceTypes = new();
         
         public float HitRate = 1;
+        public List<(string, string)> HitRateInfluences = new(); // 用来存对命中率有影响的因素，方便展示记录
         
         public int CalculateNum = 1; // 该伤害流程的重复计算次数
         public int FinalCalculatedNum = 0; // 添加命中率影响后的实际应用数量
@@ -119,6 +120,17 @@ namespace Systems.Damage
         public int TotalDefenseDamage = 0;
         public int TotalSanDamage = 0;
 
+        public void AddHitRateInfluence(string reason, float changer = 0, float multiplier = 1)
+        {
+            HitRate += changer;
+            HitRate *= multiplier;
+            string value = "";
+            if (changer != 0) 
+                value += $"{(changer > 0 ? "+" : "")}{changer * 100}%";
+            // if (!Mathf.Approximately(multiplier, 1)) 
+                value += $"*{multiplier * 100}%";
+            HitRateInfluences.Add((reason, value));
+        }
 
         public DamageExecutingContext GetSnapshot()
         {

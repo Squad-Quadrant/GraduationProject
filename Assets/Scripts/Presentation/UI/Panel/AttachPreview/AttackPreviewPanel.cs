@@ -16,7 +16,7 @@ namespace Presentation.UI.Panel
         [SerializeField] private Image equipmentIcon;
         [SerializeField] private Text equipmentName;
         [SerializeField] private Text description;
-        [SerializeField] private Text hitRate;
+        // [SerializeField] private Text hitRate;
         [SerializeField] private Toggle isPreciseShooting;
         [SerializeField] private Text damageText;
         [SerializeField] private Text ammoText;
@@ -25,6 +25,8 @@ namespace Presentation.UI.Panel
         [SerializeField] private Text armsRate;        
         [SerializeField] private Text legsRate;        
         [SerializeField] private Text torsoRate;        
+        
+        [SerializeField] private HitRateList hitRateList;
 
         public Dictionary<BodyPartType, Text> bodyPartRate = new();
         
@@ -58,7 +60,7 @@ namespace Presentation.UI.Panel
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-            hitRate.text = "";
+            // hitRate.text = "";
             
             _unit = unit;
             weaponLogic = unit.CurrentWeaponLogic;
@@ -107,7 +109,8 @@ namespace Presentation.UI.Panel
 
         private void OnDisplayHitPercent(DisplayHitPercentEvent e)
         {
-            hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
+            // hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
+            hitRateList.Refresh(e);
         }
     }
 }

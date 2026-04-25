@@ -124,7 +124,7 @@ namespace Systems.Interaction.States
 				Publish(Context, CursorInfoEvent.ForAttack(
 					cell, e.WorldPosition,
 					hitPercent, target.name, target.CurrentHp, target.maxHp));
-				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent));
+				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent, damageContext.HitRateInfluences));
 			}
 			else
 			{
