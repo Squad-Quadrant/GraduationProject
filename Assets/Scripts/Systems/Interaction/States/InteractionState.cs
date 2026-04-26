@@ -84,13 +84,8 @@ namespace Systems.Interaction.States
 				return $"状态: {names}";
 			}
 
-			if (mapCell.SceneActor != null)
-			{
-				var name = !string.IsNullOrEmpty(mapCell.SceneActor.DisplayName)
-					? mapCell.SceneActor.DisplayName
-					: mapCell.SceneActor.Type.ToString();
-				return $"物体: {name}";
-			}
+			if (mapCell.SceneActor != null && !string.IsNullOrEmpty(mapCell.SceneActor.DisplayName))
+				return $"物体: {mapCell.SceneActor.DisplayName}";
 
 			return "状态: 空";
 		}

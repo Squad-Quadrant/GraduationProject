@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7d994b20c3547c5bfe1c69731f8f4c9, type: 3}
+  m_Name: 001_manifest
+  m_EditorClassIdentifier: 
+  atlas: {fileID: 2800000, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
+  atlasGridSize: {x: 400, y: 600}
+  gameCellSize: {x: 400, y: 200}
+  configs:
+  - {fileID: 11400000, guid: 5441ec368353597408690d9bd4045d08, type: 2}
+  - {fileID: 11400000, guid: c1a31bd7a767c044c8017247b252b760, type: 2}
+  - {fileID: 11400000, guid: 8791d9e0da58a534ab2bf20b37a10ccf, type: 2}
+  - {fileID: 11400000, guid: be084050b354f194fb9b1cc3a3896a72, type: 2}
+  - {fileID: 11400000, guid: a6357b021f0472a419765368eba6e945, type: 2}
+  - {fileID: 11400000, guid: 5ccdcd95045fff94a88ac12e41132c50, type: 2}
+  - {fileID: 11400000, guid: 3aaa7bca3919e324b9ad5b3a58d1b8cc, type: 2}
+  - {fileID: 11400000, guid: 38910d7a534e8134f88391f8184f5f77, type: 2}
+  - {fileID: 11400000, guid: 26901f6fda51eef4e8942b36a8610e46, type: 2}
+  - {fileID: 11400000, guid: 8788a5753a2200a4abf90c4ee0a19687, type: 2}
+  - {fileID: 11400000, guid: 8bf7c8b6433db63478fd5028366707e5, type: 2}
+  - {fileID: 11400000, guid: ce40cb0cd8eb5b84b833a51808726179, type: 2}
+  - {fileID: 11400000, guid: 790d564b240b43844835b011c9e60a8d, type: 2}
+  - {fileID: 11400000, guid: 269bbe5062bf8e1449ab316f51479a82, type: 2}
+  padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 200
+    m_Bottom: 50

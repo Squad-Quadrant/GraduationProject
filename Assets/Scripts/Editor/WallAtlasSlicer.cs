@@ -24,7 +24,7 @@ namespace Editor
 
 		private SerializedObject _serializedSelf;
 
-		[MenuItem("Tools/Wall Atlas Slicer")]
+		[MenuItem("Tools/Slicer/Wall Atlas Slicer")]
 		private static void OpenWindow()
 		{
 			var window = GetWindow<WallAtlasSlicer>("Wall Atlas Slicer");

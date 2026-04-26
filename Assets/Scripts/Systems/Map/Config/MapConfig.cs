@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Systems.Map.Config.SceneActor;
 using UnityEngine;
 
 namespace Systems.Map.Config

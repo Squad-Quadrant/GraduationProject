@@ -22,7 +22,6 @@ namespace Presentation.Map
 	{
 		[Title("References")]
 		[SerializeField, Required] private SpriteRenderer groundRenderer;
-        [SerializeField, Required] private Tilemap sceneActorTilemap;
         [SerializeField, Required] private Tilemap cursorHoverTilemap;
 
         [Title("Cursor Hover")]
@@ -48,7 +47,6 @@ namespace Presentation.Map
         {
             EventBus.Subscribe<MapViewInitEvent>(InitMap);
             EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
-            EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
         }
 
         private void OnDisable()
@@ -56,7 +54,6 @@ namespace Presentation.Map
 	        if (!LevelContainer.Instance) return;
             EventBus.Unsubscribe<MapViewInitEvent>(InitMap);
             EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
-            EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
         }
 
         private void InitMap(MapViewInitEvent e)
@@ -70,23 +67,6 @@ namespace Presentation.Map
             }
             else
 	            this.LogWarning("No ground sprite assigned in MapConfig.");
-
-            // 初始化场景物体 tile
-            foreach (var cell in mapData.Cells.Values)
-            {
-                if (cell.SceneActor != null && cell.SceneActor.BaseCell == cell)
-	                sceneActorTilemap.SetTile((Vector3Int)cell.Position, cell.SceneActor.Tile);
-            }
-
-            // 按区域解锁状态设置场景物体透明度
-            foreach (var cell in mapData.Cells.Values)
-            {
-	            if (cell.SceneActor == null || cell.SceneActor.BaseCell != cell)
-		            continue;
-
-	            bool visible = RegionService.IsCellUnlocked(cell.Position);
-	            SetSceneActorAlpha(cell.Position, visible ? 1f : 0f);
-            }
 
             // 实例化墙 prefab
             var wallPrefab = e.WallVisualsPrefab;
@@ -125,24 +105,6 @@ namespace Presentation.Map
 			if (!e.CellPosition.HasValue) return;
 			if (e.HoveredUnitId != null) return;
 			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, cursorHoverTile);
-		}
-
-		private void OnRegionUnlocked(RegionUnlockedEvent e)
-		{
-			foreach (var cellPos in e.Cells)
-			{
-				var cell = MapService.Data.GetCell(cellPos);
-				if (cell?.SceneActor == null || cell.SceneActor.BaseCell != cell)
-					continue;
-				SetSceneActorAlpha(cellPos, 1f);
-			}
-		}
-
-		private void SetSceneActorAlpha(Vector2Int position, float alpha)
-		{
-			var pos3 = (Vector3Int)position;
-			sceneActorTilemap.SetTileFlags(pos3, TileFlags.None);
-			sceneActorTilemap.SetColor(pos3, new Color(1f, 1f, 1f, alpha));
 		}
 	}
 }

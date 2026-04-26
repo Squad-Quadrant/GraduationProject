@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7b3ddaebc6431ea79db67ef2f6e246, type: 3}
+  m_Name: car3_1x2
+  m_EditorClassIdentifier: 
+  displayName: "\u8F66"
+  extraGrid:
+  - {x: 0, y: 1}
+  blockVision: 1
+  blockMovementFrom:
+  - {x: 0, y: -1}
+  - {x: 0, y: 1}
+  - {x: 1, y: 0}
+  - {x: -1, y: 0}
+  atlasOriginCell: {x: 7, y: 1}
+  baseSlices:
+  - cellOffset: {x: 0, y: 0}
+    sprite: {fileID: 7551673742107391981, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
+  - cellOffset: {x: 0, y: 1}
+    sprite: {fileID: -544878390733637097, guid: f44226274caf99e45ae20e82c72bba18, type: 3}

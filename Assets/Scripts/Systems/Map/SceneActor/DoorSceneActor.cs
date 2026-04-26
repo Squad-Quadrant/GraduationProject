@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using Core.Events;
+using Data.Runtime.Events.Map;
 using Data.Runtime.Events.View;
 using Presentation.Bootstrap;
+using Systems.Map.Config;
+using Systems.Map.Config.SceneActor;
 using Systems.Map.Region;
 using UnityEngine.Tilemaps;
 
@@ -9,13 +12,19 @@ namespace Systems.Map.SceneActor
 {
 	public class DoorSceneActor : InteractableSceneActor
 	{
-		public DoorSceneActor(SceneActorType type, uint uid, Tile tile, MapCell baseCell, List<MapCell> extraCells, int regionId)
-			: base(type, uid, tile, baseCell, extraCells)
+		private readonly DoorSceneActorConfig _doorConfig;
+		private bool _opened;
+
+		public DoorSceneActor(uint uid, DoorSceneActorConfig config, MapCell baseCell, IReadOnlyList<MapCell> extraCells)
+			: base(uid, config, baseCell, extraCells)
 		{
-			_regionId = regionId;
+			_doorConfig = config;
 		}
 
-		private readonly int _regionId;
+		public override bool CanInteract => !_opened;
+
+		public override IReadOnlyList<SpriteSlice> CurrentSlices
+			=> _opened ? _doorConfig.openedSlices : _doorConfig.baseSlices;
 
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= LevelContainer.Instance.Resolve<IEventBus>();
@@ -23,17 +32,18 @@ namespace Systems.Map.SceneActor
 		private IRegionService _regionService;
 		private IRegionService RegionService => _regionService ??= LevelContainer.Instance.Resolve<IRegionService>();
 
-		public override bool CanInteract { get; set; } = true;
-
 		public override void Interact()
 		{
 			if (!CanInteract) return;
-			if (RegionService.IsRegionUnlocked(_regionId)) return;
+			if (RegionService.IsRegionUnlocked(_doorConfig.regionId)) return;
 
-			CanInteract = false;
+			_opened = true;
 			BlockMovement.Clear();
 			BlocksVision = false;
-			RegionService.UnlockRegion(_regionId);
+
+			RegionService.UnlockRegion(_doorConfig.regionId);
+
+			EventBus.Publish(new SceneActorVisualChangedEvent(Uid));
 			EventBus.Publish(new PresentationCompleteEvent(EPresentationCategory.Interact));
 		}
 	}
