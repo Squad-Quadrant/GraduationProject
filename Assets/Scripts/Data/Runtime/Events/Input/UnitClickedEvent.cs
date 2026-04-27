@@ -10,17 +10,14 @@ namespace Data.Runtime.Events.Input
 	{
 		public string UnitId { get; }
 
-		public Vector2Int CellPosition { get; }
-
 		public Vector3 WorldPosition { get; }
 
-		public UnitClickedEvent(string unitId, Vector2Int cellPosition, Vector3 worldPosition)
+		public UnitClickedEvent(string unitId, Vector3 worldPosition)
 		{
 			UnitId = unitId;
-			CellPosition = cellPosition;
 			WorldPosition = worldPosition;
 		}
 
-		public override string ToString() => $"[UnitClicked] Unit:{UnitId}, Cell:{CellPosition}";
+		public override string ToString() => $"[UnitClicked] Unit:{UnitId}";
 	}
 }

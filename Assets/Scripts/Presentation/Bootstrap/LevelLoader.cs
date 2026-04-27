@@ -192,11 +192,12 @@ namespace Presentation.Bootstrap
             var turnService = _levelContainer.Services.Resolve<ITurnService>();
             var unitService = _levelContainer.Services.Resolve<IUnitService>();
             var coordinateConverter = _levelContainer.Services.Resolve<ICoordinateConverter>();
-            var damageServer = _levelContainer.Services.Resolve<IDamageService>();
+            var damageService = _levelContainer.Services.Resolve<IDamageService>();
             var visionCalculator = _levelContainer.Services.Resolve<IVisionCalculator>();
             var visionService = _levelContainer.Services.Resolve<IVisionService>();
 
-            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, damageServer, unitService, interactionController.Context));
+            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
+            _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus, damageService, unitService));
             _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));

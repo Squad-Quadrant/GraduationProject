@@ -388,3 +388,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Blood.BloodSliderPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Blood.DamageTextPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.AttachPreview.AttackPreviewPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.AttackPreviewPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

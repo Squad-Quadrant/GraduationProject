@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Damage;
 using Presentation.UI.Core;
@@ -9,7 +7,7 @@ using Systems.Interfaces;
 using Systems.Unit;
 using UnityEngine;
 
-namespace Presentation.UI.Panel
+namespace Presentation.UI.Panel.Blood
 {
     public class DamageTextPanel : UIPanel
     {

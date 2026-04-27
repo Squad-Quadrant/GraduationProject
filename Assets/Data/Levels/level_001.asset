@@ -24,3 +24,10 @@ MonoBehaviour:
       mainWeaponId: 1
       secondaryWeaponId: 101
       tacticalItemIds: e9030000ea030000eb030000
+  - unitId: 002
+    unitConfig: {fileID: 11400000, guid: 01c2acc6e6f787249b6b55d7df29c891, type: 2}
+    startPosition: {x: 3, y: 3}
+    initialLoadout:
+      mainWeaponId: 1
+      secondaryWeaponId: 101
+      tacticalItemIds: e90300000000000000000000

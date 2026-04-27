@@ -1,116 +1,159 @@
-using System.Collections.Generic;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.UI;
 using Presentation.UI.Core;
+using Sirenix.OdinInspector;
 using Systems.Damage;
-using Systems.Interaction;
 using Systems.Unit;
-using Systems.Unit.Equipment.Logic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Panel
+namespace Presentation.UI.Panel.AttachPreview
 {
     public class AttackPreviewPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
-        [SerializeField] private Image equipmentIcon;
-        [SerializeField] private Text equipmentName;
-        [SerializeField] private Text description;
-        // [SerializeField] private Text hitRate;
-        [SerializeField] private Toggle isPreciseShooting;
-        [SerializeField] private Text damageText;
-        [SerializeField] private Text ammoText;
-        
-        [SerializeField] private Text headRate;        
-        [SerializeField] private Text armsRate;        
-        [SerializeField] private Text legsRate;        
-        [SerializeField] private Text torsoRate;        
-        
-        [SerializeField] private HitRateList hitRateList;
+	    [SerializeField, ChildGameObjectsOnly, Required] private TextMeshProUGUI modeTmp;
+	    [SerializeField, ChildGameObjectsOnly, Required] private TextMeshProUGUI modeDescTmp;
+	    [SerializeField, ChildGameObjectsOnly, Required] private TextMeshProUGUI confirmModeTmp;
+	    [SerializeField, ChildGameObjectsOnly, Required] private TextMeshProUGUI confirmModeDescTmp;
+	    [SerializeField, ChildGameObjectsOnly, Required] private AttackMenuItem normalAttackItem;
+	    [SerializeField, ChildGameObjectsOnly, Required] private AttackMenuItem preciseAttackItem;
+	    [SerializeField, ChildGameObjectsOnly, Required] private AttackContextDisplayPanel attackContextDisplayPanel;
+	    [SerializeField, ChildGameObjectsOnly, Required] private Button confirmButton;
+	    [SerializeField, ChildGameObjectsOnly, Required] private Button backButton;
 
-        public Dictionary<BodyPartType, Text> bodyPartRate = new();
-        
-        private IDamageService _damageService;
-        private IUnitService _unitService;
-        private InteractionContext _interactionContext;
-        private Systems.Unit.Unit _unit;
-        private WeaponLogic weaponLogic;
-        
+	    [ShowInInspector, ReadOnly] private Vector2Int? _targetCell;
 
-        public void Init(IDamageService damageService, IUnitService unitService, InteractionContext interactionContext)
-        {
-            _unitService = unitService;
-            _damageService = damageService;
-            _interactionContext = interactionContext;
-            bodyPartRate.Add(BodyPartType.Head, headRate);
-            bodyPartRate.Add(BodyPartType.Arms, armsRate);
-            bodyPartRate.Add(BodyPartType.Legs, legsRate);
-            bodyPartRate.Add(BodyPartType.Torso, torsoRate);
-        }
+	    private (string mode, string desc) _currentModePair;
+
+	    private IDamageService _damageService;
+	    private IUnitService _unitService;
+
+	    public void Init(IDamageService damageService, IUnitService unitService)
+	    {
+		    _damageService = damageService;
+		    _unitService = unitService;
+	    }
 
         protected override void OnOpen()
         {
-            EventBus.Subscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
+	        EventBus.Subscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
+	        EventBus.Subscribe<TargetingEvent>(OnTargetingEvent);
         }
 
         protected override void OnClose()
         {
-            EventBus.Unsubscribe<DisplayHitPercentEvent>(OnDisplayHitPercent);
+	        EventBus.Unsubscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
+	        EventBus.Unsubscribe<TargetingEvent>(OnTargetingEvent);
         }
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-            // hitRate.text = "";
-            
-            _unit = unit;
-            weaponLogic = unit.CurrentWeaponLogic;
-            if (weaponLogic == null)
-            {
-                this.Log("当前单位没有持有武器", true);
-                return;
-            }
+	        SetupButtons(unit);
 
-            var icon = weaponLogic.Icon();
-            equipmentIcon.sprite = icon;
-            var fixedRect = new Vector2
-            {
-                x = icon.rect.width / icon.rect.height * equipmentIcon.rectTransform.sizeDelta.y,
-                y = equipmentIcon.rectTransform.sizeDelta.y
-            };
-            equipmentIcon.rectTransform.sizeDelta = fixedRect;
-            equipmentName.text = weaponLogic.Name();
-            description.text = weaponLogic.Description();
-            
-            RefreshInfo(unit.CurrentWeaponLogic.CanPreciseShoot() && unit.CurrentWeaponLogic.IsOnPreciseShoot);
+	        attackContextDisplayPanel.Default();
 
-            isPreciseShooting.onValueChanged.RemoveAllListeners();
-            isPreciseShooting.gameObject.SetActive(unit.CurrentWeaponLogic.CanPreciseShoot());
-            isPreciseShooting.isOn = unit.CurrentWeaponLogic.IsOnPreciseShoot;
-            
-            if (unit.CurrentWeaponLogic.CanPreciseShoot())
-            {
-                isPreciseShooting.onValueChanged.AddListener(RefreshInfo);
-            }
+	        confirmButton.interactable = false;
         }
 
-        private void RefreshInfo(bool isOnPreciseShoot)
+        private void SetupButtons(Systems.Unit.Unit unit)
         {
-            _unit.CurrentWeaponLogic.IsOnPreciseShoot = isOnPreciseShoot;
-            int bulletNum = isOnPreciseShoot ? weaponLogic.PreciseShootSpeed() : weaponLogic.ShootSpeed();
-            damageText.text = $"0~{bulletNum * weaponLogic.GetDamage()}";
-            ammoText.text = bulletNum.ToString();
-            
-            var bodyRateDic = isOnPreciseShoot ? BodyDestructionConst.PreciseRate : BodyDestructionConst.Rate;
-            foreach (var bodyPart in bodyPartRate)
-            {
-                bodyPart.Value.text = bodyRateDic[bodyPart.Key] * 100 + "%";
-            }
+	        _currentModePair = (normalAttackItem.mode, normalAttackItem.desc);
+
+	        bool canPreciseShoot = unit.CurrentWeaponLogic.CanPreciseShoot();
+
+	        normalAttackItem.PointerEnter = () =>
+	        {
+		        if (!normalAttackItem.Button.interactable) return;
+		        SetModeText((normalAttackItem.mode, normalAttackItem.desc));
+	        };
+	        normalAttackItem.PointerExit = () => SetModeText(_currentModePair);
+
+	        normalAttackItem.Button.onClick.RemoveAllListeners();
+	        normalAttackItem.Button.onClick.AddListener(() =>
+	        {
+		        normalAttackItem.SetInteractable(false);
+		        if (canPreciseShoot) preciseAttackItem.SetInteractable(true);
+		        _currentModePair = (normalAttackItem.mode, normalAttackItem.desc);
+		        unit.CurrentWeaponLogic.IsOnPreciseShoot = false;
+		        SetConfirmModeText((normalAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.ShootSpeed()}发直接射击"));
+		        RefreshAttackContextDisplay(unit);
+	        });
+
+	        preciseAttackItem.Button.interactable = canPreciseShoot;
+	        preciseAttackItem.PointerEnter = () =>
+	        {
+		        if (!preciseAttackItem.Button.interactable) return;
+		        SetModeText((preciseAttackItem.mode, preciseAttackItem.desc));
+	        };
+	        preciseAttackItem.PointerExit = () => SetModeText(_currentModePair);
+
+	        preciseAttackItem.Button.onClick.RemoveAllListeners();
+	        preciseAttackItem.Button.onClick.AddListener(() =>
+	        {
+		        normalAttackItem.SetInteractable(true);
+		        preciseAttackItem.SetInteractable(false);
+		        _currentModePair = (preciseAttackItem.mode, preciseAttackItem.desc);
+		        unit.CurrentWeaponLogic.IsOnPreciseShoot = true;
+		        SetConfirmModeText((preciseAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.PreciseShootSpeed()}发高精度射击"));
+		        RefreshAttackContextDisplay(unit);
+	        });
+
+	        backButton.onClick.RemoveAllListeners();
+	        backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
+
+	        normalAttackItem.Button.onClick.Invoke();
         }
 
-        private void OnDisplayHitPercent(DisplayHitPercentEvent e)
+        private void OnTargetingEvent(TargetingEvent e)
         {
-            // hitRate.text = e.IsValid ? $"命中率: {e.HitPercent}%" : "";
-            hitRateList.Refresh(e);
+	        _targetCell = e.TargetCell;
+	        confirmButton.interactable = _targetCell.HasValue;
+        }
+
+        private void OnDisplayAttackContext(DisplayAttackContextEvent e)
+        {
+	        if (_targetCell.HasValue) return;
+
+	        if (e.Context == null)
+	        {
+		        attackContextDisplayPanel.Default();
+		        return;
+	        }
+
+	        RefreshAttackContextDisplay(e.Context);
+        }
+
+        private void RefreshAttackContextDisplay(DamageExecutingContext context) =>
+	        attackContextDisplayPanel.Show(context);
+
+        private void RefreshAttackContextDisplay(Systems.Unit.Unit attacker)
+        {
+	        if (!_targetCell.HasValue) return;
+
+	        var target = _unitService.GetUnitAtPosition(_targetCell.Value);
+	        if (target == null)
+	        {
+		        this.LogError($"{_targetCell} 存在，但是UnitService中无法找到");
+		        return;
+	        }
+
+	        var attackContext = _damageService.GetSimulatedDamage(new BulletDamageTriggeringInfo(attacker, target, EActionType.Attack));
+	        RefreshAttackContextDisplay(attackContext);
+        }
+
+        private void SetModeText((string mode, string desc) pair)
+        {
+	        modeTmp.text = pair.mode;
+	        modeDescTmp.text = pair.desc;
+        }
+
+        private void SetConfirmModeText((string mode, string desc) pair)
+        {
+	        confirmModeTmp.text = pair.mode;
+	        confirmModeDescTmp.text = pair.desc;
         }
     }
 }

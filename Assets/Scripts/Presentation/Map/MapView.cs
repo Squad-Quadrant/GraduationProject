@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Input;
@@ -23,9 +21,10 @@ namespace Presentation.Map
 		[Title("References")]
 		[SerializeField, Required] private SpriteRenderer groundRenderer;
         [SerializeField, Required] private Tilemap cursorHoverTilemap;
+        [SerializeField, Required] private Tilemap targetingTilemap;
 
         [Title("Cursor Hover")]
-        [SerializeField] private TileBase cursorHoverTile;
+        [SerializeField] private TileBase baseSingleTile;
 
         private IEventBus _eventBus;
         private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -47,6 +46,7 @@ namespace Presentation.Map
         {
             EventBus.Subscribe<MapViewInitEvent>(InitMap);
             EventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
+            EventBus.Subscribe<TargetingEvent>(OnTargeting);
         }
 
         private void OnDisable()
@@ -54,6 +54,7 @@ namespace Presentation.Map
 	        if (!LevelContainer.Instance) return;
             EventBus.Unsubscribe<MapViewInitEvent>(InitMap);
             EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
+            EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
         }
 
         private void InitMap(MapViewInitEvent e)
@@ -104,7 +105,14 @@ namespace Presentation.Map
 			cursorHoverTilemap.ClearAllTiles();
 			if (!e.CellPosition.HasValue) return;
 			if (e.HoveredUnitId != null) return;
-			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, cursorHoverTile);
+			cursorHoverTilemap.SetTile((Vector3Int)e.CellPosition.Value, baseSingleTile);
+		}
+
+		private void OnTargeting(TargetingEvent e)
+		{
+			targetingTilemap.ClearAllTiles();
+			if (!e.TargetCell.HasValue) return;
+			targetingTilemap.SetTile((Vector3Int)e.TargetCell.Value, baseSingleTile);
 		}
 	}
 }

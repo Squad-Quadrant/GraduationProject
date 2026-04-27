@@ -6,7 +6,7 @@ using Systems.Interfaces;
 using Systems.Unit;
 using UnityEngine;
 
-namespace Presentation.UI.Panel
+namespace Presentation.UI.Panel.Blood
 {
     public class BloodSliderPanel : UIPanel
     {

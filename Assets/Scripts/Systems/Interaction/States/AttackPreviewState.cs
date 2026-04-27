@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.UI;
 using Systems.Damage;
 using Systems.Unit;
 using UnityEngine;
@@ -14,11 +16,15 @@ namespace Systems.Interaction.States
 	public class AttackPreviewState : InteractionState
 	{
 		private Action<UnitClickedEvent> _onUnitClicked;
+		private Action<CellClickedEvent> _onCellClicked;
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
 		private Action<PointerHoverEvent> _onPointerHover;
+		private Action<TargetConfirmEvent> _onTargetConfirm;
+		private Action<ActionSelectedEvent> _onActionSelected;
 
 		private IReadOnlyList<Vector2Int> _validTargetCells;
+		private Unit.Unit _target;
 
         public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
@@ -40,14 +46,20 @@ namespace Systems.Interaction.States
 				sourceUnitId: ctx.selectedUnit.id));
 
 			_onUnitClicked = OnUnitClicked;
+			_onCellClicked = OnCellClicked;
 			_onBack = OnBack;
 			_onEsc = OnEsc;
 			_onPointerHover = OnPointerHover;
+			_onTargetConfirm = OnTargetConfirm;
+			_onActionSelected = OnActionSelected;
 
 			Subscribe(ctx, _onUnitClicked);
+			Subscribe(ctx, _onCellClicked);
 			Subscribe(ctx, _onBack);
 			Subscribe(ctx, _onEsc);
 			Subscribe(ctx, _onPointerHover);
+			Subscribe(ctx, _onTargetConfirm);
+			Subscribe(ctx, _onActionSelected);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -56,36 +68,63 @@ namespace Systems.Interaction.States
 
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Movement));
 			Publish(ctx, PathPreviewEvent.Hide());
+			Publish(ctx, CursorInfoEvent.Hide());
+			Publish(ctx, TargetingEvent.Clear());
 
 			Unsubscribe(ctx, _onUnitClicked);
+			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
 			Unsubscribe(ctx, _onPointerHover);
+			Unsubscribe(ctx, _onTargetConfirm);
+			Unsubscribe(ctx, _onActionSelected);
 
 			_onUnitClicked = null;
+			_onCellClicked = null;
 			_onBack = null;
 			_onEsc = null;
 			_onPointerHover = null;
-			_validTargetCells = null;
+			_onTargetConfirm = null;
+			_onActionSelected = null;
 
-			Publish(ctx, CursorInfoEvent.Hide());
+			_validTargetCells = null;
+			_target = null;
 
 			base.OnExit(ctx);
 		}
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			if (!_validTargetCells.Contains(e.CellPosition))
-            {
-                this.Log($"Clicked cell {e.CellPosition} is not a valid attack target.");
-                return;
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var target) ||
+			    !_validTargetCells.Contains(target.position))
+			{
+				this.LogError($"invalid unit {e.UnitId}.");
+				return;
 			}
 
-			ExecuteAttack(e.CellPosition);
+			_target = target;
+			Publish(Context, new TargetingEvent(target.position));
+		}
+
+		private void OnCellClicked(CellClickedEvent e)
+		{
+			var target = Context.UnitService.GetUnitAtPosition(e.CellPosition);
+			if (target == null) return;
+
+			_target = target;
+			Publish(Context, new TargetingEvent(target.position));
 		}
 
 		private void OnBack(BackInputEvent e)
 		{
+			if (_target != null)
+			{
+				this.Log($"Back -> clear target: {_target.name}");
+				_target = null;
+				Publish(Context, TargetingEvent.Clear());
+				return;
+			}
+
 			this.Log("Back -> UnitSelected");
 			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
@@ -100,37 +139,69 @@ namespace Systems.Interaction.States
 
 		private void OnPointerHover(PointerHoverEvent e)
 		{
-			if (!e.CellPosition.HasValue)
+			if (!e.CellPosition.HasValue && string.IsNullOrEmpty(e.HoveredUnitId))
 			{
 				Publish(Context, CursorInfoEvent.Hide());
 				return;
 			}
 
-			var cell = e.CellPosition.Value;
-
+			Unit.Unit target = null;
 			if (e.HoveredUnitId != null
-			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out var target)
-			    && _validTargetCells.Contains(cell))
+			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out target)
+			    && _validTargetCells.Contains(target.position))
+			{
+			}
+			else if (e.CellPosition.HasValue && _validTargetCells.Contains(e.CellPosition.Value))
+			{
+				target = Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
+			}
+
+			if (target != null)
 			{
 				var damageContext = Context.DamageService.GetSimulatedDamage(
 					new BulletDamageTriggeringInfo(
 						Context.selectedUnit,
 						target,
 						Context.currentAction));
+				Debug.LogError($"{damageContext.Damage}  {damageContext.CalculateNum}");
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
 
 				Publish(Context, CursorInfoEvent.ForAttack(
-					cell, e.WorldPosition,
+					target.position, e.WorldPosition,
 					hitPercent, target.name, target.CurrentHp, target.maxHp));
-				Publish(Context, DisplayHitPercentEvent.Valid(hitPercent, damageContext.HitRateInfluences));
+				Publish(Context, DisplayAttackContextEvent.Valid(damageContext));
 			}
 			else
 			{
 				PublishBasicCursorInfo(Context, e);
-				Publish(Context, DisplayHitPercentEvent.Invalid());
+				Publish(Context, DisplayAttackContextEvent.Invalid());
 			}
+		}
+
+		private void OnTargetConfirm(TargetConfirmEvent e)
+		{
+			if (_target == null)
+			{
+				this.LogError("Target Confirm, but target is null");
+				return;
+			}
+
+			ExecuteAttack(_target);
+		}
+
+		private void OnActionSelected(ActionSelectedEvent e)
+		{
+			if (e.ActionType != EActionType.Back)
+			{
+				this.LogError($"Unexcepted actionType: {e.ActionType}");
+				return;
+			}
+
+			this.Log("Back -> UnitSelected");
+			CancelPreview();
+			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private List<Unit.Unit> CalculateAttackableTarget(InteractionContext ctx)
@@ -154,16 +225,14 @@ namespace Systems.Interaction.States
 
 		private void CancelPreview() => Publish(Context, PathPreviewEvent.Hide());
 
-		private void ExecuteAttack(Vector2Int targetCell)
+		private void ExecuteAttack(Unit.Unit target)
 		{
-            this.Log($"Executing attack on target cell: {targetCell}");
+            this.Log($"Executing attack on target: {target.name}");
 
-			var targetUnit = Context.UnitService.GetUnitAtPosition(targetCell);
-
-			var unit = Context.selectedUnit;
+			var attacker = Context.selectedUnit;
 			var attackCommand = new UnitAttackCommand(
-				unit.id,
-                targetUnit.id,
+				attacker.id,
+                target.id,
 				1,
                 Context.currentAction,
 				Context.UnitService,
@@ -172,12 +241,7 @@ namespace Systems.Interaction.States
 			);
 
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
-            
-            // 此处Context有可能为空，是因为在attackCommand的执行链上已经切换了状态并清空了Context，导致此处无法访问到Context。
-            if (Context != null)
-            {
-			    Context.StateMachine.ChangeState<ExecutingState>();
-            }
+            Context?.StateMachine.ChangeState<ExecutingState>();
 		}
 	}
 }

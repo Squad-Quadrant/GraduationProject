@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Component
+namespace Presentation.UI.Panel.ActionMenu
 {
 	[RequireComponent(typeof(Button))]
 	public class ActionMenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler

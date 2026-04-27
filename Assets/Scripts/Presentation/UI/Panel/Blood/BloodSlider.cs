@@ -3,13 +3,12 @@ using Data.Runtime.Events.Damage;
 using DG.Tweening;
 using Presentation.UI.Component.Buff;
 using Presentation.Unit;
-using PurpleFlowerCore.Utility;
 using Systems.Interfaces;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Panel
+namespace Presentation.UI.Panel.Blood
 {
     public class BloodSlider : MonoBehaviour
     {

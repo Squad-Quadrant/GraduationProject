@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 8704878599289453578}
   - component: {fileID: 1274903228393542848}
   m_Layer: 0
-  m_Name: SceneActor
+  m_Name: Manager_SceneActor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 3023455974731395152}
   - component: {fileID: 3736743640946937428}
   m_Layer: 0
-  m_Name: PathPreview
+  m_Name: Tilemap_PathPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,6 +802,7 @@ Transform:
   - {fileID: 5153928429845589312}
   - {fileID: 8704878599289453578}
   - {fileID: 1330473037959472875}
+  - {fileID: 5627453704806533771}
   - {fileID: 4008642102945408093}
   - {fileID: 5998393018435642012}
   - {fileID: 7860715482398984443}
@@ -836,7 +837,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundRenderer: {fileID: 8472750806785375910}
   cursorHoverTilemap: {fileID: 7109044757245858994}
-  cursorHoverTile: {fileID: 11400000, guid: 9df4867eb6914454c894a7e159efde5c, type: 2}
+  targetingTilemap: {fileID: 4646231023097586506}
+  baseSingleTile: {fileID: 11400000, guid: 9df4867eb6914454c894a7e159efde5c, type: 2}
 --- !u!1 &5650590189757595907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,6 +1154,160 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   markerPrefab: {fileID: 3793561853691339783, guid: 8af7b2b2d41db534d903b1373f69bc11, type: 3}
+--- !u!1 &6468337489122903708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5627453704806533771}
+  - component: {fileID: 4646231023097586506}
+  - component: {fileID: 2839642167170801333}
+  m_Layer: 0
+  m_Name: Tilemap_Targeting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5627453704806533771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6468337489122903708}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6600589940686590176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1839735485 &4646231023097586506
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6468337489122903708}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileSpriteArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileMatrixArray:
+  - m_RefCount: 0
+    m_Data:
+      e00: 0
+      e01: 0
+      e02: -1.9327386e+10
+      e03: -1.9327386e+10
+      e10: 0
+      e11: 0
+      e12: 5.23e-43
+      e13: 5.23e-43
+      e20: 5.3858248e-24
+      e21: -3.1738485e+35
+      e22: 4.0088915e-19
+      e23: -1.95442e-40
+      e30: 4.5905e-41
+      e31: 5.25e-43
+      e32: 5.24e-43
+      e33: 5.27e-43
+  m_TileColorArray:
+  - m_RefCount: 0
+    m_Data: {r: NaN, g: NaN, b: NaN, a: NaN}
+  - m_RefCount: 0
+    m_Data: {r: 5.289e-41, g: 5.289e-41, b: 5.289e-41, a: 5.289e-41}
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 0.24056602, b: 0.24056602, a: 1}
+  m_Origin: {x: -3, y: -8, z: 0}
+  m_Size: {x: 11, y: 15, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+--- !u!483693784 &2839642167170801333
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6468337489122903708}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 1499799387
+  m_SortingLayer: 3
+  m_SortingOrder: 1
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 3
+  m_Mode: 0
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
 --- !u!1 &6511421100036269025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1163,7 +1319,7 @@ GameObject:
   - component: {fileID: 1945878203429015378}
   - component: {fileID: 2330306044948344000}
   m_Layer: 0
-  m_Name: FogOfWar
+  m_Name: Shader_FogOfWar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1227,7 +1383,7 @@ GameObject:
   - component: {fileID: 6325182767783368852}
   - component: {fileID: 8003747982167615350}
   m_Layer: 0
-  m_Name: Blackout
+  m_Name: Shader_Blackout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1276,7 +1432,7 @@ GameObject:
   - component: {fileID: 5153928429845589312}
   - component: {fileID: 8472750806785375910}
   m_Layer: 0
-  m_Name: Ground
+  m_Name: Sprite_Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1713,7 +1869,7 @@ GameObject:
   - component: {fileID: 7109044757245858994}
   - component: {fileID: 3746295334300947240}
   m_Layer: 0
-  m_Name: CursorHover
+  m_Name: Tilemap_CursorHover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

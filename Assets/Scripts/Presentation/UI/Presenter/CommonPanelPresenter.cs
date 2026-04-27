@@ -5,6 +5,7 @@ using Data.Runtime.Events;
 using Data.Runtime.Events.Damage;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Presentation.UI.Panel.Blood;
 using Presentation.UI.Panel.BodyPartPrompt;
 using Presentation.UI.Panel.Log;
 using Presentation.Unit;

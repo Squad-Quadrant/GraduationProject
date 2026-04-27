@@ -68,7 +68,15 @@ namespace Systems.Interaction.States
 
 		private void OnCellClicked(CellClickedEvent e) => ConfirmInteraction(e.CellPosition);
 
-		private void OnUnitClicked(UnitClickedEvent e) => ConfirmInteraction(e.CellPosition);
+		private void OnUnitClicked(UnitClickedEvent e)
+		{
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var target))
+			{
+				this.Log($"Unit not found: {e.UnitId}");
+				return;
+			}
+			ConfirmInteraction(target.position);
+		}
 
 		private void OnBack(BackInputEvent e)
 		{

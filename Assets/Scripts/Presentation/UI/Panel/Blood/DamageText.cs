@@ -4,7 +4,7 @@ using Systems.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Panel
+namespace Presentation.UI.Panel.Blood
 {
     public class DamageText : MonoBehaviour
     {

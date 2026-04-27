@@ -86,7 +86,15 @@ namespace Systems.Interaction.States
 
 		private void OnCellClicked(CellClickedEvent e) => ConfirmSelection(e.CellPosition);
 
-		private void OnUnitClicked(UnitClickedEvent e) => ConfirmSelection(e.CellPosition);
+		private void OnUnitClicked(UnitClickedEvent e)
+		{
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var target))
+			{
+				this.Log($"Unit not found: {e.UnitId}");
+				return;
+			}
+			ConfirmSelection(target.position);
+		}
 
 		private void ConfirmSelection(Vector2Int cellPosition)
 		{

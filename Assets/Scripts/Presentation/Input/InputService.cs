@@ -112,7 +112,6 @@ namespace Presentation.Input
 
 				_eventBus.Publish(new UnitClickedEvent(
 					unitId,
-					cellPos,
 					worldPos
 				));
 
