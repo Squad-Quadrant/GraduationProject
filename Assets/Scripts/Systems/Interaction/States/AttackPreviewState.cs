@@ -163,7 +163,6 @@ namespace Systems.Interaction.States
 						Context.selectedUnit,
 						target,
 						Context.currentAction));
-				Debug.LogError($"{damageContext.Damage}  {damageContext.CalculateNum}");
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
