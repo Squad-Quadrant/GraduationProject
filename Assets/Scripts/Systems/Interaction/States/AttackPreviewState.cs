@@ -66,7 +66,7 @@ namespace Systems.Interaction.States
 		{
 			this.Log("Exited");
 
-			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Movement));
+			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Attack));
 			Publish(ctx, PathPreviewEvent.Hide());
 			Publish(ctx, CursorInfoEvent.Hide());
 			Publish(ctx, TargetingEvent.Clear());
@@ -170,7 +170,7 @@ namespace Systems.Interaction.States
 				Publish(Context, CursorInfoEvent.ForAttack(
 					target.position, e.WorldPosition,
 					hitPercent, target.name, target.CurrentHp, target.maxHp));
-				Publish(Context, DisplayAttackContextEvent.Valid(damageContext));
+				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id));
 			}
 			else
 			{

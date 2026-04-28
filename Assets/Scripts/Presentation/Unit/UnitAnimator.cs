@@ -16,7 +16,6 @@ namespace Presentation.Unit
 	{
 		private const int MainTrack = 0;
 
-		private SkeletonAnimation _skeletonAnimation;
 		private Skeleton _skeleton;
 		private Spine.AnimationState _animState;
 
@@ -28,31 +27,33 @@ namespace Presentation.Unit
 
 		public bool IsInitialized { get; private set; }
 
-		public bool IsPaused => _skeletonAnimation &&
-		                        Mathf.Approximately(_skeletonAnimation.timeScale, 0f);
+		public bool IsPaused => SkeletonAnimation &&
+		                        Mathf.Approximately(SkeletonAnimation.timeScale, 0f);
+
+		public SkeletonAnimation SkeletonAnimation { get; private set; }
 
 		public string CurrentAnimationName => _currentEntry?.Animation?.Name;
 
 		public void Initialize(SkeletonDataAsset dataAsset, string bodySkin, string weaponSkin = null)
 		{
-			_skeletonAnimation = GetComponent<SkeletonAnimation>();
+			SkeletonAnimation = GetComponent<SkeletonAnimation>();
 
-			if (_skeletonAnimation.SkeletonDataAsset != dataAsset)
+			if (SkeletonAnimation.SkeletonDataAsset != dataAsset)
 			{
-				_skeletonAnimation.skeletonDataAsset = dataAsset;
-				_skeletonAnimation.Initialize(true);
+				SkeletonAnimation.skeletonDataAsset = dataAsset;
+				SkeletonAnimation.Initialize(true);
 			}
 			else
 			{
 				// already has the correct data asset, just ensure it's initialized
-				if (!_skeletonAnimation.valid)
-					_skeletonAnimation.Initialize(false);
+				if (!SkeletonAnimation.valid)
+					SkeletonAnimation.Initialize(false);
 			}
 
-			_skeleton = _skeletonAnimation.Skeleton;
-			_animState = _skeletonAnimation.AnimationState;
+			_skeleton = SkeletonAnimation.Skeleton;
+			_animState = SkeletonAnimation.AnimationState;
 
-			if (!_skeletonAnimation || _skeleton == null || _animState == null)
+			if (!SkeletonAnimation || _skeleton == null || _animState == null)
 			{
 				this.LogError("Failed to initialize: missing SkeletonAnimation or Skeleton or AnimationState");
 				return;
@@ -119,14 +120,14 @@ namespace Presentation.Unit
 
 		public void Pause()
 		{
-			if (!_skeletonAnimation) return;
-			_skeletonAnimation.timeScale = 0f;
+			if (!SkeletonAnimation) return;
+			SkeletonAnimation.timeScale = 0f;
 		}
 
 		public void Resume()
 		{
-			if (!_skeletonAnimation) return;
-			_skeletonAnimation.timeScale = 1f;
+			if (!SkeletonAnimation) return;
+			SkeletonAnimation.timeScale = 1f;
 		}
 
 		public void ListenForSpineEvent(string eventName, Action callback)

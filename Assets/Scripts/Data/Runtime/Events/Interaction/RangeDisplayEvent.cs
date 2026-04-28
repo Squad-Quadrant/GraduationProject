@@ -29,18 +29,22 @@ namespace Data.Runtime.Events.Interaction
 
 		public string SourceUnitId { get; }
 
+		public Color AreaEffectColor { get; }
+
 		public RangeDisplayEvent(
 			ERangeType rangeType,
 			IReadOnlyList<Vector2Int> cells,
 			IReadOnlyDictionary<Vector2Int, int> cellCosts = null,
 			Vector2Int? origin = null,
-			string sourceUnitId = null)
+			string sourceUnitId = null,
+			Color? areaEffectColor = null)
 		{
 			RangeType = rangeType;
 			Cells = cells ?? new List<Vector2Int>();
 			CellCosts = cellCosts;
 			Origin = origin;
 			SourceUnitId = sourceUnitId;
+			AreaEffectColor = areaEffectColor ?? Color.white;
 		}
 
 		/// <summary>

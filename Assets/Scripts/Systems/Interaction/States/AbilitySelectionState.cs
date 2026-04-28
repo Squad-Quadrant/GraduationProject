@@ -190,7 +190,7 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			Publish(Context, new RangeDisplayEvent(ERangeType.AreaEffectPreview, aoeCells, origin: hoverCell));
+			Publish(Context, new RangeDisplayEvent(ERangeType.AreaEffectPreview, aoeCells, origin: hoverCell, sourceUnitId: Context.selectedUnit.id, areaEffectColor: Color.red));
 		}
 
 		private void OnCellClicked(CellClickedEvent e) => Targeting(e.CellPosition);

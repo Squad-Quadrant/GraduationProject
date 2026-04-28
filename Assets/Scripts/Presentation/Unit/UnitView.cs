@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
+using DG.Tweening;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -202,6 +203,57 @@ namespace Presentation.Unit
 				meshRenderer.renderingLayerMask |= 1 << 1;
 			else
 				meshRenderer.renderingLayerMask &= ~((uint)1 << 1);
+		}
+
+		private Tween _colorTween;
+		private Color _baseColor;
+		private bool _baseColorCached;
+
+		public void StartPulse(Color peakColor, float period = 0.8f, float intensity = 0.6f)
+		{
+			CacheBaseColor();
+			_colorTween?.Kill();
+
+			var skeleton = animator.SkeletonAnimation.skeleton;
+			skeleton.SetColor(_baseColor);
+			var actualPeak = Color.Lerp(_baseColor, peakColor, Mathf.Clamp01(intensity));
+
+			_colorTween = DOTween
+				.To(
+					() => new Color(skeleton.R, skeleton.G, skeleton.B, skeleton.A),
+					c => skeleton.SetColor(c),
+					actualPeak,
+					period * 0.5f)
+				.SetEase(Ease.InOutSine)
+				.SetLoops(-1, LoopType.Yoyo);
+		}
+
+		public void StopPulse(float fadeOut = 0.2f)
+		{
+			_colorTween?.Kill();
+			if (!_baseColorCached) return;
+
+			var skeleton = animator.SkeletonAnimation.skeleton;
+			if (fadeOut <= 0f)
+			{
+				skeleton.SetColor(_baseColor);
+				return;
+			}
+
+			_colorTween = DOTween.To(
+					() => new Color(skeleton.R, skeleton.G, skeleton.B, skeleton.A),
+					c => skeleton.SetColor(c),
+					_baseColor,
+					fadeOut)
+				.SetEase(Ease.OutQuad);
+		}
+
+		private void CacheBaseColor()
+		{
+			if (_baseColorCached) return;
+			var s = animator.SkeletonAnimation.skeleton;
+			_baseColor = new Color(s.R, s.G, s.B, s.A);
+			_baseColorCached = true;
 		}
 
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)

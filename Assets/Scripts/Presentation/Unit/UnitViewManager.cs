@@ -58,6 +58,8 @@ namespace Presentation.Unit
             _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
             _eventBus.Subscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
             _eventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
+            _eventBus.Subscribe<RangeDisplayEvent>(OnRangeDisplay);
+            _eventBus.Subscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
 			this.Log("Initialized");
 		}
 
@@ -73,6 +75,8 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
             _eventBus.Unsubscribe<NoticeUnitVisionToUpdateEvent>(OnNoticeUnitVisionToUpdate);
             _eventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
+            _eventBus.Unsubscribe<RangeDisplayEvent>(OnRangeDisplay);
+            _eventBus.Unsubscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -391,6 +395,30 @@ namespace Presentation.Unit
 		        newView.SetOutline(true);
 
 	        _lastHoveredUnitId = e.HoveredUnitId;
+        }
+
+        private void OnRangeDisplay(RangeDisplayEvent e)
+        {
+	        foreach (var pair in _views)
+	        {
+		        if (!_unitService.TryGetUnit(pair.Key, out var unit)) continue;
+		        if (e.RangeType is ERangeType.AreaEffectPreview && e.Cells.Contains(unit.position))
+			        pair.Value.StartPulse(e.AreaEffectColor);
+		        else
+			        pair.Value.StopPulse();
+	        }
+        }
+
+        private void OnDisplayAttackContext(DisplayAttackContextEvent e) // 暂时借用一下语义，理论上这么写不太好
+        {
+	        if (e.Context == null)
+	        {
+		        foreach (var view in _views.Values) view.StopPulse();
+		        return;
+	        }
+	        string targetId = e.Context.Defender.id;
+	        var targetView = _views.GetValueOrDefault(targetId);
+	        targetView?.StartPulse(Color.red);
         }
 
 		#region Odin Debug
