@@ -1094,6 +1094,7 @@ GameObject:
   - component: {fileID: 1942254167792456852}
   - component: {fileID: 2367570077204131368}
   - component: {fileID: 1581058548187276017}
+  - component: {fileID: -5495353552767087535}
   m_Layer: 5
   m_Name: UnitInfo
   m_TagString: Untagged
@@ -1203,12 +1204,29 @@ MonoBehaviour:
   maxAmmoText: {fileID: 8574559522623269020}
   apRoot: {fileID: 6088556874589116231}
   apPrefab: {fileID: 2620250059851576850, guid: 0ca2e0737ce058e46880c0fed2e8737d, type: 3}
-  background: {fileID: 1942254167792456852}
-  weaponBackground: {fileID: 768800007434803477}
-  playerBackground: {fileID: 21300000, guid: e5ba01e5525da224aa15324c598a4ce0, type: 3}
-  playerWeaponBackground: {fileID: 21300000, guid: eeeb061cc9d279445b10631ceaa04911, type: 3}
-  enemyBackground: {fileID: 21300000, guid: 9fc2e487239427e42aa8b436e4f41eb8, type: 3}
-  enemyWeaponBackground: {fileID: 21300000, guid: 8dd8490a54a61c041abb92108cb415c0, type: 3}
+--- !u!114 &-5495353552767087535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506328955908956295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fbc4119686e4815b07a250a32dcc1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  useSlide: 1
+  slidePivot: 2
+  slideOffset: 80
+  useFade: 1
+  useScale: 0
+  scaleFrom: 0.9
+  openDuration: 0.3
+  openEase: 9
+  closeDuration: 0.2
+  closeEase: 8
 --- !u!1 &7725010331120643550
 GameObject:
   m_ObjectHideFlags: 0

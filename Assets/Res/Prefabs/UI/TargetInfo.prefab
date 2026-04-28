@@ -600,6 +600,7 @@ GameObject:
   - component: {fileID: 226799599754573073}
   - component: {fileID: 7770688326236937479}
   - component: {fileID: 3811154174304679496}
+  - component: {fileID: -7206669382703947976}
   m_Layer: 5
   m_Name: TargetInfo
   m_TagString: Untagged
@@ -715,6 +716,29 @@ MonoBehaviour:
   playerWeaponBackground: {fileID: 21300000, guid: eeeb061cc9d279445b10631ceaa04911, type: 3}
   enemyBackground: {fileID: 21300000, guid: 9fc2e487239427e42aa8b436e4f41eb8, type: 3}
   enemyWeaponBackground: {fileID: 21300000, guid: 8dd8490a54a61c041abb92108cb415c0, type: 3}
+--- !u!114 &-7206669382703947976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4677452802918076478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fbc4119686e4815b07a250a32dcc1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  useSlide: 1
+  slidePivot: 3
+  slideOffset: 80
+  useFade: 1
+  useScale: 0
+  scaleFrom: 0.9
+  openDuration: 0.3
+  openEase: 9
+  closeDuration: 0.2
+  closeEase: 8
 --- !u!1 &4700930836017673308
 GameObject:
   m_ObjectHideFlags: 0

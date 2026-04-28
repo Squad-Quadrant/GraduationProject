@@ -66,10 +66,10 @@ namespace Presentation.UI.Presenter
 		private void OnPointerHover(PointerHoverEvent e)
 		{
 			if (_targetCell.HasValue) return;
-			if (e.HoveredUnitId == _interactionController.Context.selectedUnit.id) return;
 
 			if (!string.IsNullOrEmpty(e.HoveredUnitId) &&
-			    _unitService.TryGetUnit(e.HoveredUnitId, out var target))
+			    _unitService.TryGetUnit(e.HoveredUnitId, out var target) &&
+			    e.HoveredUnitId != _interactionController.Context.selectedUnit.id)
 			{
 				_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
 				return;
