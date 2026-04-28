@@ -64,6 +64,15 @@ namespace Presentation.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Space"",
+                    ""type"": ""Button"",
+                    ""id"": ""055b3604-f90e-469b-8797-250ddf91f806"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -108,6 +117,17 @@ namespace Presentation.Input
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
                     ""action"": ""ESC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b56a783-c201-4f01-9a36-971b93b17727"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Space"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -655,6 +675,7 @@ namespace Presentation.Input
             m_Gameplay_SecondaryClick = m_Gameplay.FindAction("SecondaryClick", throwIfNotFound: true);
             m_Gameplay_PointerPosition = m_Gameplay.FindAction("PointerPosition", throwIfNotFound: true);
             m_Gameplay_ESC = m_Gameplay.FindAction("ESC", throwIfNotFound: true);
+            m_Gameplay_Space = m_Gameplay.FindAction("Space", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -732,6 +753,7 @@ namespace Presentation.Input
         private readonly InputAction m_Gameplay_SecondaryClick;
         private readonly InputAction m_Gameplay_PointerPosition;
         private readonly InputAction m_Gameplay_ESC;
+        private readonly InputAction m_Gameplay_Space;
         public struct GameplayActions
         {
             private @GameInputActions m_Wrapper;
@@ -740,6 +762,7 @@ namespace Presentation.Input
             public InputAction @SecondaryClick => m_Wrapper.m_Gameplay_SecondaryClick;
             public InputAction @PointerPosition => m_Wrapper.m_Gameplay_PointerPosition;
             public InputAction @ESC => m_Wrapper.m_Gameplay_ESC;
+            public InputAction @Space => m_Wrapper.m_Gameplay_Space;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -761,6 +784,9 @@ namespace Presentation.Input
                 @ESC.started += instance.OnESC;
                 @ESC.performed += instance.OnESC;
                 @ESC.canceled += instance.OnESC;
+                @Space.started += instance.OnSpace;
+                @Space.performed += instance.OnSpace;
+                @Space.canceled += instance.OnSpace;
             }
 
             private void UnregisterCallbacks(IGameplayActions instance)
@@ -777,6 +803,9 @@ namespace Presentation.Input
                 @ESC.started -= instance.OnESC;
                 @ESC.performed -= instance.OnESC;
                 @ESC.canceled -= instance.OnESC;
+                @Space.started -= instance.OnSpace;
+                @Space.performed -= instance.OnSpace;
+                @Space.canceled -= instance.OnSpace;
             }
 
             public void RemoveCallbacks(IGameplayActions instance)
@@ -927,6 +956,7 @@ namespace Presentation.Input
             void OnSecondaryClick(InputAction.CallbackContext context);
             void OnPointerPosition(InputAction.CallbackContext context);
             void OnESC(InputAction.CallbackContext context);
+            void OnSpace(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

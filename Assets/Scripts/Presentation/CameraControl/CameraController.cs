@@ -3,6 +3,7 @@ using System.Linq;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Damage;
+using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
@@ -41,6 +42,8 @@ namespace Presentation.CameraControl
 		private Tween _focusTween;
 		private Vector3 _dragWorldOrigin;
 
+		private Vector3? _lastUnitPos;
+
 		private bool _isInitialized;
 
 		public void Initialize(ServiceContainer services)
@@ -56,6 +59,7 @@ namespace Presentation.CameraControl
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 			_eventBus.Subscribe<DealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Subscribe<SpaceInputEvent>(OnSpaceInput);
 
 			_isInitialized = true;
 			this.Log("Initialized");
@@ -66,6 +70,7 @@ namespace Presentation.CameraControl
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 			_eventBus.Unsubscribe<DealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Unsubscribe<SpaceInputEvent>(OnSpaceInput);
 			KillFocusTween();
 		}
 
@@ -87,6 +92,7 @@ namespace Presentation.CameraControl
 			}
 
 			var worldPos = _coordinateConverter.CellToWorld(e.CellPosition);
+			_lastUnitPos = worldPos;
 			FocusOn(worldPos);
 		}
 
@@ -108,12 +114,18 @@ namespace Presentation.CameraControl
 			var info = e.Info;
 			if (info.DamageType != DamageType.Bullet) return;
 
-			var unit = info.Attacker as Systems.Unit.Unit;
-			if (unit == null) return;
+			if (info.Attacker is not Systems.Unit.Unit unit) return;
 
 			var worldPos = _coordinateConverter.CellToWorld(unit.position);
 			FocusOn(worldPos);
 			this.Log($"Unit attacked: {unit.id}, focusing on attacker position");
+		}
+
+		private void OnSpaceInput(SpaceInputEvent e)
+		{
+			if (!_lastUnitPos.HasValue) return;
+			FocusOn(_lastUnitPos.Value);
+			_targetZoom = config.standardZoom;
 		}
 
 		public void FocusOn(Vector3 worldPos)

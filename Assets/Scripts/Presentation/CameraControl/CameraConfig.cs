@@ -42,6 +42,10 @@ namespace Presentation.CameraControl
 		[Range(1f, 30f)]
 		public float zoomSmoothSpeed = 10f;
 
+		[FoldoutGroup("Zoom")]
+		[InfoBox("空格回正或者其他主动Focus时会设置到这一zoom")]
+		public float standardZoom = 3f;
+
 		[FoldoutGroup("Boundary")]
 		[SuffixLabel("units"), Range(0f, 5f)]
 		public float boundaryPadding = 1f;

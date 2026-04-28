@@ -64,6 +64,7 @@ namespace Presentation.Input
 			_inputActions.Gameplay.PrimaryClick.performed += OnPrimaryClick;
 			_inputActions.Gameplay.SecondaryClick.performed += OnSecondaryClick;
 			_inputActions.Gameplay.ESC.performed += OnESC;
+			_inputActions.Gameplay.Space.performed += OnSpace;
 
 			SetEnabled(true);
 		}
@@ -75,6 +76,7 @@ namespace Presentation.Input
 			_inputActions.Gameplay.PrimaryClick.performed -= OnPrimaryClick;
 			_inputActions.Gameplay.SecondaryClick.performed -= OnSecondaryClick;
 			_inputActions.Gameplay.ESC.performed -= OnESC;
+			_inputActions.Gameplay.Space.performed -= OnSpace;
 
 			_inputActions.Dispose();
 			_inputActions = null;
@@ -149,6 +151,14 @@ namespace Presentation.Input
 
 			this.Log("Esc pressed");
 			_eventBus.Publish(new EscInputEvent());
+		}
+
+		private void OnSpace(InputAction.CallbackContext ctx)
+		{
+			if (!_isEnabled) return;
+
+			this.Log("Space pressed");
+			_eventBus.Publish(new SpaceInputEvent());
 		}
 
 		private void UpdatePointerHover()
