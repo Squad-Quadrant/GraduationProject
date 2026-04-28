@@ -1,55 +1,71 @@
-﻿using Core.Events;
+﻿using System;
+using Core.Events;
 using Data.Runtime.Events.UI;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Unit.Equipment;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Presentation.UI.Panel.TacticalItemMenu
 {
 	[RequireComponent(typeof(Button))]
-	public class TacticalItemSlot : MonoBehaviour
+	public class TacticalItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
-		[Title("References")]
 		[SerializeField, Required] private Button button;
-		[SerializeField, Required] private Image iconImage;
+		[SerializeField, Required] private Image icon;
+		[SerializeField, Required] private TextMeshProUGUI remainingUses;
 
-		[Title("State Visuals")]
-		[SerializeField] private Color normalColor = Color.white;
-		[SerializeField] private Color disabledColor = new(1f, 1f, 1f, 0.4f);
+		[SerializeField] private Sprite normalSprite;
+		[SerializeField] private Sprite hoverSprite;
+		[SerializeField] private Color normalColor;
+		[SerializeField] private Color hoverColor;
 
-		private int _slotIndex = -1; // 运行时由 Panel 注入
+		public int SlotIndex { get; private set; } = -1;
+		public EquipmentContainer Container { get; private set; }
 
-		private IEventBus _eventBus;
-		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
+		public Button Button => button;
+		public Action PointerEnter;
+		public Action PointerExit;
 
-		private void Awake() => button.onClick.AddListener(OnClick);
-
-		private void OnDestroy()
+		public void Setup(int slotIndex, EquipmentContainer container, bool interactable, int remainingUseAmount)
 		{
-			if (button) button.onClick.RemoveListener(OnClick);
-		}
+			SlotIndex = slotIndex;
+			Container = container;
 
-		public void Bind(int slotIndex, EquipmentContainer container, bool interactable)
-		{
-			_slotIndex = slotIndex;
+			icon.sprite = container.Config.icon;
+			icon.enabled = container.Config.icon;
+			icon.SetNativeSize();
 
-			iconImage.sprite = container.Config.icon;
-			iconImage.enabled = container.Config.icon;
+			remainingUses.text = remainingUseAmount.ToString();
 
 			button.interactable = interactable;
-			iconImage.color = interactable ? normalColor : disabledColor;
 		}
 
-		private void OnClick()
+		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (_slotIndex < 0)
-			{
-				Debug.LogError("[TacticalItemSlot] Clicked before Bind(). slotIndex is invalid.");
-				return;
-			}
-			EventBus.Publish(new TacticalItemSelectedEvent(_slotIndex));
+			SetVisuals(button.interactable);
+			PointerEnter?.Invoke();
+		}
+
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			SetVisuals(button.interactable);
+			PointerExit?.Invoke();
+		}
+
+		public void SetInteractable(bool interactable)
+		{
+			button.interactable = interactable;
+			SetVisuals(interactable);
+		}
+
+		private void SetVisuals(bool interactable)
+		{
+			button.image.sprite = interactable ? normalSprite : hoverSprite;
+			icon.color = interactable ? normalColor : hoverColor;
 		}
 	}
 }

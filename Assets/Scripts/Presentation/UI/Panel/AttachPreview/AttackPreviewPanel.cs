@@ -26,7 +26,9 @@ namespace Presentation.UI.Panel.AttachPreview
 
 	    [ShowInInspector, ReadOnly] private Vector2Int? _targetCell;
 
-	    private (string mode, string desc) _currentModePair;
+	    private AttackMenuItem _currentSelectedItem;
+
+	    private Systems.Unit.Unit _currentUnit;
 
 	    private IDamageService _damageService;
 	    private IUnitService _unitService;
@@ -40,13 +42,13 @@ namespace Presentation.UI.Panel.AttachPreview
         protected override void OnOpen()
         {
 	        EventBus.Subscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
-	        EventBus.Subscribe<TargetingEvent>(OnTargetingEvent);
+	        EventBus.Subscribe<TargetingEvent>(OnTargeting);
         }
 
         protected override void OnClose()
         {
 	        EventBus.Unsubscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
-	        EventBus.Unsubscribe<TargetingEvent>(OnTargetingEvent);
+	        EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
         }
 
         public void DataInitialize(Systems.Unit.Unit unit)
@@ -60,25 +62,26 @@ namespace Presentation.UI.Panel.AttachPreview
 
         private void SetupButtons(Systems.Unit.Unit unit)
         {
-	        _currentModePair = (normalAttackItem.mode, normalAttackItem.desc);
+	        _currentUnit = unit;
+	        _currentSelectedItem = normalAttackItem;
 
 	        bool canPreciseShoot = unit.CurrentWeaponLogic.CanPreciseShoot();
 
 	        normalAttackItem.PointerEnter = () =>
 	        {
 		        if (!normalAttackItem.Button.interactable) return;
-		        SetModeText((normalAttackItem.mode, normalAttackItem.desc));
+		        SetModeText(normalAttackItem.mode, normalAttackItem.desc);
 	        };
-	        normalAttackItem.PointerExit = () => SetModeText(_currentModePair);
+	        normalAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
 
 	        normalAttackItem.Button.onClick.RemoveAllListeners();
 	        normalAttackItem.Button.onClick.AddListener(() =>
 	        {
 		        normalAttackItem.SetInteractable(false);
 		        if (canPreciseShoot) preciseAttackItem.SetInteractable(true);
-		        _currentModePair = (normalAttackItem.mode, normalAttackItem.desc);
+		        _currentSelectedItem = normalAttackItem;
 		        unit.CurrentWeaponLogic.IsOnPreciseShoot = false;
-		        SetConfirmModeText((normalAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.ShootSpeed()}发直接射击"));
+		        SetConfirmModeText(normalAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.ShootSpeed()}发直接射击");
 		        RefreshAttackContextDisplay(unit);
 	        });
 
@@ -86,18 +89,18 @@ namespace Presentation.UI.Panel.AttachPreview
 	        preciseAttackItem.PointerEnter = () =>
 	        {
 		        if (!preciseAttackItem.Button.interactable) return;
-		        SetModeText((preciseAttackItem.mode, preciseAttackItem.desc));
+		        SetModeText(preciseAttackItem.mode, preciseAttackItem.desc);
 	        };
-	        preciseAttackItem.PointerExit = () => SetModeText(_currentModePair);
+	        preciseAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
 
 	        preciseAttackItem.Button.onClick.RemoveAllListeners();
 	        preciseAttackItem.Button.onClick.AddListener(() =>
 	        {
 		        normalAttackItem.SetInteractable(true);
 		        preciseAttackItem.SetInteractable(false);
-		        _currentModePair = (preciseAttackItem.mode, preciseAttackItem.desc);
+		        _currentSelectedItem = preciseAttackItem;
 		        unit.CurrentWeaponLogic.IsOnPreciseShoot = true;
-		        SetConfirmModeText((preciseAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.PreciseShootSpeed()}发高精度射击"));
+		        SetConfirmModeText(preciseAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.PreciseShootSpeed()}发高精度射击");
 		        RefreshAttackContextDisplay(unit);
 	        });
 
@@ -107,7 +110,7 @@ namespace Presentation.UI.Panel.AttachPreview
 	        normalAttackItem.Button.onClick.Invoke();
         }
 
-        private void OnTargetingEvent(TargetingEvent e)
+        private void OnTargeting(TargetingEvent e)
         {
 	        _targetCell = e.TargetCell;
 	        confirmButton.interactable = _targetCell.HasValue;
@@ -123,11 +126,11 @@ namespace Presentation.UI.Panel.AttachPreview
 		        return;
 	        }
 
-	        RefreshAttackContextDisplay(e.Context);
+	        RefreshAttackContextDisplay(e.Context, _currentUnit);
         }
 
-        private void RefreshAttackContextDisplay(DamageExecutingContext context) =>
-	        attackContextDisplayPanel.Show(context);
+        private void RefreshAttackContextDisplay(DamageExecutingContext context, Systems.Unit.Unit attacker) =>
+	        attackContextDisplayPanel.Show(context, attacker);
 
         private void RefreshAttackContextDisplay(Systems.Unit.Unit attacker)
         {
@@ -141,19 +144,19 @@ namespace Presentation.UI.Panel.AttachPreview
 	        }
 
 	        var attackContext = _damageService.GetSimulatedDamage(new BulletDamageTriggeringInfo(attacker, target, EActionType.Attack));
-	        RefreshAttackContextDisplay(attackContext);
+	        RefreshAttackContextDisplay(attackContext, attacker);
         }
 
-        private void SetModeText((string mode, string desc) pair)
+        private void SetModeText(string mode, string desc)
         {
-	        modeTmp.text = pair.mode;
-	        modeDescTmp.text = pair.desc;
+	        modeTmp.text = mode;
+	        modeDescTmp.text = desc;
         }
 
-        private void SetConfirmModeText((string mode, string desc) pair)
+        private void SetConfirmModeText(string mode, string desc)
         {
-	        confirmModeTmp.text = pair.mode;
-	        confirmModeDescTmp.text = pair.desc;
+	        confirmModeTmp.text = mode;
+	        confirmModeDescTmp.text = desc;
         }
     }
 }

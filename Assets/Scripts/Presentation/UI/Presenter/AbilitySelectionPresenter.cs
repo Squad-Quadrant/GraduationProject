@@ -3,6 +3,7 @@ using Core.Events;
 using Core.FSM;
 using Core.Log;
 using Data.Runtime;
+using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel.SkillMenu;
 using Presentation.UI.Panel.TacticalItemMenu;
@@ -14,14 +15,17 @@ namespace Presentation.UI.Presenter
 	{
 		private readonly UIManager _uiManager;
 		private readonly IEventBus _eventBus;
+		private readonly InteractionController _interactionController;
 
 		private TacticalItemMenuPanel _tacticalItemPanel;
 		private SkillMenuPanel _skillPanel;
 
-		public AbilitySelectionPresenter(UIManager uiManager, IEventBus eventBus)
+		public AbilitySelectionPresenter(UIManager uiManager, IEventBus eventBus, InteractionController interactionController)
 		{
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+			_interactionController = interactionController ?? throw new ArgumentNullException(nameof(interactionController));
+
 			_eventBus.Subscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 
 			this.Log("Initialized");
@@ -62,6 +66,7 @@ namespace Presentation.UI.Presenter
 				{
 					case EActionType.UseTacticalItem:
 						_tacticalItemPanel = _uiManager.Open<TacticalItemMenuPanel, Systems.Unit.Unit>(unit);
+						_tacticalItemPanel.Init(_interactionController);
 						break;
 
 					case EActionType.UseSkill:

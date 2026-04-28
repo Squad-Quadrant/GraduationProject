@@ -46,7 +46,7 @@ namespace Systems.Interaction
 
 		public MovementSimulationResult LastSimulationResult;
 
-		public ITargeted PendingTarget;
+		// public ITargeted PendingTarget;
 
 		public InteractionContext(
 			IEventBus eventBus,
@@ -77,7 +77,6 @@ namespace Systems.Interaction
 		public void ClearSelection()
 		{
 			selectedUnit = null;
-			PendingTarget = null;
 		}
 
 		public Unit.Unit GetCurrentTurnUnit()

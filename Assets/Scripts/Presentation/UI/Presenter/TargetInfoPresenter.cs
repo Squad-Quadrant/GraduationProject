@@ -55,7 +55,8 @@ namespace Presentation.UI.Presenter
 			var target = _unitService.GetUnitAtPosition(_targetCell.Value);
 			if (target == null)
 			{
-				this.LogWarning($"Target {_targetCell.Value} Not Found");
+				_uiManager.Close(_panel);
+				_panel = null;
 				return;
 			}
 
