@@ -13,6 +13,7 @@ using Systems.Map;
 using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Presentation.Input
@@ -27,6 +28,7 @@ namespace Presentation.Input
 
 		[Title("Settings")]
 		[ShowInInspector, ReadOnly] private bool _isEnabled;
+		[ShowInInspector, ReadOnly] private bool _isPointerOverUI;
 
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordinateConverter;
@@ -82,6 +84,7 @@ namespace Presentation.Input
 		{
 			if (!_isEnabled || _inputActions == null) return;
 
+			_isPointerOverUI = EventSystem.current && EventSystem.current.IsPointerOverGameObject();
 			UpdatePointerHover();
 		}
 
@@ -100,6 +103,7 @@ namespace Presentation.Input
 		private void OnPrimaryClick(InputAction.CallbackContext ctx)
 		{
 			if (!_isEnabled) return;
+			if (_isPointerOverUI) return;
 
 			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
 			var worldPos = ScreenToWorldPosition(screenPos);
@@ -149,6 +153,16 @@ namespace Presentation.Input
 
 		private void UpdatePointerHover()
 		{
+			if (_isPointerOverUI)
+			{
+				if (_lastHoveredCell == null && _lastHoveredUnitId == null) return;
+
+				_lastHoveredCell = null;
+				_lastHoveredUnitId = null;
+				_eventBus.Publish(new PointerHoverEvent(null, Vector3.zero));
+				return;
+			}
+
 			var screenPos = _inputActions.Gameplay.PointerPosition.ReadValue<Vector2>();
 			var worldPos = ScreenToWorldPosition(screenPos);
 			var cellPos = _coordinateConverter.WorldToCell(worldPos);
