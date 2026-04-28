@@ -78,7 +78,7 @@ namespace Presentation.UI.Presenter
 			if (e.CellPosition.HasValue)
 			{
 				target = _unitService.GetUnitAtPosition(e.CellPosition.Value);
-				if (target != null)
+				if (target != null && target.id != _interactionController.Context.selectedUnit.id)
 				{
 					_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
 					return;

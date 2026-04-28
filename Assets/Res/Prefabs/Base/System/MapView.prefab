@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2216629122805946170}
   - component: {fileID: 352081570952451761}
   - component: {fileID: 5670924005161156157}
+  - component: {fileID: 4965020384938728140}
   m_Layer: 0
   m_Name: Layer_Movement
   m_TagString: Untagged
@@ -176,6 +177,21 @@ MonoBehaviour:
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
   - {r: 0.5019608, g: 1, b: 0.9104832, a: 0.35}
   - {r: 0.6509804, g: 0.8330519, b: 1, a: 0.25}
+--- !u!114 &4965020384938728140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269389424873883715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
+  alphaSpan: 0.1
+  duration: 1
 --- !u!1 &1385129590296720004
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,6 +248,7 @@ GameObject:
   - component: {fileID: 6890543527798200497}
   - component: {fileID: 6909736015298412002}
   - component: {fileID: 3849881433865077256}
+  - component: {fileID: 4973868275655270223}
   m_Layer: 0
   m_Name: Layer_AreaEffectOverlay
   m_TagString: Untagged
@@ -396,6 +413,21 @@ MonoBehaviour:
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
   - {r: 0.5019608, g: 1, b: 0.9104832, a: 0.35}
   - {r: 0.6509804, g: 0.8330519, b: 1, a: 0.25}
+--- !u!114 &4973868275655270223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2329454762263097449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
+  alphaSpan: 0.3
+  duration: 1
 --- !u!1 &2917596229683696566
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,6 +636,7 @@ GameObject:
   - component: {fileID: 4115302606944524250}
   - component: {fileID: 3399402661297876429}
   - component: {fileID: 8143817025773910930}
+  - component: {fileID: 5144567375996506143}
   m_Layer: 0
   m_Name: Layer_Interact
   m_TagString: Untagged
@@ -768,6 +801,21 @@ MonoBehaviour:
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
   - {r: 0.5019608, g: 1, b: 0.9104832, a: 0.35}
   - {r: 0.6509804, g: 0.8330519, b: 1, a: 0.25}
+--- !u!114 &5144567375996506143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508901904264631423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
+  alphaSpan: 0.1
+  duration: 1
 --- !u!1 &4713970211982079851
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,6 +993,7 @@ GameObject:
   - component: {fileID: 3724194626626383369}
   - component: {fileID: 8368762641192810404}
   - component: {fileID: 6916670407687885122}
+  - component: {fileID: 7275159430978445011}
   m_Layer: 0
   m_Name: Layer_Selection
   m_TagString: Untagged
@@ -1109,6 +1158,21 @@ MonoBehaviour:
   - {r: 0.35, g: 0.6, b: 1, a: 0.45}
   - {r: 0.5, g: 0.7, b: 1, a: 0.35}
   - {r: 0.65, g: 0.8, b: 1, a: 0.25}
+--- !u!114 &7275159430978445011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5780918916674935639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
+  alphaSpan: 0.3
+  duration: 1
 --- !u!1 &6286534370386568942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,6 +1581,7 @@ GameObject:
   - component: {fileID: 229468094640009675}
   - component: {fileID: 6800989119859023176}
   - component: {fileID: 4092512156133206820}
+  - component: {fileID: 3028998735551070937}
   m_Layer: 0
   m_Name: Layer_Attack
   m_TagString: Untagged
@@ -1681,6 +1746,21 @@ MonoBehaviour:
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
   - {r: 0.5019608, g: 1, b: 0.9104832, a: 0.35}
   - {r: 0.6509804, g: 0.8330519, b: 1, a: 0.25}
+--- !u!114 &3028998735551070937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079428866567737450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 1
+  alphaSpan: 0.3
+  duration: 0.5
 --- !u!1 &8681404432555847831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,6 +1773,7 @@ GameObject:
   - component: {fileID: 6117556031862543439}
   - component: {fileID: 5604557218073337439}
   - component: {fileID: 100449513024890691}
+  - component: {fileID: 1940424969752914036}
   m_Layer: 0
   m_Name: Layer_AreaEffectPreview
   m_TagString: Untagged
@@ -1857,6 +1938,21 @@ MonoBehaviour:
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}
   - {r: 0.5019608, g: 1, b: 0.9104832, a: 0.35}
   - {r: 0.6509804, g: 0.8330519, b: 1, a: 0.25}
+--- !u!114 &1940424969752914036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8681404432555847831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1eafb4e2dfc4f8197822e969ad0de2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 1
+  alphaSpan: 0.3
+  duration: 0.5
 --- !u!1 &9221936824263269808
 GameObject:
   m_ObjectHideFlags: 0
