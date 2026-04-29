@@ -101,11 +101,12 @@ namespace Systems.GamePlay
 		{
 			this.Log($"Turn {_turnService.TurnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} started");
 
-			AwaitThen(AdvanceToNextUnit, cmd => cmd
-				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnStart)
+			AwaitThen(
+				() => _turnService.StartTurn(),
+				AdvanceToNextUnit,
+				cmd => cmd
+					.Expect(EPresentationCategory.UI, PresentationType.UI.TurnStart)
 			);
-
-			_turnService.StartTurn();
 		}
 
 		private void AdvanceToNextUnit() // 控制Turn系统推进
@@ -117,10 +118,6 @@ namespace Systems.GamePlay
 				EndCurrentTurn();
 				return;
 			}
-
-			AwaitThen(() => StartNewUnitTurn(turnUnit), cmd => cmd
-				.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
-			);
 
 			bool visibleToPlayer;
 			var faction = turnUnit.Faction;
@@ -144,12 +141,17 @@ namespace Systems.GamePlay
 					break;
 			}
 
-			_eventBus.Publish(new UnitTurnStartedEvent(
-				turnUnit.Id,
-				turnUnit.DisplayName,
-				_turnService.TurnNumber,
-				visibleToPlayer,
-				turnUnit.CellPosition));
+			AwaitThen(
+				() => _eventBus.Publish(new UnitTurnStartedEvent(
+					turnUnit.Id,
+					turnUnit.DisplayName,
+					_turnService.TurnNumber,
+					visibleToPlayer,
+					turnUnit.CellPosition)),
+				() => StartNewUnitTurn(turnUnit),
+				cmd => cmd
+					.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
+			);
 
 			this.Log($"TurnUnit '{turnUnit.DisplayName}'({turnUnit.Id}, {turnUnit.Faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
 		}
@@ -189,26 +191,32 @@ namespace Systems.GamePlay
 
 		private void EndCurrentTurn()
 		{
-			AwaitThen(StartNewTurn, cmd => cmd
-				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
-			);
-
 			var turnNumber = _turnService.TurnNumber;
-			_turnService.EndTurn();
+
+			AwaitThen(
+				() => _turnService.EndTurn(),
+				StartNewTurn,
+				cmd => cmd
+					.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
+			);
 
 			this.Log($"Turn {turnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} ended");
 		}
 
-		private void AwaitThen(Action onComplete, Action<AwaitPresentationCommand> configure)
+		private void AwaitThen(Action trigger, Action onComplete, Action<AwaitPresentationCommand> configure)
 		{
 			if (WaitForPresentation)
 			{
 				var cmd = new AwaitPresentationCommand(onComplete);
 				configure?.Invoke(cmd);
 				_commandQueue.EnqueueAndExecute(cmd);
+				trigger?.Invoke();
 			}
 			else
+			{
+				trigger?.Invoke();
 				onComplete();
+			}
 		}
 	}
 }
