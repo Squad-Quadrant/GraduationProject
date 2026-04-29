@@ -107,6 +107,9 @@ namespace Presentation.UI.Panel.AttachPreview
 	        backButton.onClick.RemoveAllListeners();
 	        backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 
+	        confirmButton.onClick.RemoveAllListeners();
+	        confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
+
 	        normalAttackItem.Button.onClick.Invoke();
         }
 
