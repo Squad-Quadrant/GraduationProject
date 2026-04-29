@@ -7,7 +7,7 @@ namespace Systems.Unit.Equipment.Config
 {
 	// 战术道具配置
 	[Configurable("Equipment/TacticalItem")]
-	[CreateAssetMenu(fileName = "TacticalItemConfig", menuName = "Game/Equipment/TacticalItem", order = 1)]
+	[CreateAssetMenu(fileName = "TacticalItemConfig", menuName = "Game/Unit/Equipment/TacticalItem", order = 1)]
 	public class TacticalItemConfig : EquipmentConfig
 	{
 		[Title("Tactical Item")]

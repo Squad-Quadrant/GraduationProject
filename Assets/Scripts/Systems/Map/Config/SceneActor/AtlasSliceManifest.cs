@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Systems.Map.Config.SceneActor
 {
-	[CreateAssetMenu(fileName = "AtlasSliceManifest", menuName = "Game/Scene Actor/Atlas Slice Manifest")]
+	[CreateAssetMenu(fileName = "AtlasSliceManifest", menuName = "Game/Map/SceneActor/Atlas Slice Manifest")]
 	public class AtlasSliceManifest : ScriptableObject
 	{
 		[Title("Atlas")]

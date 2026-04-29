@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Systems.Unit
 {
-	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit Config")]
+	[CreateAssetMenu(fileName = "NewUnitConfig", menuName = "Game/Unit/Unit Config", order = 0)]
 	public class UnitConfig : ScriptableObject
 	{
 		[TitleGroup("基础信息")]

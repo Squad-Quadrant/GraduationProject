@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Systems.Unit.Skill
 {
-	[CreateAssetMenu(fileName = "SkillConfig", menuName = "Game/Skill Config")]
+	[CreateAssetMenu(fileName = "SkillConfig", menuName = "Game/Unit/Skill Config")]
 	public class SkillConfig : ScriptableObject
 	{
 		[Title("基础信息")]

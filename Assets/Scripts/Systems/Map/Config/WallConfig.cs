@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 namespace Systems.Map.Config
 {
     [Configurable("Map/Wall")]
-    [CreateAssetMenu(fileName = "WallConfig", menuName = "Game/Map/WallConfig", order = 1)]
+    [CreateAssetMenu(fileName = "WallConfig", menuName = "Game/Map/WallConfig", order = 2)]
     public class WallConfig : ScriptableObject
     {
         public WallType wallType;

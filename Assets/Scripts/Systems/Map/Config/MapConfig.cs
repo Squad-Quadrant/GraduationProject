@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Systems.Map.Config
 {
-	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map Config")]
+	[CreateAssetMenu(fileName = "NewMapConfig", menuName = "Game/Map/MapConfig", order = 0)]
 	public class MapConfig : ScriptableObject
 	{
 #if UNITY_EDITOR

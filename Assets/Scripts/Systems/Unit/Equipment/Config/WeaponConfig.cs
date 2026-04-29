@@ -8,7 +8,7 @@ namespace Systems.Unit.Equipment.Config
 {
 	// 射击类武器配置
 	[Configurable("Equipment/Weapon")]
-	[CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game/Equipment/Weapon", order = 0)]
+	[CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game/Unit/Equipment/Weapon", order = 0)]
 	public class WeaponConfig : EquipmentConfig
 	{
 		[LabelText("射击类武器的弹容量")]

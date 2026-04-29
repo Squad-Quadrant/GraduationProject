@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Systems.AI.Config
 {
-	[CreateAssetMenu(fileName = "AIBrainConfig", menuName = "Game/AI Brain Config")]
+	[CreateAssetMenu(fileName = "AIBrainConfig", menuName = "Game/Unit/AI Brain Config")]
 	public class AIBrainConfig : ScriptableObject
 	{
 		[FoldoutGroup("Movement"), Tooltip("移动动作的基础分数")]

@@ -13,7 +13,7 @@ namespace Systems.Map.Config.SceneActor
 		public Sprite sprite;
 	}
 
-    [CreateAssetMenu(fileName = "SceneActorConfig", menuName = "Game/Scene Actor/General")]
+    [CreateAssetMenu(fileName = "SceneActorConfig", menuName = "Game/Map/SceneActor/General")]
     public class SceneActorConfig : ScriptableObject
     {
 	    [Title("Basic")]

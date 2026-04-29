@@ -79,7 +79,7 @@ namespace Presentation.Unit
 		public static readonly IdleSet Empty = new(null, null);
 	}
 
-	[CreateAssetMenu(fileName = "NewUnitAnimConfig", menuName = "Game/Unit Animation Config")]
+	[CreateAssetMenu(fileName = "NewUnitAnimConfig", menuName = "Game/Unit/Unit Animation Config")]
 	public class UnitAnimationConfig : ScriptableObject
 	{
 		[TitleGroup("Defaults")]

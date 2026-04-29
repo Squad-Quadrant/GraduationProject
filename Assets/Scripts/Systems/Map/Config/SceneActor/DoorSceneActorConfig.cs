@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Systems.Map.Config.SceneActor
 {
-	[CreateAssetMenu(fileName = "DoorSceneActorConfig", menuName = "Game/Scene Actor/Door")]
+	[CreateAssetMenu(fileName = "DoorSceneActorConfig", menuName = "Game/Map/SceneActor/Door")]
 	public class DoorSceneActorConfig : SceneActorConfig
 	{
 		[Title("门")]

@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 namespace Systems.Map.Config
 {
     [Configurable("Map/Cell")]
-    [CreateAssetMenu(fileName = "CellConfig", menuName = "Game/Map/CellConfig")]
+    [CreateAssetMenu(fileName = "CellConfig", menuName = "Game/Map/CellConfig", order = 1)]
     public class CellConfig : ScriptableObject
     {
         public bool isWalkable = true;
