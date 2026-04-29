@@ -17,7 +17,7 @@ namespace Editor
 		private static void OpenWindow()
 		{
 			var window = GetWindow<SceneActorAtlasSlicer>("SceneActor Slicer");
-			window.minSize = new Vector2(380, 160);
+			window.minSize = new Vector2(160, 160);
 		}
 
 		private void OnEnable() => _serializedSelf = new SerializedObject(this);
@@ -95,8 +95,6 @@ namespace Editor
 					continue;
 				}
 
-				var padding = manifest.padding ?? new RectOffset();
-
 				Vector2 baseCenterPx = new(
 					config.atlasOriginCell.x * atlasGridW + atlasGridW * 0.5f,
 					config.atlasOriginCell.y * atlasGridH + gameCellH * 0.5f
@@ -106,38 +104,30 @@ namespace Editor
 				var offsets = new List<Vector2Int> { Vector2Int.zero };
 				offsets.AddRange(config.extraGrid);
 
-				foreach (var offset in offsets)
+				var cellCenters = new Vector2[offsets.Count];
+				for (int i = 0; i < offsets.Count; i++)
+					cellCenters[i] = baseCenterPx + offsets[i].x * basisXPx + offsets[i].y * basisYPx;
+
+				for (int i = 0; i < offsets.Count; i++)
 				{
-					Vector2 cellCenterPx = baseCenterPx + offset.x * basisXPx + offset.y * basisYPx;
+					var (rect, pivot) = ComputeCellRect(cellCenters[i], cellCenters, i, atlasGridW, atlasGridH, gameCellH, texW, texH);
 
-					// rect = cell 中心 ± gameCellSize/2 + padding 外扩，clamp 到 texture 边界
-					int rectMinX = Mathf.Max(0, Mathf.RoundToInt(cellCenterPx.x - gameCellW * 0.5f - padding.left));
-					int rectMinY = Mathf.Max(0, Mathf.RoundToInt(cellCenterPx.y - gameCellH * 0.5f - padding.bottom));
-					int rectMaxX = Mathf.Min(texW, Mathf.RoundToInt(cellCenterPx.x + gameCellW * 0.5f + padding.right));
-					int rectMaxY = Mathf.Min(texH, Mathf.RoundToInt(cellCenterPx.y + gameCellH * 0.5f + padding.top));
-
-					int rectW = rectMaxX - rectMinX;
-					int rectH = rectMaxY - rectMinY;
-					if (rectW <= 0 || rectH <= 0)
+					if (rect.width <= 0 || rect.height <= 0)
 					{
-						Debug.LogWarning($"[SceneActorSlicer] Degenerate rect for '{config.name}' offset {offset}, skipping.");
+						Debug.LogWarning($"[SceneActorSlicer] Degenerate rect for '{config.name}' offset {offsets[i]}, skipping.");
 						continue;
 					}
 
-					// pivot：cell 中心在 rect 内的归一化坐标
-					float pivotX = (cellCenterPx.x - rectMinX) / rectW;
-					float pivotY = (cellCenterPx.y - rectMinY) / rectH;
-
-					string spriteName = $"{config.name}_{offset.x}_{offset.y}";
+					string spriteName = $"{config.name}_{offsets[i].x}_{offsets[i].y}";
 					spriteRects.Add(new SpriteRect
 					{
 						name = spriteName,
-						rect = new Rect(rectMinX, rectMinY, rectW, rectH),
-						pivot = new Vector2(pivotX, pivotY),
+						rect = rect,
+						pivot = pivot,
 						alignment = SpriteAlignment.Custom,
 						spriteID = GUID.Generate(),
 					});
-					nameToTarget[spriteName] = (config, offset);
+					nameToTarget[spriteName] = (config, offsets[i]);
 				}
 			}
 
@@ -152,6 +142,57 @@ namespace Editor
 
 			// 回填 baseSlices
 			WriteBackBaseSlices(atlasPath, nameToTarget);
+		}
+
+		private static (Rect rect, Vector2 pivot) ComputeCellRect(
+			Vector2 thisCenter, Vector2[] allCenters, int thisIndex,
+			int atlasGridW, int atlasGridH, int gameCellH,
+			int texW, int texH)
+		{
+			float minX = thisCenter.x - atlasGridW * 0.5f;
+			float maxX = thisCenter.x + atlasGridW * 0.5f;
+			float minY = thisCenter.y - gameCellH * 0.5f;
+			float maxY = thisCenter.y - gameCellH * 0.5f + atlasGridH;
+
+			for (int i = 0; i < allCenters.Length; i++)
+			{
+				if (i == thisIndex) continue;
+
+				var other = allCenters[i];
+				float dx = other.x - thisCenter.x;
+				float dy = other.y - thisCenter.y;
+				float midX = (thisCenter.x + other.x) * 0.5f;
+				float midY = (thisCenter.y + other.y) * 0.5f;
+
+				if (Mathf.Abs(dx) >= Mathf.Abs(dy))
+				{
+					if (dx > 0)
+						maxX = Mathf.Min(maxX, midX);
+					else
+						minX = Mathf.Max(minX, midX);
+				}
+				else
+				{
+					if (dy > 0)
+						maxY = Mathf.Min(maxY, midY);
+					else
+						minY = Mathf.Max(minY, midY);
+				}
+			}
+
+			int rectMinX = Mathf.Max(0, Mathf.RoundToInt(minX));
+			int rectMinY = Mathf.Max(0, Mathf.RoundToInt(minY));
+			int rectMaxX = Mathf.Min(texW, Mathf.RoundToInt(maxX));
+			int rectMaxY = Mathf.Min(texH, Mathf.RoundToInt(maxY));
+
+			int rectW = rectMaxX - rectMinX;
+			int rectH = rectMaxY - rectMinY;
+			if (rectW <= 0 || rectH <= 0) return (default, default);
+
+			float pivotX = (thisCenter.x - rectMinX) / rectW;
+			float pivotY = (thisCenter.y - rectMinY) / rectH;
+
+			return (new Rect(rectMinX, rectMinY, rectW, rectH), new Vector2(pivotX, pivotY));
 		}
 
 		private static void WriteBackBaseSlices(string atlasPath, Dictionary<string, (SceneActorConfig config, Vector2Int offset)> nameToTarget)

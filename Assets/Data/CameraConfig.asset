@@ -20,6 +20,7 @@ MonoBehaviour:
   zoomRange: {x: 1, y: 5}
   zoomSensitivity: 1
   zoomSmoothSpeed: 8
+  standardZoom: 3
   boundaryPadding: 1
   discoveryFocusDuration: 0.3
   discoveryDwellDuration: 0.6

@@ -38,4 +38,4 @@ MonoBehaviour:
   - cellOffset: {x: 2, y: 1}
     sprite: {fileID: -1264869658929107501, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
   - cellOffset: {x: 2, y: 0}
-    sprite: {fileID: 1884284108, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
+    sprite: {fileID: -82522198, guid: f44226274caf99e45ae20e82c72bba18, type: 3}

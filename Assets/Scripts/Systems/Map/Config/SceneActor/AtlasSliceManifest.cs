@@ -20,7 +20,5 @@ namespace Systems.Map.Config.SceneActor
 		[Title("Actors")]
 		[Tooltip("此 atlas 上的所有场景物体")]
 		public List<SceneActorConfig> configs = new();
-
-		public RectOffset padding;
 	}
 }

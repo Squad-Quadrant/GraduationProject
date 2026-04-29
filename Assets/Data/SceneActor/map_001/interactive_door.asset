@@ -20,7 +20,7 @@ MonoBehaviour:
   atlasOriginCell: {x: 10, y: 4}
   baseSlices:
   - cellOffset: {x: 0, y: 0}
-    sprite: {fileID: 1699788169, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
+    sprite: {fileID: -1929477488, guid: f44226274caf99e45ae20e82c72bba18, type: 3}
   regionId: 1
   openedSlices:
   - cellOffset: {x: 0, y: 0}
