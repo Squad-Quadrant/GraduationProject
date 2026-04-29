@@ -7,6 +7,7 @@ using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
 using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Presentation.UI.Presenter
@@ -17,16 +18,18 @@ namespace Presentation.UI.Presenter
 		private readonly IEventBus _eventBus;
 		private readonly IUnitService _unitService;
 		private readonly InteractionController  _interactionController;
+		private readonly IVisionService _visionService;
 
 		private TargetInfoPanel _panel;
 		private Vector2Int? _targetCell;
 
-		public TargetInfoPresenter(UIManager uiManager, IEventBus eventBus, IUnitService unitService, InteractionController interactionController)
+		public TargetInfoPresenter(UIManager uiManager, IEventBus eventBus, IUnitService unitService, InteractionController interactionController, IVisionService visionService)
 		{
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 			_interactionController = interactionController ?? throw new ArgumentNullException(nameof(interactionController));
+			_visionService = visionService ?? throw new ArgumentNullException(nameof(visionService));
 
 			_eventBus.Subscribe<TargetingEvent>(OnTargeting);
 			_eventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
@@ -67,9 +70,11 @@ namespace Presentation.UI.Presenter
 		{
 			if (_targetCell.HasValue) return;
 
+			var currentUnitId = _interactionController.Context.selectedUnit?.id;
+
 			if (!string.IsNullOrEmpty(e.HoveredUnitId) &&
 			    _unitService.TryGetUnit(e.HoveredUnitId, out var target) &&
-			    e.HoveredUnitId != _interactionController.Context.selectedUnit.id)
+			    e.HoveredUnitId != currentUnitId)
 			{
 				_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
 				return;
@@ -78,7 +83,7 @@ namespace Presentation.UI.Presenter
 			if (e.CellPosition.HasValue)
 			{
 				target = _unitService.GetUnitAtPosition(e.CellPosition.Value);
-				if (target != null && target.id != _interactionController.Context.selectedUnit.id)
+				if (target != null && target.id != currentUnitId && _visionService.IsCellVisible(target.position))
 				{
 					_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
 					return;

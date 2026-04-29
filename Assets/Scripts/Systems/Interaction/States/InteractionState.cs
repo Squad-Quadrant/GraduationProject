@@ -6,6 +6,7 @@ using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Systems.AreaEffect;
 using Systems.Map;
+using Systems.Unit;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -58,7 +59,8 @@ namespace Systems.Interaction.States
 
 			if (!ctx.VisionService.IsCellVisible(cell)) // 无视野
 			{
-				if (e.HoveredUnitId != null && ctx.VisionService.IsEnemySpotted(e.HoveredUnitId))
+				var target = ctx.UnitService.GetUnitAtPosition(cell);
+				if (target != null && ctx.VisionService.IsEnemySpotted(target.id))
 				{
 					Publish(ctx, CursorInfoEvent.ForSpottedHiddenEnemy(cell, worldPos));
 					return;
