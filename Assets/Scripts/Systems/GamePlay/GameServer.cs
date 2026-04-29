@@ -99,13 +99,13 @@ namespace Systems.GamePlay
 
         private void StartNewTurn()
 		{
-			_turnService.StartTurn();
-
 			this.Log($"Turn {_turnService.TurnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} started");
 
 			AwaitThen(AdvanceToNextUnit, cmd => cmd
 				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnStart)
 			);
+
+			_turnService.StartTurn();
 		}
 
 		private void AdvanceToNextUnit() // 控制Turn系统推进
@@ -117,6 +117,10 @@ namespace Systems.GamePlay
 				EndCurrentTurn();
 				return;
 			}
+
+			AwaitThen(() => StartNewUnitTurn(turnUnit), cmd => cmd
+				.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
+			);
 
 			bool visibleToPlayer;
 			var faction = turnUnit.Faction;
@@ -148,10 +152,6 @@ namespace Systems.GamePlay
 				turnUnit.CellPosition));
 
 			this.Log($"TurnUnit '{turnUnit.DisplayName}'({turnUnit.Id}, {turnUnit.Faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
-
-			AwaitThen(() => StartNewUnitTurn(turnUnit), cmd => cmd
-				.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
-			);
 		}
 
 		private void StartNewUnitTurn(ITurnUnit turnUnit) // 实际开始一个新的单位回合
@@ -189,14 +189,14 @@ namespace Systems.GamePlay
 
 		private void EndCurrentTurn()
 		{
+			AwaitThen(StartNewTurn, cmd => cmd
+				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
+			);
+
 			var turnNumber = _turnService.TurnNumber;
 			_turnService.EndTurn();
 
 			this.Log($"Turn {turnNumber}{(WaitForPresentation ? " (awaiting presentation)" : "")} ended");
-
-			AwaitThen(StartNewTurn, cmd => cmd
-				.Expect(EPresentationCategory.UI, PresentationType.UI.TurnEnd)
-			);
 		}
 
 		private void AwaitThen(Action onComplete, Action<AwaitPresentationCommand> configure)
