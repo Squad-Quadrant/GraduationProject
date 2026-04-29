@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 84
-        height: 84
+        y: 2
+        width: 92
+        height: 92
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a023a4fd0b6c1ee4190935dd3a646ea2
-      internalID: -1659183236
+      spriteID: 7c662638fbdeb4d4db75118eb626b5b3
+      internalID: 988907966
       vertices: []
       indices: 
       edges: []
@@ -134,10 +134,10 @@ TextureImporter:
       name: icon3_1
       rect:
         serializedVersion: 2
-        x: 109
-        y: 0
-        width: 73
-        height: 88
+        x: 156
+        y: 2
+        width: 79
+        height: 96
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,8 +145,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a248c3dcbc45cd742b95e8223cb43cd4
-      internalID: 1978376952
+      spriteID: aff04c2110ebc9345a801bc8d0435643
+      internalID: -1043424633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: icon3_2
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 0
+        width: 101
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 047d2c802ba4d5a429943cbca56279d4
+      internalID: 295136930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: icon3_3
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 2
+        width: 81
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf8a5cf66119f5047a9e25b7eda5167a
+      internalID: -622559916
       vertices: []
       indices: 
       edges: []
@@ -162,8 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      icon3_0: -1659183236
-      icon3_1: 1978376952
+      icon3_0: 988907966
+      icon3_1: -1043424633
+      icon3_2: 295136930
+      icon3_3: -622559916
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
