@@ -2,7 +2,7 @@ Shader "TextMeshPro/Mobile/Bitmap" {
 
 Properties {
 	_MainTex		("Font Atlas", 2D) = "white" {}
-	_Color			("Text Color", Color) = (1,1,1,1)
+	[HDR]_Color		("Text Color", Color) = (1,1,1,1)
 	_DiffusePower	("Diffuse Power", Range(1.0,4.0)) = 1.0
 
 	_VertexOffsetX("Vertex OffsetX", float) = 0
@@ -18,6 +18,7 @@ Properties {
 	_StencilWriteMask("Stencil Write Mask", Float) = 255
 	_StencilReadMask("Stencil Read Mask", Float) = 255
 
+	_CullMode("Cull Mode", Float) = 0
 	_ColorMask("Color Mask", Float) = 15
 }
 
@@ -36,7 +37,7 @@ SubShader {
 
 
 	Lighting Off
-	Cull Off
+	Cull [_CullMode]
 	ZTest [unity_GUIZTestMode]
 	ZWrite Off
 	Fog { Mode Off }
@@ -55,14 +56,14 @@ SubShader {
 
 		#include "UnityCG.cginc"
 
-		struct AppData {
+		struct appdata_t {
 			float4 vertex : POSITION;
 			fixed4 color : COLOR;
 			float2 texcoord0 : TEXCOORD0;
 			float2 texcoord1 : TEXCOORD1;
 		};
 
-		struct V2F {
+		struct v2f {
 			float4 vertex		: POSITION;
 			fixed4 color		: COLOR;
 			float2 texcoord0	: TEXCOORD0;
@@ -79,9 +80,9 @@ SubShader {
 		uniform float		_MaskSoftnessX;
 		uniform float		_MaskSoftnessY;
 
-		V2F vert (AppData v)
+		v2f vert (appdata_t v)
 		{
-			V2F OUT;
+			v2f OUT;
 			float4 vert = v.vertex;
 			vert.x += _VertexOffsetX;
 			vert.y += _VertexOffsetY;
@@ -104,7 +105,7 @@ SubShader {
 			return OUT;
 		}
 
-		fixed4 frag (V2F IN) : COLOR
+		fixed4 frag (v2f IN) : COLOR
 		{
 			fixed4 color = fixed4(IN.color.rgb, IN.color.a * tex2D(_MainTex, IN.texcoord0).a);
 
@@ -113,11 +114,11 @@ SubShader {
 				half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
 				color *= m.x * m.y;
 			#endif
-			
+
 			#if UNITY_UI_ALPHACLIP
 				clip(color.a - 0.001);
 			#endif
-			
+
 			return color;
 		}
 		ENDCG

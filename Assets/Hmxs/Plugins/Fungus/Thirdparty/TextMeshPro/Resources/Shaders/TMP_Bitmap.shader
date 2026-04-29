@@ -3,7 +3,7 @@ Shader "TextMeshPro/Bitmap" {
 Properties {
 	_MainTex		("Font Atlas", 2D) = "white" {}
 	_FaceTex		("Font Texture", 2D) = "white" {}
-	_FaceColor		("Text Color", Color) = (1,1,1,1)
+	[HDR]_FaceColor	("Text Color", Color) = (1,1,1,1)
 
 	_VertexOffsetX	("Vertex OffsetX", float) = 0
 	_VertexOffsetY	("Vertex OffsetY", float) = 0
@@ -18,13 +18,14 @@ Properties {
 	_StencilWriteMask("Stencil Write Mask", Float) = 255
 	_StencilReadMask("Stencil Read Mask", Float) = 255
 
+	_CullMode("Cull Mode", Float) = 0
 	_ColorMask("Color Mask", Float) = 15
 }
 
 SubShader{
 
 	Tags { "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
-	
+
 	Stencil
 	{
 		Ref[_Stencil]
@@ -33,8 +34,8 @@ SubShader{
 		ReadMask[_StencilReadMask]
 		WriteMask[_StencilWriteMask]
 	}
-	
-	
+
+
 	Lighting Off
 	Cull [_CullMode]
 	ZTest [unity_GUIZTestMode]
@@ -54,14 +55,14 @@ SubShader{
 
 		#include "UnityCG.cginc"
 
-		struct AppData {
+		struct appdata_t {
 			float4 vertex		: POSITION;
 			fixed4 color		: COLOR;
 			float2 texcoord0	: TEXCOORD0;
 			float2 texcoord1	: TEXCOORD1;
 		};
 
-		struct V2F {
+		struct v2f {
 			float4	vertex		: SV_POSITION;
 			fixed4	color		: COLOR;
 			float2	texcoord0	: TEXCOORD0;
@@ -89,7 +90,7 @@ SubShader{
 			return output * 0.001953125;
 		}
 
-		V2F vert (AppData v)
+		v2f vert (appdata_t v)
 		{
 			float4 vert = v.vertex;
 			vert.x += _VertexOffsetX;
@@ -102,7 +103,7 @@ SubShader{
 			fixed4 faceColor = v.color;
 			faceColor *= _FaceColor;
 
-			V2F OUT;
+			v2f OUT;
 			OUT.vertex = vPosition;
 			OUT.color = faceColor;
 			OUT.texcoord0 = v.texcoord0;
@@ -113,11 +114,11 @@ SubShader{
 			// Clamp _ClipRect to 16bit.
 			float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
 			OUT.mask = float4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_MaskSoftnessX, _MaskSoftnessY) + pixelSize.xy));
-			
+
 			return OUT;
 		}
 
-		fixed4 frag (V2F IN) : SV_Target
+		fixed4 frag (v2f IN) : SV_Target
 		{
 			fixed4 color = tex2D(_MainTex, IN.texcoord0);
 			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, IN.color.a * color.a);

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SkillMenu
   m_EditorClassIdentifier: 
   panelId: SkillMenu
-  prefab: {fileID: 8433078282201340205, guid: fd95a7f1340b3204491905441d320a13, type: 3}
+  prefab: {fileID: 1619540329913624239, guid: fd95a7f1340b3204491905441d320a13, type: 3}
   layer: 2
   cacheOnClose: 0

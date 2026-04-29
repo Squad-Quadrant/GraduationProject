@@ -218,8 +218,6 @@ namespace Systems.Unit
 			if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
 				actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
 
-
-
 			return actions;
 		}
 

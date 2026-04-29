@@ -1,43 +1,57 @@
-﻿using Data.Runtime.Events.Unit;
+﻿using Data.Runtime;
+using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.UI;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
+using Systems.Unit.Skill.Logic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Presentation.UI.Panel.SkillMenu
 {
 	public class SkillMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
 	{
-		[Title("Slot")]
-		[SerializeField, Required] private SkillMenuSlot slot;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI skillName;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI skillDescription;
+		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI cooldown;
+		[SerializeField, Required, ChildGameObjectsOnly] private Button confirmButton;
+		[SerializeField, Required, ChildGameObjectsOnly] private Button backButton;
 
-		private Systems.Unit.Unit _unit;
+		private SkillLogic _currentSkillLogic;
 
 		public void DataInitialize(Systems.Unit.Unit unit)
 		{
-			_unit = unit;
-			Refresh(unit);
-		}
+			backButton.onClick.RemoveAllListeners();
+			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 
-		protected override void OnOpen() => EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+			confirmButton.onClick.RemoveAllListeners();
+			confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
+			confirmButton.interactable = false;
 
-		protected override void OnClose() => EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+			if (unit.Skill == null) return;
+			_currentSkillLogic = unit.Skill;
+			skillName.text = unit.Skill.Config.skillName;
+			skillDescription.text = unit.Skill.Config.description;
 
-		private void OnUnitInfoChanged(UnitInfoChangedEvent e)
-		{
-			if (_unit == null || e.Unit.id != _unit.id) return;
-			Refresh(e.Unit);
-		}
-
-		private void Refresh(Systems.Unit.Unit unit)
-		{
-			if (unit.Skill == null)
+			if (_currentSkillLogic.CanUse)
 			{
-				if (slot) slot.gameObject.SetActive(false);
-				return;
+				EventBus.Publish(new SkillSelectedEvent());
+				confirmButton.interactable = true;
 			}
-
-			slot.gameObject.SetActive(true);
-			slot.Bind(unit.Skill, interactable: unit.Skill.CanUse);
+			else
+			{
+				var text = "";
+				if (unit.CurrentAp < _currentSkillLogic.Config.apCost) text += "AP不足\n";
+				if (_currentSkillLogic.CurrentCooldown > 0) text += $"冷却中，剩余{_currentSkillLogic.CurrentCooldown}回合";
+				cooldown.text = text;
+			}
 		}
+
+		protected override void OnOpen() => EventBus.Subscribe<TargetingEvent>(OnTargeting);
+
+		protected override void OnClose() => EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+
+		private void OnTargeting(TargetingEvent e) => confirmButton.interactable = e.TargetCell.HasValue;
 	}
 }
