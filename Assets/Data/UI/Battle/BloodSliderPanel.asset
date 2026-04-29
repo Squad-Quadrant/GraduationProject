@@ -15,4 +15,4 @@ MonoBehaviour:
   panelId: BloodSliderPanel
   prefab: {fileID: 8753922868381692218, guid: e51d1fe1a15df0542ac554a07f3efd38, type: 3}
   layer: 1
-  cacheOnClose: 1
+  cacheOnClose: 0

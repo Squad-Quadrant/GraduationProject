@@ -18,10 +18,12 @@ namespace Presentation.UI.Panel.SkillMenu
 		[SerializeField, Required, ChildGameObjectsOnly] private Button confirmButton;
 		[SerializeField, Required, ChildGameObjectsOnly] private Button backButton;
 
-		private SkillLogic _currentSkillLogic;
+		private Systems.Unit.Unit _unit;
 
 		public void DataInitialize(Systems.Unit.Unit unit)
 		{
+			_unit = unit;
+
 			backButton.onClick.RemoveAllListeners();
 			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 
@@ -30,25 +32,33 @@ namespace Presentation.UI.Panel.SkillMenu
 			confirmButton.interactable = false;
 
 			if (unit.Skill == null) return;
-			_currentSkillLogic = unit.Skill;
 			skillName.text = unit.Skill.Config.skillName;
 			skillDescription.text = unit.Skill.Config.description;
+		}
 
-			if (_currentSkillLogic.CanUse)
+		protected override void OnOpen()
+		{
+			EventBus.Subscribe<TargetingEvent>(OnTargeting);
+
+			if (_unit == null) return;
+			var currentSkillLogic = _unit.Skill;
+
+			if (currentSkillLogic == null)
 			{
-				EventBus.Publish(new SkillSelectedEvent());
-				confirmButton.interactable = true;
+				cooldown.text = "角色无技能";
+				return;
 			}
+
+			if (currentSkillLogic.CanUse)
+				EventBus.Publish(new SkillSelectedEvent());
 			else
 			{
 				var text = "";
-				if (unit.CurrentAp < _currentSkillLogic.Config.apCost) text += "AP不足\n";
-				if (_currentSkillLogic.CurrentCooldown > 0) text += $"冷却中，剩余{_currentSkillLogic.CurrentCooldown}回合";
+				if (_unit.CurrentAp < currentSkillLogic.Config.apCost) text += "AP不足\n";
+				if (currentSkillLogic.CurrentCooldown > 0) text += $"冷却中，剩余{currentSkillLogic.CurrentCooldown}回合";
 				cooldown.text = text;
 			}
 		}
-
-		protected override void OnOpen() => EventBus.Subscribe<TargetingEvent>(OnTargeting);
 
 		protected override void OnClose() => EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
 

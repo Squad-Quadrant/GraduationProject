@@ -15,4 +15,4 @@ MonoBehaviour:
   panelId: DamageTextPanel
   prefab: {fileID: 7082509817793366905, guid: 49c8713a3f55c9a4a85ebed9697aee33, type: 3}
   layer: 2
-  cacheOnClose: 1
+  cacheOnClose: 0

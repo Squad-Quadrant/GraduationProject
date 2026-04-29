@@ -15,4 +15,4 @@ MonoBehaviour:
   panelId: TargetInfoPanel
   prefab: {fileID: 3811154174304679496, guid: 6e435bc4cd09f8c4e93f94399c1a437e, type: 3}
   layer: 2
-  cacheOnClose: 1
+  cacheOnClose: 0
