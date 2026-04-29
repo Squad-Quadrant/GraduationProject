@@ -70,7 +70,11 @@ namespace Presentation.Unit
 		// immediate play; onComplete is called after the animation finishes each loop
 		public void Play(string animName, bool loop, Action onComplete = null)
 		{
-			if (!ValidateReady()) return;
+			if (!ValidateReady())
+			{
+				onComplete?.Invoke();
+				return;
+			}
 			StopFidgetCycle();
 			PlayInternal(animName, loop, onComplete);
 		}
@@ -84,7 +88,11 @@ namespace Presentation.Unit
 
 		public void Queue(string animName, bool loop, float delay = 0f, Action onComplete = null)
 		{
-			if (!ValidateReady()) return;
+			if (!ValidateReady())
+			{
+				onComplete?.Invoke();
+				return;
+			}
 
 			var anim = _skeleton.Data.FindAnimation(animName);
 			if (anim == null)
@@ -157,6 +165,7 @@ namespace Presentation.Unit
 			if (anim == null)
 			{
 				this.LogError($"Animation '{animName}' not found in skeleton data");
+				onComplete?.Invoke();
 				return;
 			}
 
