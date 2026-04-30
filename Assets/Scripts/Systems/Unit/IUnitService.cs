@@ -9,7 +9,12 @@ namespace Systems.Unit
 	{
 		int Count { get; }
 
-		Unit CreateUnit(string unitId, UnitConfig config, Loadout loadout, Vector2Int position);
+		Unit CreateUnit(
+			string unitId,
+			UnitConfig config,
+			Loadout loadout,
+			Vector2Int position,
+			IReadOnlyList<Vector2Int> patrolWaypoints = null);
 
 		void DestroyUnit(string unitId, string killerUnitId = null);
 

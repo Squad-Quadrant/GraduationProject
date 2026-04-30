@@ -16,6 +16,8 @@ using Presentation.Unit;
 using Presentation.Vision;
 using Sirenix.OdinInspector;
 using Systems.AI;
+using Systems.AI.Alert;
+using Systems.AI.Blackboard;
 using Systems.AreaEffect;
 using Systems.Buff;
 using Systems.Damage;
@@ -57,7 +59,7 @@ namespace Presentation.Bootstrap
 
 		private readonly List<LoadStepEntry> _steps = new();
 
-		private void Start()
+		private void Awake()
 		{
 			var dataManager = RootContainer.Instance
 				? RootContainer.Instance.TryResolve<DataManager>()
@@ -169,9 +171,19 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IVisionCalculator, VisionCalculator>();
 			_levelContainer.Services.Register<IVisionService, VisionService>();
 			_levelContainer.Services.Register<IRegionService, RegionService>();
-            _levelContainer.Services.Register<IAIService, AIService>();
 			_levelContainer.Services.Register<IBuffService, BuffService>();
 			_levelContainer.Services.Register<IAreaEffectService, AreaEffectService>();
+
+			var unitService = _levelContainer.Resolve<IUnitService>();
+			var turnService = _levelContainer.Resolve<ITurnService>();
+			var visionCalculator = _levelContainer.Resolve<IVisionCalculator>();
+			var regionService = _levelContainer.Resolve<IRegionService>();
+			IAIBlackboardService aiBlackboardService = new AIBlackboardService(_eventBus, unitService, turnService, visionCalculator);
+			_levelContainer.Services.RegisterInstance(aiBlackboardService);
+
+			IAlertService alertService = new AlertService(_eventBus, unitService, visionCalculator, regionService, aiBlackboardService);
+			_levelContainer.Services.RegisterInstance(alertService);
+			_levelContainer.Services.Register<IAIService, AIService>();
 
 			_levelContainer.Services.RegisterInstance(interactionController);
 			_levelContainer.Services.RegisterInstance(unitViewManager);
@@ -255,7 +267,8 @@ namespace Presentation.Bootstrap
 					placement.unitId,
 					placement.unitConfig,
 					loadout,
-					placement.startPosition);
+					placement.startPosition,
+					placement.patrolWaypoints);
 
 				mapService.OccupyCell(placement.startPosition, placement.unitId);
 				spawned++;
@@ -266,8 +279,8 @@ namespace Presentation.Bootstrap
 
 		private void StartGame()
 		{
-			_levelContainer.Resolve<IGameServer>().StartGame();
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
+			_levelContainer.Resolve<IGameServer>().StartGame();
 		}
 
 		#region Debug

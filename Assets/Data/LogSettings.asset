@@ -44,6 +44,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.ThrowAreaEffectCommand
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Data.Runtime.Commands.UnitAttackCommand
     enabled: 1
     minLogLevel: 1
@@ -56,7 +60,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.AI.AlertIconView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.AreaEffect.AreaEffectView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Audio.AudioService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.MenuFlowController
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -88,7 +108,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Map.SceneActor.SceneActorViewManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.Map.Wall.WallViewManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Postprocessing.OutlineFeature
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Postprocessing.WallOcclusionFeature
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -108,7 +140,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.ActionMenu.ActionMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.ActionMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.AttachPreview.AttackPreviewPanel
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -116,7 +156,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Blood.BloodSliderPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Blood.DamageTextPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.BloodSliderPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.BodyPartPrompt.BodyPartPromptPanel
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -129,6 +181,30 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.UI.Panel.Log.GameLogger
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Menu.LevelSelectPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Menu.Loadout.LoadoutPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.Menu.MainMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.SkillMenu.SkillMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TacticalItemMenu.TacticalItemMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.TargetInfoPanel
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -152,11 +228,27 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.AbilitySelectionPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Presenter.ActionMenuPresenter
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.AttackPreviewPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Presenter.CommonPanelPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TacticalItemMenuPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.TargetInfoPresenter
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -196,6 +288,14 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.AI.Alert.AlertService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AI.Blackboard.AIBlackboardService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.AI.Evaluation.AttackEvaluator
     enabled: 1
     minLogLevel: 1
@@ -208,6 +308,14 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.AreaEffect.AreaEffectService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.AreaEffect.Behaviors.AttachBuffAreaBehavior
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Buff.BuffProxy
     enabled: 1
     minLogLevel: 1
@@ -216,11 +324,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Damage.BodyDestructionInfluence
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Damage.BulletDamageExecutingChain
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Damage.DamageExecutingChain
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.Damage.DamageService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Damage.GeneralDamageExecutingChain
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -233,6 +353,10 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.GamePlay.PlayerTurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AbilitySelectionState
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -252,7 +376,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Interaction.States.ItemSelectionState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Interaction.States.MovementPreviewState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.TargetingState
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -284,6 +416,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableGrenadeLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Unit.UnitService
     enabled: 1
     minLogLevel: 1
@@ -293,130 +429,6 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.Vision.VisionService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.ActionMenu.ActionMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TacticalItemMenuPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.ItemSelectionState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TacticalItemMenu.TacticalItemMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.AreaEffect.AreaEffectService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.AreaEffect.AreaEffectView
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.TargetingState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.ThrowAreaEffectCommand
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.AreaEffect.Behaviors.AttachBuffAreaBehavior
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Bootstrap.MenuFlowController
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Menu.MainMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Menu.LevelSelectPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Menu.Loadout.LoadoutPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Damage.BodyDestructionInfluence
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Postprocessing.OutlineFeature
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Damage.BulletDamageExecutingChain
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Damage.GeneralDamageExecutingChain
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.AbilitySelectionPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.AbilitySelectionState
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.SkillMenu.SkillMenuPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Postprocessing.WallOcclusionFeature
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.BodyPartPrompt.BodyPartPromptPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Map.SceneActor.SceneActorViewManager
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Blood.BloodSliderPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.Blood.DamageTextPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.AttachPreview.AttackPreviewPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.AttackPreviewPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.TargetInfoPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.TargetInfoPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableGrenadeLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Audio.AudioService
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1

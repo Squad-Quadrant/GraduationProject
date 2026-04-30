@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using Core.Events;
+using Systems.AI.Blackboard;
 using Systems.AI.Config;
-using Systems.AI.Evaluation;
+using Systems.Map;
 using Systems.PathFinding;
+using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.AI
@@ -9,14 +13,21 @@ namespace Systems.AI
 	public class AIContext
 	{
 		public Unit.Unit Self { get; }
-		public AIBrainConfig Brain { get; }
+		public AIArchetype Archetype { get; }
 		public List<Unit.Unit> Enemies { get; }
 		public List<Unit.Unit> Allies { get; }
 		public ReachableAreaResult ReachableArea { get; }
 		public HashSet<Vector2Int> VisibleCells { get; }
-		
-		public List<IActionEvaluator> evaluators;
-        // public List<Unit.Unit> AttackableEnemies { get; }
+		public int CurrentTurn { get; }
+
+		public IEventBus EventBus { get; }
+		public IUnitService UnitService { get; }
+		public IMapService MapService { get; }
+		public IVisionCalculator VisionCalculator { get; }
+		public IAIBlackboardService BlackboardService { get; }
+		public IPathFindingService PathFinding { get; }
+
+		public PathFindingOptions PathOptions { get; }
 
 		public AIContext(
 			Unit.Unit self,
@@ -24,16 +35,30 @@ namespace Systems.AI
 			List<Unit.Unit> allies,
 			ReachableAreaResult reachableArea,
 			HashSet<Vector2Int> visibleCells,
-			List<IActionEvaluator> evaluators)
+			int currentTurn,
+			IEventBus eventBus,
+			IUnitService unitService,
+			IMapService mapService,
+			IVisionCalculator visionCalculator,
+			IAIBlackboardService blackboardService,
+			PathFindingOptions pathOptions,
+			IPathFindingService pathFinding)
 		{
 			Self = self;
-			Brain = self.aiBrainConfig;
+			Archetype = self.aiArchetype;
 			Enemies = enemies;
 			Allies = allies;
 			ReachableArea = reachableArea;
 			VisibleCells = visibleCells;
-			this.evaluators = evaluators;
-            // AttackableEnemies = attackableEnemies;
+			CurrentTurn = currentTurn;
+
+			EventBus = eventBus;
+			UnitService = unitService;
+			MapService = mapService;
+			VisionCalculator = visionCalculator;
+			BlackboardService = blackboardService;
+			PathOptions = pathOptions;
+			PathFinding = pathFinding;
 		}
 	}
 }

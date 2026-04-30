@@ -63,9 +63,11 @@ namespace Data.Runtime.Commands
 				return;
 			}
 
+			_mapService.ReleaseCell(_fromPosition);
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.CurrentAp -= _apCost;
 			unit.apSpentOnMovement += _apCost;
+			unit.position = _toPosition;
 
 			_eventBus.Publish(new UnitMovedEvent(
 				unit,
@@ -121,17 +123,6 @@ namespace Data.Runtime.Commands
 				return;
 
 			this.Log($"Animation complete for {_unitId}");
-
-			if (!_unitService.TryGetUnit(_unitId, out var unit))
-			{
-				this.LogError($"Unit '{_unitId}' not found!");
-				Cleanup();
-				CompleteExecution();
-				return;
-			}
-
-			_mapService.ReleaseCell(_fromPosition); // 保证移动移动期间的墙壁透明性
-			unit.position = _toPosition;
 
 			Cleanup();
 			CompleteExecution();

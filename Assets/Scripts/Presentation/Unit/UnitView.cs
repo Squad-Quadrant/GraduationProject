@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Log;
 using DG.Tweening;
+using Presentation.AI;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -25,6 +26,8 @@ namespace Presentation.Unit
 		[SerializeField, Required, ChildGameObjectsOnly] private SortingGroup sortingGroup;
 		[SerializeField, Required, ChildGameObjectsOnly] private MeshRenderer meshRenderer;
 		[SerializeField, Required, ChildGameObjectsOnly] private Collider2D clickCollider;
+		[SerializeField, Required, ChildGameObjectsOnly] private AlertIconView alertIcon;
+
 		private UnitAnimationConfig _config;
 		private ICoordinateConverter _coordConverter;
 
@@ -71,6 +74,8 @@ namespace Presentation.Unit
 			transform.position = new Vector3(transform.position.x, transform.position.y, 0f); // ensure z=0 for correct sorting
 
 			PlayAction("idle");
+
+			alertIcon.Bind(unitId);
 
 			this.Log($"UnitView initialized at grid {initialGridPos} (world {transform.position}) with body skins '{frontBodySkinName}' and '{backBodySkinName}'");
 		}
@@ -193,6 +198,7 @@ namespace Presentation.Unit
 		{
 			meshRenderer.enabled = visible;
 			clickCollider.enabled = visible;
+			alertIcon.SetVisible(visible);
 		}
 
 		public bool GetVisible() => meshRenderer.enabled;

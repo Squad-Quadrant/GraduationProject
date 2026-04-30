@@ -43,8 +43,8 @@ namespace Systems.Unit
         public int san = 100;
 
         [TitleGroup("AI")]
-        [Tooltip("AI 决策配置。留空则使用默认权重，Player 单位无需配置。")]
-        public AIBrainConfig aiBrainConfig;
+        [Tooltip("AI 决策配置。AI必填，Player 单位无需配置。")]
+        public AIArchetype aiArchetype;
 
         [TitleGroup("Skill")]
         [Tooltip("技能配置（可空）。M8 阶段为玩家专属，AI 即使挂上也不会使用。留空表示该单位无主动技能。")]

@@ -32,7 +32,12 @@ namespace Systems.Unit
 
 		public void Dispose() => this.Log("Disposed");
 
-		public Unit CreateUnit(string unitId, UnitConfig config, Loadout loadout, Vector2Int position)
+		public Unit CreateUnit(
+			string unitId,
+			UnitConfig config,
+			Loadout loadout,
+			Vector2Int position,
+			IReadOnlyList<Vector2Int> patrolWaypoints = null)
 		{
 			if (string.IsNullOrEmpty(unitId))
 				throw new ArgumentException("Unit ID cannot be null or empty.", nameof(unitId));
@@ -47,7 +52,7 @@ namespace Systems.Unit
 			var resolvedSecondary = _dataManager.GetEquipment(loadout?.secondaryWeaponId ?? 0);
 			var resolvedTacticalItems = ResolveTacticalItems(loadout);
 
-			var unit = Unit.LoadFromConfig(unitId, config, position);
+			var unit = Unit.LoadFromConfig(unitId, config, position, patrolWaypoints);
 			unit.InitEquipment(resolvedMain, resolvedSecondary, resolvedTacticalItems);
 
 			_units[unitId] = unit;

@@ -5,18 +5,23 @@ using Core.Commands;
 using Core.Commands.Events;
 using Core.Events;
 using Core.Log;
-using Data.Runtime;
 using Data.Runtime.Commands;
-using Systems.AI.Evaluation;
+using Systems.AI.Actions;
+using Systems.AI.Alert;
+using Systems.AI.Behavior;
+using Systems.AI.Blackboard;
+using Systems.AI.Plans;
 using Systems.Map;
+using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit;
 using Systems.Vision;
+using UnityEngine;
 
 namespace Systems.AI
 {
-	public class AIService : IAIService
+	public class AIService : IAIService, IDisposable
 	{
 		private readonly IEventBus _eventBus;
 		private readonly ICommandQueue _commandQueue;
@@ -25,10 +30,16 @@ namespace Systems.AI
 		private readonly ITurnService _turnService;
 		private readonly IPathFindingService _pathFinding;
 		private readonly IVisionCalculator _visionCalculator;
+		private readonly IAIBlackboardService _blackboardService;
+		private readonly IRegionService _regionService;
+		private readonly IAlertService _alertService;
 		
 		private Unit.Unit _currentUnit;
 		private Action _onTurnComplete;
 		private Action<CommandCompletedEvent> _onCommandCompleted;
+
+		private ITurnPlan _currentPlan;
+		private Queue<IAtomicAction> _currentSequence;
 
 		public AIService(
 			IEventBus eventBus,
@@ -37,7 +48,10 @@ namespace Systems.AI
 			IMapService mapService,
 			ITurnService turnService,
 			IPathFindingService pathFinding,
-			IVisionCalculator visionCalculator)
+			IVisionCalculator visionCalculator,
+			IAIBlackboardService blackboardService,
+			IRegionService regionService,
+			IAlertService alertService)
 		{
 			_eventBus = eventBus;
 			_commandQueue = commandQueue;
@@ -46,6 +60,9 @@ namespace Systems.AI
 			_turnService = turnService;
 			_pathFinding = pathFinding;
 			_visionCalculator = visionCalculator;
+			_blackboardService = blackboardService;
+			_regionService = regionService;
+			_alertService = alertService;
 
 			this.Log("Initialized");
 		}
@@ -70,34 +87,25 @@ namespace Systems.AI
 				return;
 			}
 
-			var context = BuildContext(_currentUnit);
-			var best = EvaluateAndSelect(context);
-
-			this.Log($"Decision: {best}");
-
-			switch (best.ActionType)
+			if (!_regionService.IsCellUnlocked(_currentUnit.position)) // 未解锁区域的单位不响应
 			{
-				case EAIActionType.Wait:
-					EndTurn();
-					break;
-
-				case EAIActionType.Move:
-					ExecuteMove(best, context);
-					break;
-
-				case EAIActionType.Attack:
-					ExecuteAttack(best);
-					break;
-                
-                case EAIActionType.Reload:
-                    ExecuteReload(best);
-                    break;
-
-				default:
-					this.LogWarning($"Unhandled action type: {best.ActionType}");
-					EndTurn();
-					break;
+				this.Log($"'{_currentUnit.name}' is in locked region — skipping turn");
+				EndTurn();
+				return;
 			}
+
+			var context = BuildContext(_currentUnit);
+
+			var level = _alertService.GetAlertLevel(_currentUnit.id);
+			if (level == EAlertLevel.Calm)
+			{
+				_currentPlan = null;
+				_currentSequence = null;
+				ExecuteIdle(context);
+				return;
+			}
+
+			PlanLoop(context);
 		}
 
 		private AIContext BuildContext(Unit.Unit unit) // 构建战场上下文
@@ -117,6 +125,8 @@ namespace Systems.AI
 					allies.Add(other);
 			}
 
+			_blackboardService.ReportVisibleEnemies(unit.faction, _turnService.TurnNumber, unit.id, enemies);
+
 			var options = new PathFindingOptions(
 				canPassThroughAllies: true,
 				enemiesBlockMovement: true,
@@ -127,88 +137,151 @@ namespace Systems.AI
 				ignoreTerrainWalkability: false,
 				visibleCells: visibleCells
 			);
-			int maxMove = unit.moveRange * unit.CurrentAp;
+			int maxMove = unit.moveRange * unit.RemainingMovementAp;
 			var reachableArea = _pathFinding.GetReachableArea(unit.position, maxMove, options);
-			
-			var evaluators = GetEvaluators(unit.GetAvailableActions());
 
-			return new AIContext(unit, enemies, allies, reachableArea, visibleCells,evaluators);
+			return new AIContext(
+				unit, enemies, allies, reachableArea, visibleCells, _turnService.TurnNumber,
+				_eventBus, _unitService, _mapService, _visionCalculator, _blackboardService, options, _pathFinding);
 		}
 
-		private AIActionOption EvaluateAndSelect(AIContext context) // 跑一遍所有的评估器，选出当下最好的
+		private void ExecuteIdle(AIContext context)
 		{
-			var allOptions = new List<AIActionOption>();
+			var unit = _currentUnit;
+			var idleTarget = IdleTargetSelector.GetIdleTarget(unit, unit.aiArchetype);
 
-			var evaluators = context.evaluators;
-
-			foreach (var evaluator in evaluators)
+			if (!idleTarget.HasValue) // 已经在合适位置 -→ Wait
 			{
-				var options = evaluator.Evaluate(context);
-				if (options != null)
-					allOptions.AddRange(options);
-			}
-
-			return allOptions.OrderByDescending(o => o.Score).First();
-		}
-
-		private void ExecuteMove(AIActionOption option, AIContext context)
-		{
-			var target = option.MoveTarget!.Value;
-			var pathResult = context.ReachableArea.GetPathTo(target);
-
-			if (!pathResult.Found)
-			{
-				this.LogWarning($"No path to {target} — falling back to Wait");
+				this.Log($"'{unit.id}' idle: at target, waiting");
 				EndTurn();
 				return;
 			}
 
-			var unit = _currentUnit;
-			int apCost = unit.CalculateMovementApCost(pathResult.TotalCost);
+			var moveTarget = PathFollowingHelper.FindStepTowards(
+				unit.position, idleTarget.Value, context.ReachableArea,
+				context.PathFinding, context.PathOptions);
 
-			var cmd = new MoveUnitCommand(
-				unit.id,
-				unit.position,
-				target,
-				pathResult.Path,
-				apCost,
-				_unitService,
-				_mapService,
-				_eventBus
-			);
+			if (moveTarget == unit.position)
+			{
+				// 走不到任何格 -→ Wait
+				this.Log($"'{unit.id}' idle: cannot approach {idleTarget.Value}, waiting");
+				EndTurn();
+				return;
+			}
 
-			ExecuteCommandThenContinue(cmd);
+			var moveAction = new MoveAction(moveTarget);
+			ExecuteAction(moveAction, context);
 		}
 
-		private void ExecuteAttack(AIActionOption option)
+		private void PlanLoop(AIContext context)
 		{
-			var unit = _currentUnit;
+			int retry = 0;
+			while (true)
+			{
+				if (retry > 3)
+				{
+					this.LogError("exceeded the maximum number of attempts, ending turn");
+					EndTurn();
+					return;
+				}
 
-			var cmd = new UnitAttackCommand(
-				unit.id,
-				option.TargetUnitId,
-				1,
-				option.EquipmentAction,
-				_unitService,
-				_mapService,
-				_eventBus
-			);
+				if (_currentPlan == null) // 没 plan → 选一个
+				{
+					if (!TrySelectNewPlan(context, out _currentPlan))
+					{
+						this.LogWarning("No viable plan, ending turn");
+						EndTurn();
+						return;
+					}
+					_currentSequence = _currentPlan.BuildActionSequence(context);
+				}
 
+				if (_currentPlan.ShouldAbort(context))
+				{
+					this.Log($"Plan '{_currentPlan.Name}' aborted, replanning");
+					_currentPlan = null;
+					_currentSequence = null;
+					retry += 1;
+					continue;
+				}
+
+				if (_currentSequence == null || _currentSequence.Count == 0)
+				{
+					this.Log($"Plan '{_currentPlan.Name}' completed");
+					_currentPlan = null;
+					_currentSequence = null;
+					EndTurn();
+					return;
+				}
+
+				var action = _currentSequence.Dequeue();
+				ExecuteAction(action, context);
+				return;
+			}
+		}
+
+		private bool TrySelectNewPlan(AIContext context, out ITurnPlan newPlan)
+		{
+			var candidates = GenerateCandidatePlans(context);
+
+			ITurnPlan best = null;
+			float bestScore = float.NegativeInfinity;
+			foreach (var plan in candidates)
+			{
+				if (!plan.IsViable(context)) continue;
+				float score = plan.Score(context);
+				if (score <= bestScore) continue;
+				bestScore = score;
+				best = plan;
+			}
+
+			if (best == null)
+			{
+				newPlan = null;
+				return false;
+			}
+
+			newPlan = best;
+
+			this.Log($"Selected plan: {best.Name} (score: {bestScore:F2})");
+			return true;
+		}
+
+		private static List<ITurnPlan> GenerateCandidatePlans(AIContext context)
+		{
+			var plans = new List<ITurnPlan>();
+
+			plans.AddRange(context.Enemies.Select(enemy => new EngagePlan(enemy)));
+
+			var board = context.BlackboardService.GetBlackboard(context.Self.faction);
+			if (board != null)
+				plans.AddRange(board.KnownEnemies.Values.Select(known => new SearchPlan(known)));
+
+			plans.Add(new ReloadPlan());
+			plans.Add(new WaitPlan());
+
+			return plans;
+		}
+
+		private void ExecuteAction(IAtomicAction action, AIContext context)
+		{
+			var cmd = action.CreateCommand(context);
+			if (cmd == null)
+			{
+				this.LogWarning($"Failed to create command for {action} — aborting plan");
+				AbortAndReplan();
+				return;
+			}
+			this.Log($"Executing: {action}");
 			ExecuteCommandThenContinue(cmd);
 		}
-        
-        private void ExecuteReload(AIActionOption option)
-        {
-            var unit = _currentUnit;
-            
-            var cmd = new UnitReloadCommand(
-                unit,
-                1,
-                _eventBus
-            );
 
-            ExecuteCommandThenContinue(cmd);
-        }
+		private void AbortAndReplan()
+		{
+			_currentPlan = null;
+			_currentSequence = null;
+			DecisionLoop();
+		}
 
 		private void ExecuteCommandThenContinue(ICommand command)
 		{
@@ -232,6 +305,8 @@ namespace Systems.AI
 			var callback = _onTurnComplete;
 			_currentUnit = null;
 			_onTurnComplete = null;
+			_currentPlan = null;
+			_currentSequence = null;
 			callback?.Invoke();
 		}
 
@@ -240,26 +315,6 @@ namespace Systems.AI
 			if (_onCommandCompleted == null) return;
 			_eventBus.Unsubscribe(_onCommandCompleted);
 			_onCommandCompleted = null;
-		}
-
-		private List<IActionEvaluator> GetEvaluators(List<ActionAbility> actions)
-		{
-			var result = new List<IActionEvaluator>();
-			
-			foreach (var action in actions)
-			{
-				if (!action.IsAvailable) continue;
-				
-				if (action.ActionType == EActionType.Wait)
-					result.Add(new WaitEvaluator());
-				else if (action.ActionType == EActionType.Move)
-					result.Add(new MoveEvaluator());
-				else if (action.ActionType == EActionType.Attack)
-					result.Add(new AttackEvaluator());
-				else if (action.ActionType == EActionType.Reload)
-					result.Add(new ReloadEvaluator());
-			}
-			return result;
 		}
 	}
 }

@@ -49,7 +49,7 @@ namespace Systems.Unit
 		public EUnitFaction faction;
         public int maxDefense;
         public float defenseRate;
-        public AIBrainConfig aiBrainConfig;
+        public AIArchetype aiArchetype;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;
@@ -71,7 +71,12 @@ namespace Systems.Unit
         public bool isStunned;
         public BuffProperty<bool> CanUseEquipment = new(PropertyType.CanUseEquipment, true);
         public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
-        
+
+        // for ai only
+        public Vector2Int spawnPosition;
+        public IReadOnlyList<Vector2Int> patrolWaypoints;
+        public int patrolCursor;
+
         public List<DamageInfluence> DamageInfluences { get; } = new();
         
         public Dictionary<BodyPartType, int> BodyPartInfo = new()
@@ -145,7 +150,11 @@ namespace Systems.Unit
         private IMapService _mapService;
         private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
 		
-		internal static Unit LoadFromConfig(string unitId, UnitConfig config, Vector2Int startPosition)
+		internal static Unit LoadFromConfig(
+			string unitId,
+			UnitConfig config,
+			Vector2Int startPosition,
+			IReadOnlyList<Vector2Int> patrolWaypoints = null)
 		{
 			var unit = new Unit
 			{
@@ -164,7 +173,7 @@ namespace Systems.Unit
 				faction = config.faction,
                 maxDefense = config.defense,
                 defenseRate = config.defenseRate,
-                aiBrainConfig = config.aiBrainConfig,
+                aiArchetype = config.aiArchetype,
 
 				animationConfig = config.animationConfig,
 				skeletonDataAsset = config.skeletonDataAsset,
@@ -180,6 +189,10 @@ namespace Systems.Unit
                 _currentAp = config.actionPoints,
 				position = startPosition,
 				isStunned = false,
+
+				spawnPosition = startPosition,
+				patrolWaypoints = patrolWaypoints,
+				patrolCursor = 0,
 			};
 
 			if (config.skillConfig)

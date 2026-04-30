@@ -28,6 +28,12 @@ namespace Data.Config
 		[LabelText("初始装备配置")]
 		[InfoBox("玩家单位在局外配装后会覆盖此值；敌人/NPC 直接使用此值", InfoMessageType.None)]
 		public Loadout initialLoadout = new();
+
+		[LabelText("巡逻路线"), ShowIf("CurrentUnitFaction", EUnitFaction.Enemy)]
+		[InfoBox("仅 AIArchetype.idleBehavior=Patrol 时使用；按顺序循环。", InfoMessageType.None)]
+		public List<Vector2Int> patrolWaypoints = new();
+
+		private EUnitFaction CurrentUnitFaction => unitConfig.faction;
 	}
 
 	[CreateAssetMenu(fileName = "NewLevelConfig", menuName = "Game/Level Config")]
