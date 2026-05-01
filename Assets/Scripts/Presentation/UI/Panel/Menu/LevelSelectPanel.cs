@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Data.Config;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
@@ -29,6 +28,8 @@ namespace Presentation.UI.Panel.Menu
 
 		[Title("Buttons")]
 		[SerializeField, Required, ChildGameObjectsOnly] private Button backButton;
+		[SerializeField, Required, ChildGameObjectsOnly] private Button leftButton;
+		[SerializeField, Required, ChildGameObjectsOnly] private Button rightButton;
 
 		public void DataInitialize(LevelSelectPanelData data)
 		{
