@@ -82,8 +82,14 @@ namespace Systems.Interaction.States
 			var effects = areaEffectService?.GetAt(mapCell.Position);
 			if (effects is { Count: > 0 })
 			{
-				var names = string.Join(", ", effects.Select(ae => ae.Behavior.DisplayName));
-				return $"状态: {names}";
+				var text = "状态：";
+				foreach (var effect in effects)
+				{
+					var name = effect.Behavior.DisplayName;
+					var turn = effect.RemainingTurns;
+					text += $"\n{name} : {turn}回合";
+				}
+				return text;
 			}
 
 			if (mapCell.SceneActor != null && !string.IsNullOrEmpty(mapCell.SceneActor.DisplayName))
