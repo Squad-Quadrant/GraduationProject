@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
-  m_Name: 1003-T Item_Flash-Bang Grenade M84
+  m_Name: 1006-T Item_Bomb
   m_EditorClassIdentifier: 
-  id: 1003
-  nName: "M84\u95EA\u5149\u5F39"
+  id: 1006
+  nName: "\u5B9A\u65F6\u70B8\u5F39"
   type: "\u6218\u672F\u9053\u5177"
   description: 
   battleDescription: 
@@ -23,10 +23,10 @@ MonoBehaviour:
   weight: 0
   spineName: 
   gripType: 0
-  kind: 1
-  maxUsesPerBattle: 3
+  kind: 3
+  maxUsesPerBattle: 2
   apCost: 1
-  throwRange: 6
+  throwRange: 1
   coverageOffsets:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
@@ -37,14 +37,26 @@ MonoBehaviour:
   - {x: 1, y: -1}
   - {x: -1, y: -1}
   - {x: -1, y: 1}
+  - {x: 2, y: 2}
+  - {x: 2, y: 1}
   - {x: 2, y: 0}
+  - {x: 2, y: -1}
+  - {x: 2, y: -2}
+  - {x: 1, y: -2}
   - {x: 0, y: -2}
+  - {x: -1, y: -2}
+  - {x: -2, y: -2}
+  - {x: -2, y: -1}
   - {x: -2, y: 0}
+  - {x: -2, y: 1}
+  - {x: -2, y: 2}
+  - {x: -1, y: 2}
   - {x: 0, y: 2}
+  - {x: 1, y: 2}
   healAmount: 30
   directDamage: 50
   appliedBuff: 3
-  persistTurns: 2
+  persistTurns: 3
   oneShotVfxPrefab: {fileID: 0}
   persistentVfxPrefab: {fileID: 0}
   visionReach: 5
