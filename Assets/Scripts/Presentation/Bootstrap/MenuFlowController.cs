@@ -24,6 +24,8 @@ namespace Presentation.Bootstrap
 		private DataManager _dataManager;
 		private SceneTransitioner _sceneTransitioner;
 
+		private UIPanel _openedPanel;
+
 		private void Awake()
 		{
 			_uiManager = RootContainer.Instance.Resolve<UIManager>();
@@ -35,8 +37,8 @@ namespace Presentation.Bootstrap
 
 		private void ShowMainMenu()
 		{
-			_uiManager.CloseAll();
-			_uiManager.Open<MainMenuPanel, MainMenuPanelData>(new MainMenuPanelData
+			if (_openedPanel) _uiManager.Close(_openedPanel);
+			_openedPanel = _uiManager.Open<MainMenuPanel, MainMenuPanelData>(new MainMenuPanelData
 			{
 				OnStart = ShowLevelSelect,
 				OnQuit = QuitGame,
@@ -45,8 +47,8 @@ namespace Presentation.Bootstrap
 
 		private void ShowLevelSelect()
 		{
-			_uiManager.CloseAll();
-			_uiManager.Open<LevelSelectPanel, LevelSelectPanelData>(new LevelSelectPanelData
+			if (_openedPanel) _uiManager.Close(_openedPanel);
+			_openedPanel = _uiManager.Open<LevelSelectPanel, LevelSelectPanelData>(new LevelSelectPanelData
 			{
 				OnLevelSelected = ShowLoadout,
 				OnBack = ShowMainMenu,
@@ -63,8 +65,8 @@ namespace Presentation.Bootstrap
 
 			_dataManager.SelectedLevel = level;
 
-			_uiManager.CloseAll();
-			_uiManager.Open<LoadoutPanel, LoadoutPanelData>(new LoadoutPanelData
+			if (_openedPanel) _uiManager.Close(_openedPanel);
+			_openedPanel = _uiManager.Open<LoadoutPanel, LoadoutPanelData>(new LoadoutPanelData
 			{
 				Level = level,
 				DataManager = _dataManager,
@@ -81,7 +83,7 @@ namespace Presentation.Bootstrap
 				return;
 			}
 
-			_uiManager.CloseAll();
+			if (_openedPanel) _uiManager.Close(_openedPanel);
 			this.Log($"Loading Battle scene for level '{_dataManager.SelectedLevel.levelId}'");
 			_sceneTransitioner.LoadScene(battleSceneName, waitForLevelLoaded: true);
 		}
