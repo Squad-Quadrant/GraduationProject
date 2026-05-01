@@ -31,6 +31,10 @@ namespace Presentation.Bootstrap
         [SerializeField, Required]
         private AudioService audioService;
 
+		[TitleGroup("Configuration")]
+		[SerializeField, Required]
+		private SceneTransitioner sceneTransitioner;
+
 		[TitleGroup("Prefabs")]
 		[SerializeField, ReadOnly]
 		private RootContainer rootContainerPrefab;
@@ -85,6 +89,9 @@ namespace Presentation.Bootstrap
 
             _rootContainerInstance.Services.RegisterInstance(audioService);
             audioService.Initialize();
+
+            _rootContainerInstance.Services.RegisterInstance(sceneTransitioner);
+            sceneTransitioner.Initialize();
             
 			Log("[Bootstrapper] Global services registered.");
 		}

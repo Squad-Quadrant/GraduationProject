@@ -22,11 +22,13 @@ namespace Presentation.Bootstrap
 
 		private UIManager _uiManager;
 		private DataManager _dataManager;
+		private SceneTransitioner _sceneTransitioner;
 
 		private void Awake()
 		{
 			_uiManager = RootContainer.Instance.Resolve<UIManager>();
 			_dataManager = RootContainer.Instance.Resolve<DataManager>();
+			_sceneTransitioner = RootContainer.Instance.Resolve<SceneTransitioner>();
 		}
 
 		private void Start() => ShowMainMenu();
@@ -81,14 +83,14 @@ namespace Presentation.Bootstrap
 
 			_uiManager.CloseAll();
 			this.Log($"Loading Battle scene for level '{_dataManager.SelectedLevel.levelId}'");
-			SceneManager.LoadScene(battleSceneName);
+			_sceneTransitioner.LoadScene(battleSceneName, waitForLevelLoaded: true);
 		}
 
 		public void ReturnToMainMenu()
 		{
 			this.Log("Returning to main menu");
 			_dataManager.SelectedLevel = null;
-			SceneManager.LoadScene(mainMenuSceneName);
+			_sceneTransitioner.LoadScene(mainMenuSceneName, waitForLevelLoaded: false);
 		}
 
 		private void QuitGame()

@@ -432,3 +432,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.SceneTransitioner
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.SceneTransition.SceneTransitionPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

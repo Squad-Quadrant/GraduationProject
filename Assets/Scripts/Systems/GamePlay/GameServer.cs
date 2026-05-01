@@ -75,7 +75,6 @@ namespace Systems.GamePlay
 			this.Log("Starting game...");
 
 			_fsm.StartInteraction();
-			_visionService.RecalculateSharedVision();
 			StartNewTurn();
 		}
 
@@ -151,6 +150,7 @@ namespace Systems.GamePlay
 				() => StartNewUnitTurn(turnUnit),
 				cmd => cmd
 					.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
+					.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
 			);
 
 			this.Log($"TurnUnit '{turnUnit.DisplayName}'({turnUnit.Id}, {turnUnit.Faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");

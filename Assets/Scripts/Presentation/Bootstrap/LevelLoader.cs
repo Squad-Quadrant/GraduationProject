@@ -54,6 +54,10 @@ namespace Presentation.Bootstrap
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
 
+		[Title("Lifecycle")]
+		[SerializeField]
+		private bool autoStartGame = true;
+
 		private LevelContainer _levelContainer;
 		private IEventBus _eventBus;
 
@@ -113,6 +117,18 @@ namespace Presentation.Bootstrap
 			this.Log("====================================", format: false);
 		}
 
+		private void StartGame()
+		{
+			if (!_levelContainer)
+			{
+				this.LogError("Cannot StartGame: level not loaded yet.");
+				return;
+			}
+
+			inputService.SetEnabled(true);
+			_levelContainer.Resolve<IGameServer>().StartGame();
+		}
+
 		private void BuildSteps()
 		{
 			_steps.Clear();
@@ -124,7 +140,7 @@ namespace Presentation.Bootstrap
 			AddStep("LoadMap", LoadMap);
 			AddStep("InitializeCameraController", InitializeCameraController);
 			AddStep("LoadUnits", LoadUnits);
-			AddStep("StartGame", StartGame);
+			AddStep("InitializeVision", InitializeVision);
 		}
 
 		private void AddStep(string desc, Action execute) => _steps.Add(new LoadStepEntry { Desc = desc, Execute = execute });
@@ -141,6 +157,13 @@ namespace Presentation.Bootstrap
 				this.Log($"<color=#{ColorUtility.ToHtmlStringRGB(Color.yellow)}>{result}</color>", format: false);
 			}
 			this.Log("============ Level Loaded ============", format: false);
+
+			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
+
+			if (autoStartGame)
+				StartGame();
+			else
+				this.Log("autoStartGame=false: waiting for external StartGame() call (e.g. cutscene system).");
 		}
 
 		private void SetupLevelContainer()
@@ -187,6 +210,7 @@ namespace Presentation.Bootstrap
 
 			_levelContainer.Services.RegisterInstance(interactionController);
 			_levelContainer.Services.RegisterInstance(unitViewManager);
+			_levelContainer.Services.RegisterInstance(inputService);
 		}
         
         private void InitializeComponents()
@@ -230,10 +254,8 @@ namespace Presentation.Bootstrap
 			this.Log($"Map: {levelConfig.mapConfig.MapName} {levelConfig.mapConfig.Size.x}x{levelConfig.mapConfig.Size.y})");
 		}
 
-		private void InitializeCameraController() // 需要在LoadMao之后
-		{
-			cameraController.Initialize(_levelContainer.Services);
-		}
+		private void InitializeCameraController() // 需要在LoadMap之后
+			=> cameraController.Initialize(_levelContainer.Services);
 
 		private void LoadUnits()
 		{
@@ -277,11 +299,7 @@ namespace Presentation.Bootstrap
 			this.Log($"Spawned {spawned}/{levelConfig.unitPlacements.Count} units.");
 		}
 
-		private void StartGame()
-		{
-			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
-			_levelContainer.Resolve<IGameServer>().StartGame();
-		}
+		private void InitializeVision() => _levelContainer.Resolve<IVisionService>().RecalculateSharedVision();
 
 		#region Debug
 

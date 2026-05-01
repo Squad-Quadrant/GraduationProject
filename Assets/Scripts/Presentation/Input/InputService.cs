@@ -66,7 +66,7 @@ namespace Presentation.Input
 			_inputActions.Gameplay.ESC.performed += OnESC;
 			_inputActions.Gameplay.Space.performed += OnSpace;
 
-			SetEnabled(true);
+			SetEnabled(false); // 默认不启用
 		}
 
 		private void OnDestroy()
