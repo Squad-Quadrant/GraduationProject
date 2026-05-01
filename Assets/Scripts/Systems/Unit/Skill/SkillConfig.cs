@@ -52,5 +52,13 @@ namespace Systems.Unit.Skill
 		[ShowIf(nameof(kind), ESkillKind.ScoutEye)]
 		[LabelText("持续回合数"), MinValue(1)]
 		public int persistTurns = 2;
+
+		[Title("ScoutEye 视觉特效"), ShowIf(nameof(kind), ESkillKind.ScoutEye)]
+		[LabelText("瞬时特效")]
+		public GameObject oneShotVfxPrefab;
+
+		[ShowIf(nameof(kind), ESkillKind.ScoutEye)]
+		[LabelText("持续区域特效")]
+		public GameObject persistentVfxPrefab;
 	}
 }

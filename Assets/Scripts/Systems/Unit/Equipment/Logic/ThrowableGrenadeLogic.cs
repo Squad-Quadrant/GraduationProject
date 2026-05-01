@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.Commands;
 using Core.Log;
+using Data.Runtime.Events.Vfx;
 using DG.Tweening;
 using Systems.AreaEffect;
 using Systems.AreaEffect.Behaviors;
@@ -59,6 +60,8 @@ namespace Systems.Unit.Equipment.Logic
 
 					DOVirtual.DelayedCall(0.2f, () => // todo: 需要动画或者反馈
 					{
+						ctx.EventBus.PublishOneShotVfx(ItemConfig.oneShotVfxPrefab, target);
+
 						foreach (var cell in aoeCells)
 						{
 							var unit = ctx.UnitService.GetUnitAtPosition(cell);
@@ -112,7 +115,8 @@ namespace Systems.Unit.Equipment.Logic
 				new AttachBuffAreaBehavior(
 					buffType:    ItemConfig.appliedBuff,
 					displayName: ItemConfig.nName,
-					displayIcon: ItemConfig.icon),
+					displayIcon: ItemConfig.icon,
+					persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
 				ctx);
 	}
 
@@ -127,7 +131,9 @@ namespace Systems.Unit.Equipment.Logic
 				new CountdownExplosionBehavior(
 					damage:      ItemConfig.directDamage,
 					displayName: ItemConfig.nName,
-					displayIcon: ItemConfig.icon),
+					displayIcon: ItemConfig.icon,
+					persistentVfxPrefab: ItemConfig.persistentVfxPrefab,
+					explosionVfxPrefab: ItemConfig.oneShotVfxPrefab),
 				ctx);
 	}
 
@@ -142,7 +148,8 @@ namespace Systems.Unit.Equipment.Logic
 				new ScoutEyeBehavior(
 					visionRadius: ItemConfig.visionReach,
 					displayName:  ItemConfig.nName,
-					displayIcon:  ItemConfig.icon),
+					displayIcon:  ItemConfig.icon,
+					persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
 				ctx);
 	}
 }

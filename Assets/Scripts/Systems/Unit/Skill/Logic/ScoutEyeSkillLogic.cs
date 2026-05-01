@@ -52,7 +52,8 @@ namespace Systems.Unit.Skill.Logic
 			var behavior = new ScoutEyeBehavior(
 				visionRadius: Config.visionReach,
 				displayName:  Config.skillName,
-				displayIcon:  Config.icon);
+				displayIcon:  Config.icon,
+				persistentVfxPrefab: Config.persistentVfxPrefab);
 
 			return new AsyncLambdaCommand(
 				$"Skill/ApplyAreaEffect({Owner.name} → {target}, {behavior.DisplayName}, persist={Config.persistTurns})",

@@ -8,19 +8,17 @@ namespace Systems.AreaEffect.Behaviors
 	{
 		private readonly int _visionRadius;
 
-		public override string DisplayName { get; }
-		public override Sprite DisplayIcon { get; }
-		public override bool DestroyOnOwnerDeath => true;
-
 		private RevealToken _token = RevealToken.Invalid;
 
-		public ScoutEyeBehavior(int visionRadius, string displayName, Sprite displayIcon)
+		public ScoutEyeBehavior(
+			int visionRadius,
+			string displayName,
+			Sprite displayIcon,
+			GameObject persistentVfxPrefab = null)
+			: base(displayName, displayIcon, persistentVfxPrefab, destroyOnOwnerDeath: true)
 		{
 			_visionRadius = visionRadius;
-			DisplayName = displayName;
-			DisplayIcon = displayIcon;
 		}
-
 		public override void OnCreated(AreaEffect self, AreaEffectContext ctx)
 		{
 			var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, _visionRadius);

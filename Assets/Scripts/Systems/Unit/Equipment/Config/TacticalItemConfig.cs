@@ -51,6 +51,14 @@ namespace Systems.Unit.Equipment.Config
 		[LabelText("持续回合数"), MinValue(1)]
 		public int persistTurns = 2;
 
+		[Title("AreaEffect Visual"), ShowIf(nameof(HasPersistTurns))]
+		[LabelText("瞬时落地特效")]
+		public GameObject oneShotVfxPrefab;
+
+		[ShowIf(nameof(HasPersistTurns))]
+		[LabelText("持续区域特效")]
+		public GameObject persistentVfxPrefab;
+
 		[Title("ScoutEye"), ShowIf(nameof(kind), ETacticalItemKind.ScoutEye)]
 		[LabelText("视野透视半径"), MinValue(1)]
 		public int visionReach = 5;

@@ -20,8 +20,8 @@ namespace Presentation.AreaEffect
 
 		private struct EffectEntry
 		{
-			public IReadOnlyList<Vector2Int> Cells;   // 直接引用 AreaEffect.Cells，effect 存活期内只读且不可变
-			public GameObject VfxInstance;            // Behavior.VfxPrefab 为 null 时此字段为 null
+			public IReadOnlyList<Vector2Int> Cells;
+			public GameObject PersistentVfxInstance;
 		}
 
 		public void Initialize(ServiceContainer services)
@@ -42,23 +42,25 @@ namespace Presentation.AreaEffect
 			_eventBus.Unsubscribe<AreaEffectRegisteredEvent>(OnRegistered);
 			_eventBus.Unsubscribe<AreaEffectUnregisteredEvent>(OnUnregistered);
 
-			foreach (var entry in _entries.Values.Where(entry => entry.VfxInstance))
-				Destroy(entry.VfxInstance);
+			foreach (var entry in _entries.Values.Where(entry => entry.PersistentVfxInstance))
+				Destroy(entry.PersistentVfxInstance);
 			_entries.Clear();
 		}
 
 		private void OnRegistered(AreaEffectRegisteredEvent e)
 		{
 			var effect = e.Effect;
+
 			var entry = new EffectEntry
 			{
 				Cells = effect.Cells,
-				VfxInstance = TryInstantiateVfx(effect),
+				PersistentVfxInstance = SpawnPersistentVfx(effect),
 			};
 			_entries[effect.Id] = entry;
 
 			RepublishOverlay();
-			this.Log($"Registered view for '{effect.Id}', cells:{effect.Cells.Count}, vfx:{(entry.VfxInstance ? "yes" : "none")}");
+			this.Log($"Registered view for '{effect.Id}', cells:{effect.Cells.Count}, " +
+			         $"persistentVfx:{(entry.PersistentVfxInstance ? "yes" : "none")}");
 		}
 
 		private void OnUnregistered(AreaEffectUnregisteredEvent e)
@@ -69,21 +71,27 @@ namespace Presentation.AreaEffect
 				return;
 			}
 
-			if (entry.VfxInstance) Destroy(entry.VfxInstance);
-			_entries.Remove(e.EffectId);
+			if (entry.PersistentVfxInstance)
+			{
+				if (entry.PersistentVfxInstance.TryGetComponent<AreaEffectVfxBehavior>(out var fader))
+					fader.FadeOutAndDestroy();
+				else
+					Destroy(entry.PersistentVfxInstance);
+			}
 
+			_entries.Remove(e.EffectId);
 			RepublishOverlay();
 			this.Log($"Unregistered view for '{e.EffectId}'");
 		}
 
-		private GameObject TryInstantiateVfx(Systems.AreaEffect.AreaEffect effect)
+		private GameObject SpawnPersistentVfx(Systems.AreaEffect.AreaEffect effect)
 		{
-			var prefab = effect.Behavior.VfxPrefab;
+			var prefab = effect.Behavior.PersistentVfxPrefab;
 			if (!prefab) return null;
 
 			var world = _coordConverter.CellToWorld(effect.TargetCell);
 			var go = Instantiate(prefab, world, Quaternion.identity, transform);
-			go.name = $"AreaEffectVfx_{effect.Id}";
+			go.name = $"AreaEffectPersistentVfx_{effect.Id}";
 			return go;
 		}
 

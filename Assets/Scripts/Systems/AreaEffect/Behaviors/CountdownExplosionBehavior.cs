@@ -1,4 +1,5 @@
 ﻿using Core.Log;
+using Data.Runtime.Events.Vfx;
 using UnityEngine;
 
 namespace Systems.AreaEffect.Behaviors
@@ -6,20 +7,24 @@ namespace Systems.AreaEffect.Behaviors
 	public class CountdownExplosionBehavior : AreaEffectBehavior
 	{
 		private readonly int _damage;
+		private readonly GameObject _explosionVfxPrefab;
 
-		public override string DisplayName { get; }
-		public override Sprite DisplayIcon { get; }
-		public override bool DestroyOnOwnerDeath => false;
-
-		public CountdownExplosionBehavior(int damage, string displayName, Sprite displayIcon)
+		public CountdownExplosionBehavior(
+			int damage,
+			string displayName,
+			Sprite displayIcon,
+			GameObject persistentVfxPrefab = null,
+			GameObject explosionVfxPrefab = null)
+			: base(displayName, displayIcon, persistentVfxPrefab)
 		{
 			_damage = damage;
-			DisplayName = displayName;
-			DisplayIcon = displayIcon;
+			_explosionVfxPrefab = explosionVfxPrefab;
 		}
 
 		public override void OnExpired(AreaEffect self, AreaEffectContext ctx)
 		{
+			ctx.EventBus.PublishOneShotVfx(_explosionVfxPrefab, self.TargetCell);
+
 			// 对覆盖格内所有存活单位造成爆炸伤害
 			foreach (var cell in self.Cells)
 			{

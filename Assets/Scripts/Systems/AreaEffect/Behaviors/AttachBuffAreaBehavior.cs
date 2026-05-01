@@ -8,16 +8,14 @@ namespace Systems.AreaEffect.Behaviors
 	{
 		private readonly BuffType _buffType;
 
-		public override string DisplayName { get; }
-		public override Sprite DisplayIcon { get; }
-
-		public override bool DestroyOnOwnerDeath => false;
-
-		public AttachBuffAreaBehavior(BuffType buffType, string displayName, Sprite displayIcon)
+		public AttachBuffAreaBehavior(
+			BuffType buffType,
+			string displayName,
+			Sprite displayIcon,
+			GameObject persistentVfxPrefab = null)
+			: base(displayName, displayIcon, persistentVfxPrefab)
 		{
 			_buffType = buffType;
-			DisplayName = displayName;
-			DisplayIcon = displayIcon;
 		}
 
 		public override void OnUnitEntered(AreaEffect self, Unit.Unit unit, Vector2Int cell, AreaEffectContext ctx)
