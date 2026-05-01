@@ -13,6 +13,7 @@ using Presentation.Map;
 using Presentation.UI.Core;
 using Presentation.UI.Presenter;
 using Presentation.Unit;
+using Presentation.Vfx;
 using Presentation.Vision;
 using Sirenix.OdinInspector;
 using Systems.AI;
@@ -50,6 +51,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private CameraController cameraController;
 		[SerializeField, Required] private SpottedEnemyMarkerView spottedEnemyMarkerView;
 		[SerializeField, Required] private AreaEffectView areaEffectView;
+		[SerializeField, Required] private OneShotVfxView oneShotVfxView;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -220,6 +222,7 @@ namespace Presentation.Bootstrap
             unitViewManager.Initialize(_levelContainer.Services);
             spottedEnemyMarkerView.Initialize(_levelContainer.Services);
             areaEffectView.Initialize(_levelContainer.Services);
+            oneShotVfxView.Initialize(_levelContainer.Services);
         }
 
         private void RegisterPresenter()

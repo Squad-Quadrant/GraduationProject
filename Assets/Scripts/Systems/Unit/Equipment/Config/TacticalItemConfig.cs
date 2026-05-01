@@ -52,7 +52,7 @@ namespace Systems.Unit.Equipment.Config
 		public int persistTurns = 2;
 
 		[Title("AreaEffect Visual")]
-		[LabelText("瞬时落地特效")]
+		[LabelText("OneShot特效")]
 		public GameObject oneShotVfxPrefab;
 
 		[ShowIf(nameof(HasPersistTurns))]
