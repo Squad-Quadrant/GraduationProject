@@ -11,6 +11,8 @@ namespace Presentation.UI.Component.Buff
         public void Init(BuffInfo info)
         {
             icon.sprite = info.BuffData.icon;
+            // icon.SetNativeSize();
+            
         }
     }
 }

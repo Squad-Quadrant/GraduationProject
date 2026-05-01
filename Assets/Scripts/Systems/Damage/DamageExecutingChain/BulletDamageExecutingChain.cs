@@ -17,6 +17,9 @@ namespace Systems.Damage
             var theAttacker = context.Attacker as Unit.Unit;
             influencers.Add(theAttacker.CurrentWeaponContainer.Logic as IDamageInfluencer);
             influencers.Add(theAttacker);
+            var environment = (context.Info as BulletDamageTriggeringInfo).Environment;
+            if (environment != null)
+                influencers.AddRange(environment);
         }
 
         public override void Execute()

@@ -62,7 +62,7 @@ namespace Presentation.Vision
 			var to = info.Defender.position;
 
 			var cells = new List<Vector2Int>();
-			_visionCalculator.TraceRay(from, to, cells);
+			_visionCalculator.TraceRay(from, to, out _, cells);
 
 			if (cells.Count == 0) return;
 

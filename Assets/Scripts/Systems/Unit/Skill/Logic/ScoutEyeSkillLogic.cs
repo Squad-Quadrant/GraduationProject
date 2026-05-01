@@ -41,7 +41,7 @@ namespace Systems.Unit.Skill.Logic
 		}
 
 		public bool ValidateTarget(Vector2Int cell, InteractionContext ctx) =>
-			ctx.VisionCalculator.TraceRay(Owner.position, cell);
+			ctx.VisionCalculator.TraceRay(Owner.position, cell, out _);
 
 		public IReadOnlyList<Vector2Int> GetAreaEffectPreview(Vector2Int hoverCell) =>
 			ExpandCoverage(hoverCell);

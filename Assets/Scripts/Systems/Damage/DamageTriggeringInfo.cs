@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Data.Runtime;
 
 namespace Systems.Damage
@@ -13,11 +14,14 @@ namespace Systems.Damage
     {
         public Unit.Unit UnitAttacker => Attacker as Unit.Unit;
         public EActionType ActionType;
-        public BulletDamageTriggeringInfo( Unit.Unit attacker, Unit.Unit defender, EActionType actionType)
+        public List<IDamageInfluencer> Environment;
+        public BulletDamageTriggeringInfo( Unit.Unit attacker, Unit.Unit defender, EActionType actionType, 
+            List<IDamageInfluencer> environment = null)
         {
             Attacker = attacker;
             Defender = defender;
             ActionType = actionType;
+            Environment = environment; 
         }
 
         public override DamageType DamageType => DamageType.Bullet;

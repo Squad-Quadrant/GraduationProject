@@ -7,6 +7,6 @@ namespace Systems.Vision
 	{
 		HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange);
 
-		bool TraceRay(Vector2Int from, Vector2Int to, List<Vector2Int> passedCells = null);
+		bool TraceRay(Vector2Int from, Vector2Int to, out TraceRayInfo info, List<Vector2Int> passedCells = null);
 	}
 }

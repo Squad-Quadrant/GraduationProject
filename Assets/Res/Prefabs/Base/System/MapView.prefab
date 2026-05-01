@@ -857,6 +857,7 @@ Transform:
   - {fileID: 1945878203429015378}
   - {fileID: 6325182767783368852}
   - {fileID: 7290246446138427104}
+  - {fileID: 5930132857422573567}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2970457760337099386
@@ -887,6 +888,7 @@ MonoBehaviour:
   cursorHoverTilemap: {fileID: 7109044757245858994}
   targetingTilemap: {fileID: 4646231023097586506}
   baseSingleTile: {fileID: 11400000, guid: 9df4867eb6914454c894a7e159efde5c, type: 2}
+  gunline: {fileID: 6026206011385533314}
 --- !u!1 &5650590189757595907
 GameObject:
   m_ObjectHideFlags: 0
@@ -2107,3 +2109,76 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1001 &4667707247079833743
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6600589940686590176}
+    m_Modifications:
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.022586923
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.9813195
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.21159844
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7194727474751796925, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+      propertyPath: m_Name
+      value: GunLine
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+--- !u!4 &5930132857422573567 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1336187452510875504, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+  m_PrefabInstance: {fileID: 4667707247079833743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6026206011385533314 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1397916278173242125, guid: 333924a44031342a0be48e6d9d1c2abc, type: 3}
+  m_PrefabInstance: {fileID: 4667707247079833743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb2b30b38ce140d39a54b6242d4fb8cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
