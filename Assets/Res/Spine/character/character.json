@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "5ss6xOqDWKYsf5R/VtKJEL/iDd8",
+	"hash": "4PXTXE3euz+lW5ZOK3QPlwxPBoA",
 	"spine": "3.8.33",
-	"x": -46.3,
+	"x": -39,
 	"y": -8.02,
-	"width": 102.8,
-	"height": 169.13,
+	"width": 94.5,
+	"height": 162.02,
 	"images": "../../images/",
 	"audio": "C:/Users/60961/Downloads"
 },
@@ -31,22 +31,106 @@
 ],
 "skins": [
 	{
-		"name": "pcb1 back",
+		"name": "ddr1 back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/pcb1b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 70, "height": 66 }
+				"head": { "name": "head/ddr1b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 72, "height": 66 }
 			},
 			"body_b": {
-				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 62, "height": 112 }
+				"body": { "name": "body/ddr b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
 			},
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/handl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 23, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/handr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
+			}
+		}
+	},
+	{
+		"name": "ddr1 front",
+		"attachments": {
+			"left": {
+				"left": { "name": "hand/handl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 23, "height": 23 }
+			},
+			"head_f": {
+				"head": { "name": "head/ddr1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 65 },
+				"head2": { "name": "head/ddr1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 65 },
+				"head3": { "name": "head/ddr1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 65 }
+			},
+			"body_f": {
+				"body": { "name": "body/ddr f", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+			},
+			"right": {
+				"right": { "name": "hand/handr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
+			},
+			"body_b": {
+				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
+			}
+		}
+	},
+	{
+		"name": "neu back",
+		"attachments": {
+			"head_b": {
+				"head": { "name": "head/neu1b", "x": 21.8, "y": 1.73, "rotation": -89.67, "width": 76, "height": 65 }
+			},
+			"body_b": {
+				"body": { "name": "body/neu b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+			},
+			"left": {
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
+			},
+			"body_f": {
+				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
+			},
+			"right": {
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
+			}
+		}
+	},
+	{
+		"name": "neu front",
+		"attachments": {
+			"left": {
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
+			},
+			"head_f": {
+				"head": { "name": "head/neu1f", "x": 21.8, "y": 1.73, "rotation": -89.67, "width": 76, "height": 64 },
+				"head2": { "name": "head/neu2f", "x": 21.8, "y": 1.73, "rotation": -89.67, "width": 76, "height": 64 },
+				"head3": { "name": "head/neu3f", "x": 21.8, "y": 1.73, "rotation": -89.67, "width": 76, "height": 64 }
+			},
+			"body_f": {
+				"body": { "name": "body/neu f", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+			},
+			"right": {
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
+			},
+			"body_b": {
+				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
+			}
+		}
+	},
+	{
+		"name": "pcb1 back",
+		"attachments": {
+			"head_b": {
+				"head": { "name": "head/pcb1b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 66, "height": 63 }
+			},
+			"body_b": {
+				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 110 }
+			},
+			"left": {
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
+			},
+			"body_f": {
+				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
+			},
+			"right": {
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -54,28 +138,28 @@
 		"name": "pcb1 front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 66 },
-				"head2": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 66 },
-				"head3": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 66 }
+				"head": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 67, "height": 64 },
+				"head2": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 67, "height": 64 },
+				"head3": { "name": "head/pcb1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 67, "height": 64 }
 			},
 			"body_f": {
 				"body": {
 					"name": "body/pcb1f_b",
 					"type": "mesh",
-					"uvs": [ 0.99999, 0.34793, 0.99999, 0.64015, 0.78459, 1, 0.08451, 1, 0, 0.63516, 0, 0.34177, 1.0E-5, 0.14723, 0.27162, 0, 0.78865, 0, 1, 0.15033 ],
+					"uvs": [ 0.99999, 0.33608, 0.99999, 0.63361, 0.77716, 1, 0.05294, 1, 0, 0.62852, 0, 0.3298, 0, 0.13173, 0.2465, 0, 0.78136, 0, 1, 0.13488 ],
 					"triangles": [ 7, 8, 9, 6, 7, 9, 5, 6, 9, 0, 5, 9, 4, 5, 0, 1, 4, 0, 2, 3, 4, 1, 2, 4 ],
 					"vertices": [ 2, 1, 63.06, -26.98, 0.4, 2, 26.53, -27.46, 0.6, 2, 1, 31.36, -27.76, 0.69, 2, -5.17, -27.68, 0.31, 1, 1, -7.84, -16.1, 1, 1, 1, -8.49, 23.8, 1, 2, 1, 30.7, 29.23, 0.69, 2, -4.82, 29.32, 0.31, 2, 1, 62.24, 30.02, 0.4, 2, 26.73, 29.55, 0.6, 2, 1, 83.09, 30.88, 0.00386, 2, 47.59, 30.04, 0.99614, 1, 2, 63.66, 14.8, 1, 1, 2, 64.1, -14.67, 1, 1, 2, 48.02, -26.95, 1 ],
 					"hull": 10,
 					"edges": [ 4, 6, 6, 8, 4, 2, 8, 10, 10, 12, 2, 0, 0, 18, 12, 14, 14, 16, 16, 18, 8, 2, 18, 12, 0, 10 ],
-					"width": 60,
-					"height": 112
+					"width": 58,
+					"height": 110
 				}
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": {
@@ -96,19 +180,19 @@
 		"name": "pcb2 back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/pcb2b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 66, "height": 66 }
+				"head": { "name": "head/pcb2b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 66 }
 			},
 			"body_b": {
-				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 62, "height": 112 }
+				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 110 }
 			},
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -116,18 +200,18 @@
 		"name": "pcb2 front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 68, "height": 66 },
-				"head2": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 68, "height": 66 },
-				"head3": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 68, "height": 66 }
+				"head": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 },
+				"head2": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 },
+				"head3": { "name": "head/pcb2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 }
 			},
 			"body_f": {
-				"body": { "name": "body/pcb1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+				"body": { "name": "body/pcb1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 58, "height": 110 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
@@ -138,19 +222,19 @@
 		"name": "pcb3 back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/pcb3b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 66 }
+				"head": { "name": "head/pcb3b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 66, "height": 66 }
 			},
 			"body_b": {
-				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 62, "height": 112 }
+				"body": { "name": "body/pcb1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 110 }
 			},
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -158,18 +242,18 @@
 		"name": "pcb3 front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 69 },
-				"head2": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 69 },
-				"head3": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 69 }
+				"head": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
+				"head2": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
+				"head3": { "name": "head/pcb3f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 }
 			},
 			"body_f": {
-				"body": { "name": "body/pcb1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+				"body": { "name": "body/pcb1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 58, "height": 110 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
@@ -180,19 +264,19 @@
 		"name": "ru1 back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/ru1b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 70, "height": 66 }
+				"head": { "name": "head/ru1b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 66, "height": 63 }
 			},
 			"body_b": {
-				"body": { "name": "body/ru1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 62, "height": 112 }
+				"body": { "name": "body/ru1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 110 }
 			},
 			"left": {
-				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -200,18 +284,18 @@
 		"name": "ru1 front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 68 },
-				"head2": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 68 },
-				"head3": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 69, "height": 68 }
+				"head": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
+				"head2": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
+				"head3": { "name": "head/ru1f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 }
 			},
 			"body_f": {
-				"body": { "name": "body/ru1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+				"body": { "name": "body/ru1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 58, "height": 110 }
 			},
 			"right": {
-				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
@@ -222,19 +306,19 @@
 		"name": "ru2 back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/ru2b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 66, "height": 66 }
+				"head": { "name": "head/ru2b", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 63, "height": 63 }
 			},
 			"body_b": {
-				"body": { "name": "body/ru1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 62, "height": 112 }
+				"body": { "name": "body/ru1b_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 110 }
 			},
 			"left": {
-				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -242,18 +326,18 @@
 		"name": "ru2 front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/rul", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
-				"head2": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 },
-				"head3": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 65, "height": 66 }
+				"head": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 },
+				"head2": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 },
+				"head3": { "name": "head/ru2f", "x": 25.32, "y": -1.75, "rotation": -89.67, "width": 62, "height": 64 }
 			},
 			"body_f": {
-				"body": { "name": "body/ru1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
+				"body": { "name": "body/ru1f_b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 58, "height": 110 }
 			},
 			"right": {
-				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/rur", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
@@ -264,19 +348,19 @@
 		"name": "spectra back",
 		"attachments": {
 			"head_b": {
-				"head": { "name": "head/spectra1b", "x": 25.27, "y": 6.44, "rotation": -89.67, "width": 83, "height": 72 }
+				"head": { "name": "head/spectra1b", "x": 25.27, "y": 6.44, "rotation": -89.67, "width": 78, "height": 71 }
 			},
 			"body_b": {
 				"body": { "name": "body/spectra b", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
 			},
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"body_f": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			}
 		}
 	},
@@ -284,18 +368,18 @@
 		"name": "spectra front",
 		"attachments": {
 			"left": {
-				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 26, "height": 26 }
+				"left": { "name": "hand/pcbl", "x": 9.13, "y": 0.63, "rotation": -31.72, "width": 24, "height": 23 }
 			},
 			"head_f": {
-				"head": { "name": "head/spectra1f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 82, "height": 72 },
-				"head2": { "name": "head/spectra2f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 82, "height": 72 },
-				"head3": { "name": "head/spectra3f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 82, "height": 72 }
+				"head": { "name": "head/spectra1f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 77, "height": 68 },
+				"head2": { "name": "head/spectra2f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 77, "height": 68 },
+				"head3": { "name": "head/spectra3f", "x": 24.89, "y": 6.05, "rotation": -89.67, "width": 77, "height": 68 }
 			},
 			"body_f": {
 				"body": { "name": "body/spectra f", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 60, "height": 112 }
 			},
 			"right": {
-				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 26, "height": 29 }
+				"right": { "name": "hand/pcbr", "x": 9.9, "y": 0.57, "rotation": -32.47, "width": 24, "height": 27 }
 			},
 			"body_b": {
 				"body": { "name": "empty", "type": "linkedmesh", "skin": "pcb1 front", "parent": "body", "width": 100, "height": 100 }
@@ -460,7 +544,7 @@
 				}
 			},
 			"Weapon": {
-				"weapon": { "name": "weapon/m11", "x": -7.92, "y": 6.11, "rotation": -44.38, "width": 66, "height": 66 }
+				"weapon": { "name": "weapon/m11", "x": -7.92, "y": 6.11, "rotation": -44.38, "width": 66, "height": 65 }
 			}
 		}
 	},
@@ -468,7 +552,7 @@
 		"name": "weapon_m11sd",
 		"attachments": {
 			"Weapon": {
-				"weapon": { "name": "weapon/m11sd", "x": 9.32, "y": 0.57, "rotation": -44.38, "width": 100, "height": 83 }
+				"weapon": { "name": "weapon/m11sd", "x": 9.32, "y": 0.57, "rotation": -44.38, "width": 100, "height": 82 }
 			}
 		}
 	},
@@ -479,7 +563,7 @@
 				"muzzle": { "name": "flash", "x": 137.35, "y": -32.86, "rotation": -44.38, "width": 200, "height": 200 }
 			},
 			"Weapon": {
-				"weapon": { "name": "weapon/m177", "x": 21.73, "y": 2.59, "rotation": -44.38, "width": 117, "height": 75 }
+				"weapon": { "name": "weapon/m177", "x": 21.73, "y": 2.59, "rotation": -44.38, "width": 104, "height": 71 }
 			}
 		}
 	},
@@ -572,8 +656,10 @@
 	}
 ],
 "events": {
+	"hit_down": {},
 	"move_start": {},
-	"move_stop": {}
+	"move_stop": {},
+	"throw_start": {}
 },
 "animations": {
 	"trans/aim to stand": {
@@ -903,6 +989,77 @@
 				]
 			}
 		}
+	},
+	"idle/dead1": {
+		"slots": {
+			"muzzle": {
+				"attachment": [
+					{ "name": null }
+				]
+			},
+			"head_f": {
+				"attachment": [
+					{ "name": "head3" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{ "angle": -82.67 }
+				],
+				"translate": [
+					{ "x": 78.63, "y": -82.27 }
+				]
+			},
+			"body2": {
+				"rotate": [
+					{ "angle": -0.69 }
+				],
+				"translate": [
+					{ "x": -11.26, "y": -17.17 }
+				]
+			},
+			"body": {
+				"rotate": [
+					{ "angle": -68.98 }
+				],
+				"translate": [
+					{ "x": -0.96, "y": 0.48 }
+				]
+			},
+			"weapon": {
+				"rotate": [
+					{ "angle": -24.44 }
+				],
+				"translate": [
+					{ "x": 12.68, "y": -55.33 }
+				]
+			},
+			"right": {
+				"rotate": [
+					{ "angle": -106.11 }
+				],
+				"translate": [
+					{ "x": 20.05, "y": -27.98 }
+				]
+			},
+			"left": {
+				"rotate": [
+					{ "angle": 67.54 }
+				],
+				"translate": [
+					{ "x": 49.73, "y": -84.03 }
+				]
+			}
+		},
+		"drawOrder": [
+			{
+				"offsets": [
+					{ "slot": "Weapon", "offset": 2 }
+				]
+			}
+		]
 	},
 	"shoot/fire 3burst": {
 		"slots": {
@@ -2089,6 +2246,177 @@
 				]
 			}
 		}
+	},
+	"act/hit down": {
+		"slots": {
+			"muzzle": {
+				"attachment": [
+					{ "name": null }
+				]
+			},
+			"head_f": {
+				"attachment": [
+					{ "time": 0.2, "name": "head3" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "angle": -9.87 },
+					{ "time": 0.6667, "angle": -13.82, "curve": "stepped" },
+					{ "time": 0.7333, "angle": -13.82 },
+					{ "time": 1.8333, "angle": -18.07 },
+					{ "time": 2.0667, "angle": -63.72 },
+					{ "time": 2.1, "angle": -82.67 },
+					{ "time": 2.1667, "angle": -76.88 },
+					{ "time": 2.2, "angle": -82.67, "curve": "stepped" },
+					{ "time": 2.6667, "angle": -82.67 }
+				],
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "x": 4.63, "y": -7.23 },
+					{ "time": 0.6667, "x": 6.48, "y": -10.12, "curve": "stepped" },
+					{ "time": 0.7333, "x": 6.48, "y": -10.12 },
+					{ "time": 1.8333, "x": 12.25, "y": -13.97 },
+					{ "time": 1.9667, "x": 55.95, "y": -40.98 },
+					{ "time": 2.0667, "x": 78.63, "y": -75.54 },
+					{ "time": 2.1, "x": 78.63, "y": -82.27 },
+					{ "time": 2.1667, "x": 78.63, "y": -78.91 },
+					{ "time": 2.2, "x": 78.63, "y": -82.27, "curve": "stepped" },
+					{ "time": 2.6667, "x": 78.63, "y": -82.27 }
+				]
+			},
+			"body2": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "angle": -8.44 },
+					{ "time": 0.6667, "angle": -11.82, "curve": "stepped" },
+					{ "time": 0.7333, "angle": -11.82 },
+					{ "time": 1.8333, "angle": -14.58 },
+					{ "time": 2.1, "angle": -0.69 },
+					{ "time": 2.1667, "angle": 5.98 },
+					{ "time": 2.2, "angle": -0.69, "curve": "stepped" },
+					{ "time": 2.6667, "angle": -0.69 }
+				],
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "x": -1.92, "y": 1.72 },
+					{ "time": 0.6667, "x": -2.69, "y": 2.41, "curve": "stepped" },
+					{ "time": 0.7333, "x": -2.69, "y": 2.41 },
+					{ "time": 1.8333, "x": -4.06, "y": -1.95, "curve": "stepped" },
+					{ "time": 1.9667, "x": -4.06, "y": -1.95 },
+					{ "time": 2.1, "x": -11.26, "y": -17.17 },
+					{ "time": 2.1667, "x": -10.19, "y": -17.05 },
+					{ "time": 2.2, "x": -11.26, "y": -17.17, "curve": "stepped" },
+					{ "time": 2.6667, "x": -11.26, "y": -17.17 }
+				]
+			},
+			"body": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 1.8333 },
+					{ "time": 2.1, "angle": -68.98, "curve": "stepped" },
+					{ "time": 2.6667, "angle": -68.98 }
+				],
+				"translate": [
+					{},
+					{ "time": 2.1, "x": -0.96, "y": 0.48, "curve": "stepped" },
+					{ "time": 2.6667, "x": -0.96, "y": 0.48 }
+				]
+			},
+			"weapon": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 0.8333 },
+					{ "time": 0.9, "angle": -34.53 },
+					{ "time": 0.9333, "angle": -24.44, "curve": "stepped" },
+					{ "time": 2.6667, "angle": -24.44 }
+				],
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "x": 4.94, "y": -4.82 },
+					{ "time": 0.6667, "x": 6.91, "y": -6.75, "curve": "stepped" },
+					{ "time": 0.7333, "x": 6.91, "y": -6.75 },
+					{ "time": 0.8333, "x": 10.28, "y": -48.6 },
+					{ "time": 0.9, "x": 10.76, "y": -42.34 },
+					{ "time": 0.9333, "x": 12.68, "y": -55.33, "curve": "stepped" },
+					{ "time": 2.6667, "x": 12.68, "y": -55.33 }
+				]
+			},
+			"right": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "angle": 0.77 },
+					{ "time": 0.6667, "angle": 1.08, "curve": "stepped" },
+					{ "time": 0.7333, "angle": 1.08 },
+					{ "time": 1, "angle": -91.31 },
+					{ "time": 1.8333, "angle": -106.11, "curve": "stepped" },
+					{ "time": 2.0333, "angle": -106.11, "curve": "stepped" },
+					{ "time": 2.6667, "angle": -106.11 }
+				],
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "x": 4.7, "y": -4.87 },
+					{ "time": 0.6667, "x": 6.59, "y": -6.82, "curve": "stepped" },
+					{ "time": 0.7333, "x": 6.59, "y": -6.82 },
+					{ "time": 1, "x": -14.1, "y": 3.77 },
+					{ "time": 1.8333, "x": -9.77, "y": 2.8 },
+					{ "time": 2.0333, "x": 20.05, "y": -27.98, "curve": "stepped" },
+					{ "time": 2.6667, "x": 20.05, "y": -27.98 }
+				]
+			},
+			"left": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 0.1667, "curve": "stepped" },
+					{ "time": 0.3333, "curve": "stepped" },
+					{ "time": 0.6667, "curve": "stepped" },
+					{ "time": 0.7333 },
+					{ "time": 1, "angle": 30.61, "curve": "stepped" },
+					{ "time": 1.8333, "angle": 30.61 },
+					{ "time": 2.0333, "angle": 67.54, "curve": "stepped" },
+					{ "time": 2.6667, "angle": 67.54 }
+				],
+				"translate": [
+					{ "x": 0.41, "y": 0.41, "curve": "stepped" },
+					{ "time": 0.1667, "x": 0.41, "y": 0.41 },
+					{ "time": 0.3333, "x": 3.3, "y": -4.8 },
+					{ "time": 0.6667, "x": 4.46, "y": -6.89, "curve": "stepped" },
+					{ "time": 0.7333, "x": 4.46, "y": -6.89 },
+					{ "time": 1, "x": -15.75, "y": -22.76, "curve": "stepped" },
+					{ "time": 1.8333, "x": -15.75, "y": -22.76 },
+					{ "time": 2.0333, "x": 49.73, "y": -78.25 },
+					{ "time": 2.2, "x": 49.73, "y": -84.03, "curve": "stepped" },
+					{ "time": 2.6667, "x": 49.73, "y": -84.03 }
+				]
+			}
+		},
+		"drawOrder": [
+			{
+				"time": 0.9333,
+				"offsets": [
+					{ "slot": "Weapon", "offset": 2 }
+				]
+			},
+			{
+				"time": 2.6667,
+				"offsets": [
+					{ "slot": "Weapon", "offset": 2 }
+				]
+			}
+		],
+		"events": [
+			{ "time": 0.2, "name": "hit_down" }
+		]
 	},
 	"act/hit stand": {
 		"slots": {
@@ -4035,6 +4363,104 @@
 				]
 			}
 		}
+	},
+	"act/throw": {
+		"slots": {
+			"Weapon": {
+				"attachment": [
+					{ "name": null }
+				]
+			},
+			"muzzle": {
+				"attachment": [
+					{ "name": null }
+				]
+			},
+			"head_f": {
+				"attachment": [
+					{ "time": 0.6667, "name": "head2" },
+					{ "time": 1.3667, "name": "head3" },
+					{ "time": 1.6, "name": "head" }
+				]
+			}
+		},
+		"bones": {
+			"right": {
+				"rotate": [
+					{ "curve": "stepped" },
+					{ "time": 1.3667 },
+					{ "time": 1.5, "angle": -49.67, "curve": "stepped" },
+					{ "time": 1.6, "angle": -49.67 },
+					{ "time": 1.8333 }
+				],
+				"translate": [
+					{},
+					{ "time": 0.6667, "x": -19.96, "y": 24.52 },
+					{ "time": 1, "x": -22.85, "y": 20.67, "curve": "stepped" },
+					{ "time": 1.3667, "x": -22.85, "y": 20.67 },
+					{ "time": 1.4, "x": 14.67, "y": 59.15 },
+					{ "time": 1.4333, "x": 37.76, "y": 46.64 },
+					{ "time": 1.4667, "x": 54.11, "y": 13.45 },
+					{ "time": 1.5, "x": 46.42, "y": 19.23, "curve": "stepped" },
+					{ "time": 1.6, "x": 46.42, "y": 19.23 },
+					{ "time": 1.8333 }
+				]
+			},
+			"left": {
+				"rotate": [
+					{},
+					{ "time": 0.6667, "angle": 176.61, "curve": "stepped" },
+					{ "time": 1.6, "angle": 176.61 },
+					{ "time": 1.8333 }
+				],
+				"translate": [
+					{},
+					{ "time": 0.6667, "x": 22.34, "y": 37.03 },
+					{ "time": 1.1667, "x": 22.34, "y": 41.36, "curve": "stepped" },
+					{ "time": 1.3667, "x": 22.34, "y": 41.36 },
+					{ "time": 1.5, "x": -7.49, "y": 13.46, "curve": "stepped" },
+					{ "time": 1.6, "x": -7.49, "y": 13.46 },
+					{ "time": 1.8333 }
+				]
+			},
+			"body2": {
+				"rotate": [
+					{},
+					{ "time": 0.6667, "angle": 3.52, "curve": "stepped" },
+					{ "time": 1.6, "angle": 3.52 },
+					{ "time": 1.8333 }
+				],
+				"translate": [
+					{},
+					{ "time": 0.6667, "x": -2.48, "y": 5.74, "curve": "stepped" },
+					{ "time": 1.3333, "x": -2.48, "y": 5.74 },
+					{ "time": 1.5, "x": -0.88, "y": -4.34, "curve": "stepped" },
+					{ "time": 1.6, "x": -0.88, "y": -4.34 },
+					{ "time": 1.8333 }
+				]
+			},
+			"head": {
+				"rotate": [
+					{},
+					{ "time": 0.6667, "angle": 6.42, "curve": "stepped" },
+					{ "time": 1.3333, "angle": 6.42 },
+					{ "time": 1.5, "angle": -1.64, "curve": "stepped" },
+					{ "time": 1.6, "angle": -1.64 },
+					{ "time": 1.8333 }
+				],
+				"translate": [
+					{},
+					{ "time": 0.6667, "x": -11.04, "y": -5.46, "curve": "stepped" },
+					{ "time": 1.3333, "x": -11.04, "y": -5.46 },
+					{ "time": 1.5, "x": 4.35, "y": -5.46, "curve": "stepped" },
+					{ "time": 1.6, "x": 4.35, "y": -5.46 },
+					{ "time": 1.8333 }
+				]
+			}
+		},
+		"events": [
+			{ "time": 1.4, "name": "throw_start" }
+		]
 	}
 }
 }
