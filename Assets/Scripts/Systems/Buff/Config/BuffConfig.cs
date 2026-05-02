@@ -43,6 +43,8 @@ namespace Systems.Buff.Config
         Toxicosis,
         [InspectorName("失明")]
         Blind,
+        [InspectorName("燃烧")]
+        Burn,
         [InspectorName("眩晕")]
         Dizzy,
         [InspectorName("流血")]

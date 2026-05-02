@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: Bleed
+  m_Name: Toxicosis
   m_EditorClassIdentifier: 
-  buffType: 6
-  buffName: "\u6D41\u8840"
+  buffType: 3
+  buffName: "\u4E2D\u6BD2"
   description: 
-  icon: {fileID: 1758571940, guid: dd78c8c1f30a04c4691c66f63857deef, type: 3}
+  icon: {fileID: 739108496, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
   maxStack: 1
   tags: []
   showInUI: 0
