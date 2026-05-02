@@ -440,3 +440,23 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.GameFlowController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vfx.OneShotVfxView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.BattleServer
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.PlayerTurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.AITurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

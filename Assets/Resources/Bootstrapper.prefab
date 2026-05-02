@@ -34,6 +34,7 @@ Transform:
   - {fileID: 9188899905410317582}
   - {fileID: 291405111987535113}
   - {fileID: 4838737596480984994}
+  - {fileID: 8850457059216722304}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1396654946115819425
@@ -54,7 +55,54 @@ MonoBehaviour:
   dataManager: {fileID: 7980165080631738}
   audioService: {fileID: 725915653808379786}
   sceneTransitioner: {fileID: 1250951243432284806}
+  gameFlowController: {fileID: 4320196348494814061}
   rootContainerPrefab: {fileID: 0}
+--- !u!1 &7818035280878289192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8850457059216722304}
+  - component: {fileID: 4320196348494814061}
+  m_Layer: 0
+  m_Name: GameFlowController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8850457059216722304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818035280878289192}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3132017716888302795}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4320196348494814061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7818035280878289192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f351b21cf28945b6bf9f36975af6b296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuSceneName: 0_MainMenu
+  battleSceneName: 1_Battle
 --- !u!1001 &1705024496094217495
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 ﻿using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
-using Systems.GamePlay;
+using Systems.BattleFlow;
 using UnityEngine;
 
 namespace Presentation.Debugger
@@ -13,7 +13,7 @@ namespace Presentation.Debugger
 		[TitleGroup("Connection", order: -100)]
 		[ShowInInspector, ReadOnly]
 		[GUIColor("@IsConnected ? new Color(0.3f, 1f, 0.3f) : new Color(1f, 0.4f, 0.4f)")]
-		private bool IsConnected => _gameServer != null;
+		private bool IsConnected => _battleServer != null;
 
 		[TitleGroup("Connection")]
 		[ShowInInspector, ReadOnly, DisplayAsString]
@@ -27,13 +27,13 @@ namespace Presentation.Debugger
 		[EnableIf("@IsConnected")]
 		private void StartGame()
 		{
-			_gameServer?.StartGame();
+			_battleServer?.StartBattle();
 			Debug.Log("[GameServerDebugger] Start Game");
 		}
 
 		#region Private Fields
 
-		private IGameServer _gameServer;
+		private IBattleServer _battleServer;
 
 		#endregion
 
@@ -47,11 +47,11 @@ namespace Presentation.Debugger
 
 		private void Update()
 		{
-			if (Application.isPlaying && _gameServer == null)
+			if (Application.isPlaying && _battleServer == null)
 				TryConnect();
 		}
 
-		private void OnDisable() => _gameServer = null;
+		private void OnDisable() => _battleServer = null;
 
 		#endregion
 
@@ -62,7 +62,7 @@ namespace Presentation.Debugger
 			if (LevelContainer.Instance == null)
 				return;
 
-			_gameServer = LevelContainer.Instance.TryResolve<IGameServer>();
+			_battleServer = LevelContainer.Instance.TryResolve<IBattleServer>();
 		}
 
 		#endregion

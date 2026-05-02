@@ -35,6 +35,10 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required]
 		private SceneTransitioner sceneTransitioner;
 
+		[TitleGroup("Configuration")]
+		[SerializeField, Required]
+		private GameFlowController gameFlowController;
+
 		[TitleGroup("Prefabs")]
 		[SerializeField, ReadOnly]
 		private RootContainer rootContainerPrefab;
@@ -92,6 +96,9 @@ namespace Presentation.Bootstrap
 
             _rootContainerInstance.Services.RegisterInstance(sceneTransitioner);
             sceneTransitioner.Initialize();
+
+            _rootContainerInstance.Services.RegisterInstance(gameFlowController);
+            gameFlowController.Initialize();
             
 			Log("[Bootstrapper] Global services registered.");
 		}
