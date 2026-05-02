@@ -175,6 +175,8 @@ namespace Systems.Interaction.States
 				{
 					var theWall = mapData.GetWall(wallKey);
 					environment.Add(theWall);
+					// 仅添加一个墙体作为环境影响因素，避免重复计算同一墙体的穿透效果
+					break;
 				}
 				
 				var damageContext = Context.DamageService.GetSimulatedDamage(
