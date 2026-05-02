@@ -14,7 +14,7 @@ namespace Systems.AreaEffect
 		public IDamageService DamageService { get; }
 		public IVisionService VisionService { get; }
 		public IVisionCalculator VisionCalculator { get; }
-		public IBuffService BuffService { get; }   // TODO(Buff): BuffService 接口尚未完善
+		public IBuffService BuffService { get; }
 
 		public AreaEffectContext(
 			IEventBus eventBus,

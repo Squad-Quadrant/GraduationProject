@@ -61,6 +61,16 @@ namespace Systems.Buff
             OnLost?.Invoke(buffInfo);
         }
         
+        public virtual void Lost(BuffType buffType)
+        {
+            var buffs = GetBuffs(buffType);
+            
+            foreach (var buffInfo in buffs)
+            {
+                Lost(buffInfo);
+            }
+        }
+        
         public virtual void Turn()
         {
             foreach (var buffInfo in buffInfos)
@@ -80,7 +90,6 @@ namespace Systems.Buff
             foreach (var buffInfo in lostBuffs)
             {
                 Lost(buffInfo);
-                OnLost?.Invoke(buffInfo);
             }
         }
 
@@ -105,6 +114,7 @@ namespace Systems.Buff
         {
             return buffInfos.FirstOrDefault(b => b.Uid == uid);
         }
+        
 
         public virtual List<BuffInfo> GetBuffs(BuffType type)
         {

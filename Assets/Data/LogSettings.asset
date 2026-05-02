@@ -476,3 +476,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableBurnLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

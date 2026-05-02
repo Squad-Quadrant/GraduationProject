@@ -114,8 +114,6 @@ namespace Systems.Unit.Equipment.Logic
                         
                         var info = new GeneralDamageTriggeringInfo(this, unit);
                         ctx.EventBus.Publish(new DealDamageEvent(info));
-                        
-						this.Log($"[TODO(Damage)] Grenade @{cell}: would deal {damage} to '{unit.name}'");
 					}
 				});
 		}

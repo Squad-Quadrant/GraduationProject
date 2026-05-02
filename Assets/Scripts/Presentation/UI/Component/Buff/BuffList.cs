@@ -30,8 +30,11 @@ namespace Presentation.UI.Component.Buff
 
         private void Lost(BuffInfo info)
         {
-            Destroy(itemDict[info]);
-            itemDict.Remove(info);
+            if (itemDict.ContainsKey(info))
+            {
+                Destroy(itemDict[info].gameObject);
+                itemDict.Remove(info);
+            }
         }
     }
 }

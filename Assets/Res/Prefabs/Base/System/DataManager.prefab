@@ -62,11 +62,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b0dd64bf34a462d488136a8d148aad5c, type: 2}
   - {fileID: 11400000, guid: ec6cc2d23c4d3624ab346da3aea0a7d2, type: 2}
   - {fileID: 11400000, guid: 54f03acac16e16f498f095f661718ada, type: 2}
+  - {fileID: 11400000, guid: ac7839efa60a9e74aac4fa96eb37ec40, type: 2}
+  - {fileID: 11400000, guid: 3d9b1df6628ad7b4f96a9c624dbccb6a, type: 2}
+  - {fileID: 11400000, guid: 86094cca4c3e445409e72a850a529683, type: 2}
+  - {fileID: 11400000, guid: 8124ac0a304a9814fa4e8097c6bde60f, type: 2}
   buffs:
   - {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
   - {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}
   - {fileID: 11400000, guid: 91f8d131957f3b04d9f45fd0c7cac47c, type: 2}
   - {fileID: 11400000, guid: 40de9741ccf60024b8628937e5982b42, type: 2}
   - {fileID: 11400000, guid: 676619e6240a6554bb2f568ccaac0a40, type: 2}
+  - {fileID: 11400000, guid: 8211eb48cb5c0594db6b12b7c84f2775, type: 2}
+  - {fileID: 11400000, guid: b4f558f1a5d43ca4fbfedc391ade6f36, type: 2}
   levels:
   - {fileID: 11400000, guid: 44bf4b13b6ff80b4ba314e69af55a726, type: 2}

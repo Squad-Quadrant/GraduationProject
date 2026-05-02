@@ -97,6 +97,15 @@ namespace Systems.AreaEffect
 			behavior.OnCreated(effect, _ctx);
 			_eventBus.Publish(new AreaEffectRegisteredEvent(effect));
 
+			foreach (var cell in cells)
+            {
+                var unit = _ctx.UnitService.GetUnitAtPosition(cell);
+				if (unit != null)
+				{
+					behavior.OnUnitEntered(effect, unit, cell, _ctx);
+				}
+			}
+
 			this.Log($"Registered: {effect}");
 			return effect;
 		}
@@ -155,15 +164,33 @@ namespace Systems.AreaEffect
 			if (e.Path == null || e.Path.Count < 2) return;
 
 			var unit = e.Unit;
-
-			for (int i = 1; i < e.Path.Count; i++)   // 跳过起点 Path[0]
+			
+			var activeEffects = new HashSet<AreaEffect>();
+			if (_cellIndex.TryGetValue(e.Path[0], out var startList))
 			{
-				var cell = e.Path[i];
-				if (!_cellIndex.TryGetValue(cell, out var effectsAtCell)) continue;
+				activeEffects.UnionWith(startList);
+			}
 
-				var snapshot = new List<AreaEffect>(effectsAtCell);
-				foreach (var effect in snapshot)
-					effect.Behavior.OnUnitEntered(effect, unit, cell, _ctx);
+			for (int i = 1; i < e.Path.Count; i++)
+			{
+				var currentCell = e.Path[i];
+				var currentEffects = new HashSet<AreaEffect>();
+				if (_cellIndex.TryGetValue(currentCell, out var currentList))
+				{
+					currentEffects.UnionWith(currentList);
+				}
+
+				foreach (var effect in activeEffects.Except(currentEffects).ToList())
+				{
+					effect.Behavior.OnUnitLeft(effect, unit, e.Path[i - 1], _ctx);
+				}
+
+				foreach (var effect in currentEffects.Except(activeEffects).ToList())
+				{
+					effect.Behavior.OnUnitEntered(effect, unit, currentCell, _ctx);
+				}
+
+				activeEffects = currentEffects;
 			}
 		}
 

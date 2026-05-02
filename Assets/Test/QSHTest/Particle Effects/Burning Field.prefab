@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 19906998}
   - component: {fileID: 10839788}
   - component: {fileID: 5763294899947200620}
+  - component: {fileID: 2392974225400056391}
   m_Layer: 0
   m_Name: Burning Field
   m_TagString: Untagged
@@ -4750,7 +4751,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -4867,6 +4868,20 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &2392974225400056391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d497aa1ac349ce8d19d67ba8bdf650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinDuringFlight: 1
+  spinSpeedDegPerSec: 720
 --- !u!1 &116458
 GameObject:
   m_ObjectHideFlags: 0
@@ -9576,7 +9591,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_RenderMode: 3
   m_MeshDistribution: 0
@@ -14344,7 +14359,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -19112,7 +19127,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_RenderMode: 4
   m_MeshDistribution: 0

@@ -19,7 +19,7 @@ namespace Systems.Damage
         {
             base.Init(context);
             Context.Damage += _damageChanger;
-            Context.Damage += Mathf.RoundToInt(Context.Defender.CurrentHp * (_damageMultiplier - 1));
+            Context.Damage += Mathf.RoundToInt(Context.Defender.CurrentHp * (1 - _damageMultiplier));
         }
 
         public override void Execute()

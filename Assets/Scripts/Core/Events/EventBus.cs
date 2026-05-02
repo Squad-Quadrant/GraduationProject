@@ -144,18 +144,22 @@ namespace Core.Events
 				var subscriptionsCopy = subscriptions.ToList();
 				foreach (var subscription in subscriptionsCopy)
 				{
+#if !UNITY_EDITOR
 					try
 					{
+#endif
 						var action = (Action<TEvent>)subscription.Handler;
 						action.Invoke(eventData);
 
 						if (subscription.IsOnce)
 							_onceToRemove.Add(subscription);
+#if !UNITY_EDITOR
 					}
 					catch (Exception ex)
 					{
 						throw new Exception($"Error invoking handler for {eventType.Name}", ex);
 					}
+#endif
 				}
 
 				foreach (var subscription in _onceToRemove)

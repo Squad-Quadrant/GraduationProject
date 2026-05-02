@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
   m_Name: Dizzy
   m_EditorClassIdentifier: 
-  buffType: 5
+  buffType: 6
   buffName: "\u7729\u6655"
   description: 
   icon: {fileID: 957059444, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}

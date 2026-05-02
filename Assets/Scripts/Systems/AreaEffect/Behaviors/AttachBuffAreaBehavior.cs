@@ -1,4 +1,6 @@
 ﻿using Core.Log;
+using Sirenix.Utilities;
+using Systems.Buff;
 using Systems.Buff.Config;
 using UnityEngine;
 
@@ -18,18 +20,34 @@ namespace Systems.AreaEffect.Behaviors
 			_buffType = buffType;
 		}
 
-		public override void OnUnitEntered(AreaEffect self, Unit.Unit unit, Vector2Int cell, AreaEffectContext ctx)
+        public override void OnUnitEntered(AreaEffect self, Unit.Unit unit, Vector2Int cell, AreaEffectContext ctx)
 		{
-			// TODO(Buff): BuffService 接口完善后接入
-			// unit.AttachBuff(_buffType, creator: self);
-			this.Log($"[TODO(Buff)] {unit.name} entered {self.Behavior.DisplayName} at {cell}, would attach {_buffType}");
+            TryAddBuff(unit);
 		}
+
+        public override void OnUnitLeft(AreaEffect self, Unit.Unit unit, Vector2Int cell, AreaEffectContext ctx)
+        {
+            TryRemoveBuff(unit);
+        }
 
 		public override void OnUnitTurnStart(AreaEffect self, Unit.Unit unit, Vector2Int cell, AreaEffectContext ctx)
 		{
-			// TODO(Buff): BuffService 接口完善后接入
-			// unit.AttachBuff(_buffType, creator: self);
-			this.Log($"[TODO(Buff)] {unit.name} turn started inside {self.Behavior.DisplayName} at {cell}, would attach {_buffType}");
+            
 		}
+
+        private void TryAddBuff(Unit.Unit unit)
+        {
+            IBuffAble buffAble = unit;
+            if (buffAble.BuffProxy.GetBuffs(_buffType).IsNullOrEmpty())
+            {
+                buffAble.AttachBuff(_buffType, this);
+            }
+        }
+        
+        private void TryRemoveBuff(Unit.Unit unit)
+        {
+            IBuffAble buffAble = unit;
+            buffAble.LostBuffs(_buffType);
+        }
 	}
 }

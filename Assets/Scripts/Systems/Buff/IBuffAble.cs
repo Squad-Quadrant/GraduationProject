@@ -20,5 +20,10 @@ namespace Systems.Buff
         {
             BuffProxy.Lost(info);
         }
+        
+        public void LostBuffs(BuffType type)
+        {
+            BuffProxy.Lost(type);
+        }
     }
 }
