@@ -460,3 +460,19 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Vfx.ThrowPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.BattleOverPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.ThrowCommand
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vfx.ThrowProjectileView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

@@ -146,6 +146,11 @@ MonoBehaviour:
     grip: 0
     clipName: act/hit down
     loop: 0
+  - action: throw
+    stance: 0
+    grip: 0
+    clipName: act/throw
+    loop: 0
   transitions:
   - from: 2
     to: 0

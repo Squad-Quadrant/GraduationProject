@@ -52,6 +52,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private SpottedEnemyMarkerView spottedEnemyMarkerView;
 		[SerializeField, Required] private AreaEffectView areaEffectView;
 		[SerializeField, Required] private OneShotVfxView oneShotVfxView;
+		[SerializeField, Required] private ThrowPresenter throwPresenter;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -223,6 +224,7 @@ namespace Presentation.Bootstrap
             spottedEnemyMarkerView.Initialize(_levelContainer.Services);
             areaEffectView.Initialize(_levelContainer.Services);
             oneShotVfxView.Initialize(_levelContainer.Services);
+            throwPresenter.Initialize(_levelContainer.Services);
         }
 
         private void RegisterPresenter()

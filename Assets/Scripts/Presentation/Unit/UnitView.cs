@@ -123,6 +123,9 @@ namespace Presentation.Unit
 			animator.Play(result.ClipName, result.Loop, onComplete);
 		}
 
+		public void ListenForSpineEvent(string eventName, System.Action callback) =>
+			animator.ListenForSpineEvent(eventName, callback);
+
 		// If a transition animation exists in config, plays it first
 		public void SetStance(EUnitStance newStance, Action onComplete = null)
 		{

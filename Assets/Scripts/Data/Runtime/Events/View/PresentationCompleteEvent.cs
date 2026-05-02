@@ -66,6 +66,7 @@ namespace Data.Runtime.Events.View
 			public const string Idle = "Idle";
             public const string Reload = "Reload";
             public const string SwitchWeapon = "SwitchWeapon";
+            public const string Throw = "Throw";
 		}
 
 		public static class UI

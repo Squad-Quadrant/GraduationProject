@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &514751587784780722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7538527998748255568}
+  - component: {fileID: 8980463297078811459}
+  m_Layer: 0
+  m_Name: ThrowPresenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7538527998748255568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514751587784780722}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7970668273690025067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8980463297078811459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514751587784780722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9db7b7dbef1488184a5cec1142363ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileContainer: {fileID: 7538527998748255568}
+  flightDuration: 0.6
+  arcHeight: 1.5
+  launchOffset: {x: 0, y: 0.2, z: 0}
+  throwStartEventName: throw_start
 --- !u!1 &2165358478856014737
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,6 +269,7 @@ Transform:
   - {fileID: 7945908196038522086}
   - {fileID: 6420159491680394225}
   - {fileID: 589517926863088327}
+  - {fileID: 7538527998748255568}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8703371654886146183
@@ -242,6 +292,7 @@ MonoBehaviour:
   spottedEnemyMarkerView: {fileID: 6068211755330682449}
   areaEffectView: {fileID: 5870308615348662380}
   oneShotVfxView: {fileID: 3053913708812816739}
+  throwPresenter: {fileID: 8980463297078811459}
   levelConfig: {fileID: 11400000, guid: 44bf4b13b6ff80b4ba314e69af55a726, type: 2}
   autoStartGame: 1
 --- !u!1 &4713525320309487735

@@ -59,6 +59,11 @@ namespace Systems.Unit.Equipment.Config
 		[LabelText("持续区域特效")]
 		public GameObject persistentVfxPrefab;
 
+		[Title("Throwable"), ShowIf(nameof(IsThrowable))]
+        [LabelText("投掷物 Prefab")]
+        [Tooltip("飞行中的投掷物预制体")]
+        public GameObject projectilePrefab;
+
 		[Title("ScoutEye"), ShowIf(nameof(kind), ETacticalItemKind.ScoutEye)]
 		[LabelText("视野透视半径"), MinValue(1)]
 		public int visionReach = 5;

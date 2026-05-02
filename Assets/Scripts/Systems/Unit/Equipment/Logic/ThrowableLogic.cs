@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Core.Commands;
 using Core.Log;
+using Data.Runtime.Commands;
 using Data.Runtime.Events.Vfx;
-using DG.Tweening;
 using Systems.AreaEffect;
 using Systems.AreaEffect.Behaviors;
 using Systems.Interaction;
@@ -13,9 +13,9 @@ using UnityEngine;
 namespace Systems.Unit.Equipment.Logic
 {
 	// 投掷类战术道具的基类 Logic
-	public class ThrowableGrenadeLogic : TacticalItemLogic, ITargeted
+	public abstract class ThrowableLogic : TacticalItemLogic, ITargeted
 	{
-		public ThrowableGrenadeLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
+		protected ThrowableLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
 		public virtual IReadOnlyList<Vector2Int> GetValidCells(InteractionContext ctx)
 		{
@@ -46,33 +46,7 @@ namespace Systems.Unit.Equipment.Logic
 		public IReadOnlyList<Vector2Int> GetAreaEffectPreview(Vector2Int hoverCell) =>
 			ExpandCoverage(hoverCell);
 
-		public virtual ICommand CreateCommand(Vector2Int target, InteractionContext ctx)
-		{
-			var aoeCells = ExpandCoverage(target);
-			var damage = ItemConfig.directDamage;
-
-			return new AsyncLambdaCommand(
-				$"ThrowAoE({Owner.name} → {target}, dmg={damage}, cells={aoeCells.Count})",
-				onComplete =>
-				{
-					Owner.CurrentAp -= ItemConfig.apCost;
-					Consume();
-
-					DOVirtual.DelayedCall(0.2f, () => // todo: 需要动画或者反馈
-					{
-						ctx.EventBus.PublishOneShotVfx(ItemConfig.oneShotVfxPrefab, target);
-
-						foreach (var cell in aoeCells)
-						{
-							var unit = ctx.UnitService.GetUnitAtPosition(cell);
-							if (unit is not { IsAlive: true }) continue;
-							// TODO(Damage): 等 IDamageService 扩展后替换为实际伤害结算
-							this.Log($"[TODO(Damage)] Grenade @{cell}: would deal {damage} to '{unit.name}'");
-						}
-						onComplete();
-					});
-				});
-		}
+		public abstract ICommand CreateCommand(Vector2Int target, InteractionContext ctx);
 
 		protected ICommand BuildAreaEffectCommand(
 			Vector2Int target,
@@ -81,31 +55,67 @@ namespace Systems.Unit.Equipment.Logic
 		{
 			var cells = ExpandCoverage(target);
 
-			return new AsyncLambdaCommand(
-				$"ThrowAreaEffect({Owner.name} → {target}, {behavior.DisplayName}, persist={ItemConfig.persistTurns})",
-				onComplete =>
+			return new ThrowCommand(
+				owner: Owner,
+				targetCell: target,
+				projectilePrefab: ItemConfig.projectilePrefab,
+				eventBus: ctx.EventBus,
+				onLaunched: () =>
 				{
 					Owner.CurrentAp -= ItemConfig.apCost;
 					Consume();
+				},
+				onLanded: () =>
+				{
+					var effect = ctx.AreaEffectService.Register(
+						ownerId:        Owner.id,
+						targetCell:     target,
+						cells:          cells,
+						remainingTurns: ItemConfig.persistTurns,
+						behavior:       behavior);
 
-					DOVirtual.DelayedCall(0.2f, () => // todo: 需要动画或者反馈
+					this.Log($"Registered {effect}");
+				});
+		}
+	}
+
+	// 手雷
+	public class ThrowableGrenadeLogic : ThrowableLogic
+	{
+		public ThrowableGrenadeLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
+
+		public override ICommand CreateCommand(Vector2Int target, InteractionContext ctx)
+		{
+			var aoeCells = ExpandCoverage(target);
+			var damage = ItemConfig.directDamage;
+
+			return new ThrowCommand(
+				owner: Owner,
+				targetCell: target,
+				projectilePrefab: ItemConfig.projectilePrefab,
+				eventBus: ctx.EventBus,
+				onLaunched: () =>
+				{
+					Owner.CurrentAp -= ItemConfig.apCost;
+					Consume();
+				},
+				onLanded: () =>
+				{
+					ctx.EventBus.PublishOneShotVfx(ItemConfig.oneShotVfxPrefab, target);
+
+					foreach (var cell in aoeCells)
 					{
-						var effect = ctx.AreaEffectService.Register(
-							ownerId:        Owner.id,
-							targetCell:     target,
-							cells:          cells,
-							remainingTurns: ItemConfig.persistTurns,
-							behavior:       behavior);
-
-						this.Log($"Registered {effect}");
-						onComplete();
-					});
+						var unit = ctx.UnitService.GetUnitAtPosition(cell);
+						if (unit is not { IsAlive: true }) continue;
+						// TODO(Damage): 等 IDamageService 扩展后替换为实际伤害结算
+						this.Log($"[TODO(Damage)] Grenade @{cell}: would deal {damage} to '{unit.name}'");
+					}
 				});
 		}
 	}
 
 	// 燃烧弹
-	public class ThrowableBurnLogic : ThrowableGrenadeLogic
+	public class ThrowableBurnLogic : ThrowableLogic
 	{
 		public ThrowableBurnLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
@@ -121,7 +131,7 @@ namespace Systems.Unit.Equipment.Logic
 	}
 
 	// 定时炸弹
-	public class ThrowableTimerBombLogic : ThrowableGrenadeLogic
+	public class ThrowableTimerBombLogic : ThrowableLogic
 	{
 		public ThrowableTimerBombLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
@@ -138,7 +148,7 @@ namespace Systems.Unit.Equipment.Logic
 	}
 
 	// 侦察眼
-	public class ThrowableScoutEyeLogic : ThrowableGrenadeLogic
+	public class ThrowableScoutEyeLogic : ThrowableLogic
 	{
 		public ThrowableScoutEyeLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
