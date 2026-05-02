@@ -6,9 +6,10 @@ using Data.Runtime;
 using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Map;
 using Data.Runtime.Events.UI;
 using Systems.Damage;
-using Systems.Unit;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -25,6 +26,8 @@ namespace Systems.Interaction.States
 
 		private IReadOnlyList<Vector2Int> _validTargetCells;
 		private Unit.Unit _target;
+		private bool hasConfirmed;
+		
 
         public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
@@ -103,6 +106,7 @@ namespace Systems.Interaction.States
 			}
 
 			_target = target;
+			hasConfirmed = true;
 			Publish(Context, new TargetingEvent(target.position));
 		}
 
@@ -112,6 +116,7 @@ namespace Systems.Interaction.States
 			if (target == null) return;
 
 			_target = target;
+			hasConfirmed = true;
 			Publish(Context, new TargetingEvent(target.position));
 		}
 
@@ -122,9 +127,11 @@ namespace Systems.Interaction.States
 				this.Log($"Back -> clear target: {_target.name}");
 				_target = null;
 				Publish(Context, TargetingEvent.Clear());
+				hasConfirmed = false;
+				Publish(Context, new RemoveGunLineEvent());
 				return;
 			}
-
+			
 			this.Log("Back -> UnitSelected");
 			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
@@ -158,11 +165,24 @@ namespace Systems.Interaction.States
 
 			if (target != null)
 			{
+				List<IDamageInfluencer> environment = new();
+				
+				var info = new TraceRayInfo();
+				Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out info);
+				var mapData = Context.MapService.Data;
+
+				foreach (var wallKey in info.lowWalls)
+				{
+					var theWall = mapData.GetWall(wallKey);
+					environment.Add(theWall);
+				}
+				
 				var damageContext = Context.DamageService.GetSimulatedDamage(
 					new BulletDamageTriggeringInfo(
 						Context.selectedUnit,
 						target,
-						Context.currentAction));
+						Context.currentAction,
+						environment));
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
@@ -171,11 +191,21 @@ namespace Systems.Interaction.States
 					target.position, e.WorldPosition,
 					hitPercent, target.name, target.CurrentHp, target.maxHp));
 				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id));
+				if (!hasConfirmed)
+				{
+
+					
+					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target));
+				}
 			}
 			else
 			{
 				PublishBasicCursorInfo(Context, e);
 				Publish(Context, DisplayAttackContextEvent.Invalid());
+				if (!hasConfirmed)
+				{
+					Publish(Context, new RemoveGunLineEvent());
+				}
 			}
 		}
 
@@ -222,7 +252,12 @@ namespace Systems.Interaction.States
             return enemyUnits;
 		}
 
-		private void CancelPreview() => Publish(Context, PathPreviewEvent.Hide());
+		private void CancelPreview()
+		{
+			hasConfirmed = false;
+			Publish(Context, new RemoveGunLineEvent());
+			Publish(Context, PathPreviewEvent.Hide());
+		}
 
 		private void ExecuteAttack(Unit.Unit target)
 		{
@@ -238,7 +273,7 @@ namespace Systems.Interaction.States
 				Context.MapService,
 				Context.EventBus
 			);
-
+			
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
             Context?.StateMachine.ChangeState<ExecutingState>();
 		}

@@ -49,7 +49,7 @@ namespace Systems.Damage
         
         public DamageExecutingChain GetDamageChain(DamageTriggeringInfo info)
         {
-            var context = new DamageExecutingContext(info.Attacker, info.Defender);
+            var context = new DamageExecutingContext(info);
             DamageExecutingChain damageChain;
             switch (info.DamageType)
             {

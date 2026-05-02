@@ -87,10 +87,12 @@ namespace Systems.Damage
         public DamageType DamageType => Owner.DamageType;
 
         public DamageExecutingChain Owner;
-        public DamageExecutingContext(IDamageInfluencer attacker, Unit.Unit defender)
+        public DamageTriggeringInfo Info;
+        public DamageExecutingContext(DamageTriggeringInfo info)
         {
-            Attacker = attacker;
-            Defender = defender;
+            Attacker = info.Attacker;
+            Defender = info.Defender;
+            Info = info;
         }
         
         public int Damage = 0;
@@ -127,7 +129,7 @@ namespace Systems.Damage
             string value = "";
             if (changer != 0) 
                 value += $"{(changer > 0 ? "+" : "")}{changer * 100}%";
-            // if (!Mathf.Approximately(multiplier, 1)) 
+            if (!Mathf.Approximately(multiplier, 1) || changer == 0) 
                 value += $"*{multiplier * 100}%";
             HitRateInfluences.Add((reason, value));
         }

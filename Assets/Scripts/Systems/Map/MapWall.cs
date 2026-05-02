@@ -1,8 +1,8 @@
 using System;
-using JetBrains.Annotations;
+using System.Collections.Generic;
+using Systems.Damage;
 using Systems.Map.Config;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Systems.Map
 {
@@ -64,7 +64,7 @@ namespace Systems.Map
 	    public override string ToString() => $"Wall[{_position1} <-> {_position2}]";
     }
     
-    public class MapWall
+    public class MapWall : IDamageInfluencer
     {
         public WallKey Key { get; }
         public WallType Type { get; set; }
@@ -72,6 +72,15 @@ namespace Systems.Map
         public MapWall(WallKey key)
         {
             Key = key;
+        }
+
+        public string DisplayName => Key.ToString();
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+	        return new List<DamageInfluence>
+	        {
+		        new LowWallRateInfluence(this)
+	        };
         }
     }
 }

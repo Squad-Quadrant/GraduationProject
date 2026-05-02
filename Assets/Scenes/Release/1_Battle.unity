@@ -276,6 +276,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1765763154486904037, guid: 3a3cfae4b05de274aa8bd333420761b5, type: 3}
+      propertyPath: flashSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765763154486904037, guid: 3a3cfae4b05de274aa8bd333420761b5, type: 3}
+      propertyPath: lengthRate
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 3337339289356212280, guid: 3a3cfae4b05de274aa8bd333420761b5, type: 3}
       propertyPath: m_Name
       value: LevelLoader
