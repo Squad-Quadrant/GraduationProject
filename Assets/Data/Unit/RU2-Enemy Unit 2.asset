@@ -10,29 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fe1742d0f494787a9923bbde5816c0a, type: 3}
-  m_Name: Unit 004
+  m_Name: RU2-Enemy Unit 2
   m_EditorClassIdentifier: 
-  configId: unit_004
-  unitName: Test Player 4
-  description: This is a Enemy
-  icon: {fileID: -1742949670, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  configId: enemy_unit_001
+  unitName: RU2
+  description: "\u654C\u65B9\u58EB\u51752"
+  unitClass: Assault
+  icon: {fileID: 21300000, guid: 9613e9408c2ac0d419d836d8f03417da, type: 3}
+  portraitPrefabLoadout: {fileID: -7329017297306985217, guid: e6f9749d236bf4840814fa6979519372, type: 3}
+  portraitPrefabUnitInfo: {fileID: 8232878118925338526, guid: 00bad59aabfdda44e8a9c61fa0a73abf, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
   frontBodySkin: ru2 front
   backBodySkin: ru2 back
   maxHp: 100
-  speed: 90
-  moveRange: 4
+  speed: 115
+  moveRange: 6
   maxMovementAp: 2
-  actionPoints: 2
+  actionPoints: 3
   visionRange: 5
   faction: 1
-  defense: 40
+  defense: 70
   defenseRate: 0
   san: 100
-  mainWeapon: {fileID: 11400000, guid: d3c075c9fa71266459f7fe277c5a3b5b, type: 2}
-  secondaryWeapon: {fileID: 11400000, guid: e54057a764aefd9439824c5f172c4703, type: 2}
-  item0: {fileID: 11400000, guid: a787d6c0d429c294d92db4790eedda9e, type: 2}
-  item1: {fileID: 0}
-  item2: {fileID: 0}
-  aiBrainConfig: {fileID: 11400000, guid: 2ab7077191b4a7f4db93eaf8ff561289, type: 2}
+  aiArchetype: {fileID: 11400000, guid: 7f7b62f7d36cc004f9fbec10a7655668, type: 2}
+  skillConfig: {fileID: 0}
