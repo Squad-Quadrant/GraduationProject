@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using Systems.Map.Config;
 using Systems.Unit;
@@ -36,6 +37,7 @@ namespace Data.Config
 		private EUnitFaction CurrentUnitFaction => unitConfig.faction;
 	}
 
+    [Configurable("Level")]
 	[CreateAssetMenu(fileName = "NewLevelConfig", menuName = "Game/Level Config")]
 	public class LevelConfig : ScriptableObject
 	{

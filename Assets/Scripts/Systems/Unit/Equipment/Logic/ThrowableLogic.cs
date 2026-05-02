@@ -2,9 +2,11 @@
 using Core.Commands;
 using Core.Log;
 using Data.Runtime.Commands;
+using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Vfx;
 using Systems.AreaEffect;
 using Systems.AreaEffect.Behaviors;
+using Systems.Damage;
 using Systems.Interaction;
 using Systems.Interaction.Targeting;
 using Systems.Unit.Equipment.Config;
@@ -81,7 +83,7 @@ namespace Systems.Unit.Equipment.Logic
 	}
 
 	// 手雷
-	public class ThrowableGrenadeLogic : ThrowableLogic
+	public class ThrowableGrenadeLogic : ThrowableLogic, IDamageInfluencer
 	{
 		public ThrowableGrenadeLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
@@ -108,12 +110,25 @@ namespace Systems.Unit.Equipment.Logic
 					{
 						var unit = ctx.UnitService.GetUnitAtPosition(cell);
 						if (unit is not { IsAlive: true }) continue;
-						// TODO(Damage): 等 IDamageService 扩展后替换为实际伤害结算
+						if (GetDamage() <= 0) continue;
+                        
+                        var info = new GeneralDamageTriggeringInfo(this, unit);
+                        ctx.EventBus.Publish(new DealDamageEvent(info));
+                        
 						this.Log($"[TODO(Damage)] Grenade @{cell}: would deal {damage} to '{unit.name}'");
 					}
 				});
 		}
-	}
+
+        public string DisplayName => Name();
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            return new List<DamageInfluence>
+            {
+                new GeneralHPInfluence(1, GetDamage(), this)
+            };
+        }
+    }
 
 	// 燃烧弹
 	public class ThrowableBurnLogic : ThrowableLogic

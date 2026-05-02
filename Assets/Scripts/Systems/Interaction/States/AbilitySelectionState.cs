@@ -70,6 +70,7 @@ namespace Systems.Interaction.States
 
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.Interact));
 			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.AreaEffectPreview));
+			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.AreaEffectOverlay));
 			Publish(ctx, CursorInfoEvent.Hide());
 
 			Unsubscribe(ctx, _onTacticalItemSelected);

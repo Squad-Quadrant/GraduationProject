@@ -73,7 +73,7 @@ MonoBehaviour:
     commandType: 3
     color: {r: 1, g: 0.95848835, b: 0, a: 1}
     lineBreak: 1
-    commandParam: Assets/Data/Equipment/NormalPistol.asset
+    commandParam: Assets/Data/Equipment/1001-T Item_Grenade M67.asset
     command:
       m_PersistentCalls:
         m_Calls: []
