@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using Presentation.Bootstrap;
+using Systems.PathFinding;
 using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
@@ -9,6 +10,13 @@ namespace Systems.Unit.Equipment.Logic
 	{
 		protected readonly TacticalItemConfig ItemConfig;
 
+		protected PathFindingOptions PathFindingOptions;
+
+		private IPathFindingService _pathFindingService;
+		protected IPathFindingService PathFindingService => _pathFindingService ??= LevelContainer.Instance.Resolve<IPathFindingService>();
+
+		private static readonly Vector2Int[] BfsDirections = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
 		public int RemainingUses { get; private set; }
 
 		public virtual bool CanUse => RemainingUses > 0 && Owner.CurrentAp >= ItemConfig.apCost;
@@ -17,6 +25,14 @@ namespace Systems.Unit.Equipment.Logic
 		{
 			ItemConfig = itemConfig;
 			RemainingUses = itemConfig.maxUsesPerBattle;
+			PathFindingOptions = new PathFindingOptions(
+				canPassThroughAllies: true,
+				enemiesBlockMovement: false,
+				movingUnitFaction: Owner.faction,
+				movingUnitId: Owner.id,
+				canCrossHighWalls: false,
+				canCrossLowWalls: false,
+				ignoreTerrainWalkability: true);
 		}
 
 		public void Consume()
@@ -33,14 +49,34 @@ namespace Systems.Unit.Equipment.Logic
 		protected List<Vector2Int> ExpandCoverage(Vector2Int center)
 		{
 			var offsets = ItemConfig.coverageOffsets;
-			var result = new List<Vector2Int>(offsets?.Length ?? 1);
 			if (offsets == null || offsets.Length == 0)
-			{
-				result.Add(center);   // 兜底：至少覆盖落点自身
-				return result;
-			}
+				return new List<Vector2Int> { center };
 
-			result.AddRange(offsets.Select(o => center + o));
+			var candidates = new HashSet<Vector2Int>(offsets.Length);
+			foreach (var offset in offsets)
+				candidates.Add(center + offset);
+
+			var result = new List<Vector2Int>(offsets.Length);
+			var visited = new HashSet<Vector2Int> { center };
+			var queue = new Queue<Vector2Int>();
+			queue.Enqueue(center);
+
+			if (candidates.Contains(center))
+				result.Add(center);
+
+			while (queue.Count > 0)
+			{
+				var current = queue.Dequeue();
+				foreach (var direction in BfsDirections)
+				{
+					var next = current + direction;
+					if (!candidates.Contains(next)) continue;
+					if (!visited.Add(next)) continue;
+					if (!PathFindingService.CanTraverseBetween(current, next, PathFindingOptions)) continue;
+					queue.Enqueue(next);
+					result.Add(next);
+				}
+			}
 			return result;
 		}
 	}

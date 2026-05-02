@@ -8,6 +8,7 @@ using Systems.AreaEffect.Behaviors;
 using Systems.Interaction;
 using Systems.Interaction.Targeting;
 using Systems.Unit.Equipment.Config;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Unit.Equipment.Logic
@@ -32,7 +33,7 @@ namespace Systems.Unit.Equipment.Logic
 					var cell = origin + new Vector2Int(dx, dy);
 					if (!ctx.MapService.Data.IsInBounds(cell)) continue;
 
-					// if (!ctx.VisionCalculator.TraceRay(origin, cell)) continue;
+					if (!ctx.VisionCalculator.TraceRay(origin, cell, out _)) continue;
 
 					result.Add(cell);
 				}
