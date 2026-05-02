@@ -158,11 +158,16 @@ namespace Presentation.Unit
 			}
 
 			view.CancelMovement();
-			view.PlayAction("death", () =>
+			view.PlayAction("hitdown", () =>
 			{
-				_eventBus.Publish(new UnitViewDespawnedEvent(unitId));
-				if (view && view.gameObject)
-					Destroy(view.gameObject);
+				if (!view) return;
+				view.PlayAction("dead");
+				view.FadeOut(() =>
+				{
+					_eventBus.Publish(new UnitViewDespawnedEvent(unitId));
+					if (view && view.gameObject)
+						Destroy(view.gameObject);
+				});
 			});
 
 			this.Log($"View destroying for '{unitId}'.");

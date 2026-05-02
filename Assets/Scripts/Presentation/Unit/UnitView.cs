@@ -21,6 +21,10 @@ namespace Presentation.Unit
 		[TitleGroup("Settings")]
 		[SerializeField] private float moveSpeed = 3f;
 
+		[TitleGroup("Settings")]
+		[SerializeField, Tooltip("死亡 Spine 动画播完之后，淡出到完全透明的时长（秒）")]
+		private float fadeOutDuration = 1f;
+
 		[TitleGroup("References")]
 		[SerializeField, Required, ChildGameObjectsOnly] private UnitAnimator animator;
 		[SerializeField, Required, ChildGameObjectsOnly] private SortingGroup sortingGroup;
@@ -39,6 +43,8 @@ namespace Presentation.Unit
 		private string _backBodySkinName;
 
 		private Coroutine _moveCoroutine;
+
+		private Tween _fadeTween;
 
 		public bool IsMoving => _moveCoroutine != null;
 
@@ -82,9 +88,12 @@ namespace Presentation.Unit
 
 		private void OnDestroy()
 		{
-			if (_moveCoroutine == null) return;
-			StopCoroutine(_moveCoroutine);
-			_moveCoroutine = null;
+			if (_moveCoroutine != null)
+			{
+				StopCoroutine(_moveCoroutine);
+				_moveCoroutine = null;
+			}
+			_fadeTween?.Kill();
 		}
 
 		// onComplete will be called even if the animation fails to play (e.g. not found)
@@ -191,6 +200,32 @@ namespace Presentation.Unit
 			this.Log("Movement cancelled.");
 		}
 
+		public void FadeOut(Action onComplete = null)
+		{
+			StopPulse(0f);
+
+			alertIcon.SetVisible(false);
+			clickCollider.enabled = false;
+
+			var skeleton = animator.SkeletonAnimation.skeleton;
+
+			_fadeTween?.Kill();
+			_fadeTween = DOTween.To(
+					() => skeleton.A,
+					a => skeleton.A = a,
+					0f,
+					fadeOutDuration)
+				.SetEase(Ease.InQuad)
+				.SetUpdate(true)
+				.OnComplete(() =>
+				{
+					_fadeTween = null;
+					onComplete?.Invoke();
+				});
+
+			this.Log($"FadeOut started (duration: {fadeOutDuration}s)");
+		}
+
 		public void Pause() => animator.Pause();
 		public void Resume() => animator.Resume();
 
@@ -210,6 +245,9 @@ namespace Presentation.Unit
 			else
 				meshRenderer.renderingLayerMask &= ~((uint)1 << 1);
 		}
+
+
+		#region Color Pulse
 
 		private Tween _colorTween;
 		private Color _baseColor;
@@ -261,6 +299,8 @@ namespace Presentation.Unit
 			_baseColor = new Color(s.R, s.G, s.B, s.A);
 			_baseColorCached = true;
 		}
+
+		#endregion
 
 		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)
 		{

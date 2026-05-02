@@ -74,7 +74,7 @@ MonoBehaviour:
   - action: idle
     stance: 0
     grip: 1
-    clipName: idle/idle stand hg
+    clipName: idle/idle stand hg1
     loop: 1
   - action: move_loop
     stance: 0
@@ -135,6 +135,16 @@ MonoBehaviour:
     stance: 0
     grip: 0
     clipName: reload/reloading mp5
+    loop: 0
+  - action: dead
+    stance: 0
+    grip: 0
+    clipName: idle/dead1
+    loop: 0
+  - action: hitdown
+    stance: 0
+    grip: 0
+    clipName: act/hit down
     loop: 0
   transitions:
   - from: 2

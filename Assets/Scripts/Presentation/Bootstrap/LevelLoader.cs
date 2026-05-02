@@ -20,9 +20,9 @@ using Systems.AI;
 using Systems.AI.Alert;
 using Systems.AI.Blackboard;
 using Systems.AreaEffect;
+using Systems.BattleFlow;
 using Systems.Buff;
 using Systems.Damage;
-using Systems.GamePlay;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Map.Region;
@@ -128,7 +128,7 @@ namespace Presentation.Bootstrap
 			}
 
 			inputService.SetEnabled(true);
-			_levelContainer.Resolve<IGameServer>().StartGame();
+			_levelContainer.Resolve<IBattleServer>().StartBattle();
 		}
 
 		private void BuildSteps()
@@ -184,7 +184,7 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.Register<IMapService, MapService>();
 			_levelContainer.Services.Register<IUnitService, UnitService>();
 			_levelContainer.Services.Register<ITurnService, TurnService>();
-			_levelContainer.Services.Register<IGameServer, GameServer>();
+			_levelContainer.Services.Register<IBattleServer, BattleServer>();
             _levelContainer.Services.Register<IDamageService, DamageService>();
 			_levelContainer.Services.Register<IPathFindingService>(container =>
 			{
@@ -234,6 +234,7 @@ namespace Presentation.Bootstrap
             var damageService = _levelContainer.Services.Resolve<IDamageService>();
             var visionCalculator = _levelContainer.Services.Resolve<IVisionCalculator>();
             var visionService = _levelContainer.Services.Resolve<IVisionService>();
+            var gameFlowController = RootContainer.Instance.Resolve<GameFlowController>();
 
             _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus, damageService, unitService));
@@ -244,6 +245,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
             _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus, interactionController));
+            _levelContainer.Services.RegisterInstance(new BattleOverPresenter(uiManager, _eventBus, gameFlowController));
         }
 
         private void LoadMap()

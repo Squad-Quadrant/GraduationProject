@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Log;
+﻿using Core.Log;
 using Data;
 using Data.Config;
 using Presentation.UI.Core;
@@ -7,30 +6,23 @@ using Presentation.UI.Panel.Menu;
 using Presentation.UI.Panel.Menu.Loadout;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Presentation.Bootstrap
 {
 	public class MenuFlowController : MonoBehaviour
 	{
-		[Title("Scene")]
-		[SerializeField, Tooltip("主菜单场景名，必须与 Build Settings 中的名字一致")]
-		private string mainMenuSceneName = "0_MainMenu";
-
-		[SerializeField, Tooltip("关卡场景名，必须与 Build Settings 中的名字一致")]
-		private string battleSceneName = "1_Battle";
-
 		private UIManager _uiManager;
 		private DataManager _dataManager;
-		private SceneTransitioner _sceneTransitioner;
+		private GameFlowController _gameFlowController;
 
 		private UIPanel _openedPanel;
+		private LevelConfig _selectedLevel;
 
 		private void Awake()
 		{
 			_uiManager = RootContainer.Instance.Resolve<UIManager>();
 			_dataManager = RootContainer.Instance.Resolve<DataManager>();
-			_sceneTransitioner = RootContainer.Instance.Resolve<SceneTransitioner>();
+			_gameFlowController = RootContainer.Instance.Resolve<GameFlowController>();
 		}
 
 		private void Start() => ShowMainMenu();
@@ -63,7 +55,7 @@ namespace Presentation.Bootstrap
 				return;
 			}
 
-			_dataManager.SelectedLevel = level;
+			_selectedLevel = level;
 
 			if (_openedPanel) _uiManager.Close(_openedPanel);
 			_openedPanel = _uiManager.Open<LoadoutPanel, LoadoutPanelData>(new LoadoutPanelData
@@ -77,22 +69,14 @@ namespace Presentation.Bootstrap
 
 		private void StartBattle()
 		{
-			if (!_dataManager.SelectedLevel)
+			if (!_selectedLevel)
 			{
-				this.LogError("Cannot start battle: SelectedLevel is null");
+				this.LogError("Cannot start battle: no level selected");
 				return;
 			}
 
 			if (_openedPanel) _uiManager.Close(_openedPanel);
-			this.Log($"Loading Battle scene for level '{_dataManager.SelectedLevel.levelId}'");
-			_sceneTransitioner.LoadScene(battleSceneName, waitForLevelLoaded: true);
-		}
-
-		public void ReturnToMainMenu()
-		{
-			this.Log("Returning to main menu");
-			_dataManager.SelectedLevel = null;
-			_sceneTransitioner.LoadScene(mainMenuSceneName, waitForLevelLoaded: false);
+			_gameFlowController.StartBattle(_selectedLevel);
 		}
 
 		private void QuitGame()
