@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe1742d0f494787a9923bbde5816c0a, type: 3}
   m_Name: RU2-Enemy Unit 2
   m_EditorClassIdentifier: 
-  configId: enemy_unit_001
+  configId: enemy_unit_002
   unitName: RU2
   description: "\u654C\u65B9\u7A81\u51FB\u58EB\u5175"
   unitClass: Assault

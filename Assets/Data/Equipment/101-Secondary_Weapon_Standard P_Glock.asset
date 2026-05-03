@@ -15,13 +15,14 @@ MonoBehaviour:
   id: 101
   nName: Glock
   type: "\u6807\u51C6\u624B\u67AA"
-  description: "\u5317\u7EA6\u5C11\u6570\u56FD\u5BB6\u914D\u5907\u7684\u65B0\u9510\u6807\u51C6\u624B\u67AA"
+  description: "\u5965\u5730\u5229\u751F\u4EA7\u7684\u65B0\u578B9mm\u624B\u67AA\uFF0C\u91C7\u7528\u805A\u5408\u7269\u6750\u8D28\u90E8\u4EF6\u51CF\u91CD\uFF0C\u5E76\u62E5\u6709\u8F83\u9AD8\u7684\u5F39\u5BB9\u91CF\u3002"
+  battleDescription: 
   icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  damage: 25
-  mentalDamage: 0
   weight: 0
   spineName: weapon_glock
   gripType: 1
+  damage: 25
+  mentalDamage: 0
   ammoCapacity: 15
   shotRanges:
   - min: 0

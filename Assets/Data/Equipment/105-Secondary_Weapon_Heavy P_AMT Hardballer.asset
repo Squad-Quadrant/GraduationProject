@@ -15,13 +15,14 @@ MonoBehaviour:
   id: 105
   nName: AMT Hardballer
   type: "\u91CD\u578B\u624B\u67AA"
-  description: "\u9887\u5177\u4F20\u5947\u8272\u5F69\u7684\u786C\u6C49\u624B\u67AA\uFF0C\u5C5E\u4E8E\u91CD\u578B\u624B\u67AA"
+  description: "\u62E5\u6709\u4E0D\u9508\u94A2\u957F\u5957\u7B52\u7684\u5B9A\u52361911\u624B\u67AA\uFF0C\u62E5\u6709\u66F4\u597D\u7684\u7CBE\u5EA6\u4E0E\u5C04\u7A0B\u8868\u73B0\u3002"
+  battleDescription: 
   icon: {fileID: 1452205263, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: weapon_m1911ct
+  gripType: 1
   damage: 40
   mentalDamage: 0
-  weight: 0
-  spineName: weapon_glock
-  gripType: 1
   ammoCapacity: 8
   shotRanges:
   - min: 0

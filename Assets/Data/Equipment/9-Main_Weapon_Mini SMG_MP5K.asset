@@ -15,13 +15,14 @@ MonoBehaviour:
   id: 9
   nName: MP5K
   type: "\u5FAE\u578B\u51B2\u950B\u67AA"
-  description: "\u57FA\u4E8EMP5\u7279\u5316\uFF0C\u6781\u5EA6\u7D27\u51D1\u4FBF\u643A\u7684\u5FAE\u578B\u51B2\u950B\u67AA"
+  description: "\u8FD9\u6B3E\u5FAE\u578B\u51B2\u950B\u67AA\u56E0\u5176\u7D27\u51D1\u7684\u5C3A\u5BF8\u53D7\u5230\u7279\u79CD\u4F5C\u6218\u4EBA\u5458\u4E0E\u4FDD\u9556\u7684\u9752\u7750\u3002"
+  battleDescription: 
   icon: {fileID: 1139497918, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: weapon_mp5k
+  gripType: 0
   damage: 20
   mentalDamage: 0
-  weight: 0
-  spineName: weapon_m177
-  gripType: 0
   ammoCapacity: 20
   shotRanges:
   - min: 0

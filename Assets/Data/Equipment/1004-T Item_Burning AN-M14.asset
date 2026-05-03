@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
+  m_Name: 1004-T Item_Burning AN-M14
+  m_EditorClassIdentifier: 
+  id: 1004
+  nName: "AN-M14\u71C3\u70E7\u5F39"
+  type: "\u6218\u672F\u9053\u5177"
+  description: "\u519B\u7528\u767D\u78F7\u71C3\u70E7\u5F39\uFF0C\u53EF\u4EE5\u5FEB\u901F\u5F15\u71C3\u533A\u57DF\u5185\u7684\u76EE\u6807"
+  battleDescription: 
+  icon: {fileID: -2111100431, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: 
+  gripType: 1
+  kind: 2
+  maxUsesPerBattle: 2
+  apCost: 1
+  throwRange: 5
+  coverageOffsets:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
+  - {x: 1, y: 0}
+  - {x: 1, y: -1}
+  - {x: 0, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: 0}
+  - {x: -1, y: 1}
+  healAmount: 30
+  directDamage: 50
+  appliedBuff: 5
+  persistTurns: 2
+  oneShotVfxPrefab: {fileID: 0}
+  persistentVfxPrefab: {fileID: 107076, guid: 7126f4258b683574ea5df5dc1f8246eb, type: 3}
+  projectilePrefab: {fileID: 2997148212300979965, guid: 7414387c18e5a8a4ea6a9b4090511d0a, type: 3}
+  visionReach: 5

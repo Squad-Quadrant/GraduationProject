@@ -492,3 +492,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableSmokeLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

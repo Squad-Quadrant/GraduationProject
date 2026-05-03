@@ -15,13 +15,14 @@ MonoBehaviour:
   id: 104
   nName: MAC-11
   type: "\u51B2\u950B\u624B\u67AA"
-  description: "\u4E16\u754C\u4E0A\u6700\u5C0F\u6700\u7D27\u51D1\u7684\u51B2\u950B\u67AA\uFF0C\u751A\u81F3\u53EF\u4EE5\u5F52\u7C7B\u4E3A\u624B\u67AA\uFF0C\u56E0\u6B64\u4E5F\u53EF\u4EE5\u8BF4\u662F\u51B2\u950B\u624B\u67AA"
+  description: ".380ACP\u53E3\u5F84\u7684\u5FAE\u578B\u51B2\u950B\u67AA\uFF0C\u6709\u9650\u7684\u67AA\u7BA1\u957F\u5EA6\u4E0E\u6781\u9AD8\u7684\u5C04\u901F\u53EA\u5F97\u5B83\u4EC5\u9002\u5408\u8FD1\u8DDD\u79BB\u626B\u5C04\u3002"
+  battleDescription: 
   icon: {fileID: -409057103, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: weapon_m11
+  gripType: 1
   damage: 15
   mentalDamage: 0
-  weight: 0
-  spineName: weapon_glock
-  gripType: 1
   ammoCapacity: 20
   shotRanges:
   - min: 0

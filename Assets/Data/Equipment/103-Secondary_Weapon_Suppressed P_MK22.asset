@@ -15,13 +15,14 @@ MonoBehaviour:
   id: 103
   nName: MK22
   type: "\u6D88\u97F3\u624B\u67AA"
-  description: "\u88C5\u5907\u4E86\u6D88\u97F3\u5668\u7684\u624B\u67AA\uFF0C\u5F39\u9053\u66F4\u52A0\u7A33\u5B9A"
+  description: "\u7F8E\u519B\u5728\u8D8A\u6218\u671F\u95F4\u4E3A\u6F5C\u5165\u4F5C\u6218\u800C\u7814\u53D1\u76849mm\u6D88\u97F3\u624B\u67AA\uFF0C\u5B89\u88C5\u6709\u4E13\u5C5E\u7684\u9AD8\u6548\u6D88\u97F3\u5668\u3002"
+  battleDescription: 
   icon: {fileID: 733355011, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: weapon_mk22
+  gripType: 1
   damage: 20
   mentalDamage: 0
-  weight: 0
-  spineName: weapon_glock
-  gripType: 1
   ammoCapacity: 12
   shotRanges:
   - min: 0
