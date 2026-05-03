@@ -18,13 +18,12 @@ namespace Systems.Damage
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);
-            Context.Damage += _damageChanger;
-            Context.Damage += Mathf.RoundToInt(Context.Defender.CurrentHp * (1 - _damageMultiplier));
         }
 
         public override void Execute()
         {
-            
+            Context.Damage += _damageChanger;
+            Context.Damage += Mathf.RoundToInt(Context.Defender.CurrentHp * (1 - _damageMultiplier));
         }
 
         public override void Last()
