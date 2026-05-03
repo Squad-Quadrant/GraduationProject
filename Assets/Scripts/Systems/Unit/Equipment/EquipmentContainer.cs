@@ -34,6 +34,8 @@ namespace Systems.Unit.Equipment
 		        ETacticalItemKind.Burn           => new ThrowableBurnLogic(config, owner),
 		        ETacticalItemKind.TimerBomb      => new ThrowableTimerBombLogic(config, owner),
 		        ETacticalItemKind.ScoutEye       => new ThrowableScoutEyeLogic(config, owner),
+		        ETacticalItemKind.Light       => new ThrowableLightLogic(config, owner),
+		        ETacticalItemKind.Smoke       => new ThrowableSmokeLogic(config, owner),
 		        _ => throw new ArgumentOutOfRangeException(nameof(config.kind), config.kind, $"Unknown TacticalItemKind: {config.kind}"),
 	        };
     }

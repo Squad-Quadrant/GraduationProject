@@ -46,6 +46,11 @@ namespace Systems.Unit.Equipment.Logic
 
         public virtual float PenetrationRate() => _weaponConfig.penetrationRate;
 
+        public override int GetDamage()
+        {
+            return _weaponConfig.damage;
+        }
+
         public override int Range() => int.MaxValue;
 
         public override bool CheckAttackable(Unit target)

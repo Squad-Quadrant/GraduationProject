@@ -1,10 +1,12 @@
-﻿using Core.Log;
+﻿using System.Collections.Generic;
+using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Vfx;
+using Systems.Damage;
 using UnityEngine;
 
 namespace Systems.AreaEffect.Behaviors
 {
-	public class CountdownExplosionBehavior : AreaEffectBehavior
+	public class CountdownExplosionBehavior : AreaEffectBehavior, IDamageInfluencer
 	{
 		private readonly int _damage;
 		private readonly GameObject _explosionVfxPrefab;
@@ -31,9 +33,19 @@ namespace Systems.AreaEffect.Behaviors
 				var unit = ctx.UnitService.GetUnitAtPosition(cell);
 				if (unit is not { IsAlive: true }) continue;
 
-				// TODO(DamageService)
-				this.Log($"[TODO(DamageService)] Explosion of {self.Id} at {cell}: would deal {_damage} damage to {unit.name}");
+                if (_damage <= 0) continue;
+                        
+                var info = new GeneralDamageTriggeringInfo(this, unit);
+                ctx.EventBus.Publish(new DealDamageEvent(info));
 			}
 		}
-	}
+
+        public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
+        {
+            return new List<DamageInfluence>
+            {
+                new GeneralHPInfluence(1, _damage, this)
+            };
+        }
+    }
 }

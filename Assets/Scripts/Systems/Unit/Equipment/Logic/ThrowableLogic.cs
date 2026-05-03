@@ -80,6 +80,11 @@ namespace Systems.Unit.Equipment.Logic
 					this.Log($"Registered {effect}");
 				});
 		}
+        
+        public override int GetDamage()
+        {
+            return ItemConfig.directDamage;
+        }
 	}
 
 	// 手雷
@@ -176,4 +181,36 @@ namespace Systems.Unit.Equipment.Logic
 					persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
 				ctx);
 	}
+    
+    // 照明弹
+    public class ThrowableLightLogic : ThrowableLogic
+    {
+        public ThrowableLightLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
+
+        public override ICommand CreateCommand(Vector2Int target, InteractionContext ctx) =>
+            BuildAreaEffectCommand(
+                target,
+                new LightBehavior(
+                    visionRadius: ItemConfig.visionReach,
+                    displayName:  ItemConfig.nName,
+                    displayIcon:  ItemConfig.icon,
+                    persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
+                ctx);
+    }
+    
+    // 烟雾弹
+    public class ThrowableSmokeLogic : ThrowableLogic
+    {
+        public ThrowableSmokeLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
+
+        public override ICommand CreateCommand(Vector2Int target, InteractionContext ctx) =>
+            BuildAreaEffectCommand(
+                target,
+                new SmokeBehavior(
+                    visionRadius: ItemConfig.visionReach,
+                    displayName:  ItemConfig.nName,
+                    displayIcon:  ItemConfig.icon,
+                    persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
+                ctx);
+    }
 }

@@ -7,5 +7,10 @@
 		Burn,               // 投掷：落点生成燃烧区域（AreaEffect + BuffAttach）
 		TimerBomb,          // 投掷：落点生成定时炸弹（AreaEffect + 倒计时爆炸）
 		ScoutEye,           // 投掷：落点生成侦察眼（AreaEffect + 持续透视）
+        Light,              // 投掷：落点生成照明弹（AreaEffect  + 持续照明）              
+        Smoke,              // 投掷：落点生成烟雾弹（AreaEffect + 持续遮蔽）
+        
+        // ...
+        Count
 	}
 }

@@ -54,7 +54,7 @@ MonoBehaviour:
   - {x: 0, y: 2}
   - {x: 1, y: 2}
   healAmount: 30
-  directDamage: 50
+  directDamage: 0
   appliedBuff: 3
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}

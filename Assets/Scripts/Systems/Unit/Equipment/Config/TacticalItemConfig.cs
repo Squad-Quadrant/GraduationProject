@@ -37,7 +37,7 @@ namespace Systems.Unit.Equipment.Config
 		public int healAmount = 30;
 
 		[Title("Grenade"), ShowIf(nameof(kind), ETacticalItemKind.Grenade)]
-		[LabelText("直接伤害"), MinValue(1)]
+		[LabelText("直接伤害"), MinValue(0)]
 		public int directDamage = 50;
 
 		[Title("Burn"), ShowIf(nameof(kind), ETacticalItemKind.Burn)]

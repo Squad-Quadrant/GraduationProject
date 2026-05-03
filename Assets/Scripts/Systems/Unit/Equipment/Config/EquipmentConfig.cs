@@ -36,8 +36,6 @@ namespace Systems.Unit.Equipment.Config
         [LabelText("描述")] public string description;
         [LabelText("战斗描述（如：使用xx对敌方造成xxx）")] public string battleDescription;
         [LabelText("图标")] public Sprite icon;
-        [LabelText("伤害")] public int damage;
-        [LabelText("精神伤害")] public int mentalDamage;
         [LabelText("重量")] public float weight;
         [LabelText("Spine动画使用的名称")] public string spineName;
         [LabelText("握持方式")] public EGripType gripType;

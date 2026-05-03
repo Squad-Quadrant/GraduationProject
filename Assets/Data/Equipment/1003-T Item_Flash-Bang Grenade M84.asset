@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1003-T Item_Flash-Bang Grenade M84
   m_EditorClassIdentifier: 
   id: 1003
-  nName: "M84\u95EA\u5149\u5F39"
+  nName: "\u7167\u660E\u5F39"
   type: "\u6218\u672F\u9053\u5177"
   description: 
   battleDescription: 
@@ -23,7 +23,7 @@ MonoBehaviour:
   weight: 0
   spineName: 
   gripType: 0
-  kind: 1
+  kind: 2
   maxUsesPerBattle: 3
   apCost: 1
   throwRange: 6
@@ -42,7 +42,7 @@ MonoBehaviour:
   - {x: -2, y: 0}
   - {x: 0, y: 2}
   healAmount: 30
-  directDamage: 50
+  directDamage: 0
   appliedBuff: 3
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}

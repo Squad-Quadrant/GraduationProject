@@ -11,6 +11,9 @@ namespace Systems.Unit.Equipment.Config
 	[CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game/Unit/Equipment/Weapon", order = 0)]
 	public class WeaponConfig : EquipmentConfig
 	{
+        [LabelText("伤害")] public int damage;
+        [LabelText("精神伤害")] public int mentalDamage;
+        
 		[LabelText("射击类武器的弹容量")]
 		public int ammoCapacity;
 

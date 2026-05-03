@@ -28,5 +28,10 @@ namespace Systems.Unit.Equipment.Logic
 
 					DOVirtual.DelayedCall(0.2f, () => onComplete()); // todo: 需要动画或者反馈
 				});
-	}
+
+        public override int GetDamage()
+        {
+            return ItemConfig.directDamage;
+        }
+    }
 }
