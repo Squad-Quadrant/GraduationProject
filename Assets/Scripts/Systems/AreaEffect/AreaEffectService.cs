@@ -118,6 +118,15 @@ namespace Systems.AreaEffect
 				return;
 			}
 
+			foreach (var cell in effect.Cells)
+			{
+				var unit = _ctx.UnitService.GetUnitAtPosition(cell);
+				if (unit != null)
+				{
+					effect.Behavior.OnUnitLeft(effect, unit, cell, _ctx);
+				}
+			}
+
 			effect.Behavior.OnRemoved(effect, _ctx);
 
 			_effects.Remove(effectId);

@@ -17,7 +17,7 @@ MonoBehaviour:
   type: "\u6218\u672F\u9053\u5177"
   description: 
   battleDescription: 
-  icon: {fileID: 0}
+  icon: {fileID: -2111100431, guid: d723e6b88f967c846a38343439950a03, type: 3}
   damage: 0
   mentalDamage: 0
   weight: 0
@@ -42,6 +42,6 @@ MonoBehaviour:
   appliedBuff: 3
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}
-  persistentVfxPrefab: {fileID: 0}
-  projectilePrefab: {fileID: 2997148212300979965, guid: 029068138a42d8d4a9b7f600736ad36b, type: 3}
+  persistentVfxPrefab: {fileID: 127860, guid: d156aae93264ba34abe11fcb3fae8b97, type: 3}
+  projectilePrefab: {fileID: 2997148212300979965, guid: 47db9f257f122a5469f46e9516ab4982, type: 3}
   visionReach: 5
