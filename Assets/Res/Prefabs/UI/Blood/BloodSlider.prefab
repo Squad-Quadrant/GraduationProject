@@ -72,8 +72,8 @@ MonoBehaviour:
   defenseSliderImage: {fileID: 8931166375284681761}
   defenseSliderImage1: {fileID: 3281272622692578630}
   defenseSliderImage2: {fileID: 3133749958501401634}
-  playerBackground: {fileID: 4701354947338453463}
-  enemyBackground: {fileID: 4645451136578172255}
+  playerBackground: {fileID: 4645451136578172255}
+  enemyBackground: {fileID: 4701354947338453463}
   buffList: {fileID: 2728175467865646734}
   duration: 1
   minSpeed: 0.5
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 2251435412169689212}
   - component: {fileID: 4645451136578172255}
   m_Layer: 5
-  m_Name: EnemyBackground
+  m_Name: PlayerBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 974838728364386873}
   - component: {fileID: 4701354947338453463}
   m_Layer: 5
-  m_Name: PlayerBackground
+  m_Name: EnemyBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -45,7 +45,7 @@ namespace Systems.Unit.Equipment.Config
 		public BuffType appliedBuff;
 
 		private bool HasPersistTurns =>
-			kind is ETacticalItemKind.Burn or ETacticalItemKind.TimerBomb or ETacticalItemKind.ScoutEye;
+			kind is ETacticalItemKind.Burn or ETacticalItemKind.TimerBomb or ETacticalItemKind.ScoutEye or ETacticalItemKind.Light or ETacticalItemKind.Smoke;
 
 		[Title("AreaEffect Lifetime"), ShowIf(nameof(HasPersistTurns))]
 		[LabelText("持续回合数"), MinValue(1)]

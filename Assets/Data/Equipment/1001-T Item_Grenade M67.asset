@@ -18,11 +18,9 @@ MonoBehaviour:
   description: 
   battleDescription: 
   icon: {fileID: -2134066461, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  damage: 50
-  mentalDamage: 0
   weight: 0
   spineName: 
-  gripType: 0
+  gripType: 1
   kind: 1
   maxUsesPerBattle: 3
   apCost: 1

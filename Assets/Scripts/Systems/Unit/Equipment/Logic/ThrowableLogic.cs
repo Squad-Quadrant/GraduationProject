@@ -182,6 +182,7 @@ namespace Systems.Unit.Equipment.Logic
 				ctx);
 	}
     
+    // todo: 当该类道具数量增多,抽取GeneralThrowableLogic,将不同的AreaEffectBehavior作为参数传入
     // 照明弹
     public class ThrowableLightLogic : ThrowableLogic
     {

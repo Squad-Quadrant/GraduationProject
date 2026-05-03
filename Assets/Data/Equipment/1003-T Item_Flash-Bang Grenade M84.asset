@@ -18,12 +18,10 @@ MonoBehaviour:
   description: 
   battleDescription: 
   icon: {fileID: -1789119976, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  damage: 0
-  mentalDamage: 0
   weight: 0
   spineName: 
-  gripType: 0
-  kind: 2
+  gripType: 1
+  kind: 5
   maxUsesPerBattle: 3
   apCost: 1
   throwRange: 6
@@ -45,7 +43,7 @@ MonoBehaviour:
   directDamage: 0
   appliedBuff: 3
   persistTurns: 2
-  oneShotVfxPrefab: {fileID: 0}
+  oneShotVfxPrefab: {fileID: 135726, guid: 154a10755f2c4a0409a0ab5c88261468, type: 3}
   persistentVfxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 2997148212300979965, guid: 029068138a42d8d4a9b7f600736ad36b, type: 3}
   visionReach: 5

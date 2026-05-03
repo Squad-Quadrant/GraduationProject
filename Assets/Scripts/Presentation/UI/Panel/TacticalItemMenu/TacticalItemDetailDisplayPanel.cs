@@ -34,6 +34,8 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 					lines[4].SetPair("伤害", $"{config.directDamage}");
 					break;
 				case ETacticalItemKind.Burn:
+				case ETacticalItemKind.Light:
+				case ETacticalItemKind.Smoke:
 					lines[3].SetPair("范围", $"{config.throwRange}格");
 					lines[4].SetPair("持续回合", $"{config.persistTurns}回合");
 					break;
