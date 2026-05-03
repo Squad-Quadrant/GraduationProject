@@ -66,6 +66,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d9b1df6628ad7b4f96a9c624dbccb6a, type: 2}
   - {fileID: 11400000, guid: 86094cca4c3e445409e72a850a529683, type: 2}
   - {fileID: 11400000, guid: 8124ac0a304a9814fa4e8097c6bde60f, type: 2}
+  - {fileID: 11400000, guid: 574db797f9f882642acf367d22b9c03d, type: 2}
   buffs:
   - {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
   - {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}
