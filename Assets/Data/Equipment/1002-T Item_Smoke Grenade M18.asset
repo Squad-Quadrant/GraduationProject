@@ -57,5 +57,5 @@ MonoBehaviour:
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}
   persistentVfxPrefab: {fileID: 127860, guid: fc9ddf35d9558084ab4754cde7d3eabd, type: 3}
-  projectilePrefab: {fileID: 2997148212300979965, guid: 029068138a42d8d4a9b7f600736ad36b, type: 3}
+  projectilePrefab: {fileID: 2997148212300979965, guid: 47db9f257f122a5469f46e9516ab4982, type: 3}
   visionReach: 5

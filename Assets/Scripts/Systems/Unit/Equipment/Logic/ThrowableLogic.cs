@@ -192,7 +192,6 @@ namespace Systems.Unit.Equipment.Logic
             BuildAreaEffectCommand(
                 target,
                 new LightBehavior(
-                    visionRadius: ItemConfig.visionReach,
                     displayName:  ItemConfig.nName,
                     displayIcon:  ItemConfig.icon,
                     persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
@@ -208,7 +207,6 @@ namespace Systems.Unit.Equipment.Logic
             BuildAreaEffectCommand(
                 target,
                 new SmokeBehavior(
-                    visionRadius: ItemConfig.visionReach,
                     displayName:  ItemConfig.nName,
                     displayIcon:  ItemConfig.icon,
                     persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
