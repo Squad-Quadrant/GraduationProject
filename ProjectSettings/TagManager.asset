@@ -47,11 +47,11 @@ TagManager:
   - name: Ground
     uniqueID: 975103653
     locked: 0
-  - name: OnGround
-    uniqueID: 1499799387
-    locked: 0
   - name: Highlight
     uniqueID: 3043970941
+    locked: 0
+  - name: OnGround
+    uniqueID: 1499799387
     locked: 0
   - name: UI
     uniqueID: 4039949325
