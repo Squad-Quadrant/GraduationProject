@@ -22,6 +22,12 @@ namespace Systems.Vision
 
         void RemoveTemporaryReveal(RevealToken token);
 
+        // Temporary obscures
+        /// <returns>token</returns>
+        ObscureToken AddTemporaryObscure(IReadOnlyList<Vector2Int> cells);
+
+        void RemoveTemporaryObscure(ObscureToken token);
+
         // Spotted enemies
         IReadOnlyDictionary<string, Vector2Int> SpottedEnemies { get; }
 

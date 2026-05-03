@@ -15,11 +15,13 @@ namespace Systems.Vision
 		private readonly IUnitService _unitService;
 
 		private readonly Dictionary<string, HashSet<Vector2Int>> _perUnitVision = new();
-		private HashSet<Vector2Int> _mergedVisibleCells = new(); // per unit vision + temporary reveals
+		private HashSet<Vector2Int> _mergedVisibleCells = new(); // per unit vision + temporary reveals - temporary obscures
 		private readonly Dictionary<int, HashSet<Vector2Int>> _temporaryReveals = new(); // tokenId → revealed cells
+		private readonly Dictionary<int, HashSet<Vector2Int>> _temporaryObscures = new(); // tokenId → obscured cells
 		private readonly Dictionary<string, Vector2Int> _spottedEnemies = new(); // unitId → last known position
 
 		private int _nextTokenId = 1;
+		private int _nextObscureTokenId = 1;
 
 		public IReadOnlyCollection<Vector2Int> CurrentVisibleCells => _mergedVisibleCells;
 		public IReadOnlyDictionary<string, Vector2Int> SpottedEnemies => _spottedEnemies;
@@ -87,6 +89,23 @@ namespace Systems.Vision
 			RebuildMergedAndPublish();
 		}
 
+		public ObscureToken AddTemporaryObscure(IReadOnlyList<Vector2Int> cells)
+		{
+			var token = new ObscureToken(_nextObscureTokenId++);
+			_temporaryObscures[token.Id] = new HashSet<Vector2Int>(cells);
+			this.Log($"Added temporary obscure {token} ({cells.Count} cells)");
+			RebuildMergedAndPublish();
+			return token;
+		}
+
+		public void RemoveTemporaryObscure(ObscureToken token)
+		{
+			if (!token.IsValid) return;
+			if (!_temporaryObscures.Remove(token.Id)) return;
+			this.Log($"Removed temporary obscure {token}");
+			RebuildMergedAndPublish();
+		}
+
 		public void MarkEnemySpotted(string unitId, Vector2Int position)
 		{
 			bool isNew = !_spottedEnemies.ContainsKey(unitId);
@@ -116,6 +135,9 @@ namespace Systems.Vision
 
 			foreach (var reveal in _temporaryReveals.Values)
 				merged.UnionWith(reveal);
+
+			foreach (var obscure in _temporaryObscures.Values)
+				merged.ExceptWith(obscure);
 
 			_mergedVisibleCells = merged;
 

@@ -132,13 +132,20 @@ namespace Presentation.Map
 		{
 			Vector3 position0 = _coordinateConverter.CellToWorld(e.attacker.position);
 			Vector3 position1 = _coordinateConverter.CellToWorld(e.target.position);
+
+            _wallViewManager.ClearAllHighLight();
+            foreach (var wallKey in e.heightWalls)
+            {
+                _wallViewManager.SetWallHighlight(wallKey);
+            }
 			
 			gunline.Refresh(position0, position1);
 		}
 
 		private void RemoveGunLine(RemoveGunLineEvent e)
 		{
+            _wallViewManager.ClearAllHighLight();
 			gunline.Remove();
 		}
-	}
+    }
 }

@@ -196,9 +196,7 @@ namespace Systems.Interaction.States
 				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id));
 				if (!hasConfirmed)
 				{
-
-					
-					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target));
+					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, info.lowWalls));
 				}
 			}
 			else
