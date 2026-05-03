@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
+  m_Name: 1003-T Item_Light
+  m_EditorClassIdentifier: 
+  id: 1003
+  nName: "\u7167\u660E\u5F39"
+  type: "\u6218\u672F\u9053\u5177"
+  description: "\u7528\u4E8E\u7279\u79CD\u4F5C\u6218\u7684\u95EA\u5149\u9707\u64BC\u5F39\uFF0C\u53EF\u9707\u6151\u8303\u56F4\u5185\u7684\u654C\u4EBA\u5E76\u4F7F\u5176\u5931\u660E\u3002"
+  battleDescription: 
+  icon: {fileID: -1789119976, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  weight: 0
+  spineName: 
+  gripType: 1
+  kind: 5
+  maxUsesPerBattle: 3
+  apCost: 1
+  throwRange: 6
+  coverageOffsets:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: -1, y: 0}
+  - {x: 0, y: -1}
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: 1}
+  - {x: 2, y: 0}
+  - {x: 0, y: -2}
+  - {x: -2, y: 0}
+  - {x: 0, y: 2}
+  healAmount: 30
+  directDamage: 0
+  appliedBuff: 3
+  persistTurns: 2
+  oneShotVfxPrefab: {fileID: 135726, guid: 154a10755f2c4a0409a0ab5c88261468, type: 3}
+  persistentVfxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 2997148212300979965, guid: 0fdc7757d92177849b033ae5e0b10408, type: 3}
+  visionReach: 5

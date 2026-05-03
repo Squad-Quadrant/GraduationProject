@@ -6,6 +6,8 @@ using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Vfx;
 using Systems.AreaEffect;
 using Systems.AreaEffect.Behaviors;
+using Systems.Buff;
+using Systems.Buff.Config;
 using Systems.Damage;
 using Systems.Interaction;
 using Systems.Interaction.Targeting;
@@ -115,10 +117,17 @@ namespace Systems.Unit.Equipment.Logic
 					{
 						var unit = ctx.UnitService.GetUnitAtPosition(cell);
 						if (unit is not { IsAlive: true }) continue;
-						if (GetDamage() <= 0) continue;
                         
-                        var info = new GeneralDamageTriggeringInfo(this, unit);
-                        ctx.EventBus.Publish(new DealDamageEvent(info));
+						if (GetDamage() > 0)
+                        {
+                            var info = new GeneralDamageTriggeringInfo(this, unit);
+                            ctx.EventBus.Publish(new DealDamageEvent(info));
+                        }
+
+                        if (ItemConfig.appliedBuff != BuffType.None)
+                        {
+                            (unit as IBuffAble).AttachBuff(ItemConfig.appliedBuff, this);
+                        }
 					}
 				});
 		}
