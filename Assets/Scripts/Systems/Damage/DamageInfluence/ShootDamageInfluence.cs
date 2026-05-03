@@ -21,22 +21,21 @@ namespace Systems.Damage
         {
             base.Init(context);
             var theWeapon = (WeaponLogic)Owner;
-            if (context.needApplyDamage)
-            {
+
                 if (!_isOnPreciseShoot)
                 {
                     int bulletNum = theWeapon.CurrentAmmo() > theWeapon.ShootSpeed() ? theWeapon.ShootSpeed() : theWeapon.CurrentAmmo();
-                    theWeapon.CurrentAmmo(-bulletNum);
+                    if (context.needApplyDamage)
+                       theWeapon.CurrentAmmo(-bulletNum);
                     Context.CalculateNum = bulletNum;
                 }
                 else
                 {
                     int bulletNum = theWeapon.CurrentAmmo() > theWeapon.PreciseShootSpeed() ? theWeapon.PreciseShootSpeed() : theWeapon.CurrentAmmo();
-                    theWeapon.CurrentAmmo(-bulletNum);
+                    if (context.needApplyDamage)
+                        theWeapon.CurrentAmmo(-bulletNum);
                     Context.CalculateNum = bulletNum;
                 }
-            }
-
         }
 
         public override void Execute()

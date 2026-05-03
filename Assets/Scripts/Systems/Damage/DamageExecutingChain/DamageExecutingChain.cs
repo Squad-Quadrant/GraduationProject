@@ -54,21 +54,26 @@ namespace Systems.Damage
             int finalDamage = Mathf.RoundToInt(context.Damage * context.DamageModifier);
             int finalDefenseDamage = Mathf.RoundToInt(context.DefenceDamage * context.DefenseDamageModifier);
             int finalSanDamage = Mathf.RoundToInt(context.SanDamage * context.SanDamageModifier);
-
-            defender.CurrentHp -= finalDamage;
-            defender.CurrentDefense -= finalDefenseDamage;
-            defender.CurrentSan -= finalSanDamage;
-
-            defender.BodyPartInfo[context.bodyPartType] += finalDamage;
+            
 
             context.TotalDamage += finalDamage;
             context.TotalDefenseDamage += finalDefenseDamage;
             context.TotalSanDamage += finalSanDamage;
             
-            this.Log($"Damage applied: type:{context.DamageType}, {context.Damage} damage, {context.DefenceDamage} defense damage," +
-                $" {context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
+            if (context.needApplyDamage)
+            {
+                defender.CurrentHp -= finalDamage;
+                defender.CurrentDefense -= finalDefenseDamage;
+                defender.CurrentSan -= finalSanDamage;
 
-            eventBus.Publish(new DamageAppliedEvent(context.GetSnapshot()));
+                defender.BodyPartInfo[context.bodyPartType] += finalDamage;
+
+                this.Log(
+                    $"Damage applied: type:{context.DamageType}, {context.Damage} damage, {context.DefenceDamage} defense damage," +
+                    $" {context.SanDamage} mental damage. Defender ID:{defender.id} HP: {defender.CurrentHp}, Defense: {defender.CurrentDefense}");
+
+                eventBus.Publish(new DamageAppliedEvent(context.GetSnapshot()));
+            }
         }
 
         protected virtual void ResetDamage()
@@ -121,6 +126,8 @@ namespace Systems.Damage
         public int TotalDamage = 0;
         public int TotalDefenseDamage = 0;
         public int TotalSanDamage = 0;
+
+        public bool IsSimulating;
 
         public void AddHitRateInfluence(string reason, float changer = 0, float multiplier = 1)
         {

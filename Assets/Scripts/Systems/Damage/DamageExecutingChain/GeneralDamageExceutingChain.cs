@@ -21,23 +21,31 @@ namespace Systems.Damage
         {
             influences.RemoveAll(i => context.ignoredInfluenceTypes.Any(t => i.DamageInfluenceTypes.Contains(t)));
             
-            for (int i = 0; i < context.CalculateNum; i++)
+            if (context.IsFinalCalculated)
             {
-                if (context.HitRate > Random.Range(0f, 1f)) 
-                    context.FinalCalculatedNum++;
+                context.FinalCalculatedNum = context.CalculateNum;
+            }
+            else
+            {
+                for (int i = 0; i < context.CalculateNum; i++)
+                {
+                    if (context.HitRate > Random.Range(0f, 1f))
+                        context.FinalCalculatedNum++;
+                }
             }
 
             for (int i = 0; i < context.FinalCalculatedNum; i++)
             {
+                if (context.needResetDamage) 
+                    ResetDamage();
+                
                 context.CurrentDamageIndex = i;
+                
                 foreach (var influence in influences)
                 {
                     influence.Execute();
                 }
-                if (context.needApplyDamage)
-                    ApplyDamage();
-                if (context.needResetDamage) 
-                    ResetDamage();
+                ApplyDamage();
             }
             
             if (context.needApplyDamage)

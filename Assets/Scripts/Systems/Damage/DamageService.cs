@@ -40,6 +40,7 @@ namespace Systems.Damage
         public DamageExecutingContext GetSimulatedDamage(BulletDamageTriggeringInfo info)
         {
             var damageChain = GetDamageChain(info);
+            damageChain.Context.IsSimulating = true;
             damageChain.Context.needApplyDamage = false;
             damageChain.Init();
             damageChain.Execute();

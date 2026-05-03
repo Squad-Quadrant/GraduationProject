@@ -73,7 +73,8 @@ namespace Systems.Interaction.States
 			Publish(ctx, PathPreviewEvent.Hide());
 			Publish(ctx, CursorInfoEvent.Hide());
 			Publish(ctx, TargetingEvent.Clear());
-
+            Publish(Context, new RemoveGunLineEvent());
+            
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onBack);

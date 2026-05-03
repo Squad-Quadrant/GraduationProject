@@ -35,11 +35,11 @@ namespace Presentation.UI.Panel.AttachPreview
 			}
 
 			// right
-			var damage = attacker.CurrentWeaponLogic.GetDamage();
+            var damage = context.Damage;
 			var bulletAmount = context.FinalCalculatedNum;
 			right[0].SetPair("伤害", $"{damage}x{bulletAmount}");
 
-			var armDamage = context.DefenceDamage;
+			var armDamage = context.TotalDefenseDamage;
 			right[1].SetPair("破甲", $"{armDamage}");
 		}
 	}
