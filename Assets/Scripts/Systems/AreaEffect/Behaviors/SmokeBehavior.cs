@@ -17,8 +17,9 @@ namespace Systems.AreaEffect.Behaviors
 		}
 		public override void OnCreated(AreaEffect self, AreaEffectContext ctx)
 		{
-			var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, 1);
-			_token = ctx.VisionService.AddTemporaryObscure(visibleCells.ToList());
+			// var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, 1);
+			_token = ctx.VisionService.AddTemporaryObscure(Cells.ToList());
+            ctx.AIService.AddObscuresCells(Cells.ToList());
 		}
 
 		public override void OnRemoved(AreaEffect self, AreaEffectContext ctx)
@@ -26,6 +27,7 @@ namespace Systems.AreaEffect.Behaviors
 			if (!_token.IsValid) return;
 			ctx.VisionService.RemoveTemporaryObscure(_token);
 			_token = ObscureToken.Invalid;
+            ctx.AIService.RemoveObscuresCells(Cells.ToList());
 		}
 	}
 }

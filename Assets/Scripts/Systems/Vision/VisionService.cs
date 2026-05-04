@@ -130,14 +130,28 @@ namespace Systems.Vision
 			var previous = _mergedVisibleCells;
 
 			var merged = new HashSet<Vector2Int>();
-			foreach (var unitCells in _perUnitVision.Values)
-				merged.UnionWith(unitCells);
-
+            
+            // 1. 单位视野
+            foreach (var unitCells in _perUnitVision.Values)
+                merged.UnionWith(unitCells);
+            
+            // 2. 临时揭示
 			foreach (var reveal in _temporaryReveals.Values)
 				merged.UnionWith(reveal);
 
+            // 3. 临时隐藏
 			foreach (var obscure in _temporaryObscures.Values)
 				merged.ExceptWith(obscure);
+
+            // 4. 单位位置
+			var allUnits = _unitService.GetAllAliveUnits();
+			foreach (var unit in allUnits)
+			{
+				if (unit.faction == EUnitFaction.Player && !merged.Contains(unit.position))
+				{
+					merged.Add(unit.position);
+				}
+			}
 
 			_mergedVisibleCells = merged;
 
