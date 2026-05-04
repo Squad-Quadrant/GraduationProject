@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 1003-T Item_Light
   m_EditorClassIdentifier: 
   id: 1003
-  nName: "\u7167\u660E\u5F39"
-  type: "\u7167\u660E\u5F39"
+  nName: "M84\u95EA\u5149\u5F39"
+  type: "\u95EA\u5149\u5F39"
   description: "\u7528\u4E8E\u7279\u79CD\u4F5C\u6218\u7684\u95EA\u5149\u9707\u64BC\u5F39\uFF0C\u53EF\u9707\u6151\u8303\u56F4\u5185\u7684\u654C\u4EBA\u5E76\u4F7F\u5176\u5931\u660E\u3002"
   battleDescription: 
   icon: {fileID: -1789119976, guid: d723e6b88f967c846a38343439950a03, type: 3}
