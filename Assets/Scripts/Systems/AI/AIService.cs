@@ -5,7 +5,6 @@ using Core.Commands;
 using Core.Commands.Events;
 using Core.Events;
 using Core.Log;
-using Data.Runtime.Commands;
 using Systems.AI.Actions;
 using Systems.AI.Alert;
 using Systems.AI.Behavior;
@@ -40,6 +39,7 @@ namespace Systems.AI
 
 		private ITurnPlan _currentPlan;
 		private Queue<IAtomicAction> _currentSequence;
+        private readonly List<Vector2Int> obscuresCells = new();
 
 		public AIService(
 			IEventBus eventBus,
@@ -78,7 +78,22 @@ namespace Systems.AI
 			DecisionLoop();
 		}
 
-		private void DecisionLoop()
+        public void AddObscuresCells(List<Vector2Int> cells)
+        {
+            obscuresCells.AddRange(cells);
+        }
+
+        public void RemoveObscuresCells(List<Vector2Int> cells)
+        {
+            obscuresCells.RemoveAll(c => cells.Contains(c));
+        }
+
+        public void RemoveAllObscuresCells(List<Vector2Int> cells)
+        {
+            obscuresCells.Clear();
+        }
+
+        private void DecisionLoop()
 		{
 			if (_currentUnit is not { IsAlive: true } || !_currentUnit.HasAp)
 			{
@@ -110,7 +125,10 @@ namespace Systems.AI
 
 		private AIContext BuildContext(Unit.Unit unit) // 构建战场上下文
 		{
-			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange);
+            var theObscuresCells = new List<Vector2Int>(obscuresCells);
+            theObscuresCells.Remove(unit.position);
+            
+			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange, theObscuresCells);
 
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();

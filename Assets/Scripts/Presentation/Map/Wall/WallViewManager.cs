@@ -2,7 +2,6 @@
 using System.Linq;
 using Core.Events;
 using Core.Log;
-using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
@@ -108,6 +107,21 @@ namespace Presentation.Map.Wall
 			var c = visual.Renderer.color;
 			visual.Renderer.color = new Color(c.r, c.g, c.b, alpha);
 		}
+        
+        public void SetWallHighlight(WallKey key)
+        {
+            if (_wallLookup == null) return;
+            if (!_wallLookup.TryGetValue(key, out var visual)) return;
+            visual.Renderer.color = Color.red;
+        }
+
+        public void ClearAllHighLight()
+        {
+            foreach (var wall in _wallLookup.Values)
+            {
+                wall.Renderer.color = new Color(1, 1, 1, wall.Renderer.color.a);
+            }
+        }
 
 		private bool IsWallRegionVisible(WallKey wallKey)
 		{

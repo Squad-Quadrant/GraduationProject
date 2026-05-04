@@ -7,6 +7,7 @@ using Data.Runtime.Events.AreaEffect;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
+using Systems.AI;
 using Systems.Buff;
 using Systems.Damage;
 using Systems.Unit;
@@ -30,10 +31,11 @@ namespace Systems.AreaEffect
 			IDamageService damageService,
 			IVisionService visionService,
 			IVisionCalculator visionCalculator,
-			IBuffService buffService)
+			IBuffService buffService,
+            IAIService aiService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_ctx = new AreaEffectContext(eventBus, unitService, damageService, visionService, visionCalculator, buffService);
+			_ctx = new AreaEffectContext(eventBus, unitService, damageService, visionService, visionCalculator, buffService, aiService);
 
 			_eventBus.Subscribe<TurnStartedEvent>(OnTurnStarted);
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
@@ -78,6 +80,8 @@ namespace Systems.AreaEffect
 
 			if (cells.All(c => c != targetCell))
 				throw new ArgumentException($"targetCell {targetCell} must be one of cells", nameof(targetCell));
+
+            behavior.Cells = cells;
 
 			_idCounter++;
 			var id = $"ae_{_idCounter}_{ownerId ?? "anonymous"}";

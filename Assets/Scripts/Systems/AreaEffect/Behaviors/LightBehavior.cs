@@ -17,8 +17,8 @@ namespace Systems.AreaEffect.Behaviors
 		}
 		public override void OnCreated(AreaEffect self, AreaEffectContext ctx)
 		{
-			var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, 1);
-			_token = ctx.VisionService.AddTemporaryReveal(visibleCells.ToList());
+			// var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, 1);
+			_token = ctx.VisionService.AddTemporaryReveal(Cells.ToList());
 		}
 
 		public override void OnRemoved(AreaEffect self, AreaEffectContext ctx)

@@ -39,8 +39,11 @@ namespace Systems.Unit.Equipment.Config
 		[Title("Grenade"), ShowIf(nameof(kind), ETacticalItemKind.Grenade)]
 		[LabelText("直接伤害"), MinValue(0)]
 		public int directDamage = 50;
+        
+        private bool CanAttachBuff =>
+            kind is ETacticalItemKind.Burn or ETacticalItemKind.Grenade;
 
-		[Title("Burn"), ShowIf(nameof(kind), ETacticalItemKind.Burn)]
+		[Title("Burn"), ShowIf(nameof(CanAttachBuff))]
 		[LabelText("附加 Buff 类型")]
 		public BuffType appliedBuff;
 

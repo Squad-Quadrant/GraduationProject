@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Systems.AreaEffect
 {
@@ -10,6 +11,7 @@ namespace Systems.AreaEffect
 		public GameObject PersistentVfxPrefab { get; }   // 可为 null
 
 		public bool DestroyOnOwnerDeath { get; }
+        public IReadOnlyList<Vector2Int> Cells { get; set; }
 
 		protected AreaEffectBehavior(
 			string displayName,

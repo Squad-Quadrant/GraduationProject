@@ -5,7 +5,7 @@ namespace Systems.Vision
 {
 	public interface IVisionCalculator
 	{
-		HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange);
+		HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange, List<Vector2Int> ignoredCells = null);
 
 		bool TraceRay(Vector2Int from, Vector2Int to, out TraceRayInfo info, List<Vector2Int> passedCells = null);
 	}

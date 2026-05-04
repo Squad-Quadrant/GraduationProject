@@ -16,7 +16,7 @@ namespace Systems.Vision
 			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
 
 		// 按曼哈顿距离遍历所有visionRange中的格子，一个个调用HasLineOfSight
-		public HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange)
+		public HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange, List<Vector2Int> ignoredCells = null)
 		{
 			var visible = new HashSet<Vector2Int> { origin };
 			var mapData = _mapService.Data;
@@ -34,6 +34,8 @@ namespace Systems.Vision
 						visible.Add(target);
 				}
 			}
+            
+            visible.ExceptWith(ignoredCells ?? new List<Vector2Int>());
 
 			return visible;
 		}

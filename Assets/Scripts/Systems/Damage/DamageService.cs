@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
 using Data.Runtime;
@@ -37,13 +38,27 @@ namespace Systems.Damage
             _unitService.CheckUnitDeath();
         }
 
-        public DamageExecutingContext GetSimulatedDamage(BulletDamageTriggeringInfo info)
+        public DamageExecutingContext GetSimulatedDamage(BulletDamageTriggeringInfo info, 
+            out Dictionary<BodyPartType, DamageExecutingContext> simulatedBodyPartDamages)
         {
+            simulatedBodyPartDamages = new();
+            
             var damageChain = GetDamageChain(info);
             damageChain.Context.IsSimulating = true;
             damageChain.Context.needApplyDamage = false;
             damageChain.Init();
             damageChain.Execute();
+
+            foreach (var bodyPart in info.Defender.BodyPartInfo.Keys)
+            {
+                var bodyPartDamageChain = GetDamageChain(info);
+                bodyPartDamageChain.Context.IsSimulating = true;
+                bodyPartDamageChain.Context.needApplyDamage = false;
+                bodyPartDamageChain.Context.bodyPartType = bodyPart;
+                bodyPartDamageChain.Init();
+                bodyPartDamageChain.Execute();
+                simulatedBodyPartDamages[bodyPart] = bodyPartDamageChain.Context;
+            }
 
             return damageChain.Context;
         }

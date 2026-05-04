@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Systems.AI;
 using Systems.Buff;
 using Systems.Damage;
 using Systems.Unit;
@@ -15,6 +16,7 @@ namespace Systems.AreaEffect
 		public IVisionService VisionService { get; }
 		public IVisionCalculator VisionCalculator { get; }
 		public IBuffService BuffService { get; }
+        public IAIService AIService { get; }
 
 		public AreaEffectContext(
 			IEventBus eventBus,
@@ -22,7 +24,8 @@ namespace Systems.AreaEffect
 			IDamageService damageService,
 			IVisionService visionService,
 			IVisionCalculator visionCalculator,
-			IBuffService buffService)
+			IBuffService buffService,
+            IAIService aiService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -30,6 +33,7 @@ namespace Systems.AreaEffect
 			VisionService = visionService;
 			VisionCalculator = visionCalculator;
 			BuffService = buffService;
+            AIService = aiService;
 		}
 	}
 }
