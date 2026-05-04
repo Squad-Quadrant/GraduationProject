@@ -165,7 +165,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -289,8 +289,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3908be16c6e14582b189c98bdae73705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuSceneName: 0_MainMenu
-  battleSceneName: 1_Battle
 --- !u!4 &1019355882
 Transform:
   m_ObjectHideFlags: 0
