@@ -108,7 +108,7 @@ MonoBehaviour:
   spacing: 15
   maxVisibleSlots: 15
   currentScale: 1
-  currentOffsetY: -12
+  currentOffsetY: -20
   actedAlpha: 0.4
   playerBg: {fileID: 21300000, guid: 1cab5098a2bda3947ad9c6e280f9c4b7, type: 3}
   enemyBg: {fileID: 21300000, guid: 9623022498c6bcc489a613c1c5bfcca3, type: 3}
