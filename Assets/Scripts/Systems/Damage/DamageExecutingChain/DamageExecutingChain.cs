@@ -55,6 +55,9 @@ namespace Systems.Damage
             int finalDefenseDamage = Mathf.RoundToInt(context.DefenceDamage * context.DefenseDamageModifier);
             int finalSanDamage = Mathf.RoundToInt(context.SanDamage * context.SanDamageModifier);
             
+            context.FinalDamage[context.CurrentDamageIndex] = finalDamage;
+            context.FinalDefenseDamage[context.CurrentDamageIndex] = finalDefenseDamage;
+            context.FinalSanDamage[context.CurrentDamageIndex] = finalSanDamage;
 
             context.TotalDamage += finalDamage;
             context.TotalDefenseDamage += finalDefenseDamage;
@@ -108,7 +111,7 @@ namespace Systems.Damage
         public float DefenseDamageModifier = 1;
         public float SanDamageModifier = 1;
 
-        public BodyPartType bodyPartType; // 击中部位
+        public BodyPartType bodyPartType = BodyPartType.None; // 击中部位
         public List<DamageInfluenceType> ignoredInfluenceTypes = new();
         
         public float HitRate = 1;
@@ -122,6 +125,10 @@ namespace Systems.Damage
         public bool isMiss => FinalCalculatedNum == 0;
         public bool needApplyDamage = true;
         public bool needResetDamage = true; // 在每次重新计算伤害之前是否需要重置伤害
+
+        public Dictionary<int, int> FinalDamage = new();
+        public Dictionary<int, int> FinalDefenseDamage = new();
+        public Dictionary<int, int> FinalSanDamage = new();
 
         public int TotalDamage = 0;
         public int TotalDefenseDamage = 0;

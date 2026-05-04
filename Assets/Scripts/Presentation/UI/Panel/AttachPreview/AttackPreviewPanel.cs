@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Interaction;
@@ -129,11 +130,12 @@ namespace Presentation.UI.Panel.AttachPreview
 		        return;
 	        }
 
-	        RefreshAttackContextDisplay(e.Context, _currentUnit);
+	        RefreshAttackContextDisplay(e.Context, _currentUnit, e.ContextDic);
         }
 
-        private void RefreshAttackContextDisplay(DamageExecutingContext context, Systems.Unit.Unit attacker) =>
-	        attackContextDisplayPanel.Show(context, attacker);
+        private void RefreshAttackContextDisplay(DamageExecutingContext context, Systems.Unit.Unit attacker, 
+            Dictionary<BodyPartType, DamageExecutingContext> attackContextDict) =>
+	        attackContextDisplayPanel.Show(context, attacker, attackContextDict);
 
         private void RefreshAttackContextDisplay(Systems.Unit.Unit attacker)
         {
@@ -146,8 +148,9 @@ namespace Presentation.UI.Panel.AttachPreview
 		        return;
 	        }
 
-	        var attackContext = _damageService.GetSimulatedDamage(new BulletDamageTriggeringInfo(attacker, target, EActionType.Attack));
-	        RefreshAttackContextDisplay(attackContext, attacker);
+            var attackContext = _damageService.GetSimulatedDamage(new BulletDamageTriggeringInfo(attacker, target, EActionType.Attack),
+                out var attackContextDict);
+	        RefreshAttackContextDisplay(attackContext, attacker, attackContextDict);
         }
 
         private void SetModeText(string mode, string desc)

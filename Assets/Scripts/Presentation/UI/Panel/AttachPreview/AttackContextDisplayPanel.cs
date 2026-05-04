@@ -16,7 +16,7 @@ namespace Presentation.UI.Panel.AttachPreview
 			foreach (var line in right) line.SetDefault();
 		}
 
-		public void Show(DamageExecutingContext context, Systems.Unit.Unit attacker)
+		public void Show(DamageExecutingContext context, Systems.Unit.Unit attacker, Dictionary<BodyPartType, DamageExecutingContext> attackContextDict)
 		{
 			// left
 			var hitPrecent = Mathf.Clamp(Mathf.RoundToInt(context.HitRate * 100f), 0, 100);
@@ -35,12 +35,26 @@ namespace Presentation.UI.Panel.AttachPreview
 			}
 
 			// right
-            var damage = context.Damage;
-			var bulletAmount = context.FinalCalculatedNum;
-			right[0].SetPair("伤害", $"{damage}x{bulletAmount}");
+            int minDamage = context.FinalDamage[0];
+            int maxDamage = context.FinalDamage[0];
 
-			var armDamage = context.TotalDefenseDamage;
-			right[1].SetPair("破甲", $"{armDamage}");
+            foreach (var theContext in attackContextDict.Values)
+            {
+                minDamage = Mathf.Min(minDamage, theContext.FinalDamage[0]);
+                maxDamage = Mathf.Max(maxDamage, theContext.FinalDamage[0]);
+            }
+            
+			var bulletAmount = context.FinalCalculatedNum;
+			right[0].SetPair("伤害", $"({minDamage}~{maxDamage})x{bulletAmount}");
+
+            int maxDefenseDamage = context.FinalDefenseDamage[0];
+
+            foreach (var theContext in attackContextDict.Values)
+            {
+                maxDefenseDamage = Mathf.Max(maxDefenseDamage, theContext.TotalDefenseDamage);
+            }
+            
+			right[1].SetPair("破甲", $"0~{maxDefenseDamage}");
 		}
 	}
 }

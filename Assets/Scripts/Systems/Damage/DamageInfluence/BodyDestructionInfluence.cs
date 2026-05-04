@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 using Systems.Buff;
 using Systems.Buff.Config;
@@ -67,8 +68,15 @@ namespace Systems.Damage
         public override void Init(DamageExecutingContext context)
         {
             base.Init(context);
-            
-            hitPart = GetRandomBodyPart();
+
+            if (Context.IsSimulating && context.bodyPartType != BodyPartType.None)
+            {
+                hitPart = BodyParts.First(p => p.PartType == context.bodyPartType);
+            }
+            else
+            {
+                hitPart = GetRandomBodyPart();
+            }
             
             Context.DamageModifier = hitPart.DamageMultiplier;
             Context.bodyPartType = hitPart.PartType;

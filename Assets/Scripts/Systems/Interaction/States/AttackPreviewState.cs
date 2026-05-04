@@ -180,12 +180,14 @@ namespace Systems.Interaction.States
 					break;
 				}
 				
+                Dictionary<BodyPartType, DamageExecutingContext> contextDic = new();
+                
 				var damageContext = Context.DamageService.GetSimulatedDamage(
 					new BulletDamageTriggeringInfo(
 						Context.selectedUnit,
 						target,
 						Context.currentAction,
-						environment));
+						environment), out contextDic);
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
@@ -193,7 +195,7 @@ namespace Systems.Interaction.States
 				Publish(Context, CursorInfoEvent.ForAttack(
 					target.position, e.WorldPosition,
 					hitPercent, target.name, target.CurrentHp, target.maxHp));
-				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id));
+				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
 				if (!hasConfirmed)
 				{
 					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, info.lowWalls));
