@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 1004-T Item_Burning AN-M14
   m_EditorClassIdentifier: 
   id: 1004
-  nName: "AN-M14\u71C3\u70E7\u5F39"
-  type: "\u6218\u672F\u9053\u5177"
+  nName: AN-M14
+  type: "\u71C3\u70E7\u5F39"
   description: "\u519B\u7528\u767D\u78F7\u71C3\u70E7\u5F39\uFF0C\u53EF\u4EE5\u5FEB\u901F\u5F15\u71C3\u533A\u57DF\u5185\u7684\u76EE\u6807"
   battleDescription: 
   icon: {fileID: -2111100431, guid: d723e6b88f967c846a38343439950a03, type: 3}

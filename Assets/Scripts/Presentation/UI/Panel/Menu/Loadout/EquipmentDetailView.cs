@@ -51,8 +51,22 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				return;
 			}
 
-			if (detailName) detailName.text = config.nName;
-			if (detailDescription) detailDescription.text = config.description;
+			ClearText();
+			detailName.text = config.nName;
+			detailDescription.text = config.description;
+			switch (config)
+			{
+				case WeaponConfig weaponConfig:
+					detailLine1.text = $"伤害：　　{weaponConfig.damage}";
+					detailLine2.text = $"弹容量：　{weaponConfig.ammoCapacity}发";
+					detailLine3.text = $"射速：　　{weaponConfig.shootSpeed}发/AP";
+					detailLine4.text = $"穿透率：　{weaponConfig.penetrationRate:P1}";
+					break;
+				case TacticalItemConfig tacticalItemConfig:
+					detailLine1.text = $"使用次数：　{tacticalItemConfig.maxUsesPerBattle}次";
+					detailLine2.text = $"AP消耗：　　{tacticalItemConfig.apCost}点/次";
+					break;
+			}
 
 			_rectTransform.SetAsLastSibling();
 
@@ -102,6 +116,16 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 			if (RectTransformUtility.ScreenPointToWorldPointInRectangle(_rectTransform, target, cam, out Vector3 worldPoint))
 				_rectTransform.position = worldPoint;
+		}
+
+		private void ClearText()
+		{
+			detailName.text = "";
+			detailDescription.text = "";
+			detailLine1.text = "";
+			detailLine2.text = "";
+			detailLine3.text = "";
+			detailLine4.text = "";
 		}
 	}
 }
