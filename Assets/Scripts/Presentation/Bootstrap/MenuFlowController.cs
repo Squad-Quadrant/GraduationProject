@@ -1,6 +1,7 @@
 ﻿using Core.Log;
 using Data;
 using Data.Config;
+using Presentation.Audio;
 using Presentation.UI.Core;
 using Presentation.UI.Panel.Menu;
 using Presentation.UI.Panel.Menu.Loadout;
@@ -11,9 +12,20 @@ namespace Presentation.Bootstrap
 {
 	public class MenuFlowController : MonoBehaviour
 	{
+		[Title("Audio")]
+		[SerializeField, Tooltip("主菜单 BGM")]
+		private AudioClip mainMenuBgm;
+
+		[SerializeField, Range(0f, 3f)]
+		private float bgmFadeIn = 1f;
+
+		[SerializeField, Range(0f, 3f)]
+		private float bgmVolume = 0.5f;
+
 		private UIManager _uiManager;
 		private DataManager _dataManager;
 		private GameFlowController _gameFlowController;
+		private AudioService _audioService;
 
 		private UIPanel _openedPanel;
 		private LevelConfig _selectedLevel;
@@ -23,9 +35,18 @@ namespace Presentation.Bootstrap
 			_uiManager = RootContainer.Instance.Resolve<UIManager>();
 			_dataManager = RootContainer.Instance.Resolve<DataManager>();
 			_gameFlowController = RootContainer.Instance.Resolve<GameFlowController>();
+			_audioService = RootContainer.Instance.Resolve<AudioService>();
 		}
 
-		private void Start() => ShowMainMenu();
+		private void Start()
+		{
+			if (mainMenuBgm)
+			{
+				_audioService.PlayBGM(mainMenuBgm, bgmFadeIn);
+				_audioService.SetVolume(EVolumeChannel.BGM, bgmVolume);
+			}
+			ShowMainMenu();
+		}
 
 		private void ShowMainMenu()
 		{

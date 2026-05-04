@@ -15,3 +15,5 @@ MonoBehaviour:
   entries:
   - kind: 1
     clip: {fileID: 0}
+  - kind: 2
+    clip: {fileID: 0}

@@ -39,3 +39,6 @@ MonoBehaviour:
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  fireClip: {fileID: 8300000, guid: 8210480051bd37d4d84dcc30f021627d, type: 3}
+  reloadClip: {fileID: 8300000, guid: 2abf701fa0957e3458823e34ac511305, type: 3}
+  emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

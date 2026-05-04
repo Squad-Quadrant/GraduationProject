@@ -146,7 +146,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: Movement
   servingRangeTypes: 01000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 0, g: 1, b: 0.016897917, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
@@ -382,7 +382,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 30
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: AreaEffectOverlay
   servingRangeTypes: 05000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 1, g: 1, b: 1, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
@@ -573,7 +573,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -770,7 +770,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 20
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -794,7 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: Interaction
   servingRangeTypes: 03000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 0.6764116, g: 1, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
@@ -1174,7 +1174,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 5
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1198,7 +1198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: Selection
   servingRangeTypes: 00000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 0.9738562, g: 1, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.2, g: 0.5, b: 1, a: 0.55}
@@ -1409,7 +1409,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1762,7 +1762,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 15
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1786,7 +1786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: Attack
   servingRangeTypes: 02000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 1, g: 0.11492197, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
@@ -1954,7 +1954,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 25
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1978,7 +1978,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layerId: AreaEffectPreview
   servingRangeTypes: 04000000
-  baseTile: {fileID: 11400000, guid: 685025feb25ea5b48a10483b3b0f9825, type: 2}
+  baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
   color: {r: 1, g: 0.37588555, b: 0, a: 0.5}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
@@ -2144,7 +2144,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}

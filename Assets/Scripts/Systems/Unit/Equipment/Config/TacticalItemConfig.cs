@@ -70,5 +70,11 @@ namespace Systems.Unit.Equipment.Config
 		[Title("ScoutEye"), ShowIf(nameof(kind), ETacticalItemKind.ScoutEye)]
 		[LabelText("视野透视半径"), MinValue(1)]
 		public int visionReach = 5;
+
+		[Title("Audio")]
+		[ShowIf(nameof(IsThrowable))] public AudioClip clipWhenThrowAnimationStarted;
+		[ShowIf(nameof(IsThrowable))] public AudioClip clipWhenProjectileGenerated;
+		[ShowIf(nameof(IsThrowable))] public AudioClip clipWhenLanded;
+		[ShowIf(nameof(kind), ETacticalItemKind.TimerBomb)] public AudioClip timerBombExplosionClip;
 	}
 }

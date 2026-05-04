@@ -37,6 +37,11 @@ namespace Systems.Unit.Equipment.Config
 
 		[LabelText("精确射击模式下的命中率加成")]
 		public float preciseShootHitRateBonus;
+
+		[Title("Audio")]
+		[LabelText("开火音效")] public AudioClip fireClip;
+		[LabelText("换弹音效")] public AudioClip reloadClip;
+		[LabelText("空仓音效")] public AudioClip emptyClip;
 	}
 
 	[Serializable]

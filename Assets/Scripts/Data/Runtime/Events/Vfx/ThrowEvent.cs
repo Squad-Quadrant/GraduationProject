@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Data.Runtime.Events.Vfx
@@ -8,12 +9,14 @@ namespace Data.Runtime.Events.Vfx
 		public string OwnerUnitId { get; }
 		public Vector2Int TargetCell { get; }
 		public GameObject ProjectilePrefab { get; }
+		public TacticalItemConfig ItemConfig { get; }
 
-		public ThrowEvent(string ownerUnitId, Vector2Int targetCell, GameObject projectilePrefab)
+		public ThrowEvent(string ownerUnitId, Vector2Int targetCell, GameObject projectilePrefab, TacticalItemConfig itemConfig)
 		{
 			OwnerUnitId = ownerUnitId;
 			TargetCell = targetCell;
 			ProjectilePrefab = projectilePrefab;
+			ItemConfig = itemConfig;
 		}
 
 		public override string ToString() =>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Presentation.Audio;
 using Presentation.Bootstrap;
 using Systems.PathFinding;
 using Systems.Unit.Equipment.Config;
@@ -14,6 +15,9 @@ namespace Systems.Unit.Equipment.Logic
 
 		private IPathFindingService _pathFindingService;
 		protected IPathFindingService PathFindingService => _pathFindingService ??= LevelContainer.Instance.Resolve<IPathFindingService>();
+
+		private AudioService _audioService;
+		protected AudioService AudioService => _audioService ??= RootContainer.Instance.Resolve<AudioService>();
 
 		private static readonly Vector2Int[] BfsDirections = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 

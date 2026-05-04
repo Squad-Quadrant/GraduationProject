@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Log;
 using DG.Tweening;
 using Presentation.Audio.Config;
@@ -26,6 +29,10 @@ namespace Presentation.Audio
 		private Tween _bgmTween;
 		private bool _initialized;
 
+		private readonly Stack<AudioSource> _freeSources = new();
+		private readonly Dictionary<int, AudioSource> _activeLoops = new();
+		private int _nextHandleId = 1;
+
 		private const string PrefKeyPrefix = "Audio.Volume.";
 		private const float MinDb = -80f;
 
@@ -45,8 +52,18 @@ namespace Presentation.Audio
 		private void OnDestroy()
 		{
 			_bgmTween?.Kill();
+
+			foreach (var src in _activeLoops.Values.Where(src => src))
+			{
+				DOTween.Kill(src);
+				src.Stop();
+			}
+			_activeLoops.Clear();
+
 			this.Log("Destroyed");
 		}
+
+		#region BGM
 
 		public void PlayBGM(AudioClip clip, float fade = 0f)
 		{
@@ -107,18 +124,160 @@ namespace Presentation.Audio
 				.OnComplete(() => bgmSource.Stop());
 		}
 
+		#endregion
+
+		#region SFX
+
 		public void PlayUISfx(EUISfx kind)
 		{
 			if (kind == EUISfx.None || !uiSoundConfig) return;
 			var clip = uiSoundConfig.Get(kind);
-			if (clip) PlaySFX(clip);
+			if (clip) PlaySfx(clip);
 		}
 
-		public void PlaySFX(AudioClip clip, float volumeScale = 1f)
+		public void PlaySfx(AudioClip clip, float volumeScale = 1f, float pitch = 1f)
 		{
-			if (!clip) return;
-			sfxSource.PlayOneShot(clip, volumeScale);
+			if (!clip)
+			{
+				this.LogWarning("PlaySfx called with null clip");
+				return;
+			}
+
+			if (pitch <= 0f)
+			{
+				this.LogWarning($"PlaySFX: pitch must be > 0, got {pitch}. Falling back to 1.");
+				pitch = 1f;
+			}
+
+			if (Mathf.Approximately(pitch, 1f))
+			{
+				sfxSource.PlayOneShot(clip, volumeScale);
+				return;
+			}
+
+			var src = AcquireSource();
+			src.clip = clip;
+			src.volume = volumeScale;
+			src.pitch = pitch;
+			src.loop = false;
+			src.Play();
+
+			StartCoroutine(ReleaseAfter(src, clip.length / pitch));
 		}
+
+		public SfxHandle PlayLoop(AudioClip clip, float volumeScale = 1f, float pitch = 1f)
+		{
+			if (!clip)
+			{
+				this.LogWarning("PlayLoop called with null clip");
+				return SfxHandle.Invalid;
+			}
+
+			if (pitch <= 0f)
+			{
+				this.LogWarning($"PlayLoop: pitch must be > 0, got {pitch}. Using 1.");
+				pitch = 1f;
+			}
+
+			var src = AcquireSource();
+			src.clip = clip;
+			src.volume = volumeScale;
+			src.pitch = pitch;
+			src.loop = true;
+			src.Play();
+
+			var id = _nextHandleId++;
+			_activeLoops[id] = src;
+
+			this.Log($"PlayLoop '{clip.name}' → handle {id} (pitch={pitch}, vol={volumeScale})");
+			return new SfxHandle(id);
+		}
+
+		public void StopLoop(SfxHandle handle, float fade = 0f)
+		{
+			if (!handle.IsValid) return;
+			if (!_activeLoops.Remove(handle.Id, out var src))
+				return;
+
+			if (!src) return; // source 已被外部销毁
+
+			if (fade <= 0f)
+			{
+				ReleaseSource(src);
+				return;
+			}
+
+			src.DOFade(0f, fade)
+				.SetTarget(src)
+				.OnComplete(() => { if (src) ReleaseSource(src); });
+		}
+
+		public void SetLoopPitch(SfxHandle handle, float pitch)
+		{
+			if (!handle.IsValid || pitch <= 0f) return;
+			if (_activeLoops.TryGetValue(handle.Id, out var src) && src)
+				src.pitch = pitch;
+		}
+
+		public void SetLoopVolume(SfxHandle handle, float volumeScale)
+		{
+			if (!handle.IsValid) return;
+			if (_activeLoops.TryGetValue(handle.Id, out var src) && src)
+				src.volume = Mathf.Max(0f, volumeScale);
+		}
+
+		public bool IsLoopPlaying(SfxHandle handle)
+			=> handle.IsValid && _activeLoops.ContainsKey(handle.Id);
+
+		#endregion
+
+		#region pool
+
+		private AudioSource AcquireSource()
+		{
+			while (_freeSources.Count > 0)
+			{
+				var src = _freeSources.Pop();
+				if (src) return src;
+			}
+			return CreateSource();
+		}
+
+		private AudioSource CreateSource()
+		{
+			var go = new GameObject("PooledSfxSource");
+			go.transform.SetParent(transform, worldPositionStays: false);
+
+			var src = go.AddComponent<AudioSource>();
+			src.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup;
+			src.playOnAwake = false;
+			src.spatialBlend = 0f; // 2D 音频
+			return src;
+		}
+
+		private void ReleaseSource(AudioSource src)
+		{
+			if (!src) return;
+
+			DOTween.Kill(src);
+
+			src.Stop();
+			src.clip = null;
+			src.loop = false;
+			src.pitch = 1f;
+			src.volume = 1f;
+			_freeSources.Push(src);
+		}
+
+		private IEnumerator ReleaseAfter(AudioSource src, float seconds)
+		{
+			yield return new WaitForSeconds(seconds);
+			if (src) ReleaseSource(src);
+		}
+
+		#endregion
+
+		#region Volume
 
 		public void SetVolume(EVolumeChannel channel, float v01)
 		{
@@ -155,6 +314,8 @@ namespace Presentation.Audio
 				this.LogError($"Mixer parameter '{paramName}' not exposed. Did you set it in the AudioMixer asset?");
 		}
 
+		#endregion
+
 		private static string GetMixerParamName(EVolumeChannel channel) => channel.ToString();
 
 		private static string PrefKey(EVolumeChannel channel) => PrefKeyPrefix + channel;
@@ -162,5 +323,15 @@ namespace Presentation.Audio
 		private static float LinearToDb(float linear) => linear > 0.0001f ? 20f * Mathf.Log10(linear) : MinDb;
 
 		private static float DbToLinear(float db) => Mathf.Pow(10f, db / 20f);
+
+		#region Debug
+
+		[ShowInInspector, ReadOnly, PropertyOrder(100), FoldoutGroup("Debug")]
+		private int ActiveLoopCount => _activeLoops.Count;
+
+		[ShowInInspector, ReadOnly, PropertyOrder(101), FoldoutGroup("Debug")]
+		private int FreePoolSize => _freeSources.Count;
+
+		#endregion
 	}
 }

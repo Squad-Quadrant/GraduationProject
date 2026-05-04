@@ -64,6 +64,7 @@ namespace Systems.Unit.Equipment.Logic
 				owner: Owner,
 				targetCell: target,
 				projectilePrefab: ItemConfig.projectilePrefab,
+				itemConfig: ItemConfig,
 				eventBus: ctx.EventBus,
 				onLaunched: () =>
 				{
@@ -72,6 +73,8 @@ namespace Systems.Unit.Equipment.Logic
 				},
 				onLanded: () =>
 				{
+					if (ItemConfig.clipWhenLanded) AudioService.PlaySfx(ItemConfig.clipWhenLanded);
+
 					var effect = ctx.AreaEffectService.Register(
 						ownerId:        Owner.id,
 						targetCell:     target,
@@ -103,6 +106,7 @@ namespace Systems.Unit.Equipment.Logic
 				owner: Owner,
 				targetCell: target,
 				projectilePrefab: ItemConfig.projectilePrefab,
+				itemConfig: ItemConfig,
 				eventBus: ctx.EventBus,
 				onLaunched: () =>
 				{
@@ -112,7 +116,7 @@ namespace Systems.Unit.Equipment.Logic
 				onLanded: () =>
 				{
 					ctx.EventBus.PublishOneShotVfx(ItemConfig.oneShotVfxPrefab, target);
-
+					AudioService.PlaySfx(ItemConfig.clipWhenLanded);
 					foreach (var cell in aoeCells)
 					{
 						var unit = ctx.UnitService.GetUnitAtPosition(cell);
@@ -171,7 +175,8 @@ namespace Systems.Unit.Equipment.Logic
 					displayName: ItemConfig.nName,
 					displayIcon: ItemConfig.icon,
 					persistentVfxPrefab: ItemConfig.persistentVfxPrefab,
-					explosionVfxPrefab: ItemConfig.oneShotVfxPrefab),
+					explosionVfxPrefab: ItemConfig.oneShotVfxPrefab,
+					explosionClip:  ItemConfig.timerBombExplosionClip),
 				ctx);
 	}
 

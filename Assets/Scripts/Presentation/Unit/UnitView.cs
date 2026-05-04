@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Core.Log;
 using DG.Tweening;
 using Presentation.AI;
+using Presentation.Audio;
+using Presentation.Bootstrap;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
@@ -46,6 +48,9 @@ namespace Presentation.Unit
 
 		private Tween _fadeTween;
 
+		private AudioService _audioService;
+		private SfxHandle _footstepHandle;
+
 		public bool IsMoving => _moveCoroutine != null;
 
 		#region IClickableUnit
@@ -70,6 +75,8 @@ namespace Presentation.Unit
 			_frontBodySkinName = frontBodySkinName;
 			_backBodySkinName = backBodySkinName;
 
+			_audioService = RootContainer.Instance.TryResolve<AudioService>();
+
 			animator.Initialize(skeletonDataAsset, frontBodySkinName, weaponSkinName);
 
 			_stance = config.DefaultStance;
@@ -93,6 +100,13 @@ namespace Presentation.Unit
 				StopCoroutine(_moveCoroutine);
 				_moveCoroutine = null;
 			}
+
+			if (_audioService && _footstepHandle.IsValid)
+			{
+				_audioService.StopLoop(_footstepHandle);
+				_footstepHandle = SfxHandle.Invalid;
+			}
+
 			_fadeTween?.Kill();
 		}
 
@@ -326,6 +340,14 @@ namespace Presentation.Unit
 			animator.ListenForSpineEvent("move_start", () => moveSignal = true);
 			while (!moveSignal) yield return null;
 
+			if (_audioService && _config.footstepClip)
+			{
+				_footstepHandle = _audioService.PlayLoop(
+					_config.footstepClip,
+					volumeScale: 5f,
+					pitch: _config.footstepPitch);
+			}
+
 			int lastIdx = path.Count - 1;
 			bool switchedToLoop = false;
 
@@ -372,6 +394,12 @@ namespace Presentation.Unit
 			// Snap to exact final position
 			transform.position = toWorld;
 			onStep?.Invoke(path[lastIdx]);
+
+			if (_audioService && _footstepHandle.IsValid)
+			{
+				_audioService.StopLoop(_footstepHandle, fade: 0.1f);
+				_footstepHandle = SfxHandle.Invalid;
+			}
 
 			while (!endDone) yield return null; // Wait for move_end animation to finish
 

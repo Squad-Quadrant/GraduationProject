@@ -98,6 +98,10 @@ namespace Presentation.Unit
 		[TitleGroup("Transitions")]
 		[SerializeField, TableList(ShowIndexLabels = true)] private List<TransitionEntry> transitions = new();
 
+		[Title("Audio")] // 先放在这里，比较方便
+		[LabelText("脚步")] public AudioClip footstepClip;
+		[LabelText("脚步速度"), Range(0.5f, 3f)] public float footstepPitch = 1f;
+
 		#region Inspector Helper
 
 		[TitleGroup("Animations"), HorizontalGroup("Animations/Move")]

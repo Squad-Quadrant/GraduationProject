@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12acb804f9c94a1eb54f55fb74a06bd7, type: 3}
+  m_Name: CharacterAnimConfig
+  m_EditorClassIdentifier: 
+  defaultStance: 0
+  defaultGrip: 0
+  fidgetInterval: {x: 5, y: 12}
+  animations:
+  - action: shoot
+    stance: 0
+    grip: 0
+    clipName: shoot/fire 3burst
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 1
+    clipName: shoot/fire 3burst hg
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 0
+    clipName: shoot/fire 5burst
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 0
+    clipName: shoot/fire auto
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 0
+    clipName: shoot/fire auto2
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 0
+    clipName: shoot/fire semi
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 1
+    clipName: shoot/fire semi hg
+    loop: 0
+  - action: idle
+    stance: 1
+    grip: 0
+    clipName: idle/idle bend1
+    loop: 1
+  - action: idle
+    stance: 1
+    grip: 1
+    clipName: idle/idle bend hg
+    loop: 1
+  - action: idle
+    stance: 0
+    grip: 0
+    clipName: idle/idle stand1
+    loop: 1
+  - action: idle
+    stance: 0
+    grip: 0
+    clipName: idle/idle stand2
+    loop: 0
+  - action: idle
+    stance: 0
+    grip: 1
+    clipName: idle/idle stand hg1
+    loop: 1
+  - action: move_loop
+    stance: 0
+    grip: 0
+    clipName: move/move1
+    loop: 1
+  - action: move_loop
+    stance: 0
+    grip: 1
+    clipName: move/move hg
+    loop: 1
+  - action: move_start
+    stance: 0
+    grip: 0
+    clipName: move/move start
+    loop: 0
+  - action: move_start
+    stance: 0
+    grip: 1
+    clipName: move/move start hg
+    loop: 0
+  - action: move_end
+    stance: 0
+    grip: 0
+    clipName: move/move end
+    loop: 0
+  - action: move_end
+    stance: 0
+    grip: 1
+    clipName: move/move end hg
+    loop: 0
+  - action: beHit
+    stance: 0
+    grip: 0
+    clipName: act/hit stand
+    loop: 0
+  - action: beHit
+    stance: 0
+    grip: 1
+    clipName: act/hit stand hg
+    loop: 0
+  - action: beHit
+    stance: 1
+    grip: 0
+    clipName: act/hit bend
+    loop: 0
+  - action: beHit
+    stance: 1
+    grip: 1
+    clipName: act/hit bend hg
+    loop: 0
+  - action: reload
+    stance: 0
+    grip: 0
+    clipName: reload/reloading m16
+    loop: 0
+  - action: reload
+    stance: 0
+    grip: 0
+    clipName: reload/reloading mp5
+    loop: 0
+  - action: dead
+    stance: 0
+    grip: 0
+    clipName: idle/dead1
+    loop: 0
+  - action: hitdown
+    stance: 0
+    grip: 0
+    clipName: act/hit down
+    loop: 0
+  - action: throw
+    stance: 0
+    grip: 0
+    clipName: act/throw
+    loop: 0
+  transitions:
+  - from: 2
+    to: 0
+    grip: 0
+    clipName: trans/aim to stand
+  - from: 2
+    to: 0
+    grip: 1
+    clipName: trans/aim to stand hg
+  - from: 1
+    to: 0
+    grip: 0
+    clipName: trans/bend to stand
+  - from: 1
+    to: 0
+    grip: 1
+    clipName: trans/bend to stand hg
+  - from: 0
+    to: 2
+    grip: 0
+    clipName: trans/stand to aim
+  - from: 0
+    to: 2
+    grip: 1
+    clipName: trans/stand to aim hg
+  - from: 0
+    to: 1
+    grip: 0
+    clipName: trans/stand to bend
+  - from: 0
+    to: 1
+    grip: 1
+    clipName: trans/stand to bend hg
+  footstepClip: {fileID: 8300000, guid: 72f430dc397b5bb4bbb00e3fb75ad881, type: 3}
+  footstepPitch: 2
+  animIndex: 6
+  transIndex: 0
+  skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}

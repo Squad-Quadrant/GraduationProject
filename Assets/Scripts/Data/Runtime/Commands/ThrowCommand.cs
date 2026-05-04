@@ -5,6 +5,7 @@ using Core.Log;
 using Data.Runtime.Events.Vfx;
 using Data.Runtime.Events.View;
 using Systems.Unit;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Data.Runtime.Commands
@@ -14,6 +15,7 @@ namespace Data.Runtime.Commands
 		private readonly Unit _owner;
 		private readonly Vector2Int _targetCell;
 		private readonly GameObject _projectilePrefab;
+		private readonly TacticalItemConfig _itemConfig;
 		private readonly Action _onLaunched; // 投掷开始时立即执行（扣 AP / Consume）
 		private readonly Action _onLanded;   // 投掷物落地时执行（VFX / AreaEffect / 伤害）
 
@@ -28,6 +30,7 @@ namespace Data.Runtime.Commands
 			Unit owner,
 			Vector2Int targetCell,
 			GameObject projectilePrefab,
+			TacticalItemConfig itemConfig,
 			IEventBus eventBus,
 			Action onLaunched = null,
 			Action onLanded = null)
@@ -35,6 +38,7 @@ namespace Data.Runtime.Commands
 			_owner = owner ?? throw new ArgumentNullException(nameof(owner));
 			_targetCell = targetCell;
 			_projectilePrefab = projectilePrefab;
+			_itemConfig = itemConfig;
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_onLaunched = onLaunched;
 			_onLanded = onLanded;
@@ -48,7 +52,7 @@ namespace Data.Runtime.Commands
 			_onPresentationComplete = OnPresentationComplete;
 			_eventBus.Subscribe(_onPresentationComplete);
 
-			_eventBus.Publish(new ThrowEvent(_owner.id, _targetCell, _projectilePrefab));
+			_eventBus.Publish(new ThrowEvent(_owner.id, _targetCell, _projectilePrefab, _itemConfig));
 		}
 
 		private void OnPresentationComplete(PresentationCompleteEvent e)

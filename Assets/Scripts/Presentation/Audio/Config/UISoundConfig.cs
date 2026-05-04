@@ -6,6 +6,17 @@ using UnityEngine;
 
 namespace Presentation.Audio.Config
 {
+	public enum EUISfx
+	{
+		None = 0,
+
+		ButtonClick,
+		ButtonHover,
+		PanelOpen,
+		PanelClose,
+		Error
+	}
+
 	[CreateAssetMenu(fileName = "UISoundConfig", menuName = "Game/Audio/UI Sound Config")]
 	public class UISoundConfig : ScriptableObject
 	{

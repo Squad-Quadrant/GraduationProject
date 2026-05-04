@@ -67,6 +67,10 @@ namespace Data.Config
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
 		public List<UnitPlacement> unitPlacements = new();
 
+		[Title("音效", bold: true)]
+		[LabelText("战斗 BGM")] public AudioClip battleBgm;
+		[LabelText("BGM 淡入时长(秒)")] [Range(0f, 3f)] public float bgmFadeIn = 1f;
+
 
 		[Button("验证配置", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
 		public void ValidateConfig()

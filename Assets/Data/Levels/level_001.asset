@@ -97,3 +97,5 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
+  battleBgm: {fileID: 8300000, guid: 0825044c2d6047b4ba348c6dfd36e380, type: 3}
+  bgmFadeIn: 1

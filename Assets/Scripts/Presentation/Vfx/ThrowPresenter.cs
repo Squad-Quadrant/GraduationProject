@@ -2,6 +2,7 @@
 using Core.Log;
 using Data.Runtime.Events.Vfx;
 using Data.Runtime.Events.View;
+using Presentation.Audio;
 using Presentation.Bootstrap;
 using Presentation.Unit;
 using Sirenix.OdinInspector;
@@ -32,12 +33,14 @@ namespace Presentation.Vfx
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordConverter;
 		private UnitViewManager _unitViewManager;
+		private AudioService _audioService;
 
 		public void Initialize(ServiceContainer services)
 		{
 			_eventBus = services.Resolve<IEventBus>();
 			_coordConverter = services.Resolve<ICoordinateConverter>();
 			_unitViewManager = services.Resolve<UnitViewManager>();
+			_audioService = services.Resolve<AudioService>();
 
 			if (!projectileContainer) projectileContainer = transform;
 
@@ -61,6 +64,7 @@ namespace Presentation.Vfx
 			var dir = e.TargetCell - fromCell;
 			if (dir != Vector2Int.zero) unitView.SetFacing(dir);
 
+			if (e.ItemConfig.clipWhenThrowAnimationStarted) _audioService.PlaySfx(e.ItemConfig.clipWhenThrowAnimationStarted);
 			unitView.PlayAction("throw", () => unitView.PlayAction("idle"));
 			unitView.ListenForSpineEvent(throwStartEventName, () => SpawnProjectile(e, unitView));
 		}
@@ -89,6 +93,7 @@ namespace Presentation.Vfx
 				return;
 			}
 
+			if (e.ItemConfig.clipWhenProjectileGenerated) _audioService.PlaySfx(e.ItemConfig.clipWhenProjectileGenerated);
 			projectile.Launch(fromWorld, toWorld, flightDuration, arcHeight, onLanded: () =>
 			{
 				PublishComplete(e.OwnerUnitId);

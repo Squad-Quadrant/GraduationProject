@@ -6,6 +6,7 @@ using Data;
 using Data.Config;
 using Data.Runtime.Events;
 using Presentation.AreaEffect;
+using Presentation.Audio;
 using Presentation.CameraControl;
 using Presentation.Input;
 using Presentation.Interaction;
@@ -162,6 +163,12 @@ namespace Presentation.Bootstrap
 			this.Log("============ Level Loaded ============", format: false);
 
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
+
+			if (levelConfig.battleBgm)
+			{
+				var audioService = RootContainer.Instance.Resolve<AudioService>();
+				audioService.PlayBGM(levelConfig.battleBgm, levelConfig.bgmFadeIn);
+			}
 
 			if (autoStartGame)
 				StartGame();

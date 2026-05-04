@@ -47,3 +47,7 @@ MonoBehaviour:
   persistentVfxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 2997148212300979965, guid: 029068138a42d8d4a9b7f600736ad36b, type: 3}
   visionReach: 5
+  clipWhenThrowAnimationStarted: {fileID: 8300000, guid: 3aa1e4542f30ced4ba988c209733181a, type: 3}
+  clipWhenProjectileGenerated: {fileID: 8300000, guid: 8a8c61a6ca6566a458ec7ba27fa78147, type: 3}
+  clipWhenLanded: {fileID: 8300000, guid: 45c009744b8ea9d47b65b25fdadc84d2, type: 3}
+  timerBombExplosionClip: {fileID: 0}
