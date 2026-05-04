@@ -18,19 +18,22 @@ namespace Presentation.UI.Panel.BattleFlow
 	{
 		[Title("Display")]
 		[SerializeField, Required, ChildGameObjectsOnly]
-		private TextMeshProUGUI titleText;
+		private Image resultImage;
 
-		[SerializeField, Tooltip("胜利时显示的标题文字")]
-		private string victoryText = "行动胜利！";
+		[SerializeField, AssetsOnly]
+		private Sprite winSprite;
 
-		[SerializeField]
-		private Color victoryColor = Color.green;
+		[SerializeField, AssetsOnly]
+		private Sprite loseSprite;
 
-		[SerializeField, Tooltip("失败时显示的标题文字")]
-		private string defeatText = "行动失败";
+		[SerializeField, Required, ChildGameObjectsOnly]
+		private Image descImage;
 
-		[SerializeField]
-		private Color defeatColor = Color.red;
+		[SerializeField, AssetsOnly]
+		private Sprite winDescSprite;
+
+		[SerializeField, AssetsOnly]
+		private Sprite loseDescSprite;
 
 		[Title("Buttons")]
 		[SerializeField, Required, ChildGameObjectsOnly]
@@ -41,8 +44,8 @@ namespace Presentation.UI.Panel.BattleFlow
 
 		public void DataInitialize(BattleOverPanelData data)
 		{
-			titleText.text = data.IsVictory ? victoryText : defeatText;
-			titleText.color = data.IsVictory ? victoryColor : defeatColor;
+			resultImage.sprite = data.IsVictory ? winSprite : loseSprite;
+			descImage.sprite = data.IsVictory ? winDescSprite : loseDescSprite;
 
 			restartButton.onClick.RemoveAllListeners();
 			restartButton.onClick.AddListener(() => data.OnRestart?.Invoke());
