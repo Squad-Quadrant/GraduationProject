@@ -101,7 +101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableLogs: 1
   logSettings: {fileID: 11400000, guid: 731d1a68061b8304d9778fdd60b7fa58, type: 2}
-  volumeSetter: {fileID: 11400000, guid: c60178bc61d5014429d14bda90a6eb90, type: 2}
   uiManager: {fileID: 1090293761091075710}
   dataManager: {fileID: 7980165080631738}
   audioService: {fileID: 725915653808379786}
@@ -347,6 +346,14 @@ PrefabInstance:
     - target: {fileID: 2837580592150295387, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988318211280345560, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
+      propertyPath: defaultBgmVolume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988318211280345560, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
+      propertyPath: defaultSfxVolume
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4160560906937627221, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
       propertyPath: m_Name

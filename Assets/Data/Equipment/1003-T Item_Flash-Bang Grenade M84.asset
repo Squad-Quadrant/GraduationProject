@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
-  m_Name: 1009-T Item_Flash-Bang Grenade M84
+  m_Name: 1003-T Item_Flash-Bang Grenade M84
   m_EditorClassIdentifier: 
-  id: 1009
-  nName: "\u7167\u660E\u5F39"
-  type: "\u7167\u660E\u5F39"
+  id: 1003
+  nName: M84
+  type: "\u95EA\u5149\u5F39"
   description: "\u7528\u4E8E\u7279\u79CD\u4F5C\u6218\u7684\u95EA\u5149\u9707\u64BC\u5F39\uFF0C\u53EF\u9707\u6151\u8303\u56F4\u5185\u7684\u654C\u4EBA\u5E76\u4F7F\u5176\u5931\u660E\u3002"
   battleDescription: 
   icon: {fileID: -1789119976, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: 
   gripType: 1
-  kind: 5
+  kind: 1
   maxUsesPerBattle: 3
   apCost: 1
   throwRange: 6
@@ -41,7 +41,7 @@ MonoBehaviour:
   - {x: 0, y: 2}
   healAmount: 30
   directDamage: 0
-  appliedBuff: 3
+  appliedBuff: 4
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 135726, guid: 154a10755f2c4a0409a0ab5c88261468, type: 3}
   persistentVfxPrefab: {fileID: 0}
