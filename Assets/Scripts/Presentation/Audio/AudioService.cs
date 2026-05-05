@@ -23,8 +23,12 @@ namespace Presentation.Audio
 		[SerializeField, Required, ChildGameObjectsOnly] private AudioSource sfxSource;
 
 		[Title("Settings")]
-		[SerializeField, Range(0f, 1f), Tooltip("首次启动时（PlayerPrefs 无记录）使用的默认音量")]
-		private float defaultVolume = 0.8f;
+		[InfoBox("首次启动时（PlayerPrefs 无记录）使用的默认音量")]
+		[SerializeField, Range(0f, 1f)] private float defaultGlobalVolume = 0.5f;
+		[SerializeField, Range(0f, 1f)] private float defaultBgmVolume = 0.3f;
+		[SerializeField, Range(0f, 1f)] private float defaultSfxVolume = 0.5f;
+
+
 
 		private Tween _bgmTween;
 		private bool _initialized;
@@ -307,7 +311,7 @@ namespace Presentation.Audio
 			foreach (EVolumeChannel ch in Enum.GetValues(typeof(EVolumeChannel)))
 			{
 				var key = PrefKey(ch);
-				var v01 = PlayerPrefs.HasKey(key) ? PlayerPrefs.GetFloat(key) : defaultVolume;
+				var v01 = PlayerPrefs.HasKey(key) ? PlayerPrefs.GetFloat(key) : GetDefaultVolume(ch);
 				ApplyVolumeToMixer(ch, v01);
 			}
 		}
@@ -324,6 +328,17 @@ namespace Presentation.Audio
 		#endregion
 
 		private static string GetMixerParamName(EVolumeChannel channel) => channel.ToString();
+
+		private float GetDefaultVolume(EVolumeChannel channel)
+		{
+			return channel switch
+			{
+				EVolumeChannel.Master => defaultGlobalVolume,
+				EVolumeChannel.BGM => defaultBgmVolume,
+				EVolumeChannel.SFX => defaultSfxVolume,
+				_ => throw new ArgumentOutOfRangeException(nameof(channel), channel, null)
+			};
+		}
 
 		private static string PrefKey(EVolumeChannel channel) => PrefKeyPrefix + channel;
 
