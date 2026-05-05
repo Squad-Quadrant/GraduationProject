@@ -43,18 +43,22 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 			tacticalItemDetailDisplayPanel.Default();
 			tacticalItemDetailDisplayPanel.gameObject.SetActive(false);
 			confirmPanel.SetActive(false);
-
-			backButton.onClick.RemoveAllListeners();
-			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
-
-			confirmButton.onClick.RemoveAllListeners();
-			confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
 			confirmButton.interactable = false;
 		}
 
-		protected override void OnOpen() => EventBus.Subscribe<TargetingEvent>(OnTargeting);
+		protected override void OnOpen()
+		{
+			EventBus.Subscribe<TargetingEvent>(OnTargeting);
+			confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
+			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
+		}
 
-		protected override void OnClose() => EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+		protected override void OnClose()
+		{
+			EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+			confirmButton.onClick.RemoveAllListeners();
+			backButton.onClick.RemoveAllListeners();
+		}
 
 		private void SetupSlots(Systems.Unit.Unit unit)
 		{

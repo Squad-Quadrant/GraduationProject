@@ -24,11 +24,6 @@ namespace Presentation.UI.Panel.SkillMenu
 		{
 			_unit = unit;
 
-			backButton.onClick.RemoveAllListeners();
-			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
-
-			confirmButton.onClick.RemoveAllListeners();
-			confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
 			confirmButton.interactable = false;
 
 			if (unit.Skill == null) return;
@@ -58,9 +53,18 @@ namespace Presentation.UI.Panel.SkillMenu
 				if (currentSkillLogic.CurrentCooldown > 0) text += $"冷却中，剩余{currentSkillLogic.CurrentCooldown}回合";
 				cooldown.text = text;
 			}
+
+			confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
+			backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 		}
 
-		protected override void OnClose() => EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+		protected override void OnClose()
+		{
+			EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+
+			backButton.onClick.RemoveAllListeners();
+			confirmButton.onClick.RemoveAllListeners();
+		}
 
 		private void OnTargeting(TargetingEvent e) => confirmButton.interactable = e.TargetCell.HasValue;
 	}

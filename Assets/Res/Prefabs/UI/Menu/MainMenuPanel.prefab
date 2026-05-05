@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 1188626768200613497}
   - component: {fileID: 1632559032011611810}
   - component: {fileID: 8190728129811290720}
+  - component: {fileID: 1500652782391864390}
   m_Layer: 5
   m_Name: Btn_Start
   m_TagString: Untagged
@@ -306,6 +307,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverImg: {fileID: 2581531665737524937}
+--- !u!114 &1500652782391864390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3685016577017773126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 2
+  onHoverSfx: 3
 --- !u!1 &5997788720935477441
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,6 +335,7 @@ GameObject:
   - component: {fileID: 2914238664447980311}
   - component: {fileID: 5676048132463744637}
   - component: {fileID: 1983487804074695479}
+  - component: {fileID: 6902720561900673543}
   m_Layer: 5
   m_Name: Btn_Quit
   m_TagString: Untagged
@@ -462,6 +478,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverImg: {fileID: 9110183062572259380}
+--- !u!114 &6902720561900673543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5997788720935477441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 2
+  onHoverSfx: 3
 --- !u!1 &8515686334670036002
 GameObject:
   m_ObjectHideFlags: 0

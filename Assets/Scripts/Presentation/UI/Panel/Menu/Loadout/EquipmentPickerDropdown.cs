@@ -19,6 +19,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[Title("Anchoring")]
 		[SerializeField, Tooltip("相对于被点击槽位的偏移（像素，屏幕空间）。X>0 在右侧弹出。")]
 		private Vector2 anchorOffset = new(0f, 0f);
+		[SerializeField] private float widthOffset = 10f;
 
 		private readonly List<EquipmentPickerItem> _spawnedItems = new();
 		private Action _onDismiss;
@@ -104,7 +105,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 			rootRect.position = anchorWorldPos + worldOffset;
 
-			float worldWidth = anchorRect.rect.width * anchorRect.lossyScale.x;
+			float worldWidth = anchorRect.rect.width * anchorRect.lossyScale.x + widthOffset;
 			float rootLocalWidth = worldWidth / Mathf.Max(rootRect.lossyScale.x, 0.0001f);
 			rootRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rootLocalWidth);
 		}

@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 5352786243136910946}
   - component: {fileID: 5948503722885197523}
   - component: {fileID: 3177226619714921283}
+  - component: {fileID: 2705586792110444385}
   m_Layer: 5
   m_Name: btn_back
   m_TagString: Untagged
@@ -292,6 +293,20 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &2705586792110444385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4163266966696091017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 1
+  onHoverSfx: 3
 --- !u!1 &6070547869716741784
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +608,7 @@ GameObject:
   - component: {fileID: 1443674378178568013}
   - component: {fileID: 5678953481135667336}
   - component: {fileID: 7409716908007484424}
+  - component: {fileID: 6272086700224180575}
   m_Layer: 5
   m_Name: btn_restart
   m_TagString: Untagged
@@ -721,3 +737,17 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &6272086700224180575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7901349507306489144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 1
+  onHoverSfx: 3

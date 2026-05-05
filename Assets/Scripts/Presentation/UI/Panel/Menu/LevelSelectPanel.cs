@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Data.Config;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
@@ -31,19 +32,27 @@ namespace Presentation.UI.Panel.Menu
 		[SerializeField, Required, ChildGameObjectsOnly] private Button leftButton;
 		[SerializeField, Required, ChildGameObjectsOnly] private Button rightButton;
 
-		public void DataInitialize(LevelSelectPanelData data)
+		private LevelSelectPanelData _data;
+
+		public void DataInitialize(LevelSelectPanelData data) => _data = data;
+
+		protected override void OnOpen()
 		{
 			foreach (var entry in entries)
 			{
 				if (!entry?.level || !entry.button) continue;
 
 				var captured = entry.level;
-				entry.button.onClick.RemoveAllListeners();
-				entry.button.onClick.AddListener(() => data.OnLevelSelected?.Invoke(captured));
+				entry.button.onClick.AddListener(() => _data.OnLevelSelected?.Invoke(captured));
 			}
 
+			backButton.onClick.AddListener(() => _data.OnBack?.Invoke());
+		}
+
+		protected override void OnClose()
+		{
+			foreach (var entry in entries.Where(entry => entry?.level && entry.button)) entry.button.onClick.RemoveAllListeners();
 			backButton.onClick.RemoveAllListeners();
-			backButton.onClick.AddListener(() => data.OnBack?.Invoke());
 		}
 	}
 

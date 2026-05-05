@@ -19,9 +19,6 @@ namespace Presentation.Bootstrap
 		[SerializeField, Range(0f, 3f)]
 		private float bgmFadeIn = 1f;
 
-		[SerializeField, Range(0f, 3f)]
-		private float bgmVolume = 0.5f;
-
 		private UIManager _uiManager;
 		private DataManager _dataManager;
 		private GameFlowController _gameFlowController;
@@ -41,10 +38,7 @@ namespace Presentation.Bootstrap
 		private void Start()
 		{
 			if (mainMenuBgm)
-			{
 				_audioService.PlayBGM(mainMenuBgm, bgmFadeIn);
-				_audioService.SetVolume(EVolumeChannel.BGM, bgmVolume);
-			}
 			ShowMainMenu();
 		}
 

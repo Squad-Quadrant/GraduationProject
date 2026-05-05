@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - kind: 1
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: c133241163758334c8d6d17f01ec2e00, type: 3}
   - kind: 2
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 8ffd8a6c1f2fcd547afb7b4f9a4a80ca, type: 3}
+  - kind: 3
+    clip: {fileID: 8300000, guid: e0a28498d7bfd9540aa5e86c96bf34cd, type: 3}

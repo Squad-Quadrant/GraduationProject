@@ -10,7 +10,8 @@ namespace Presentation.Audio.Config
 	{
 		None = 0,
 
-		ButtonClick,
+		ButtonClickBattle,
+		ButtonClickMenu,
 		ButtonHover,
 		PanelOpen,
 		PanelClose,

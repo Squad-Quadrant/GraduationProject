@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3836417472529266769}
   - component: {fileID: 8263086246947840717}
   - component: {fileID: 6235180407340072629}
+  - component: {fileID: 7187982297936046901}
   m_Layer: 5
   m_Name: btn_confirm
   m_TagString: Untagged
@@ -141,6 +142,20 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &7187982297936046901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381469829710741438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 1
+  onHoverSfx: 3
 --- !u!1 &805403232963975362
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,6 +438,7 @@ GameObject:
   - component: {fileID: 3512442557191447332}
   - component: {fileID: 4142371502954502662}
   - component: {fileID: 3550943310468872011}
+  - component: {fileID: 8359787953322998452}
   m_Layer: 5
   m_Name: btn_back
   m_TagString: Untagged
@@ -552,6 +568,20 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &8359787953322998452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2299520364960716349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 1
+  onHoverSfx: 3
 --- !u!1 &3264820432849279767
 GameObject:
   m_ObjectHideFlags: 0

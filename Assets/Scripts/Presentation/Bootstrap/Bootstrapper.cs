@@ -7,6 +7,7 @@ using Presentation.Logger;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Presentation.Bootstrap
 {

@@ -50,6 +50,11 @@ namespace Presentation.UI.Panel.AttachPreview
         {
 	        EventBus.Unsubscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
 	        EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
+
+	        normalAttackItem.Button.onClick.RemoveAllListeners();
+	        preciseAttackItem.Button.onClick.RemoveAllListeners();
+	        backButton.onClick.RemoveAllListeners();
+	        confirmButton.onClick.RemoveAllListeners();
         }
 
         public void DataInitialize(Systems.Unit.Unit unit)
@@ -75,7 +80,6 @@ namespace Presentation.UI.Panel.AttachPreview
 	        };
 	        normalAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
 
-	        normalAttackItem.Button.onClick.RemoveAllListeners();
 	        normalAttackItem.Button.onClick.AddListener(() =>
 	        {
 		        normalAttackItem.SetInteractable(false);
@@ -94,7 +98,6 @@ namespace Presentation.UI.Panel.AttachPreview
 	        };
 	        preciseAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
 
-	        preciseAttackItem.Button.onClick.RemoveAllListeners();
 	        preciseAttackItem.Button.onClick.AddListener(() =>
 	        {
 		        normalAttackItem.SetInteractable(true);
@@ -105,10 +108,8 @@ namespace Presentation.UI.Panel.AttachPreview
 		        RefreshAttackContextDisplay(unit);
 	        });
 
-	        backButton.onClick.RemoveAllListeners();
 	        backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 
-	        confirmButton.onClick.RemoveAllListeners();
 	        confirmButton.onClick.AddListener(() => EventBus.Publish(new TargetConfirmEvent()));
 
 	        normalAttackItem.Button.onClick.Invoke();

@@ -47,11 +47,14 @@ namespace Presentation.UI.Panel.BattleFlow
 			resultImage.sprite = data.IsVictory ? winSprite : loseSprite;
 			descImage.sprite = data.IsVictory ? winDescSprite : loseDescSprite;
 
-			restartButton.onClick.RemoveAllListeners();
 			restartButton.onClick.AddListener(() => data.OnRestart?.Invoke());
-
-			returnToMenuButton.onClick.RemoveAllListeners();
 			returnToMenuButton.onClick.AddListener(() => data.OnReturnToMenu?.Invoke());
+		}
+
+		protected override void OnClose()
+		{
+			restartButton.onClick.RemoveAllListeners();
+			returnToMenuButton.onClick.RemoveAllListeners();
 		}
 	}
 }

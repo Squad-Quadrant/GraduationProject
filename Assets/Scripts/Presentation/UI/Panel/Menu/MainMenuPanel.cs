@@ -12,14 +12,24 @@ namespace Presentation.UI.Panel.Menu
 		[SerializeField, Required, ChildGameObjectsOnly] private Button startButton;
 		[SerializeField, Required, ChildGameObjectsOnly] private Button quitButton;
 
-		public void DataInitialize(MainMenuPanelData data)
-		{
-			startButton.onClick.RemoveAllListeners();
-			startButton.onClick.AddListener(() => data.OnStart?.Invoke());
+		private MainMenuPanelData _data;
 
-			quitButton.onClick.RemoveAllListeners();
-			quitButton.onClick.AddListener(() => data.OnQuit?.Invoke());
+		public void DataInitialize(MainMenuPanelData data) => _data = data;
+
+		protected override void OnOpen()
+		{
+			startButton.onClick.AddListener(OnStartButtonClicked);
+			quitButton.onClick.AddListener(OnQuitButtonClicked);
 		}
+
+		protected override void OnClose()
+		{
+			startButton.onClick.RemoveListener(OnStartButtonClicked);
+			quitButton.onClick.RemoveListener(OnQuitButtonClicked);
+		}
+
+		private void OnStartButtonClicked() => _data.OnStart?.Invoke();
+		private void OnQuitButtonClicked() => _data.OnQuit?.Invoke();
 	}
 
 	public struct MainMenuPanelData

@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 3577455028935161835}
   - component: {fileID: 8868015431410599545}
   - component: {fileID: 8192291296613596672}
+  - component: {fileID: 5295314391000280703}
+  - component: {fileID: 6519236738256136264}
   m_Layer: 5
   m_Name: EquipmentPickerItem
   m_TagString: Untagged
@@ -218,6 +220,40 @@ MonoBehaviour:
   classText: {fileID: 8864509723120381056}
   emptySlotLabel: "\u7A7A"
   highlightOverlay: {fileID: 4779521638276257481}
+--- !u!114 &5295314391000280703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2793042505151213428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 1
+  onHoverSfx: 3
+--- !u!114 &6519236738256136264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2793042505151213428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9fc70e92b0c45b2a3e2b83908861200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxScale: 1.1
+  toMaxDuration: 0.15
+  toMaxEase: 27
+  minScale: 0.85
+  toMinDuration: 0.06
+  toMinEase: 6
+  toOriginDuration: 0.12
+  toOriginEase: 6
 --- !u!1 &3953642917341271662
 GameObject:
   m_ObjectHideFlags: 0

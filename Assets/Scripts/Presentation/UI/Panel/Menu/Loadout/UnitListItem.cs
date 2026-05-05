@@ -28,11 +28,12 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			}
 			if (nameText) nameText.text = config.unitName;
 
-			button.onClick.RemoveAllListeners();
 			button.onClick.AddListener(() => onClick?.Invoke());
 
 			SetHighlight(false);
 		}
+
+		private void OnDestroy() => button.onClick.RemoveAllListeners();
 
 		public void SetHighlight(bool highlight)
 		{

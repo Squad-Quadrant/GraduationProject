@@ -1638,6 +1638,7 @@ MonoBehaviour:
   itemContainer: {fileID: 6646493979083368139}
   rootRect: {fileID: 6933918417775471229}
   anchorOffset: {x: 0, y: 0}
+  widthOffset: 25
 --- !u!1 &3079894391258493321
 GameObject:
   m_ObjectHideFlags: 0
@@ -3707,6 +3708,7 @@ GameObject:
   - component: {fileID: 5274329735551650569}
   - component: {fileID: 5034582247654046453}
   - component: {fileID: 6314187485221199579}
+  - component: {fileID: 7242222521340556617}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -3835,6 +3837,20 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &7242222521340556617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6804401109457558757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 2
+  onHoverSfx: 3
 --- !u!1 &6983486103442098964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3848,6 +3864,7 @@ GameObject:
   - component: {fileID: 9012602134867855154}
   - component: {fileID: 1785657906262541760}
   - component: {fileID: 795095670958397697}
+  - component: {fileID: 3693310240412091047}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -3976,6 +3993,20 @@ MonoBehaviour:
   toMinEase: 6
   toOriginDuration: 0.12
   toOriginEase: 6
+--- !u!114 &3693310240412091047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6983486103442098964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ae66b06b974f9b997e12aa4a3bc19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onClickSfx: 2
+  onHoverSfx: 3
 --- !u!1 &7114632340393018490
 GameObject:
   m_ObjectHideFlags: 0

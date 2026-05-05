@@ -291,6 +291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuBgm: {fileID: 8300000, guid: e8c502f6254e8ad4dbfc736c7f628ea2, type: 3}
   bgmFadeIn: 1
+  bgmVolume: 0.2
 --- !u!4 &1019355882
 Transform:
   m_ObjectHideFlags: 0

@@ -41,12 +41,18 @@ namespace Presentation.Audio
 			if (_initialized) return;
 			_initialized = true;
 
-			LoadAndApplyAllVolumes();
-
 			if (!uiSoundConfig)
 				this.LogWarning("uiSoundConfig未配置");
 
+			StartCoroutine(ApplyInitialVolumesNextFrame());
+
 			this.Log("Initialized");
+		}
+
+		private IEnumerator ApplyInitialVolumesNextFrame()
+		{
+			yield return null; // 等到下一帧，AudioMixer需要一帧初始化
+			LoadAndApplyAllVolumes();
 		}
 
 		private void OnDestroy()
@@ -312,6 +318,7 @@ namespace Presentation.Audio
 			var db = LinearToDb(v01);
 			if (!mixer.SetFloat(paramName, db))
 				this.LogError($"Mixer parameter '{paramName}' not exposed. Did you set it in the AudioMixer asset?");
+			Debug.Log($"Setting mixer parameter '{paramName}' to '{db}'");
 		}
 
 		#endregion
