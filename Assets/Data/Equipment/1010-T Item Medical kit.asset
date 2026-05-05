@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
+  m_Name: 1010-T Item Medical kit
+  m_EditorClassIdentifier: 
+  id: 1010
+  nName: "\u533B\u7597\u5305"
+  type: "\u533B\u7597\u5305"
+  description: "\u533B\u7597\u5305"
+  battleDescription: 
+  icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  weight: 0
+  spineName: 
+  gripType: 1
+  kind: 0
+  maxUsesPerBattle: 3
+  apCost: 1
+  throwRange: 6
+  coverageOffsets:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: -1, y: 0}
+  - {x: 0, y: -1}
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: 1}
+  - {x: 2, y: 0}
+  - {x: 0, y: -2}
+  - {x: -2, y: 0}
+  - {x: 0, y: 2}
+  healAmount: 30
+  directDamage: 0
+  appliedBuff: 4
+  persistTurns: 2
+  oneShotVfxPrefab: {fileID: 135726, guid: 154a10755f2c4a0409a0ab5c88261468, type: 3}
+  persistentVfxPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 2997148212300979965, guid: 0fdc7757d92177849b033ae5e0b10408, type: 3}
+  visionReach: 5
+  clipWhenThrowAnimationStarted: {fileID: 8300000, guid: 008df7dd4fd00ee499ed1caf60081416, type: 3}
+  clipWhenProjectileGenerated: {fileID: 8300000, guid: fa2f568b5bfe4654bbcf8039f670ca82, type: 3}
+  clipWhenLanded: {fileID: 8300000, guid: 0742ffeae133e8e4397de79baa05d3ed, type: 3}
+  timerBombExplosionClip: {fileID: 0}

@@ -50,6 +50,11 @@ namespace Systems.Unit.Equipment.Logic
 		public override int Range() => 0;
 		public override bool CheckAttackable(Unit target) => false;
 
+		public virtual ETacticalItemKind Kind()
+		{
+			return ItemConfig.kind;
+		}
+
 		protected List<Vector2Int> ExpandCoverage(Vector2Int center)
 		{
 			var offsets = ItemConfig.coverageOffsets;

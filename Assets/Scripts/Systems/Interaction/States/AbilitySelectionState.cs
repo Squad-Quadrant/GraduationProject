@@ -9,6 +9,8 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.UI;
 using Systems.Interaction.Targeting;
 using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Config;
+using Systems.Unit.Equipment.Logic;
 using UnityEngine;
 
 namespace Systems.Interaction.States
@@ -257,8 +259,14 @@ namespace Systems.Interaction.States
 		{
 			if (!_targetCell.HasValue)
 			{
-				this.LogError($"Target cell null");
-				return;
+				var itemLogic = logic as TacticalItemLogic;
+				if (itemLogic == null) return;
+				
+				if (itemLogic.Kind() != ETacticalItemKind.InstantMedpack)
+				{
+					this.LogError($"Target cell null");
+					return;
+				}
 			}
 
 			ICommand cmd = logic switch
