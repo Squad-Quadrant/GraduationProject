@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: VolumeSetter
   m_EditorClassIdentifier: 
   globalVolume: 0.49999997
-  bgmVolume: 0.19999999
-  sfxVolume: 0.49999997
+  bgmVolume: 0.24999999
+  sfxVolume: 0.7
