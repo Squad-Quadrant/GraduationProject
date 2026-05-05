@@ -167,6 +167,15 @@ namespace Systems.Vision
 					}
 					return false; // 低墙不阻挡视线
 				}
+
+				if (wall.Type == WallType.HighWall)
+				{
+					if (info != null && !info.highWalls.Contains(key))
+					{
+						info.highWalls.Add(key);
+					}
+				}
+				
 				return true; // 其他类型的墙阻挡视线
 			}
 			return false;
@@ -183,5 +192,6 @@ namespace Systems.Vision
 	{
 		public List<Vector2Int> passedCells = new();
 		public List<WallKey> lowWalls = new();
+		public List<WallKey> highWalls = new();
 	}
 }

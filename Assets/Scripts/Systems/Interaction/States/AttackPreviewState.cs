@@ -170,6 +170,18 @@ namespace Systems.Interaction.States
 				
 				var info = new TraceRayInfo();
 				Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out info);
+				
+				if (info.highWalls.Count > 0)
+				{
+					PublishBasicCursorInfo(Context, e);
+					Publish(Context, DisplayAttackContextEvent.Invalid());
+					if (!hasConfirmed)
+					{
+						Publish(Context, new RemoveGunLineEvent());
+					}
+					return;
+				}
+				
 				var mapData = Context.MapService.Data;
 
 				foreach (var wallKey in info.lowWalls)
