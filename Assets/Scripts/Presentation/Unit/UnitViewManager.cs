@@ -150,7 +150,6 @@ namespace Presentation.Unit
 				_lastHoveredUnitId = null;
 			}
 
-
 			if (!_views.Remove(unitId, out var view))
 			{
 				this.LogWarning($"No view found for destroyed unit '{unitId}'.");
@@ -169,6 +168,8 @@ namespace Presentation.Unit
 						Destroy(view.gameObject);
 				});
 			});
+
+			_visionService.ClearSpottedMark(unitId);
 
 			this.Log($"View destroying for '{unitId}'.");
 		}
