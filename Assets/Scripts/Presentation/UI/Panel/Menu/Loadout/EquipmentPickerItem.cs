@@ -50,7 +50,6 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				if (classText) classText.text = "";
 			}
 
-			button.onClick.RemoveAllListeners();
 			button.onClick.AddListener(() => onClick?.Invoke());
 
 			SetHighlight(false);
@@ -81,5 +80,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			SetHighlight(false);
 			if (_detail) _detail.Hide();
 		}
+
+		private void OnDestroy() => button.onClick.RemoveAllListeners();
 	}
 }

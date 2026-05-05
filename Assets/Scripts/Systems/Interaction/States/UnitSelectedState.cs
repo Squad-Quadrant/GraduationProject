@@ -85,7 +85,8 @@ namespace Systems.Interaction.States
                     var reloadCommand = new UnitReloadCommand(
                         Context.selectedUnit,
                         1,
-                        Context.EventBus
+                        Context.EventBus,
+                        Context.AudioService
                     );
                     Context.CommandQueue.EnqueueAndExecute(reloadCommand);
                     break;

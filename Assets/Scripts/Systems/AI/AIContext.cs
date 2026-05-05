@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Core.Events;
+using Presentation.Audio;
 using Systems.AI.Blackboard;
 using Systems.AI.Config;
 using Systems.Map;
@@ -26,6 +27,7 @@ namespace Systems.AI
 		public IVisionCalculator VisionCalculator { get; }
 		public IAIBlackboardService BlackboardService { get; }
 		public IPathFindingService PathFinding { get; }
+		public AudioService AudioService { get; }
 
 		public PathFindingOptions PathOptions { get; }
 
@@ -42,7 +44,8 @@ namespace Systems.AI
 			IVisionCalculator visionCalculator,
 			IAIBlackboardService blackboardService,
 			PathFindingOptions pathOptions,
-			IPathFindingService pathFinding)
+			IPathFindingService pathFinding,
+			AudioService audioService)
 		{
 			Self = self;
 			Archetype = self.aiArchetype;
@@ -59,6 +62,7 @@ namespace Systems.AI
 			BlackboardService = blackboardService;
 			PathOptions = pathOptions;
 			PathFinding = pathFinding;
+			AudioService = audioService;
 		}
 	}
 }

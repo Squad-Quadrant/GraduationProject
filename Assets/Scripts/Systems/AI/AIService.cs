@@ -5,6 +5,7 @@ using Core.Commands;
 using Core.Commands.Events;
 using Core.Events;
 using Core.Log;
+using Presentation.Audio;
 using Systems.AI.Actions;
 using Systems.AI.Alert;
 using Systems.AI.Behavior;
@@ -32,6 +33,7 @@ namespace Systems.AI
 		private readonly IAIBlackboardService _blackboardService;
 		private readonly IRegionService _regionService;
 		private readonly IAlertService _alertService;
+		private readonly AudioService _audioService;
 		
 		private Unit.Unit _currentUnit;
 		private Action _onTurnComplete;
@@ -51,7 +53,8 @@ namespace Systems.AI
 			IVisionCalculator visionCalculator,
 			IAIBlackboardService blackboardService,
 			IRegionService regionService,
-			IAlertService alertService)
+			IAlertService alertService,
+			AudioService audioService)
 		{
 			_eventBus = eventBus;
 			_commandQueue = commandQueue;
@@ -63,6 +66,7 @@ namespace Systems.AI
 			_blackboardService = blackboardService;
 			_regionService = regionService;
 			_alertService = alertService;
+			_audioService = audioService;
 
 			this.Log("Initialized");
 		}
@@ -160,7 +164,7 @@ namespace Systems.AI
 
 			return new AIContext(
 				unit, enemies, allies, reachableArea, visibleCells, _turnService.TurnNumber,
-				_eventBus, _unitService, _mapService, _visionCalculator, _blackboardService, options, _pathFinding);
+				_eventBus, _unitService, _mapService, _visionCalculator, _blackboardService, options, _pathFinding, _audioService);
 		}
 
 		private void ExecuteIdle(AIContext context)

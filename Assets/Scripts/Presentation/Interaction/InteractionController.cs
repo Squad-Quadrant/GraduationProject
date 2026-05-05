@@ -2,6 +2,7 @@
 using Core.Events;
 using Core.FSM;
 using Core.Log;
+using Presentation.Audio;
 using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.AreaEffect;
@@ -50,7 +51,8 @@ namespace Presentation.Interaction
 				services.Resolve<IVisionCalculator>(),
 				services.Resolve<IDamageService>(),
 				services.Resolve<IAreaEffectService>(),
-				services.Resolve<IRegionService>());
+				services.Resolve<IRegionService>(),
+				services.Resolve<AudioService>());
 
 			StateMachine = new StateMachine<InteractionContext>(
 				_context,

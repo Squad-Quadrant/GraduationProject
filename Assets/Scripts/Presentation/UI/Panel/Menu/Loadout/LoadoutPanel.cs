@@ -89,7 +89,6 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			if (units.Count > 0)
 				SelectUnit(units[0]);
 
-			leftButton.onClick.RemoveAllListeners();
 			leftButton.onClick.AddListener(() =>
 			{
 				if (units.Count == 0) return;
@@ -110,7 +109,6 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				SelectUnit(units[prevIndex]);
 			});
 
-			rightButton.onClick.RemoveAllListeners();
 			rightButton.onClick.AddListener(() =>
 			{
 				if (units.Count == 0) return;
@@ -142,6 +140,11 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			if (!_currentPortrait) return;
 			Destroy(_currentPortrait.gameObject);
 			_currentPortrait = null;
+
+			leftButton.onClick.RemoveAllListeners();
+			rightButton.onClick.RemoveAllListeners();
+			startBattleButton.onClick.RemoveAllListeners();
+			backButton.onClick.RemoveAllListeners();
 		}
 
 		#region 单位选择
@@ -349,10 +352,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 		private void WireButtons()
 		{
-			startBattleButton.onClick.RemoveAllListeners();
 			startBattleButton.onClick.AddListener(() => _data.OnStartBattle?.Invoke());
-
-			backButton.onClick.RemoveAllListeners();
 			backButton.onClick.AddListener(() => _data.OnBack?.Invoke());
 		}
 

@@ -7,20 +7,19 @@ namespace Systems.Unit.Equipment.Logic
 {
 	public class WeaponLogic : EquipmentLogic, IDamageInfluencer
     {
-	    private readonly WeaponConfig _weaponConfig;
-
 	    protected int Ammo;
 	    public bool IsOnPreciseShoot = false;
         public string DisplayName => Name();
         public bool FullAmmo => Ammo >= AmmoCapacity();
+        public WeaponConfig WeaponConfig { get; }
 
         public WeaponLogic(WeaponConfig config, Unit owner) : base(config, owner)
         {
-	        _weaponConfig = config;
+	        WeaponConfig = config;
 	        Ammo = config.ammoCapacity;
         }
 
-        public virtual bool CanPreciseShoot() => _weaponConfig.canPreciseShoot;
+        public virtual bool CanPreciseShoot() => WeaponConfig.canPreciseShoot;
 
         public virtual int CurrentAmmo(int delta = 0)
         {
@@ -32,23 +31,23 @@ namespace Systems.Unit.Equipment.Logic
             return Ammo;
         }
 
-        public virtual int ShootSpeed() => _weaponConfig.shootSpeed;
+        public virtual int ShootSpeed() => WeaponConfig.shootSpeed;
 
-        public virtual int AmmoCapacity() => _weaponConfig.ammoCapacity;
+        public virtual int AmmoCapacity() => WeaponConfig.ammoCapacity;
 
-        public virtual int PreciseShootSpeed() => _weaponConfig.preciseShootSpeed;
+        public virtual int PreciseShootSpeed() => WeaponConfig.preciseShootSpeed;
 
-        public virtual float PreciseShootHitRateBonus() => _weaponConfig.preciseShootHitRateBonus;
+        public virtual float PreciseShootHitRateBonus() => WeaponConfig.preciseShootHitRateBonus;
 
-        public virtual List<ShotRange> ShotRange() => _weaponConfig.shotRanges;
+        public virtual List<ShotRange> ShotRange() => WeaponConfig.shotRanges;
 
-        public virtual DamageAttenuation DamageAttenuation() => _weaponConfig.damageAttenuation;
+        public virtual DamageAttenuation DamageAttenuation() => WeaponConfig.damageAttenuation;
 
-        public virtual float PenetrationRate() => _weaponConfig.penetrationRate;
+        public virtual float PenetrationRate() => WeaponConfig.penetrationRate;
 
         public override int GetDamage()
         {
-            return _weaponConfig.damage;
+            return WeaponConfig.damage;
         }
 
         public override int Range() => int.MaxValue;

@@ -20,7 +20,8 @@ namespace Systems.AI.Actions
 				EActionType.Attack,
 				ctx.UnitService,
 				ctx.MapService,
-				ctx.EventBus);
+				ctx.EventBus,
+				ctx.AudioService);
 		}
 
 		public override string ToString() => $"Attack→{TargetUnitId}";

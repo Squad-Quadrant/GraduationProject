@@ -28,8 +28,6 @@ namespace Presentation.Audio
 		[SerializeField, Range(0f, 1f)] private float defaultBgmVolume = 0.3f;
 		[SerializeField, Range(0f, 1f)] private float defaultSfxVolume = 0.5f;
 
-
-
 		private Tween _bgmTween;
 		private bool _initialized;
 
@@ -159,6 +157,7 @@ namespace Presentation.Audio
 				pitch = 1f;
 			}
 
+			this.Log($"PlaySFX: {clip.name} volumeScale: {volumeScale} pitch: {pitch}");
 			if (Mathf.Approximately(pitch, 1f))
 			{
 				sfxSource.PlayOneShot(clip, volumeScale);

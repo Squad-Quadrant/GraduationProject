@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
+using Presentation.Audio;
 using Systems.Unit;
 
 namespace Data.Runtime.Commands
@@ -14,6 +15,7 @@ namespace Data.Runtime.Commands
 		private readonly int _apCost;
 
 		private readonly IEventBus _eventBus;
+		private readonly AudioService _audioService;
 
 		public bool WaitForAnimation { get; set; } = true;
 
@@ -26,11 +28,13 @@ namespace Data.Runtime.Commands
 		public UnitReloadCommand(
             Unit unit,
 			int apCost,
-			IEventBus eventBus)
+			IEventBus eventBus,
+            AudioService audioService)
 		{
 			_unit = unit;
 			_apCost = apCost;
 			_eventBus = eventBus;
+			_audioService = audioService;
 		}
 
 		protected override void OnExecuteAsync()
@@ -46,6 +50,8 @@ namespace Data.Runtime.Commands
 
             _unit.CurrentAp -= _apCost;
             _unit.CurrentWeaponLogic.CurrentAmmo(1000);
+
+            _audioService.PlaySfx(_unit.CurrentWeaponLogic.WeaponConfig.reloadClip, 5);
 
             _eventBus.Publish(new UnitReloadedEvent(_unit));
             

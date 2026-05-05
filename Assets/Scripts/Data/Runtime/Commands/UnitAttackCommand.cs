@@ -6,6 +6,7 @@ using Core.Log;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
+using Presentation.Audio;
 using Systems.Damage;
 using Systems.Map;
 using Systems.Unit;
@@ -23,6 +24,7 @@ namespace Data.Runtime.Commands
 		private readonly IUnitService _unitService;
 		private readonly IMapService _mapService;
 		private readonly IEventBus _eventBus;
+		private readonly AudioService _audioService;
 
         private bool _attackAnimationDone = false;
         private bool _beHitAnimationDone = false;
@@ -41,7 +43,8 @@ namespace Data.Runtime.Commands
             EActionType  actionType,
 			IUnitService unitService,
 			IMapService mapService,
-			IEventBus eventBus)
+			IEventBus eventBus,
+			AudioService audioService)
 		{
 			_unitId = unitId;
             _targetUnitId = targetUnitId;
@@ -51,6 +54,7 @@ namespace Data.Runtime.Commands
 			_unitService = unitService;
 			_mapService = mapService;
 			_eventBus = eventBus;
+			_audioService = audioService;
 		}
 
 		protected override void OnExecuteAsync()
@@ -77,8 +81,13 @@ namespace Data.Runtime.Commands
             
 			unit.CanAttack.Value = false;
             unit.CurrentAp -= _apCost;
-            
-			if (WaitForAnimation)
+
+            _audioService.PlaySfx(
+	            unit.CurrentWeaponLogic.CurrentAmmo() <= 0
+		            ? unit.CurrentWeaponLogic.WeaponConfig.emptyClip
+		            : unit.CurrentWeaponLogic.WeaponConfig.fireClip, 5);
+
+            if (WaitForAnimation)
 			{
 				_onPresentationComplete = OnPresentationComplete;
 				_eventBus.Subscribe(_onPresentationComplete);

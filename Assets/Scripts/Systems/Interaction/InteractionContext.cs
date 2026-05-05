@@ -4,6 +4,7 @@ using Core.Commands;
 using Core.Events;
 using Core.FSM;
 using Data.Runtime;
+using Presentation.Audio;
 using Systems.AreaEffect;
 using Systems.Damage;
 using Systems.Interaction.Targeting;
@@ -33,8 +34,8 @@ namespace Systems.Interaction
         public IVisionCalculator VisionCalculator { get; }
         public IDamageService DamageService { get; }
         public IAreaEffectService AreaEffectService { get; }
-
         public IRegionService RegionService { get; }
+        public AudioService AudioService { get; }
 
 		#endregion
 
@@ -59,7 +60,8 @@ namespace Systems.Interaction
 			IVisionCalculator visionCalculator,
 			IDamageService damageService,
 			IAreaEffectService areaEffectService,
-			IRegionService regionService)
+			IRegionService regionService,
+			AudioService audioService)
 		{
 			EventBus = eventBus;
 			UnitService = unitService;
@@ -72,6 +74,7 @@ namespace Systems.Interaction
             DamageService = damageService;
             AreaEffectService = areaEffectService;
             RegionService = regionService;
+            AudioService = audioService;
 		}
 
 		public void ClearSelection()
