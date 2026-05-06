@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1007-T Item_Medkits
   m_EditorClassIdentifier: 
   id: 1007
-  nName: "\u4FBF\u643A\u6025\u6551\u5305"
+  nName: Medpack
   type: "\u6025\u6551\u5305"
   description: "\u7279\u79CD\u4F5C\u6218\u4F7F\u7528\u7684\u968F\u8EAB\u6025\u6551\u5305\uFF0C\u53EF\u8FDB\u884C\u7B80\u5355\u7684\u6218\u5730\u533B\u7597\u64CD\u4F5C\u3002"
   battleDescription: 
