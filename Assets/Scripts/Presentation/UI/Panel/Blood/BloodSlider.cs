@@ -1,5 +1,6 @@
 using Core.Events;
 using Data.Runtime.Events.Damage;
+using Data.Runtime.Events.Unit;
 using DG.Tweening;
 using Presentation.UI.Component.Buff;
 using Presentation.Unit;
@@ -76,11 +77,13 @@ namespace Presentation.UI.Panel.Blood
             Refresh();
             
             _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
+            _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
 
         private void OnDestroy()
         {
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
 
         private void Refresh()
@@ -103,16 +106,27 @@ namespace Presentation.UI.Panel.Blood
         private void OnDamageApplied(DamageAppliedEvent e)
         {
             if (e.Context.Defender != _owner) return;
+            FetchInfo();
+        }
+
+        private void OnUnitInfoChanged(UnitInfoChangedEvent e)
+        {
+            if (e.Unit != _owner) return;
+            FetchInfo();
+        }
+
+        private void FetchInfo()
+        {
             hpTarget1 = (float)_owner.CurrentHp / _owner.maxHp;
             defenseTarget1 = (float)_owner.CurrentDefense / _owner.maxDefense;
             DOVirtual.DelayedCall(2f, () =>
             {
-	            hpTarget = hpTarget1;
-	            hpSpeed = Mathf.Abs(hpTarget - bloodSliderImage.fillAmount) / duration;
-	            hpSpeed = Mathf.Max(hpSpeed, minSpeed);
-	            defenseTarget = defenseTarget1;
-	            defenseSpeed = Mathf.Abs(defenseTarget - defenseSliderImage.fillAmount) / duration;
-	            defenseSpeed = Mathf.Max(defenseSpeed, minSpeed);
+                hpTarget = hpTarget1;
+                hpSpeed = Mathf.Abs(hpTarget - bloodSliderImage.fillAmount) / duration;
+                hpSpeed = Mathf.Max(hpSpeed, minSpeed);
+                defenseTarget = defenseTarget1;
+                defenseSpeed = Mathf.Abs(defenseTarget - defenseSliderImage.fillAmount) / duration;
+                defenseSpeed = Mathf.Max(defenseSpeed, minSpeed);
             });
         }
     }

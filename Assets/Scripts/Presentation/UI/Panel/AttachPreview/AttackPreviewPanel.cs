@@ -123,7 +123,11 @@ namespace Presentation.UI.Panel.AttachPreview
 
         private void OnDisplayAttackContext(DisplayAttackContextEvent e)
         {
-	        if (_targetCell.HasValue) return;
+	        if (_targetCell.HasValue)
+	        {
+		        if (e.Context == null) return;
+		        if (e.Context.Defender.position != _targetCell) return;
+	        } 
 
 	        if (e.Context == null)
 	        {

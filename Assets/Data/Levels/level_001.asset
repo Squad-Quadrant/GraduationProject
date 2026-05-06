@@ -42,7 +42,7 @@ MonoBehaviour:
       tacticalItemIds: e9030000ea030000eb030000
     patrolWaypoints: []
   - unitId: 1001
-    unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
+    unitConfig: {fileID: 11400000, guid: 990463de072a07c4298b7695743be00e, type: 2}
     startPosition: {x: 10, y: 12}
     initialLoadout:
       mainWeaponId: 2
@@ -50,14 +50,14 @@ MonoBehaviour:
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
   - unitId: 1002
-    unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
+    unitConfig: {fileID: 11400000, guid: 990463de072a07c4298b7695743be00e, type: 2}
     startPosition: {x: 12, y: 7}
     initialLoadout:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-  - unitId: 1003
+  - unitId: 2001
     unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
     startPosition: {x: 9, y: 15}
     initialLoadout:
@@ -65,7 +65,7 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-  - unitId: 1004
+  - unitId: 2002
     unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
     startPosition: {x: 10, y: 5}
     initialLoadout:
@@ -73,7 +73,7 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-  - unitId: 2001
+  - unitId: 3001
     unitConfig: {fileID: 11400000, guid: 7036709897a1ea14f9290a0107b0ab02, type: 2}
     startPosition: {x: 17, y: 14}
     initialLoadout:
@@ -81,7 +81,7 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-  - unitId: 2002
+  - unitId: 3002
     unitConfig: {fileID: 11400000, guid: 7036709897a1ea14f9290a0107b0ab02, type: 2}
     startPosition: {x: 17, y: 5}
     initialLoadout:
@@ -89,8 +89,8 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-  - unitId: 1005
-    unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
+  - unitId: 1003
+    unitConfig: {fileID: 11400000, guid: 990463de072a07c4298b7695743be00e, type: 2}
     startPosition: {x: 12, y: 2}
     initialLoadout:
       mainWeaponId: 2
