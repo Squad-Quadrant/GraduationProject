@@ -17,7 +17,7 @@ MonoBehaviour:
   type: "\u533B\u7597\u5305"
   description: "\u533B\u7597\u5305"
   battleDescription: 
-  icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  icon: {fileID: -1271880537, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   weight: 0
   spineName: 
   gripType: 1
@@ -39,7 +39,7 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
-  healAmount: 30
+  healAmount: 20
   directDamage: 0
   appliedBuff: 4
   persistTurns: 2

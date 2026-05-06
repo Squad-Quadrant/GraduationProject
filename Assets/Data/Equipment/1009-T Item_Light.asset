@@ -17,7 +17,7 @@ MonoBehaviour:
   type: "\u7167\u660E\u5F39"
   description: "\u519B\u7528\u9AD8\u5F3A\u5EA6\u7167\u660E\u5F39\uFF0C\u7528\u4E8E\u591C\u95F4\u7167\u660E\u6216\u6307\u793A\u76EE\u6807"
   battleDescription: 
-  icon: {fileID: 0}
+  icon: {fileID: -2097954336, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   weight: 0
   spineName: 
   gripType: 1
