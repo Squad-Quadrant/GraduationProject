@@ -179,17 +179,38 @@ namespace Systems.Interaction.States
 					{
 						Publish(Context, new RemoveGunLineEvent());
 					}
+					_target = null;
+					Publish(Context, TargetingEvent.Clear());
+					hasConfirmed = false;
 					return;
 				}
 				
 				var mapData = Context.MapService.Data;
-
-				foreach (var wallKey in info.lowWalls)
+				
+				// foreach (var wallKey in info.lowWalls)
+				// {
+				// 	var theWall = mapData.GetWall(wallKey);
+				// 	environment.Add(theWall);
+				// 	// 仅添加一个墙体作为环境影响因素，避免重复计算同一墙体的穿透效果
+				// 	break;
+				// }
+				
+				Vector2Int[] dirs =
 				{
-					var theWall = mapData.GetWall(wallKey);
-					environment.Add(theWall);
-					// 仅添加一个墙体作为环境影响因素，避免重复计算同一墙体的穿透效果
-					break;
+					Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right,
+				};
+				foreach (var dir in dirs)
+				{
+					var neighborPos = target.position + dir;
+					var neighborWallKey = new Map.WallKey(target.position, neighborPos);
+					var neighborWall = mapData.GetWall(neighborWallKey);
+					if (neighborWall != null && neighborWall.Type == Map.Config.WallType.LowWall)
+					{
+						if (!environment.Contains(neighborWall))
+						{
+							environment.Add(neighborWall);
+						}
+					}
 				}
 				
                 Dictionary<BodyPartType, DamageExecutingContext> contextDic = new();
@@ -286,8 +307,7 @@ namespace Systems.Interaction.States
                 Context.currentAction,
 				Context.UnitService,
 				Context.MapService,
-				Context.EventBus,
-				Context.AudioService
+				Context.EventBus
 			);
 			
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
