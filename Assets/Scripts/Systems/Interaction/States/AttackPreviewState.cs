@@ -307,7 +307,8 @@ namespace Systems.Interaction.States
                 Context.currentAction,
 				Context.UnitService,
 				Context.MapService,
-				Context.EventBus
+				Context.EventBus,
+				Context.AudioService
 			);
 			
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
