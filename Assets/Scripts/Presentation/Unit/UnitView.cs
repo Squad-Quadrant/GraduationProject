@@ -149,19 +149,20 @@ namespace Presentation.Unit
 				return;
 			}
 
-			var transition = _config.GetTransition(_stance, newStance, _grip);
+			var oldStance = _stance;
+			_stance = newStance;
+
+			var transition = _config.GetTransition(oldStance, newStance, _grip);
 			if (!string.IsNullOrEmpty(transition))
 			{
 				animator.Play(transition, false, () =>
 				{
-					_stance = newStance;
 					PlayAction("idle");
 					onComplete?.Invoke();
 				});
 			}
 			else
 			{
-				_stance = newStance;
 				PlayAction("idle");
 				onComplete?.Invoke();
 			}
