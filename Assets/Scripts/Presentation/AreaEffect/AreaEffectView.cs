@@ -90,7 +90,8 @@ namespace Presentation.AreaEffect
 			if (!prefab) return null;
 
 			var world = _coordConverter.CellToWorld(effect.TargetCell);
-			var go = Instantiate(prefab, world, Quaternion.identity, transform);
+			var go = Instantiate(prefab, transform);
+			go.transform.position = world;
 			go.name = $"AreaEffectPersistentVfx_{effect.Id}";
 			return go;
 		}

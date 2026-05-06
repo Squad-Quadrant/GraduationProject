@@ -215,11 +215,6 @@ namespace Presentation.Unit
 				},
 				onComplete: () =>
 				{
-					_eventBus.Publish(new PresentationCompleteEvent(
-						category: EPresentationCategory.Animation,
-						type: PresentationType.Animation.Move,
-						entityId: e.Unit.id
-					));
 					if (e.Unit.faction != EUnitFaction.Player)
 						view.SetVisible(_visionService.IsCellVisible(movingUnit.position));
 					else
@@ -228,6 +223,12 @@ namespace Presentation.Unit
 					// 移动到矮墙周围自动蹲下
 					var neighborCells = _mapService.Data.GetNeighborWalls(movingUnit.position);
 					view.SetStance(neighborCells.Any(wall => wall.Type == WallType.LowWall) ? EUnitStance.Bend : EUnitStance.Stand);
+
+					_eventBus.Publish(new PresentationCompleteEvent(
+						category: EPresentationCategory.Animation,
+						type: PresentationType.Animation.Move,
+						entityId: e.Unit.id
+					));
 				});
 		}
 
