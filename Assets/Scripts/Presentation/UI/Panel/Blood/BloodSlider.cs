@@ -35,6 +35,8 @@ namespace Presentation.UI.Panel.Blood
         [SerializeField] private float speed1 = 0.05f;
         [SerializeField] private float xOffset;
         [SerializeField] private float yOffset;
+
+        [SerializeField] private Image fullHide;
         
         [SerializeField] private CanvasGroup canvasGroup;
         private ICoordinateConverter _coordinateConverter;
@@ -101,6 +103,8 @@ namespace Presentation.UI.Panel.Blood
             defenseSliderImage1.fillAmount = Mathf.Lerp(defenseSliderImage1.fillAmount, defenseTarget1, speed1);
             transform.position = _unitView.transform.position + new Vector3(xOffset, yOffset, 0);
             transform.localScale =  _originCameraSize * Vector3.one / Camera.main.orthographicSize;
+            
+            fullHide.enabled = _unitView.Stance == EUnitStance.Bend;
         }
 
         private void OnDamageApplied(DamageAppliedEvent e)

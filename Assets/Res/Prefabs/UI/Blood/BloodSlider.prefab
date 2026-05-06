@@ -80,6 +80,7 @@ MonoBehaviour:
   speed1: 0.05
   xOffset: 0.6
   yOffset: 0.7
+  fullHide: {fileID: 6997194845186929526}
   canvasGroup: {fileID: 5976878292003943013}
 --- !u!225 &5976878292003943013
 CanvasGroup:

@@ -38,6 +38,7 @@ namespace Presentation.Unit
 		private ICoordinateConverter _coordConverter;
 
 		private EUnitStance _stance;
+		public EUnitStance Stance => _stance;
 		private EGripType _grip;
 		private bool _facingRight;
 
