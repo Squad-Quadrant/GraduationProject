@@ -15,29 +15,29 @@ MonoBehaviour:
   id: 1
   nName: M16A1
   type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
-  description: "M16A1\u662F\u7F8E\u519B\u5728\u8D8A\u6218\u65F6\u671F\u5217\u88C5\u7684\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA,\u4E00\u822C\u914D\u88C520\u53D1\u5F39\u5323\uFF0C\u62E5\u6709\u8F83\u9AD8\u7684\u5C04\u901F\u3002"
+  description: "M16A1\u662F\u7F8E\u519B\u5728\u8D8A\u6218\u65F6\u671F\u5217\u88C5\u7684\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA,\u4E00\u822C\u914D\u88C530\u53D1\u5F39\u5323\uFF0C\u62E5\u6709\u8F83\u9AD8\u7684\u5C04\u901F\u3002"
   battleDescription: 
   icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_a1
   gripType: 0
-  damage: 33
+  damage: 28
   mentalDamage: 0
   ammoCapacity: 30
   shotRanges:
   - min: 0
-    hitRate: 1
-  - min: 5
     hitRate: 0.9
+  - min: 5
+    hitRate: 0.85
   - min: 10
     hitRate: 0.8
   damageAttenuation:
     perGrid: 5
     multiplier: 0.95
-  penetrationRate: 0.7
+  penetrationRate: 0.65
   shootSpeed: 5
   canPreciseShoot: 1
-  preciseShootSpeed: 2
+  preciseShootSpeed: 3
   preciseShootHitRateBonus: 0.15
   fireClip: {fileID: 8300000, guid: 9b741acaedf772e4388cdff82efb4f47, type: 3}
   reloadClip: {fileID: 8300000, guid: d933f986c785f2941bcacb9cf643d84f, type: 3}

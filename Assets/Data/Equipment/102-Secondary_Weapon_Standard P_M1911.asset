@@ -21,12 +21,12 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_m1911
   gripType: 1
-  damage: 25
+  damage: 22
   mentalDamage: 0
   ammoCapacity: 12
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.8
   - min: 3
     hitRate: 0.65
   - min: 7

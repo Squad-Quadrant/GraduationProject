@@ -21,20 +21,20 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_m1911ct
   gripType: 1
-  damage: 40
+  damage: 25
   mentalDamage: 0
   ammoCapacity: 8
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.85
   - min: 3
-    hitRate: 0.6
+    hitRate: 0.7
   - min: 7
-    hitRate: 0.4
+    hitRate: 0.45
   damageAttenuation:
     perGrid: 10
     multiplier: 0.8
-  penetrationRate: 0.75
+  penetrationRate: 0.7
   shootSpeed: 2
   canPreciseShoot: 0
   preciseShootSpeed: 0

@@ -21,23 +21,25 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_a1car
   gripType: 0
-  damage: 33
+  damage: 26
   mentalDamage: 0
-  ammoCapacity: 25
+  ammoCapacity: 28
   shotRanges:
   - min: 0
-    hitRate: 1
-  - min: 5
     hitRate: 0.8
+  - min: 3
+    hitRate: 0.75
+  - min: 5
+    hitRate: 0.65
   - min: 10
-    hitRate: 0.7
+    hitRate: 0.6
   damageAttenuation:
     perGrid: 5
     multiplier: 0.9
-  penetrationRate: 0.6
-  shootSpeed: 0
+  penetrationRate: 0.55
+  shootSpeed: 7
   canPreciseShoot: 1
-  preciseShootSpeed: 2
+  preciseShootSpeed: 4
   preciseShootHitRateBonus: 0.1
   fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
   reloadClip: {fileID: 8300000, guid: 6790eff764492f24d9b9743d8c0b350b, type: 3}

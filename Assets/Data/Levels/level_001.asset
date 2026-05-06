@@ -48,7 +48,11 @@ MonoBehaviour:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
-    patrolWaypoints: []
+    patrolWaypoints:
+    - {x: 9, y: 13}
+    - {x: 15, y: 13}
+    - {x: 12, y: 12}
+    - {x: 10, y: 12}
   - unitId: 1002
     unitConfig: {fileID: 11400000, guid: 990463de072a07c4298b7695743be00e, type: 2}
     startPosition: {x: 12, y: 7}
@@ -56,7 +60,10 @@ MonoBehaviour:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
-    patrolWaypoints: []
+    patrolWaypoints:
+    - {x: 9, y: 6}
+    - {x: 15, y: 6}
+    - {x: 12, y: 7}
   - unitId: 2001
     unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
     startPosition: {x: 9, y: 15}
@@ -64,7 +71,13 @@ MonoBehaviour:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
-    patrolWaypoints: []
+    patrolWaypoints:
+    - {x: 15, y: 15}
+    - {x: 14, y: 18}
+    - {x: 12, y: 16}
+    - {x: 12, y: 19}
+    - {x: 9, y: 18}
+    - {x: 9, y: 15}
   - unitId: 2002
     unitConfig: {fileID: 11400000, guid: f820835a55e2ba24d985ea52bc0098d5, type: 2}
     startPosition: {x: 10, y: 5}
@@ -72,7 +85,11 @@ MonoBehaviour:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
-    patrolWaypoints: []
+    patrolWaypoints:
+    - {x: 10, y: 1}
+    - {x: 14, y: 1}
+    - {x: 14, y: 5}
+    - {x: 10, y: 5}
   - unitId: 3001
     unitConfig: {fileID: 11400000, guid: 7036709897a1ea14f9290a0107b0ab02, type: 2}
     startPosition: {x: 17, y: 14}
@@ -96,6 +113,9 @@ MonoBehaviour:
       mainWeaponId: 2
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
-    patrolWaypoints: []
+    patrolWaypoints:
+    - {x: 11, y: 3}
+    - {x: 13, y: 3}
+    - {x: 12, y: 2}
   battleBgm: {fileID: 8300000, guid: 0825044c2d6047b4ba348c6dfd36e380, type: 3}
   bgmFadeIn: 1

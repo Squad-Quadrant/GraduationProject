@@ -21,12 +21,12 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_mk22
   gripType: 1
-  damage: 20
+  damage: 18
   mentalDamage: 0
   ammoCapacity: 12
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.9
   - min: 4
     hitRate: 0.75
   - min: 10

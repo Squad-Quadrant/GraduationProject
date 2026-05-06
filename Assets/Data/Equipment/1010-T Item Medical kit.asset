@@ -43,7 +43,7 @@ MonoBehaviour:
   directDamage: 0
   appliedBuff: 4
   persistTurns: 2
-  oneShotVfxPrefab: {fileID: 135726, guid: 154a10755f2c4a0409a0ab5c88261468, type: 3}
+  oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 2997148212300979965, guid: 0fdc7757d92177849b033ae5e0b10408, type: 3}
   visionReach: 5

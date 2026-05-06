@@ -15,24 +15,32 @@ MonoBehaviour:
   id: 4
   nName: MPi-KMS
   type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
-  description: "\uFF08\u6570\u503C\u5F85\u5F00\u53D1\uFF09\u4E1C\u5FB7\u4EFF\u5236\u7684AKM\u7A81\u51FB\u6B65\u67AA\uFF0C\u91C7\u7528\u4E86\u72EC\u7279\u7684\u8863\u67B6\u5F0F\u67AA\u6258\uFF0C\u9664\u4E86\u88C5\u5907\u4E1C\u5FB7\u90E8\u961F\uFF0C\u4E5F\u5927\u91CF\u51FA\u53E3\u5230\u4E86\u5176\u5B83\u56FD\u5BB6\u3002"
+  description: "\u4E1C\u5FB7\u4EFF\u5236\u7684AKM\u7A81\u51FB\u6B65\u67AA\uFF0C\u91C7\u7528\u4E86\u72EC\u7279\u7684\u8863\u67B6\u5F0F\u67AA\u6258\uFF0C\u9664\u4E86\u88C5\u5907\u4E1C\u5FB7\u90E8\u961F\uFF0C\u4E5F\u5927\u91CF\u51FA\u53E3\u5230\u4E86\u5176\u5B83\u56FD\u5BB6\u3002"
   battleDescription: 
   icon: {fileID: -778865188, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
-  spineName: 
+  spineName: weapon_akm
   gripType: 0
-  damage: 0
+  damage: 38
   mentalDamage: 0
-  ammoCapacity: 0
-  shotRanges: []
+  ammoCapacity: 24
+  shotRanges:
+  - min: 0
+    hitRate: 0.8
+  - min: 4
+    hitRate: 0.75
+  - min: 6
+    hitRate: 0.7
+  - min: 8
+    hitRate: 0.65
   damageAttenuation:
     perGrid: 0
     multiplier: 0
-  penetrationRate: 0
-  shootSpeed: 0
-  canPreciseShoot: 0
-  preciseShootSpeed: 0
-  preciseShootHitRateBonus: 0
+  penetrationRate: 0.7
+  shootSpeed: 4
+  canPreciseShoot: 1
+  preciseShootSpeed: 2
+  preciseShootHitRateBonus: 0.1
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

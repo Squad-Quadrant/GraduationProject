@@ -33,5 +33,5 @@ MonoBehaviour:
   defense: 70
   defenseRate: 0
   san: 100
-  aiArchetype: {fileID: 11400000, guid: 7f7b62f7d36cc004f9fbec10a7655668, type: 2}
+  aiArchetype: {fileID: 11400000, guid: 813a11ec827ba364ca71a1ddf5cd85b7, type: 2}
   skillConfig: {fileID: 0}

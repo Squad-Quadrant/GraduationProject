@@ -17,7 +17,7 @@ MonoBehaviour:
   type: "\u6025\u6551\u5305"
   description: "\u7279\u79CD\u4F5C\u6218\u4F7F\u7528\u7684\u968F\u8EAB\u6025\u6551\u5305\uFF0C\u53EF\u8FDB\u884C\u7B80\u5355\u7684\u6218\u5730\u533B\u7597\u64CD\u4F5C\u3002"
   battleDescription: 
-  icon: {fileID: 0}
+  icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   weight: 0
   spineName: 
   gripType: 1
@@ -31,7 +31,11 @@ MonoBehaviour:
   directDamage: 50
   appliedBuff: 0
   persistTurns: 2
-  oneShotVfxPrefab: {fileID: 0}
+  oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 2997148212300979965, guid: 029068138a42d8d4a9b7f600736ad36b, type: 3}
   visionReach: 5
+  clipWhenThrowAnimationStarted: {fileID: 0}
+  clipWhenProjectileGenerated: {fileID: 0}
+  clipWhenLanded: {fileID: 0}
+  timerBombExplosionClip: {fileID: 0}

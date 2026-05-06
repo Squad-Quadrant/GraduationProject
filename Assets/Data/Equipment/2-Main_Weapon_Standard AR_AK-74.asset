@@ -15,27 +15,27 @@ MonoBehaviour:
   id: 2
   nName: AK74
   type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
-  description: "\u82CF\u80545.45mm\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA\u3002\u4F5C\u4E3AAKM\u7684\u7EE7\u4EFB\u8005\uFF0C\u5176\u7ED3\u6784\u4F9D\u7136\u7ED3\u6784\u53EF\u9760\uFF0C\u540C\u65F6\u7A33\u5B9A\u6027\u6709\u4E86\u663E\u8457\u7684\u63D0\u5347\u3002"
+  description: "\u82CF\u80545.45mm\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA\u3002\u4F5C\u4E3AAKM\u7684\u7EE7\u4EFB\u8005\uFF0C\u5176\u7ED3\u6784\u4F9D\u7136\u53EF\u9760\uFF0C\u540C\u65F6\u7A33\u5B9A\u6027\u6709\u4E86\u663E\u8457\u7684\u63D0\u5347\u3002"
   battleDescription: 
   icon: {fileID: -1714735755, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_ak74
   gripType: 0
-  damage: 38
+  damage: 33
   mentalDamage: 0
-  ammoCapacity: 25
+  ammoCapacity: 24
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.85
   - min: 5
-    hitRate: 0.9
-  - min: 10
     hitRate: 0.8
+  - min: 10
+    hitRate: 0.7
   damageAttenuation:
     perGrid: 10
     multiplier: 0.9
   penetrationRate: 0.7
-  shootSpeed: 5
+  shootSpeed: 4
   canPreciseShoot: 1
   preciseShootSpeed: 2
   preciseShootHitRateBonus: 0.15

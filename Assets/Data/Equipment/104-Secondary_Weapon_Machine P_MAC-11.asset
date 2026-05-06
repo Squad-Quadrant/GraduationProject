@@ -21,7 +21,7 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_m11
   gripType: 1
-  damage: 15
+  damage: 13
   mentalDamage: 0
   ammoCapacity: 20
   shotRanges:

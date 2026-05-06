@@ -21,12 +21,12 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_glock
   gripType: 1
-  damage: 25
+  damage: 20
   mentalDamage: 0
   ammoCapacity: 15
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.85
   - min: 3
     hitRate: 0.7
   - min: 8

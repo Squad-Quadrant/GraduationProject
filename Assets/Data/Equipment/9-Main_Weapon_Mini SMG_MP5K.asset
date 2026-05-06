@@ -23,13 +23,13 @@ MonoBehaviour:
   gripType: 0
   damage: 20
   mentalDamage: 0
-  ammoCapacity: 20
+  ammoCapacity: 24
   shotRanges:
   - min: 0
-    hitRate: 1
-  - min: 3
+    hitRate: 0.75
+  - min: 2
     hitRate: 0.65
-  - min: 5
+  - min: 4
     hitRate: 0.55
   - min: 8
     hitRate: 0.45
@@ -37,7 +37,7 @@ MonoBehaviour:
     perGrid: 5
     multiplier: 0.7
   penetrationRate: 0.45
-  shootSpeed: 10
+  shootSpeed: 12
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
