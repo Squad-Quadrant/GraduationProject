@@ -62,7 +62,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 
 		private void SetupSlots(Systems.Unit.Unit unit)
 		{
-			bool unitCanAct = unit.HasAp && unit.CanUseEquipment;
+			bool unitCanAct = unit.HasAp;
 			_currentSelectedSlot = null;
 
 			for (int i = 2; i >= 0; i--)

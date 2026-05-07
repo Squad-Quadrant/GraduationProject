@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1007-T Item_Light
   m_EditorClassIdentifier: 
   id: 1007
-  nName: "\u7167\u660E\u5F39"
+  nName: Flare
   type: "\u7167\u660E\u5F39"
   description: "\u519B\u7528\u9AD8\u5F3A\u5EA6\u7167\u660E\u5F39\uFF0C\u7528\u4E8E\u591C\u95F4\u7167\u660E\u6216\u6307\u793A\u76EE\u6807"
   battleDescription: 
@@ -24,7 +24,7 @@ MonoBehaviour:
   kind: 5
   maxUsesPerBattle: 3
   apCost: 1
-  throwRange: 6
+  throwRange: 9
   coverageOffsets:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
