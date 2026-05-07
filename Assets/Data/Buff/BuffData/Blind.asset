@@ -26,4 +26,5 @@ MonoBehaviour:
   onLostEvents: []
   onTurnEvents: []
   onResetEvents: []
-  propertyInfluences: []
+  propertyInfluences:
+  - {fileID: 11400000, guid: eab4a62ae2f93456ea6ff0c2c448bfc1, type: 2}
