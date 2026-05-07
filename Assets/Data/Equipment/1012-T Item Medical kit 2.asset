@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
   m_Name: 1012-T Item Medical kit 2
   m_EditorClassIdentifier: 
-  id: 1010
-  nName: "\u533B\u7597\u5305"
+  id: 1012
+  nName: "\u79FB\u9664Debuf"
   type: "\u533B\u7597\u5305"
   description: "\u533B\u7597\u5305"
   battleDescription: 
@@ -39,9 +39,9 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
-  healAmount: 20
+  displayHealAmount: 20
   directDamage: 0
-  appliedBuff: 9
+  appliedBuff: 11
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}

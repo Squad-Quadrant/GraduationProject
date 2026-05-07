@@ -9,6 +9,8 @@ namespace Presentation.Map.GunLine
         [SerializeField] private Vector2 offset;
         [SerializeField] private float flashSpeed = 5f;
         [SerializeField] private float lengthRate = 1;
+        [SerializeField] private Material material;
+        [SerializeField] private float textureScrollSpeed = 1f;
         
         private Coroutine _flashCoroutine;
         private Color _originalStartColor;
@@ -18,6 +20,12 @@ namespace Presentation.Map.GunLine
         {
             _originalStartColor = lineRenderer.startColor;
             _originalEndColor = lineRenderer.endColor;
+            
+            if (material != null)
+            {
+                lineRenderer.material = material;
+            }
+            lineRenderer.textureMode = LineTextureMode.Tile;
         }
 
         public void Refresh(Vector3 position0, Vector3  position1)
@@ -59,6 +67,13 @@ namespace Presentation.Map.GunLine
                 
                 lineRenderer.startColor = newStart;
                 lineRenderer.endColor = newEnd;
+                
+                if (lineRenderer.material != null)
+                {
+                    Vector2 currentOffset = lineRenderer.material.mainTextureOffset;
+                    currentOffset.x += textureScrollSpeed * Time.deltaTime;
+                    lineRenderer.material.mainTextureOffset = currentOffset;
+                }
                 
                 yield return null;
             }
