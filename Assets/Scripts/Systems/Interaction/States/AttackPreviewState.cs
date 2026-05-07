@@ -9,6 +9,8 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
 using Data.Runtime.Events.UI;
 using Systems.Damage;
+using Systems.Map;
+using Systems.Map.Config;
 using Systems.Vision;
 using UnityEngine;
 
@@ -195,6 +197,8 @@ namespace Systems.Interaction.States
 				// 	break;
 				// }
 				
+				var lowWalls = new List<WallKey>();
+				
 				Vector2Int[] dirs =
 				{
 					Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right,
@@ -204,10 +208,11 @@ namespace Systems.Interaction.States
 					var neighborPos = target.position + dir;
 					var neighborWallKey = new Map.WallKey(target.position, neighborPos);
 					var neighborWall = mapData.GetWall(neighborWallKey);
-					if (neighborWall != null && neighborWall.Type == Map.Config.WallType.LowWall)
+					if (neighborWall != null && neighborWall.Type == WallType.LowWall)
 					{
 						if (!environment.Contains(neighborWall))
 						{
+							lowWalls.Add(neighborWallKey);
 							environment.Add(neighborWall);
 						}
 					}
@@ -231,7 +236,7 @@ namespace Systems.Interaction.States
 				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
 				if (!hasConfirmed)
 				{
-					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, info.lowWalls));
+					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, lowWalls));
 				}
 			}
 			else
