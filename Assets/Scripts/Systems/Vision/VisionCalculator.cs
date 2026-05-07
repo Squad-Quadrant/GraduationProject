@@ -121,10 +121,15 @@ namespace Systems.Vision
 				AddSceneActorInfo(enteredCell, mapData, info);
 
 				if (cellX == to.x && cellY == to.y) // Arrival check
+				{
+					info.CanPass = true;
 					return true;
+				}
 
 				if (IsCellBlocking(new Vector2Int(cellX, cellY), mapData))
+				{
 					return false;
+				}
 			}
 
 			return false;
@@ -206,10 +211,11 @@ namespace Systems.Vision
 		public List<WallKey> lowWalls = new();
 		public List<WallKey> highWalls = new();
 		public List<SceneActorBase> sceneActors = new();
+		public bool CanPass = false;
 		
 		public bool CanGunLinePass()
 		{
-			return highWalls.Count == 0 && sceneActors.Count == 0;
+			return highWalls.Count == 0 && sceneActors.Count == 0 && CanPass;
 		}
 	}
 }
