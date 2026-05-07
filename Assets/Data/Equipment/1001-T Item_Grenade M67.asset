@@ -41,6 +41,7 @@ MonoBehaviour:
   - {x: -2, y: 0}
   displayHealAmount: 20
   directDamage: 50
+  ApplyForPlayerFaction: 1
   appliedBuff: 0
   otherBuffs: 
   persistTurns: 2

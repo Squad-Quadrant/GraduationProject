@@ -122,6 +122,11 @@ namespace Systems.Unit.Equipment.Logic
 						var unit = ctx.UnitService.GetUnitAtPosition(cell);
 						if (unit is not { IsAlive: true }) continue;
                         
+						if (unit.faction == EUnitFaction.Player && !ItemConfig.ApplyForPlayerFaction)
+						{
+							continue;
+						}
+						
 						if (GetDamage() > 0)
                         {
                             var info = new GeneralDamageTriggeringInfo(this, unit);

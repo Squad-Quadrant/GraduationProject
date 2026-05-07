@@ -72,6 +72,8 @@ namespace Systems.Unit
         public BuffProperty<bool> CanUseMainWeapon = new(PropertyType.CanUseMainWeapon, true);
         public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
 
+        public BuffProperty<bool> CanAIUseEye = new(PropertyType.CanAIUseEye, true);
+
         // for ai only
         public Vector2Int spawnPosition;
         public IReadOnlyList<Vector2Int> patrolWaypoints;

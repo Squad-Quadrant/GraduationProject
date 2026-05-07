@@ -15,6 +15,7 @@ namespace Systems.Buff
         CanUseMainWeapon,
         CanAttack,
         VisionRange,
+        CanAIUseEye,
         // ---------------------------------
         Count,
     }

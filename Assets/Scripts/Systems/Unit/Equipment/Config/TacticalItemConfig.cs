@@ -40,6 +40,10 @@ namespace Systems.Unit.Equipment.Config
 		[Title("Grenade"), ShowIf(nameof(kind), ETacticalItemKind.Grenade)]
 		[LabelText("直接伤害"), MinValue(0)]
 		public int directDamage = 50;
+
+		[ShowIf(nameof(kind), ETacticalItemKind.Grenade)]
+		[LabelText("对友军生效")]
+		public bool ApplyForPlayerFaction = true;
         
         private bool CanAttachBuff =>
             kind is ETacticalItemKind.Burn or ETacticalItemKind.Grenade or ETacticalItemKind.InstantMedpack;
@@ -48,7 +52,7 @@ namespace Systems.Unit.Equipment.Config
 		[LabelText("主Buff类型(直接添加Buff或生成地形)")]
 		public BuffType appliedBuff;
 		
-		[Title("Buff"), ShowIf(nameof(CanAttachBuff))]
+		[ShowIf(nameof(CanAttachBuff))]
 		[LabelText("附加Buff类型")]
 		public List<BuffType> otherBuffs;
 

@@ -20,8 +20,8 @@ MonoBehaviour:
   tags: []
   showInUI: 1
   durationTurn: 3
-  attachType: 0
-  lostType: 0
+  attachType: 2
+  lostType: 1
   onAttachEvents: []
   onLostEvents: []
   onTurnEvents: []

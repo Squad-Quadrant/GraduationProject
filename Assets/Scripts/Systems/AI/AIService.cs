@@ -134,6 +134,12 @@ namespace Systems.AI
             
 			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange, theObscuresCells);
 
+			if (!unit.CanAIUseEye)
+			{
+				visibleCells.Clear();
+				visibleCells.Add(unit.position);
+			}
+			
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();
 			foreach (var other in _unitService.GetAllAliveUnits())
