@@ -133,7 +133,13 @@ namespace Systems.AI
             theObscuresCells.Remove(unit.position);
             
 			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange, theObscuresCells);
-			
+
+			if (!unit.CanAIUseEye.Value)
+			{
+				visibleCells.Clear();
+				visibleCells.Add(unit.position);
+			}
+
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();
 			foreach (var other in _unitService.GetAllAliveUnits())
@@ -147,11 +153,6 @@ namespace Systems.AI
 					allies.Add(other);
 			}
 
-			if (!unit.CanAIUseEye.Value)
-			{
-				enemies.Clear();
-			}
-
 			_blackboardService.ReportVisibleEnemies(unit.faction, _turnService.TurnNumber, unit.id, enemies);
 
 			var options = new PathFindingOptions(
@@ -162,7 +163,7 @@ namespace Systems.AI
 				canCrossLowWalls: false,
 				canCrossHighWalls: false,
 				ignoreTerrainWalkability: false,
-				visibleCells: visibleCells
+				visibleCells: null
 			);
 			int maxMove = unit.moveRange * unit.RemainingMovementAp;
 			var reachableArea = _pathFinding.GetReachableArea(unit.position, maxMove, options);
