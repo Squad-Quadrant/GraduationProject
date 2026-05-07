@@ -75,7 +75,7 @@ namespace Systems.AI.Plans
 				context.ReachableArea,
 				context.PathFinding, context.PathOptions);
 
-			if (step == unit.position) return queue;
+			if (step == unit.position || stoppable != null && !stoppable.Contains(step)) return queue;
 
 			context.TryEnqueueAction(new MoveAction(step), ref queue);
 			return queue;
