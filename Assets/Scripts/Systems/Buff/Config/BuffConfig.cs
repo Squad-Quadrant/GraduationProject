@@ -51,8 +51,12 @@ namespace Systems.Buff.Config
         Bleed,
         [InspectorName("虚弱")]
         Weak,
-        [InspectorName("医疗包")]
+        [InspectorName("医疗包_30")]
         InstantAddHP,
+        [InspectorName("医疗包_45")]
+        InstantAddHP_45,
+        [InspectorName("医疗包_90")]
+        InstantAddHP_90,
         [InspectorName("持续回血医疗包")]
         SlowAddHP,
         [InspectorName("移除负面Buff")]
