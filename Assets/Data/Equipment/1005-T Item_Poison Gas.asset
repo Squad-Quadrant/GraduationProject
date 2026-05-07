@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1005-T Item_Poison Gas
   m_EditorClassIdentifier: 
   id: 1005
-  nName: "\u6BD2\u6C14\u5F39"
+  nName: Poison Gas
   type: "\u6BD2\u6C14\u5F39"
   description: "\u6295\u63B7\u540E\u653E\u51FA\u6709\u6BD2\u70DF\u96FE\u7684\u624B\u69B4\u5F39\uFF0C\u6BD2\u6C14\u901A\u8FC7\u76AE\u80A4\u548C\u547C\u5438\u7CFB\u7EDF\u5BF9\u6709\u751F\u76EE\u6807\u9020\u6210\u4F24\u5BB3\u3002"
   battleDescription: 
@@ -24,7 +24,7 @@ MonoBehaviour:
   kind: 2
   maxUsesPerBattle: 1
   apCost: 1
-  throwRange: 7
+  throwRange: 8
   coverageOffsets:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
@@ -35,9 +35,10 @@ MonoBehaviour:
   - {x: -1, y: -1}
   - {x: -1, y: 0}
   - {x: -1, y: 1}
-  healAmount: 30
+  displayHealAmount: 20
   directDamage: 50
   appliedBuff: 3
+  otherBuffs: 
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}
   persistentVfxPrefab: {fileID: 127860, guid: d156aae93264ba34abe11fcb3fae8b97, type: 3}
