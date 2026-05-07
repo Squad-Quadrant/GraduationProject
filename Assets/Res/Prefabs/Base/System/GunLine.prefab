@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 8077299709278740953}
   offset: {x: 0, y: 0.3}
-  flashSpeed: 5
+  flashSpeed: 100
   lengthRate: 0.8
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c327deb428aff4d7ba410051139a171a, type: 2}
   textureScrollSpeed: -1
 --- !u!120 &8077299709278740953
 LineRenderer:

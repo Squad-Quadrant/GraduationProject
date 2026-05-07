@@ -39,9 +39,10 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
-  healAmount: 20
+  displayHealAmount: 20
   directDamage: 0
   appliedBuff: 9
+  otherBuffs: 0b000000
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}
