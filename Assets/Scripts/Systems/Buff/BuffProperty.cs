@@ -12,7 +12,7 @@ namespace Systems.Buff
         Speed,
         MoveRange,
         MaxAmmo,
-        CanUseEquipment,
+        CanUseMainWeapon,
         CanAttack,
         VisionRange,
         // ---------------------------------

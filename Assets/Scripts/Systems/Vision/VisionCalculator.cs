@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Log;
 using Systems.Map;
 using Systems.Map.Config;
 using Systems.Map.SceneActor;
@@ -54,7 +53,11 @@ namespace Systems.Vision
 		{
 			info = new TraceRayInfo();
 			
-			if (from == to) return true;
+			if (from == to)
+			{
+				info.CanPass = true;
+				return true;
+			}
 
 			int dx = to.x - from.x;
 			int dy = to.y - from.y;
@@ -155,9 +158,15 @@ namespace Systems.Vision
 				passedCells?.Add(entered);
 				info.passedCells.Add(entered);
 
-				if (pos == end) return true;
+				if (pos == end)
+				{
+					info.CanPass = true;
+					return true;
+				}
 				if (IsCellBlocking(entered, mapData)) return false;
 			}
+
+			info.CanPass = true;
 			return true;
 		}
 

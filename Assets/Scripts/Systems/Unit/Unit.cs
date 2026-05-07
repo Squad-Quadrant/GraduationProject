@@ -69,7 +69,7 @@ namespace Systems.Unit
 		public int apSpentOnMovement;
         public Vector2Int position;
         public bool isStunned;
-        public BuffProperty<bool> CanUseEquipment = new(PropertyType.CanUseEquipment, true);
+        public BuffProperty<bool> CanUseMainWeapon = new(PropertyType.CanUseMainWeapon, true);
         public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
 
         // for ai only
@@ -211,7 +211,8 @@ namespace Systems.Unit
 			{
 				new (EActionType.Move, RemainingMovementAp > 0),
 				new (EActionType.Interact, hasInteractableNeighbor),
-				new (EActionType.Attack, !CurrentWeaponContainer.IsNullOrEmpty() && HasAp && HasAmmo && CanUseEquipment && CanAttack),
+				new (EActionType.Attack, !CurrentWeaponContainer.IsNullOrEmpty() && HasAp && HasAmmo && CanAttack &&
+				                         (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon())),
 				new (EActionType.Wait)
 			};
 
@@ -226,10 +227,11 @@ namespace Systems.Unit
 				actions.Add(new ActionAbility(EActionType.UseSkill, Skill.CanUse));
 
 			if (CurrentWeaponLogic!= null)
-	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && CanUseEquipment && !CurrentWeaponLogic.FullAmmo));
+	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && !CurrentWeaponLogic.FullAmmo &&
+	                                                              (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon())));
 
 			if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
-				actions.Add(new ActionAbility(EActionType.SwitchWeapon, CanUseEquipment));
+				actions.Add(new ActionAbility(EActionType.SwitchWeapon));
 
 			return actions;
 		}
@@ -370,6 +372,18 @@ namespace Systems.Unit
         {
             CurrentWeaponContainer = _currentWeaponContainer == MainWeapon ? SecondaryWeapon : MainWeapon;
             TriggerInfoChanged();
+        }
+
+        public bool IsUsingMainWeapon()
+        {
+	        if (MainWeapon  == null) return false;
+	        return _currentWeaponContainer == MainWeapon;
+        }
+
+        public bool IsUseSecondaryWeapon()
+        {
+	        if (SecondaryWeapon  == null) return false;
+	        return _currentWeaponContainer == SecondaryWeapon;
         }
         
         #endregion
