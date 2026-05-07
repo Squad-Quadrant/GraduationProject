@@ -150,7 +150,7 @@ namespace Systems.AI
 			{
 				enemies.Clear();
 			}
-			this.Log($"'{unit.name}' : {unit.CanAIUseEye}, sees {enemies.Count} enemies and {allies.Count} allies");
+			this.Log($"'{unit.name}' : {unit.CanAIUseEye.Value}, sees {enemies.Count} enemies and {allies.Count} allies");
 
 			_blackboardService.ReportVisibleEnemies(unit.faction, _turnService.TurnNumber, unit.id, enemies);
 
