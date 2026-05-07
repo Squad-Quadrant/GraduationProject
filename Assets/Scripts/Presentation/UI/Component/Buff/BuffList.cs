@@ -23,6 +23,7 @@ namespace Presentation.UI.Component.Buff
 
         private void Attach(BuffInfo info)
         {
+            if (!info.BuffData.showInUI) return;
             var item = Instantiate(itemPrefab, buffContainer);
             item.Init(info);
             itemDict.Add(info, item);

@@ -18,7 +18,7 @@ MonoBehaviour:
   icon: {fileID: 1758571940, guid: dd78c8c1f30a04c4691c66f63857deef, type: 3}
   maxStack: 1
   tags: []
-  showInUI: 0
+  showInUI: 1
   durationTurn: 3
   attachType: 0
   lostType: 0

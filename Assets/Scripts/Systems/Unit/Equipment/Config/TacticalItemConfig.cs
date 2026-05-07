@@ -41,7 +41,7 @@ namespace Systems.Unit.Equipment.Config
 		public int directDamage = 50;
         
         private bool CanAttachBuff =>
-            kind is ETacticalItemKind.Burn or ETacticalItemKind.Grenade;
+            kind is ETacticalItemKind.Burn or ETacticalItemKind.Grenade or ETacticalItemKind.InstantMedpack;
 
 		[Title("Burn"), ShowIf(nameof(CanAttachBuff))]
 		[LabelText("附加 Buff 类型")]

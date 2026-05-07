@@ -14,18 +14,14 @@ namespace Systems.Unit.Equipment.Logic
 
 		public ICommand CreateCommand(InteractionContext ctx) =>
 			new AsyncLambdaCommand(
-				$"UseInstant({Owner.name} +{ItemConfig.healAmount}HP)",
+				$"{Owner.name} Use {Name()}",
 				onComplete =>
 				{
 					Owner.CurrentAp -= ItemConfig.apCost;
 					Consume();
-
-					int newHp = Mathf.Min(Owner.CurrentHp + ItemConfig.healAmount, Owner.maxHp);
-					int actualHeal = newHp - Owner.CurrentHp;
-					Owner.CurrentHp = newHp;
-
-					this.Log($"{Owner.name} healed {actualHeal} HP → {Owner.CurrentHp}/{Owner.maxHp}");
-
+					
+					Owner.BuffProxy.Attach(ItemConfig.appliedBuff, this);
+					
 					DOVirtual.DelayedCall(0.2f, () => onComplete()); // todo: 需要动画或者反馈
 				});
 

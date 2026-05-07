@@ -50,7 +50,13 @@ namespace Systems.Buff.Config
         [InspectorName("流血")]
         Bleed,
         [InspectorName("虚弱")]
-        Weak
+        Weak,
+        [InspectorName("医疗包")]
+        InstantAddHP,
+        [InspectorName("持续回血医疗包")]
+        SlowAddHP,
+        [InspectorName("移除负面Buff")]
+        RemoveDebuff,
     }
 
     [Configurable("Buff/BuffData")]
