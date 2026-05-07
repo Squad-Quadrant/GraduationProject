@@ -33,8 +33,8 @@ namespace Systems.Unit.Equipment.Config
 		public Vector2Int[] coverageOffsets = { Vector2Int.zero };
 
 		[Title("Medpack"), ShowIf(nameof(kind), ETacticalItemKind.InstantMedpack)]
-		[LabelText("治疗量"), MinValue(1)]
-		public int healAmount = 30;
+		[LabelText("治疗量（仅展示用，不涉及计算逻辑）"), MinValue(1)]
+		public int displayHealAmount = 20;
 
 		[Title("Grenade"), ShowIf(nameof(kind), ETacticalItemKind.Grenade)]
 		[LabelText("直接伤害"), MinValue(0)]

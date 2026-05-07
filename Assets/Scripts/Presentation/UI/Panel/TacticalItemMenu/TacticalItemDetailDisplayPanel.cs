@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Systems.Buff.Config;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
 using Systems.Unit.Equipment.Logic;
@@ -27,7 +28,12 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 			switch (config.kind)
 			{
 				case ETacticalItemKind.InstantMedpack:
-					lines[3].SetPair("治疗量", $"{config.healAmount}");
+					if (config.appliedBuff == BuffType.InstantAddHP)
+						lines[3].SetPair("治疗量", $"{config.displayHealAmount}");
+					if (config.appliedBuff == BuffType.SlowAddHP)
+						lines[3].SetPair("每回合治疗量", $"{config.displayHealAmount}");
+					// if (config.appliedBuff == BuffType.RemoveDebuff)
+					// 	lines[3].SetPair("治疗量", "");
 					break;
 				case ETacticalItemKind.Grenade:
 					lines[3].SetPair("范围", $"{config.throwRange}格");
