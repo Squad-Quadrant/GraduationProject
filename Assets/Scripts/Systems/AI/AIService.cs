@@ -133,12 +133,6 @@ namespace Systems.AI
             theObscuresCells.Remove(unit.position);
             
 			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange, theObscuresCells);
-
-			if (!unit.CanAIUseEye)
-			{
-				visibleCells.Clear();
-				visibleCells.Add(unit.position);
-			}
 			
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();
@@ -151,6 +145,11 @@ namespace Systems.AI
 					enemies.Add(other);
 				else if (other.faction == unit.faction)
 					allies.Add(other);
+			}
+			
+			if (!unit.CanAIUseEye)
+			{
+				enemies.Clear();
 			}
 
 			_blackboardService.ReportVisibleEnemies(unit.faction, _turnService.TurnNumber, unit.id, enemies);
