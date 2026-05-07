@@ -146,11 +146,11 @@ namespace Systems.AI
 				else if (other.faction == unit.faction)
 					allies.Add(other);
 			}
-			
 			if (!unit.CanAIUseEye)
 			{
 				enemies.Clear();
 			}
+			this.Log($"'{unit.name}' : {unit.CanAIUseEye}");
 
 			_blackboardService.ReportVisibleEnemies(unit.faction, _turnService.TurnNumber, unit.id, enemies);
 
