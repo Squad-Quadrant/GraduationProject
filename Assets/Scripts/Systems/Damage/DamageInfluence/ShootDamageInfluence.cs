@@ -43,7 +43,7 @@ namespace Systems.Damage
             var theWeapon = (WeaponLogic)Owner;
             
             // 获得两个单位的距离
-            float distance = Vector2Int.Distance(UnitAttacker.position, Defender.position);
+            float distance = Mathf.Abs(UnitAttacker.position.x - Defender.position.x) + Mathf.Abs(UnitAttacker.position.y - Defender.position.y);
 
             // 伤害衰减
             float damageMultiplier = 1f;
