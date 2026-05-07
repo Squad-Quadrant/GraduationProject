@@ -21,6 +21,11 @@ namespace Systems.Unit.Equipment.Logic
 					Consume();
 					
 					Owner.BuffProxy.Attach(ItemConfig.appliedBuff, this);
+
+					foreach (var buffType in ItemConfig.otherBuffs)
+					{
+						Owner.BuffProxy.Attach(buffType, this);
+					}
 					
 					DOVirtual.DelayedCall(0.2f, () => onComplete()); // todo: 需要动画或者反馈
 				});

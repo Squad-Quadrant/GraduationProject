@@ -1,4 +1,5 @@
-﻿using PurpleFlowerCore;
+﻿using System.Collections.Generic;
+using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using Systems.Buff.Config;
 using UnityEngine;
@@ -43,9 +44,13 @@ namespace Systems.Unit.Equipment.Config
         private bool CanAttachBuff =>
             kind is ETacticalItemKind.Burn or ETacticalItemKind.Grenade or ETacticalItemKind.InstantMedpack;
 
-		[Title("Burn"), ShowIf(nameof(CanAttachBuff))]
-		[LabelText("附加 Buff 类型")]
+		[Title("Buff"), ShowIf(nameof(CanAttachBuff))]
+		[LabelText("主Buff类型(直接添加Buff或生成地形)")]
 		public BuffType appliedBuff;
+		
+		[Title("Buff"), ShowIf(nameof(CanAttachBuff))]
+		[LabelText("附加Buff类型")]
+		public List<BuffType> otherBuffs;
 
 		private bool HasPersistTurns =>
 			kind is ETacticalItemKind.Burn or ETacticalItemKind.TimerBomb or ETacticalItemKind.ScoutEye or ETacticalItemKind.Light or ETacticalItemKind.Smoke;
