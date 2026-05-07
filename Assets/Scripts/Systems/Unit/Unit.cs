@@ -234,6 +234,11 @@ namespace Systems.Unit
 			return actions;
 		}
 
+		public bool CanUseAction(EActionType type)
+		{
+			return GetAvailableActions().FirstOrDefault(a => a.ActionType == type).IsAvailable;
+		}
+
 		public int CalculateMovementApCost(int pathCost)
 		{
 			return moveRange <= 0
