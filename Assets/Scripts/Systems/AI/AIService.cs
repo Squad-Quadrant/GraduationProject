@@ -146,7 +146,7 @@ namespace Systems.AI
 				else if (other.faction == unit.faction)
 					allies.Add(other);
 			}
-			if (!unit.CanAIUseEye)
+			if (!unit.CanAIUseEye.Value)
 			{
 				enemies.Clear();
 			}
