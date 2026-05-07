@@ -36,7 +36,7 @@ namespace Systems.AI.Plans
 		public Queue<IAtomicAction> BuildActionSequence(AIContext context)
 		{
 			var queue = new Queue<IAtomicAction>();
-			queue.Enqueue(new ReloadAction());
+			context.TryEnqueueAction(new ReloadAction(), ref queue);
 			return queue;
 		}
 

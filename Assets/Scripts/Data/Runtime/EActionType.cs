@@ -16,6 +16,7 @@
         Reload,
         SwitchWeapon,
         Back,
+        AI,
         //...
 		Count,
 	}

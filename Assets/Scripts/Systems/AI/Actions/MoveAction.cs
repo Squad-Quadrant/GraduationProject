@@ -1,5 +1,6 @@
 ﻿using Core.Commands;
 using Core.Log;
+using Data.Runtime;
 using Data.Runtime.Commands;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace Systems.AI.Actions
 {
 	public class MoveAction : IAtomicAction
 	{
+		public EActionType ActionType => EActionType.Move;
+
 		public Vector2Int Target { get; }
 
 		public MoveAction(Vector2Int target) => Target = target;

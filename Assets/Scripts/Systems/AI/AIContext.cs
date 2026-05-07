@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Core.Events;
+using Data.Runtime;
 using Presentation.Audio;
+using Systems.AI.Actions;
 using Systems.AI.Blackboard;
 using Systems.AI.Config;
 using Systems.Map;
@@ -63,6 +65,21 @@ namespace Systems.AI
 			PathOptions = pathOptions;
 			PathFinding = pathFinding;
 			AudioService = audioService;
+		}
+
+		public bool TryEnqueueAction(IAtomicAction action, ref Queue<IAtomicAction> queue)
+		{
+			if (action.ActionType == EActionType.AI)
+			{
+				queue.Enqueue(action);
+				return true;
+			}
+
+			var availableActions = Self.GetAvailableActions();
+			if (!availableActions.Exists(ability => ability.ActionType == action.ActionType && ability.IsAvailable))
+				return false;
+			queue.Enqueue(action);
+			return true;
 		}
 	}
 }

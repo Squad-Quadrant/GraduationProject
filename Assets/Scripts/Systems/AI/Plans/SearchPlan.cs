@@ -65,7 +65,7 @@ namespace Systems.AI.Plans
 
 			if (canReachThisTurn)
 			{
-				queue.Enqueue(new MoveAction(lastKnown));
+				context.TryEnqueueAction(new MoveAction(lastKnown), ref queue);
 				queue.Enqueue(new SearchCompletionAction(_target.EnemyUnitId));
 				return queue;
 			}
@@ -77,7 +77,7 @@ namespace Systems.AI.Plans
 
 			if (step == unit.position) return queue;
 
-			queue.Enqueue(new MoveAction(step));
+			context.TryEnqueueAction(new MoveAction(step), ref queue);
 			return queue;
 		}
 

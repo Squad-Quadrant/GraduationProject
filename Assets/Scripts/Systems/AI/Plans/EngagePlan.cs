@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Core.Log;
+using Data.Runtime;
 using Systems.AI.Actions;
 using Systems.Unit.Equipment;
 using UnityEngine;
@@ -64,12 +65,12 @@ namespace Systems.AI.Plans
 
 			if (bestPos.Value == context.Self.position) // 当前位置已能攻击 → 直接攻击，不移动
 			{
-				queue.Enqueue(new AttackAction(_target.id));
+				context.TryEnqueueAction(new AttackAction(_target.id), ref queue);
 				return queue;
 			}
 
-			queue.Enqueue(new MoveAction(bestPos.Value));
-			queue.Enqueue(new AttackAction(_target.id));
+			context.TryEnqueueAction(new MoveAction(bestPos.Value), ref queue);
+			context.TryEnqueueAction(new AttackAction(_target.id), ref queue);
 			return queue;
 		}
 

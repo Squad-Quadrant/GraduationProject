@@ -6,6 +6,8 @@ namespace Systems.AI.Actions
 {
 	public class AttackAction : IAtomicAction
 	{
+		public EActionType ActionType => EActionType.Attack;
+
 		public string TargetUnitId { get; }
 
 		public AttackAction(string targetUnitId) => TargetUnitId = targetUnitId;
