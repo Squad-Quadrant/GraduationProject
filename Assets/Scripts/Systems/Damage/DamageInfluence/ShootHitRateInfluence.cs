@@ -21,8 +21,9 @@ namespace Systems.Damage
             base.Init(context);
             var theWeapon = ((WeaponLogic)Owner);
             
-            // 获得两个单位的距离
-            float distance = Vector2Int.Distance(UnitAttacker.position, Defender.position);
+            // 获得两个单位的距离，曼哈顿距离
+            float distance = Mathf.Abs(UnitAttacker.position.x - Defender.position.x) + Mathf.Abs(UnitAttacker.position.y - Defender.position.y);
+            
             float hitRateMultiplier = 1f;
             var hitRange = theWeapon.ShotRange();
             foreach (var theRange in hitRange)
