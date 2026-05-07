@@ -67,7 +67,7 @@ namespace Presentation.Bootstrap
 
 		private readonly List<LoadStepEntry> _steps = new();
 
-		private void Awake()
+		private void Start()
 		{
 			var dataManager = RootContainer.Instance
 				? RootContainer.Instance.TryResolve<DataManager>()
@@ -260,7 +260,10 @@ namespace Presentation.Bootstrap
         private void LoadMap()
 		{
 			if (!levelConfig.mapConfig)
-				throw new InvalidOperationException("LevelConfig has no MapConfig assigned!");
+			{
+				this.LogError("Map config is missing.");
+				return;
+			}
 
 			_levelContainer.Resolve<IRegionService>().Initialize(levelConfig.mapConfig);
 

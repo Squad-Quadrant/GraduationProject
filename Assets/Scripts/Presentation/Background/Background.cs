@@ -45,8 +45,6 @@ namespace Presentation.Background
 
 		private void Awake()
 		{
-
-
 			if (!rawImage) rawImage = GetComponent<RawImage>();
 
 			if (!rawImage.material) return;

@@ -158,6 +158,7 @@ namespace Systems.Map.Config
 
         private void OnSizeChanged()
         {
+#if UNITY_EDITOR
             size = editedSize;
             var temp = cells;
             cells = new CellConfigData[Size.x * Size.y];
@@ -233,8 +234,8 @@ namespace Systems.Map.Config
                     }
                 }
             }
+#endif
         }
-
 
 		private void OnMapNameChanged()
 		{

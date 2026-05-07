@@ -2,6 +2,8 @@
 {
     Properties
     {
+		[HideInInspector] _MainTex ("Base (RGB)", 2D) = "white" {}
+
         [Header(Mesh Gradient)]
         _GradColor0 ("Color 0 (dominant dark)", Color) = (0.018, 0.030, 0.060, 1)
         _GradColor1 ("Color 1 (cool mid)",      Color) = (0.040, 0.080, 0.130, 1)

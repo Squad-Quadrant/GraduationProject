@@ -60,11 +60,6 @@ namespace Core.Log
 
 		private static ILogger GetLogger(object obj)
 		{
-            // 如果是打包后的版本，直接返回一个空的logger
-#if !(UNITY_EDITOR || DEVELOPMENT_BUILD)
-            	return null;
-#endif
-            
 			if (_factory == null || obj == null)
 				return null;
 
