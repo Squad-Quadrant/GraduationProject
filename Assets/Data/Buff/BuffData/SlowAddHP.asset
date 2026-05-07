@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
   m_Name: SlowAddHP
   m_EditorClassIdentifier: 
-  buffType: 10
+  buffType: 12
   buffName: "\u6301\u7EED\u56DE\u8840"
   description: 
-  icon: {fileID: 739108496, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
+  icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   maxStack: 1
   tags: []
   showInUI: 0
-  durationTurn: 3
+  durationTurn: 2
   attachType: 2
   lostType: 1
   onAttachEvents: []

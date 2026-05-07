@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
-  m_Name: 1009-T Item_Light
+  m_Name: 1008-T Item Bandage
   m_EditorClassIdentifier: 
-  id: 1009
-  nName: "\u7167\u660E\u5F39"
-  type: "\u7167\u660E\u5F39"
-  description: "\u519B\u7528\u9AD8\u5F3A\u5EA6\u7167\u660E\u5F39\uFF0C\u7528\u4E8E\u591C\u95F4\u7167\u660E\u6216\u6307\u793A\u76EE\u6807"
+  id: 1008
+  nName: Bandage
+  type: "\u6025\u6551\u7EF7\u5E26"
+  description: "\u519B\u7528\u6025\u6551\u7EF7\u5E26\uFF0C\u7528\u4E8E\u4F24\u53E3\u7684\u6B62\u8840\u5305\u624E\u3002"
   battleDescription: 
-  icon: {fileID: -2097954336, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  icon: {fileID: -1271880537, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   weight: 0
   spineName: 
   gripType: 1
-  kind: 5
+  kind: 0
   maxUsesPerBattle: 3
   apCost: 1
   throwRange: 6
@@ -39,11 +39,12 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
-  healAmount: 30
+  displayHealAmount: 30
   directDamage: 0
-  appliedBuff: 4
+  appliedBuff: 9
+  otherBuffs: 
   persistTurns: 2
-  oneShotVfxPrefab: {fileID: 0}
+  oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}
   projectilePrefab: {fileID: 2997148212300979965, guid: 0fdc7757d92177849b033ae5e0b10408, type: 3}
   visionReach: 5

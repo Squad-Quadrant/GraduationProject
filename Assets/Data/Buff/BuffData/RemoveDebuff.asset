@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
   m_Name: RemoveDebuff
   m_EditorClassIdentifier: 
-  buffType: 11
+  buffType: 13
   buffName: "\u79FB\u9664\u8D1F\u9762Buff"
   description: 
   icon: {fileID: 739108496, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
