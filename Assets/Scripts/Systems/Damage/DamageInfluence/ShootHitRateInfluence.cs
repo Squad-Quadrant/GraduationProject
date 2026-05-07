@@ -31,6 +31,9 @@ namespace Systems.Damage
                 if (distance >= theRange.min)
                 {
                     hitRateMultiplier = theRange.hitRate;
+                }
+                else
+                {
                     break;
                 }
             }
