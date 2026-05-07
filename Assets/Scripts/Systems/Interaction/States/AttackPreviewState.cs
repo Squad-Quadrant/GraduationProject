@@ -11,6 +11,7 @@ using Data.Runtime.Events.UI;
 using Systems.Damage;
 using Systems.Map;
 using Systems.Map.Config;
+using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;
 
@@ -108,6 +109,13 @@ namespace Systems.Interaction.States
 				return;
 			}
 
+			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
+				
+			if (!info.CanGunLinePass())
+			{
+				return;
+			}
+
 			_target = target;
 			hasConfirmed = true;
 			Publish(Context, new TargetingEvent(target.position));
@@ -117,6 +125,13 @@ namespace Systems.Interaction.States
 		{
 			var target = Context.UnitService.GetUnitAtPosition(e.CellPosition);
 			if (target == null) return;
+
+			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
+				
+			if (!info.CanGunLinePass())
+			{
+				return;
+			}
 
 			_target = target;
 			hasConfirmed = true;
@@ -169,34 +184,10 @@ namespace Systems.Interaction.States
 			if (target != null)
 			{
 				List<IDamageInfluencer> environment = new();
-				
-				var info = new TraceRayInfo();
-				Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out info);
-				
-				if (info.highWalls.Count > 0)
-				{
-					PublishBasicCursorInfo(Context, e);
-					Publish(Context, DisplayAttackContextEvent.Invalid());
-					if (!hasConfirmed)
-					{
-						Publish(Context, new RemoveGunLineEvent());
-					}
-					_target = null;
-					Publish(Context, TargetingEvent.Clear());
-					hasConfirmed = false;
-					return;
-				}
+
+				Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
 				
 				var mapData = Context.MapService.Data;
-				
-				// foreach (var wallKey in info.lowWalls)
-				// {
-				// 	var theWall = mapData.GetWall(wallKey);
-				// 	environment.Add(theWall);
-				// 	// 仅添加一个墙体作为环境影响因素，避免重复计算同一墙体的穿透效果
-				// 	break;
-				// }
-				
 				var lowWalls = new List<WallKey>();
 				
 				Vector2Int[] dirs =
@@ -210,33 +201,42 @@ namespace Systems.Interaction.States
 					var neighborWall = mapData.GetWall(neighborWallKey);
 					if (neighborWall != null && neighborWall.Type == WallType.LowWall)
 					{
-						if (!environment.Contains(neighborWall))
+						if (!environment.Contains(neighborWall) && info.lowWalls.Contains(neighborWallKey))
 						{
 							lowWalls.Add(neighborWallKey);
 							environment.Add(neighborWall);
 						}
 					}
 				}
-				
-                Dictionary<BodyPartType, DamageExecutingContext> contextDic = new();
-                
+
 				var damageContext = Context.DamageService.GetSimulatedDamage(
 					new BulletDamageTriggeringInfo(
 						Context.selectedUnit,
 						target,
 						Context.currentAction,
-						environment), out contextDic);
+						environment), out var contextDic);
 
 				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
 				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
-
-				Publish(Context, CursorInfoEvent.ForAttack(
-					target.position, e.WorldPosition,
-					hitPercent, target.name, target.CurrentHp, target.maxHp));
-				Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
-				if (!hasConfirmed)
+				
+				if (!hasConfirmed && target.faction != EUnitFaction.Player)
 				{
 					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, lowWalls));
+				}
+				
+				if (!info.CanGunLinePass())
+				{
+					PublishBasicCursorInfo(Context, e);
+					Publish(Context, DisplayAttackContextEvent.Invalid());
+					_target = null;
+					hasConfirmed = false;
+				}
+				else
+				{
+					Publish(Context, CursorInfoEvent.ForAttack(
+						target.position, e.WorldPosition,
+						hitPercent, target.name, target.CurrentHp, target.maxHp));
+					Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
 				}
 			}
 			else

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using Systems.Map;
 using Systems.Map.Config;
+using Systems.Map.SceneActor;
 using Systems.Unit;
 using UnityEngine;
 
@@ -116,6 +117,8 @@ namespace Systems.Vision
 				var enteredCell = new Vector2Int(cellX, cellY);
 				passedCells?.Add(enteredCell);
 				info.passedCells.Add(enteredCell);
+				
+				AddSceneActorInfo(enteredCell, mapData, info);
 
 				if (cellX == to.x && cellY == to.y) // Arrival check
 					return true;
@@ -186,6 +189,15 @@ namespace Systems.Vision
 			var cell = mapData.GetCell(cellPos);
 			return cell?.SceneActor is { BlocksVision: true };
 		}
+
+		private static void AddSceneActorInfo(Vector2Int cellPos, MapData mapData, TraceRayInfo info)
+		{
+			var cell = mapData.GetCell(cellPos);
+			if (cell?.SceneActor != null && !info.sceneActors.Contains(cell.SceneActor))
+			{
+				info.sceneActors.Add(cell.SceneActor);
+			}
+		}
 	}
 
 	public class TraceRayInfo
@@ -193,5 +205,11 @@ namespace Systems.Vision
 		public List<Vector2Int> passedCells = new();
 		public List<WallKey> lowWalls = new();
 		public List<WallKey> highWalls = new();
+		public List<SceneActorBase> sceneActors = new();
+		
+		public bool CanGunLinePass()
+		{
+			return highWalls.Count == 0 && sceneActors.Count == 0;
+		}
 	}
 }
