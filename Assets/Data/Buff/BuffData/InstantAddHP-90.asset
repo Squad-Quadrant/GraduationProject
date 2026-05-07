@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8926ba876749416483f1cb718fc24ab5, type: 3}
-  m_Name: Toxicosis
+  m_Name: InstantAddHP-90
   m_EditorClassIdentifier: 
-  buffType: 3
-  buffName: "\u4E2D\u6BD2"
+  buffType: 11
+  buffName: "\u533B\u7597\u5305_90"
   description: 
-  icon: {fileID: 739108496, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
+  icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   maxStack: 1
   tags: []
-  showInUI: 1
-  durationTurn: 3
-  attachType: 0
-  lostType: 0
-  onAttachEvents: []
+  showInUI: 0
+  durationTurn: 1
+  attachType: 2
+  lostType: 2
+  onAttachEvents:
+  - {fileID: 11400000, guid: 086e3f7f7260838499b95b89df5e0af2, type: 2}
   onLostEvents: []
-  onTurnEvents:
-  - {fileID: 11400000, guid: c78a8b22a7b0b78409c148e524f8eb4a, type: 2}
+  onTurnEvents: []
   onResetEvents: []
   propertyInfluences: []

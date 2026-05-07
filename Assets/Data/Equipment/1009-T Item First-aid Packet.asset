@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c46a467f091499ab796671ae3a2d23d, type: 3}
-  m_Name: 1012-T Item Medical kit 2
+  m_Name: 1009-T Item First-aid Packet
   m_EditorClassIdentifier: 
-  id: 1012
-  nName: "\u79FB\u9664Debuf"
-  type: "\u533B\u7597\u5305"
-  description: "\u533B\u7597\u5305"
+  id: 1009
+  nName: First-aid Packet
+  type: "\u4FBF\u643A\u6025\u6551\u5305"
+  description: "\u7279\u79CD\u4F5C\u6218\u4F7F\u7528\u7684\u968F\u8EAB\u6025\u6551\u5305\uFF0C\u53EF\u8FDB\u884C\u7B80\u5355\u7684\u6218\u5730\u533B\u7597\u64CD\u4F5C\u3002\u4F7F\u7528\u540E\u80FD\u591F\u6D88\u9664\u81EA\u8EAB\u7684\u8D1F\u9762\u72B6\u6001\u3002"
   battleDescription: 
-  icon: {fileID: -1271880537, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
+  icon: {fileID: -1594841911, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   weight: 0
   spineName: 
   gripType: 1
   kind: 0
-  maxUsesPerBattle: 3
-  apCost: 1
+  maxUsesPerBattle: 2
+  apCost: 2
   throwRange: 6
   coverageOffsets:
   - {x: 0, y: 0}
@@ -39,9 +39,10 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
-  displayHealAmount: 20
+  displayHealAmount: 45
   directDamage: 0
-  appliedBuff: 11
+  appliedBuff: 10
+  otherBuffs: 0d000000
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
   persistentVfxPrefab: {fileID: 0}

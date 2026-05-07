@@ -32,8 +32,8 @@ MonoBehaviour:
   - min: 10
     hitRate: 0.55
   damageAttenuation:
-    perGrid: 5
-    multiplier: 0.85
+    perGrid: 4
+    multiplier: 0.8
   penetrationRate: 0.5
   shootSpeed: 3
   canPreciseShoot: 0
