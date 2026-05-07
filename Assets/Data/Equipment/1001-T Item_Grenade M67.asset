@@ -24,7 +24,7 @@ MonoBehaviour:
   kind: 1
   maxUsesPerBattle: 3
   apCost: 1
-  throwRange: 5
+  throwRange: 6
   coverageOffsets:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
@@ -39,9 +39,10 @@ MonoBehaviour:
   - {x: 2, y: 0}
   - {x: 0, y: -2}
   - {x: -2, y: 0}
-  healAmount: 30
+  displayHealAmount: 20
   directDamage: 50
   appliedBuff: 0
+  otherBuffs: 
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 180702, guid: b01e726aff5404a4ba03ee58e6426b6b, type: 3}
   persistentVfxPrefab: {fileID: 0}
