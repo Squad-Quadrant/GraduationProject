@@ -9,6 +9,7 @@ using Presentation.Bootstrap;
 using Presentation.Input;
 using Sirenix.OdinInspector;
 using Spine.Unity;
+using Systems.Buff;
 using Systems.Interfaces;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -51,6 +52,8 @@ namespace Presentation.Unit
 
 		private AudioService _audioService;
 		private SfxHandle _footstepHandle;
+
+        private Dictionary<BuffInfo, GameObject> _buffVFX = new();
 
 		public bool IsMoving => _moveCoroutine != null;
 
@@ -429,6 +432,30 @@ namespace Presentation.Unit
 			}
 			transform.position = toWorld;
 		}
+
+        public void OnAttachBuff(BuffInfo info)
+        {
+            var persistentVfxPrefab = info.PersistentVfxPrefab;
+            if (persistentVfxPrefab)
+            {
+                var go = Instantiate(persistentVfxPrefab, transform.position, Quaternion.identity, transform);
+                go.name = $"Buff_persistent_{persistentVfxPrefab.name}_f{Time.frameCount}";
+                _buffVFX[info] = go;
+            }
+        }
+
+        public void OnLostBuff(BuffInfo info)
+        {
+            var persistentVfxPrefab = info.PersistentVfxPrefab;
+            if (persistentVfxPrefab)
+            {             
+                if (_buffVFX.TryGetValue(info, out var go))
+                {
+                    Destroy(go);
+                    _buffVFX.Remove(info);
+                }
+            }
+        }
 
 		#region Debug
 

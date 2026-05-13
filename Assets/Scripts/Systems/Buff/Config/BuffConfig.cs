@@ -84,6 +84,12 @@ namespace Systems.Buff.Config
         [Title("Update Type")]
         public BuffAttachType attachType;
         public BuffLostType lostType;
+        
+        [Title("Unit VFX")]
+        public GameObject oneShotVfxPrefab;
+        public GameObject persistentVfxPrefab;
+        public GameObject turnVfxPrefab;
+        
 
         [Title("Callback Event")]
         // [InlineEditor] public BuffEvent[] onInitEvents;

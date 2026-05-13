@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Events;
 using Core.Log;
+using Data.Runtime.Events.Buff;
 using Systems.Buff.Config;
 using UnityEngine;
-using Object = UnityEngine.Object;
 namespace Systems.Buff
 {
     [Serializable]
@@ -15,6 +16,7 @@ namespace Systems.Buff
         protected readonly IBuffAble owner;
         public IBuffAble Owner => owner;
         public List<BuffInfo> BuffInfos => buffInfos;
+        private IEventBus _eventBus;
 
         public event Action<BuffInfo> OnAttach;
         public event Action<BuffInfo> OnMerge;
@@ -22,11 +24,12 @@ namespace Systems.Buff
         public event Action<BuffInfo> OnTurn;
         public event Action<BuffInfo> OnReset;
 
-        public BuffProxy(IBuffService buffService, IBuffAble owner)
+        public BuffProxy(IBuffService buffService, IBuffAble owner, IEventBus eventbus)
         {
             this.buffService = buffService;
             this.owner = owner;
             BuffPropertyInjector.Inject(owner);
+            _eventBus = eventbus;
         }
         
         public virtual void Attach(BuffType buffType, object creator)
@@ -50,6 +53,7 @@ namespace Systems.Buff
                 buffInfos.Add(buffInfo);
                 buffInfo.OnAttach();
                 OnAttach?.Invoke(buffInfo);
+                _eventBus.Publish(new BuffAttachedEvent(owner, buffInfo));
             }
         }
         
@@ -59,6 +63,7 @@ namespace Systems.Buff
             buffInfos.Remove(buffInfo);
             buffInfo.OnLost();
             OnLost?.Invoke(buffInfo);
+            _eventBus.Publish(new BuffLostEvent(owner, buffInfo));
         }
         
         public virtual void Lost(BuffType buffType)
@@ -76,6 +81,7 @@ namespace Systems.Buff
             foreach (var buffInfo in buffInfos)
             {
                 buffInfo.OnTurn();
+                _eventBus.Publish(new BuffTurnEvent(owner, buffInfo));
             }
             
             List<BuffInfo> lostBuffs = new();

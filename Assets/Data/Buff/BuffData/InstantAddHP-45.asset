@@ -22,6 +22,9 @@ MonoBehaviour:
   durationTurn: 1
   attachType: 2
   lostType: 2
+  oneShotVfxPrefab: {fileID: 105942, guid: d227d2503452fc34889529711d019263, type: 3}
+  persistentVfxPrefab: {fileID: 0}
+  turnVfxPrefab: {fileID: 0}
   onAttachEvents:
   - {fileID: 11400000, guid: 7e0e10b2237e56642896141914f00049, type: 2}
   onLostEvents: []

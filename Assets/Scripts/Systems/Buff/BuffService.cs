@@ -46,7 +46,7 @@ namespace Systems.Buff
                 this.LogError($"BuffService already has a BuffProxy for target {target}");
                 return;
             }
-            var proxy = new BuffProxy(this, target);
+            var proxy = new BuffProxy(this, target, _eventBus);
             target.BuffProxy = proxy;
             _buffProxies.Add(target, proxy);
         }

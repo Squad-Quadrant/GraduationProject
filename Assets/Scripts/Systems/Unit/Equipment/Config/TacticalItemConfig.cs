@@ -58,12 +58,15 @@ namespace Systems.Unit.Equipment.Config
 
 		private bool HasPersistTurns =>
 			kind is ETacticalItemKind.Burn or ETacticalItemKind.TimerBomb or ETacticalItemKind.ScoutEye or ETacticalItemKind.Light or ETacticalItemKind.Smoke;
+        
+        private bool HasOneShotVFX => HasPersistTurns || kind is ETacticalItemKind.Grenade;
 
 		[Title("AreaEffect Lifetime"), ShowIf(nameof(HasPersistTurns))]
 		[LabelText("持续回合数"), MinValue(1)]
 		public int persistTurns = 2;
 
 		[Title("AreaEffect Visual")]
+        [ShowIf(nameof(HasOneShotVFX))]
 		[LabelText("OneShot特效")]
 		public GameObject oneShotVfxPrefab;
 

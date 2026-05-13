@@ -2,6 +2,7 @@
 using System.Linq;
 using Core.Events;
 using Core.Log;
+using Data.Runtime.Events.Buff;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
@@ -60,6 +61,9 @@ namespace Presentation.Unit
             _eventBus.Subscribe<PointerHoverEvent>(OnPointerHover);
             _eventBus.Subscribe<RangeDisplayEvent>(OnRangeDisplay);
             _eventBus.Subscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
+            _eventBus.Subscribe<BuffAttachedEvent>(OnBuffAttach);
+            _eventBus.Subscribe<BuffLostEvent>(OnBuffLost);
+            _eventBus.Subscribe<BuffTurnEvent>(OnBuffTurn);
 			this.Log("Initialized");
 		}
 
@@ -77,6 +81,9 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
             _eventBus.Unsubscribe<RangeDisplayEvent>(OnRangeDisplay);
             _eventBus.Unsubscribe<DisplayAttackContextEvent>(OnDisplayAttackContext);
+            _eventBus.Unsubscribe<BuffAttachedEvent>(OnBuffAttach);
+            _eventBus.Unsubscribe<BuffLostEvent>(OnBuffLost);
+            _eventBus.Unsubscribe<BuffTurnEvent>(OnBuffTurn);
 
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -367,6 +374,72 @@ namespace Presentation.Unit
                 var config = e.Unit.CurrentWeaponContainer.Config;
                 view.SetGrip(config.gripType);
                 view.SetWeaponSkin(config.spineName);
+            }
+        }
+
+        private void OnBuffAttach(BuffAttachedEvent e)
+        {
+            var unit = e.Buffable as Systems.Unit.Unit;
+            if(unit == null)
+            {
+                this.LogError("AttachBuffEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(unit.id, out var view))
+            {
+                this.LogWarning($"No view found for attached unit '{unit.id}'.");
+                return;
+            }
+
+            var oneShotVFX = e.BuffInfo.OneShotVfxPrefab;
+            if (oneShotVFX)
+            {
+                var go = Instantiate(oneShotVFX, view.transform.position, Quaternion.identity, transform);
+                go.name = $"Buff_OneShot_{oneShotVFX.name}_f{Time.frameCount}";
+            }
+            
+            view.OnAttachBuff(e.BuffInfo);
+        }
+
+        private void OnBuffLost(BuffLostEvent e)
+        {
+            var unit = e.Buffable as Systems.Unit.Unit;
+            if(unit == null)
+            {
+                this.LogError("LostBuffEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(unit.id, out var view))
+            {
+                this.LogWarning($"No view found for attached unit '{unit.id}'.");
+                return;
+            }
+            
+            view.OnLostBuff(e.BuffInfo);
+        }
+
+        private void OnBuffTurn(BuffTurnEvent e)
+        {
+            var unit = e.Buffable as Systems.Unit.Unit;
+            if(unit == null)
+            {
+                this.LogError("BuffTurnEvent has null Unit");
+                return;
+            }
+
+            if (!_views.TryGetValue(unit.id, out var view))
+            {
+                this.LogWarning($"No view found for attached unit '{unit.id}'.");
+                return;
+            }
+
+            var turnVFX = e.BuffInfo.TurnVfxPrefab;
+            if (turnVFX)
+            {
+                var go = Instantiate(turnVFX, view.transform.position, Quaternion.identity, transform);
+                go.name = $"Buff_Turn_{turnVFX.name}_f{Time.frameCount}";
             }
         }
 

@@ -30,6 +30,10 @@ namespace Systems.Buff
         public BuffLostType LostType => BuffData.lostType;
         public int MaxStack => BuffData.maxStack;
         public int DurationTurn => BuffData.durationTurn;
+        public GameObject OneShotVfxPrefab => BuffData.oneShotVfxPrefab;
+        public GameObject PersistentVfxPrefab => BuffData.persistentVfxPrefab;
+        public GameObject TurnVfxPrefab => BuffData.turnVfxPrefab;
+        
 
         public BuffInfo(BuffData buffData, object creator, IBuffAble target, IEventBus eventBus, int uid)
         {
