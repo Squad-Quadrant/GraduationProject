@@ -213,6 +213,7 @@ namespace Systems.Turn
 			{
 				this.Log($"Removing currently acting unit '{unitId}', ending their turn");
 				_data.IsUnitActing = false;
+				_eventBus.Publish(new UnitTurnEndedEvent(unitId, _data.TurnNumber));
 			}
 
 			bool wasInQueue = _data.Queue.Remove(unitId);
