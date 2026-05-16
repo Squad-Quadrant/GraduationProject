@@ -11,7 +11,8 @@ namespace Data.Runtime.Events.Interaction
 		Attack,
 		Interact,
 		AreaEffectPreview,
-		AreaEffectOverlay
+		AreaEffectOverlay,
+		HoverMovementPreview,
 	}
 
 	/// <summary>

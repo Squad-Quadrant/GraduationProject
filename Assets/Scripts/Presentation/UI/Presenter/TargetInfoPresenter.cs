@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Input;
@@ -70,26 +71,20 @@ namespace Presentation.UI.Presenter
 		{
 			if (_targetCell.HasValue) return;
 
+			Systems.Unit.Unit target = null;
 			var currentUnitId = _interactionController.Context.selectedUnit?.id;
 
-			if (!string.IsNullOrEmpty(e.HoveredUnitId) &&
-			    _unitService.TryGetUnit(e.HoveredUnitId, out var target) &&
-			    e.HoveredUnitId != currentUnitId)
+			if (!string.IsNullOrEmpty(e.HoveredUnitId))
+				_unitService.TryGetUnit(e.HoveredUnitId, out target);
+
+			if (target == null && e.CellPosition.HasValue)
+				target = _unitService.GetUnitAtPosition(e.CellPosition.Value);
+
+			if (target != null && target.id != currentUnitId && _visionService.IsCellVisible(target.position))
 			{
 				_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
 				return;
 			}
-
-			if (e.CellPosition.HasValue)
-			{
-				target = _unitService.GetUnitAtPosition(e.CellPosition.Value);
-				if (target != null && target.id != currentUnitId && _visionService.IsCellVisible(target.position))
-				{
-					_panel = _uiManager.Open<TargetInfoPanel, Systems.Unit.Unit>(target);
-					return;
-				}
-			}
-
 			_uiManager.Close(_panel);
 			_panel = null;
 		}
