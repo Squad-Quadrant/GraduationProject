@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Presentation.UI.Panel.AttachPreview
+namespace Presentation.UI.Panel.AttackPreview
 {
 	public class AttackContextLine : MonoBehaviour
 	{

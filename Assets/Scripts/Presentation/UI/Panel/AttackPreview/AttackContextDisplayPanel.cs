@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using Systems.Damage;
 using UnityEngine;
 
-namespace Presentation.UI.Panel.AttachPreview
+namespace Presentation.UI.Panel.AttackPreview
 {
 	public class AttackContextDisplayPanel : MonoBehaviour
 	{

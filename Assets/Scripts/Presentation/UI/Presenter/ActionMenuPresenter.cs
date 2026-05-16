@@ -2,11 +2,8 @@
 using Core.Events;
 using Core.FSM;
 using Core.Log;
-using Presentation.Interaction;
 using Presentation.UI.Core;
-using Presentation.UI.Panel;
 using Presentation.UI.Panel.ActionMenu;
-using Presentation.UI.Panel.AttachPreview;
 using Systems.Interaction;
 
 namespace Presentation.UI.Presenter

@@ -11,7 +11,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Panel.AttachPreview
+namespace Presentation.UI.Panel.AttackPreview
 {
     public class AttackPreviewPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
@@ -90,23 +90,30 @@ namespace Presentation.UI.Panel.AttachPreview
 		        RefreshAttackContextDisplay(unit);
 	        });
 
-	        preciseAttackItem.Button.interactable = canPreciseShoot;
-	        preciseAttackItem.PointerEnter = () =>
+	        if (canPreciseShoot)
 	        {
-		        if (!preciseAttackItem.Button.interactable) return;
-		        SetModeText(preciseAttackItem.mode, preciseAttackItem.desc);
-	        };
-	        preciseAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
-
-	        preciseAttackItem.Button.onClick.AddListener(() =>
-	        {
-		        normalAttackItem.SetInteractable(true);
 		        preciseAttackItem.SetInteractable(false);
-		        _currentSelectedItem = preciseAttackItem;
-		        unit.CurrentWeaponLogic.IsOnPreciseShoot = true;
-		        SetConfirmModeText(preciseAttackItem.mode, $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.PreciseShootSpeed()}发高精度射击");
-		        RefreshAttackContextDisplay(unit);
-	        });
+		        preciseAttackItem.PointerEnter = () =>
+		        {
+			        if (!preciseAttackItem.Button.interactable) return;
+			        SetModeText(preciseAttackItem.mode, preciseAttackItem.desc);
+		        };
+		        preciseAttackItem.PointerExit = () => SetModeText(_currentSelectedItem.mode, _currentSelectedItem.desc);
+		        preciseAttackItem.Button.onClick.AddListener(() =>
+		        {
+			        normalAttackItem.SetInteractable(true);
+			        preciseAttackItem.SetInteractable(false);
+			        _currentSelectedItem = preciseAttackItem;
+			        unit.CurrentWeaponLogic.IsOnPreciseShoot = true;
+			        SetConfirmModeText(preciseAttackItem.mode,
+				        $"使用{unit.CurrentWeaponLogic.DisplayName}向目标进行{unit.CurrentWeaponLogic.PreciseShootSpeed()}发高精度射击");
+			        RefreshAttackContextDisplay(unit);
+		        });
+	        }
+	        else
+	        {
+		        preciseAttackItem.gameObject.SetActive(false);
+	        }
 
 	        backButton.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(EActionType.Back)));
 

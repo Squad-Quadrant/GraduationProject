@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Presentation.UI.Panel.AttachPreview
+namespace Presentation.UI.Panel.AttackPreview
 {
 	[RequireComponent(typeof(Button))]
 	public class AttackMenuItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
