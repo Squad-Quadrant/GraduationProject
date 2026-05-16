@@ -211,14 +211,15 @@ namespace Presentation.Bootstrap
 			var unitService = _levelContainer.Resolve<IUnitService>();
 			var turnService = _levelContainer.Resolve<ITurnService>();
 			var visionCalculator = _levelContainer.Resolve<IVisionCalculator>();
+			var visionService = _levelContainer.Resolve<IVisionService>();
 			var regionService = _levelContainer.Resolve<IRegionService>();
-			IAIBlackboardService aiBlackboardService = new AIBlackboardService(_eventBus, unitService, turnService, visionCalculator);
+			IAIBlackboardService aiBlackboardService = new AIBlackboardService(_eventBus, unitService, turnService, visionCalculator, visionService);
 			_levelContainer.Services.RegisterInstance(aiBlackboardService);
 
 			var enemyActivationService = new EnemyActivationService(_eventBus, unitService, turnService, regionService);
 			_levelContainer.Services.RegisterInstance<IEnemyActivationService>(enemyActivationService);
 
-			IAlertService alertService = new AlertService(_eventBus, unitService, visionCalculator, regionService, aiBlackboardService);
+			IAlertService alertService = new AlertService(_eventBus, unitService, visionCalculator, visionService, regionService, aiBlackboardService);
 			_levelContainer.Services.RegisterInstance(alertService);
 			_levelContainer.Services.Register<IAIService, AIService>();
 

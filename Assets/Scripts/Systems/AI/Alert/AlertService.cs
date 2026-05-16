@@ -17,6 +17,7 @@ namespace Systems.AI.Alert
 		private readonly IEventBus _eventBus;
 		private readonly IUnitService _unitService;
 		private readonly IVisionCalculator _visionCalculator;
+		private readonly IVisionService _visionService;
 		private readonly IRegionService _regionService;
 		private readonly IAIBlackboardService _blackboardService;
 
@@ -26,12 +27,14 @@ namespace Systems.AI.Alert
 			IEventBus eventBus,
 			IUnitService unitService,
 			IVisionCalculator visionCalculator,
+			IVisionService visionService,
 			IRegionService regionService,
 			IAIBlackboardService blackboardService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 			_visionCalculator = visionCalculator ?? throw new ArgumentNullException(nameof(visionCalculator));
+			_visionService = visionService ?? throw new ArgumentNullException(nameof(visionService));
 			_regionService = regionService ?? throw new ArgumentNullException(nameof(regionService));
 			_blackboardService = blackboardService ?? throw new ArgumentNullException(nameof(blackboardService));
 
@@ -86,7 +89,7 @@ namespace Systems.AI.Alert
 			var newLevel = ComputeAlertLevel(unit);
 
 			// 字典里没有 = 第一次见到这个 unit，视为 Calm
-			var oldLevel = _currentLevels.TryGetValue(unit.id, out var v) ? v : EAlertLevel.Calm;
+			var oldLevel = _currentLevels.GetValueOrDefault(unit.id, EAlertLevel.Calm);
 
 			if (oldLevel == newLevel) return;
 
@@ -110,7 +113,7 @@ namespace Systems.AI.Alert
 			var board = _blackboardService.GetBlackboard(unit.faction);
 			if (board == null || board.KnownEnemies.Count == 0) return EAlertLevel.Calm;
 
-			var visible = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange);
+			var visible = AIVisionHelper.CalculateVisibleCells(unit, _visionCalculator, _visionService);
 
 			foreach (var known in board.KnownEnemies.Values)
 			{

@@ -24,6 +24,7 @@ namespace Systems.AI.Blackboard
 		private readonly IUnitService _unitService;
 		private readonly ITurnService _turnService;
 		private readonly IVisionCalculator _visionCalculator;
+		private readonly IVisionService _visionService;
 
 		private readonly Dictionary<EUnitFaction, AIBlackboard> _blackboards = new();
 
@@ -31,12 +32,14 @@ namespace Systems.AI.Blackboard
 			IEventBus eventBus,
 			IUnitService unitService,
 			ITurnService turnService,
-			IVisionCalculator visionCalculator)
+			IVisionCalculator visionCalculator,
+			IVisionService visionService)
 		{
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
 			_turnService = turnService ?? throw new ArgumentNullException(nameof(turnService));
 			_visionCalculator = visionCalculator ?? throw new ArgumentNullException(nameof(visionCalculator));
+			_visionService = visionService ?? throw new ArgumentNullException(nameof(visionService));
 
 			_eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
 			_eventBus.Subscribe<TurnStartedEvent>(OnTurnStarted);
@@ -167,7 +170,7 @@ namespace Systems.AI.Blackboard
 				var board = GetBlackboard(aiUnit.faction);
 				if (board == null) continue;
 
-				var aiVisible = _visionCalculator.CalculateVisibleCells(aiUnit.position, aiUnit.visionRange);
+				var aiVisible = AIVisionHelper.CalculateVisibleCells(aiUnit, _visionCalculator, _visionService);
 
 				foreach (var other in _unitService.GetAllAliveUnits())
 				{
@@ -194,7 +197,7 @@ namespace Systems.AI.Blackboard
 				var board = GetBlackboard(aiUnit.faction);
 				if (board == null) return;
 
-				var aiVisible = _visionCalculator.CalculateVisibleCells(aiUnit.position, aiUnit.visionRange);
+				var aiVisible = AIVisionHelper.CalculateVisibleCells(aiUnit, _visionCalculator, _visionService);
 
 				Vector2Int? lastSeenPos = null;
 				foreach (var step in path)

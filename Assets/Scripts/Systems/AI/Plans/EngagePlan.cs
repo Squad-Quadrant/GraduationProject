@@ -107,7 +107,9 @@ namespace Systems.AI.Plans
 
 			float dist = Vector2Int.Distance(cell, _target.position);
 			return dist <= weapon.Logic.Range() &&
-			       context.VisionCalculator.TraceRay(cell, _target.position, out _);
+			       context.VisionCalculator.TraceRay(
+				       cell, _target.position, out _,
+				       visionBlockers: context.VisionService.VisionBlockingCells);
 		}
 	}
 }

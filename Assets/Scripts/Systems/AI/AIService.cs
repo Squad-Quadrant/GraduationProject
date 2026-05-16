@@ -30,6 +30,7 @@ namespace Systems.AI
 		private readonly ITurnService _turnService;
 		private readonly IPathFindingService _pathFinding;
 		private readonly IVisionCalculator _visionCalculator;
+		private readonly IVisionService _visionService;
 		private readonly IAIBlackboardService _blackboardService;
 		private readonly IRegionService _regionService;
 		private readonly IAlertService _alertService;
@@ -41,7 +42,6 @@ namespace Systems.AI
 
 		private ITurnPlan _currentPlan;
 		private Queue<IAtomicAction> _currentSequence;
-        private readonly List<Vector2Int> obscuresCells = new();
 
 		public AIService(
 			IEventBus eventBus,
@@ -51,6 +51,7 @@ namespace Systems.AI
 			ITurnService turnService,
 			IPathFindingService pathFinding,
 			IVisionCalculator visionCalculator,
+			IVisionService visionService,
 			IAIBlackboardService blackboardService,
 			IRegionService regionService,
 			IAlertService alertService,
@@ -63,6 +64,7 @@ namespace Systems.AI
 			_turnService = turnService;
 			_pathFinding = pathFinding;
 			_visionCalculator = visionCalculator;
+			_visionService = visionService;
 			_blackboardService = blackboardService;
 			_regionService = regionService;
 			_alertService = alertService;
@@ -81,21 +83,6 @@ namespace Systems.AI
 			this.Log($"Starting AI turn for '{unit.name}' (AP:{unit.CurrentAp})");
 			DecisionLoop();
 		}
-
-        public void AddObscuresCells(List<Vector2Int> cells)
-        {
-            obscuresCells.AddRange(cells);
-        }
-
-        public void RemoveObscuresCells(List<Vector2Int> cells)
-        {
-            obscuresCells.RemoveAll(c => cells.Contains(c));
-        }
-
-        public void RemoveAllObscuresCells(List<Vector2Int> cells)
-        {
-            obscuresCells.Clear();
-        }
 
         private void DecisionLoop()
 		{
@@ -122,16 +109,7 @@ namespace Systems.AI
 
 		private AIContext BuildContext(Unit.Unit unit) // 构建战场上下文
 		{
-            var theObscuresCells = new List<Vector2Int>(obscuresCells);
-            theObscuresCells.Remove(unit.position);
-            
-			var visibleCells = _visionCalculator.CalculateVisibleCells(unit.position, unit.visionRange, theObscuresCells);
-
-			if (!unit.CanAIUseEye.Value)
-			{
-				visibleCells.Clear();
-				visibleCells.Add(unit.position);
-			}
+			var visibleCells = AIVisionHelper.CalculateVisibleCells(unit, _visionCalculator, _visionService);
 
 			var enemies = new List<Unit.Unit>();
 			var allies = new List<Unit.Unit>();
@@ -163,7 +141,7 @@ namespace Systems.AI
 
 			return new AIContext(
 				unit, enemies, allies, reachableArea, visibleCells, _turnService.TurnNumber,
-				_eventBus, _unitService, _mapService, _visionCalculator, _blackboardService, options, _pathFinding, _audioService);
+				_eventBus, _unitService, _mapService, _visionCalculator, _visionService, _blackboardService, options, _pathFinding, _audioService);
 		}
 
 		private void ExecuteIdle(AIContext context)

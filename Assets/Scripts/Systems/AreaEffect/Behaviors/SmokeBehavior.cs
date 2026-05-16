@@ -18,7 +18,6 @@ namespace Systems.AreaEffect.Behaviors
 		public override void OnCreated(AreaEffect self, AreaEffectContext ctx)
 		{
 			_token = ctx.VisionService.AddVisionBlocker(Cells.ToList());
-            ctx.AIService.AddObscuresCells(Cells.ToList());
 		}
 
 		public override void OnRemoved(AreaEffect self, AreaEffectContext ctx)
@@ -26,7 +25,6 @@ namespace Systems.AreaEffect.Behaviors
 			if (!_token.IsValid) return;
 			ctx.VisionService.RemoveVisionBlocker(_token);
 			_token = VisionBlockerToken.Invalid;
-            ctx.AIService.RemoveObscuresCells(Cells.ToList());
 		}
 	}
 }

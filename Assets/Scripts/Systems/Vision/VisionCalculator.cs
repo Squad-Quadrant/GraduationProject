@@ -19,7 +19,6 @@ namespace Systems.Vision
 		public HashSet<Vector2Int> CalculateVisibleCells(
 			Vector2Int origin,
 			int visionRange,
-			List<Vector2Int> ignoredCells = null,
 			IReadOnlyCollection<Vector2Int> visionBlockers = null)
 		{
 			var visible = new HashSet<Vector2Int> { origin };
@@ -27,10 +26,7 @@ namespace Systems.Vision
 			var blockerSet = NormalizeBlockers(visionBlockers);
 
 			if (blockerSet != null && blockerSet.Contains(origin))
-			{
-				visible.ExceptWith(ignoredCells ?? new List<Vector2Int>());
 				return visible;
-			}
 
 			for (int dx = -visionRange; dx <= visionRange; dx++)
 			{
@@ -45,8 +41,6 @@ namespace Systems.Vision
 						visible.Add(target);
 				}
 			}
-            
-            visible.ExceptWith(ignoredCells ?? new List<Vector2Int>());
 
 			return visible;
 		}

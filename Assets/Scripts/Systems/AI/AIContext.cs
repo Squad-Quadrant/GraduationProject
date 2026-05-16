@@ -27,6 +27,7 @@ namespace Systems.AI
 		public IUnitService UnitService { get; }
 		public IMapService MapService { get; }
 		public IVisionCalculator VisionCalculator { get; }
+		public IVisionService VisionService { get; }
 		public IAIBlackboardService BlackboardService { get; }
 		public IPathFindingService PathFinding { get; }
 		public AudioService AudioService { get; }
@@ -44,6 +45,7 @@ namespace Systems.AI
 			IUnitService unitService,
 			IMapService mapService,
 			IVisionCalculator visionCalculator,
+			IVisionService visionService,
 			IAIBlackboardService blackboardService,
 			PathFindingOptions pathOptions,
 			IPathFindingService pathFinding,
@@ -61,6 +63,7 @@ namespace Systems.AI
 			UnitService = unitService;
 			MapService = mapService;
 			VisionCalculator = visionCalculator;
+			VisionService = visionService;
 			BlackboardService = blackboardService;
 			PathOptions = pathOptions;
 			PathFinding = pathFinding;
