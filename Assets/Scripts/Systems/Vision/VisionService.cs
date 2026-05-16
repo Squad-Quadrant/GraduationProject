@@ -147,6 +147,8 @@ namespace Systems.Vision
 
 			this.Log($"Enemy '{unitId}' spotted at {position}");
 			_eventBus.Publish(new EnemySpottedEvent(unitId, position));
+
+			RebuildMergedAndPublish();
 		}
 
 		public void ClearSpottedMark(string unitId)
@@ -155,6 +157,8 @@ namespace Systems.Vision
 
 			this.Log($"Cleared spotted mark for '{unitId}'");
 			_eventBus.Publish(new EnemySpotClearedEvent(unitId));
+
+			RebuildMergedAndPublish();
 		}
 
 		#endregion
@@ -180,6 +184,9 @@ namespace Systems.Vision
 				if (unit.faction == EUnitFaction.Player)
 					merged.Add(unit.position);
 			}
+
+			foreach (var pos in _spottedEnemies.Values)
+				merged.Add(pos);
 
 			_mergedVisibleCells = merged;
 

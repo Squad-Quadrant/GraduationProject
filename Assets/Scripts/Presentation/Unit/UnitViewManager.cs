@@ -224,8 +224,8 @@ namespace Presentation.Unit
 				{
 					if (e.Unit.faction != EUnitFaction.Player)
 						view.SetVisible(_visionService.IsCellVisible(movingUnit.position));
-					else
-						_visionService.UpdateUnitVision(movingUnit.id, movingUnit.position, movingUnit.visionRange); // 确保结束时视野正确更新
+					// else
+					// 	_visionService.UpdateUnitVision(movingUnit.id, movingUnit.position, movingUnit.visionRange); // 确保结束时视野正确更新
 
 					// 移动到矮墙周围自动蹲下
 					var neighborCells = _mapService.Data.GetNeighborWalls(movingUnit.position);

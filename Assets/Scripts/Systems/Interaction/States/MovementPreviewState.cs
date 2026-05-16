@@ -143,7 +143,7 @@ namespace Systems.Interaction.States
 				enemiesBlockMovement: true,
 				movingUnitFaction: selectedUnit.faction,
 				movingUnitId: selectedUnit.id,
-				canCrossLowWalls: false,  // TODO: could be unit-specific
+				canCrossLowWalls: false,
 				canCrossHighWalls: false,
 				ignoreTerrainWalkability: false,
 				visibleCells: visibleCells

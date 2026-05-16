@@ -18,7 +18,7 @@ namespace Data.Runtime.Events.Turn
 
 		public int TurnNumber { get; }
 
-		public bool IsVisibleToPlayer { get; } // 现在这个单位在不在友方视野里
+		public bool IsVisibleToPlayer { get; } // 用于触发聚焦
 
 		public Vector2Int CellPosition { get; }
 

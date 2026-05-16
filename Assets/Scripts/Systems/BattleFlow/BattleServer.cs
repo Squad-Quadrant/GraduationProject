@@ -87,7 +87,7 @@ namespace Systems.BattleFlow
 
 	        var aliveUnits = _unitService.GetAllAliveUnits();
 
-	        bool isVictory = aliveUnits.All(u => u.faction == EUnitFaction.Player || u.faction == EUnitFaction.Neutral);
+	        bool isVictory = aliveUnits.All(u => u.faction is EUnitFaction.Player or EUnitFaction.Neutral);
 	        bool isDefeat  = aliveUnits.All(u => u.faction is EUnitFaction.Enemy or EUnitFaction.Neutral);
 
 	        if (!isVictory && !isDefeat) return;
