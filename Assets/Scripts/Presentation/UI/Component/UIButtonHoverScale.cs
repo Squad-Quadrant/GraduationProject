@@ -76,8 +76,6 @@ namespace Presentation.UI.Component
 			ApplyState();
 		}
 
-		// --- Core: pick a target based on current flags ---
-
 		private void ApplyState()
 		{
 			if (!_button.interactable)

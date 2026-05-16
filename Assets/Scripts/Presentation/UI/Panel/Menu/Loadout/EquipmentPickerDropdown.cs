@@ -105,7 +105,8 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 			rootRect.position = anchorWorldPos + worldOffset;
 
-			float worldWidth = anchorRect.rect.width * anchorRect.lossyScale.x + widthOffset;
+			float anchorParentScaleX = anchorRect.lossyScale.x / Mathf.Max(anchorRect.localScale.x, 0.0001f);
+			float worldWidth = anchorRect.rect.width * anchorParentScaleX + widthOffset;
 			float rootLocalWidth = worldWidth / Mathf.Max(rootRect.lossyScale.x, 0.0001f);
 			rootRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rootLocalWidth);
 		}

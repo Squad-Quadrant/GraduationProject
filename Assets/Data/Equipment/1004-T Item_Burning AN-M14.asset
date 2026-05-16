@@ -35,9 +35,11 @@ MonoBehaviour:
   - {x: -1, y: -1}
   - {x: -1, y: 0}
   - {x: -1, y: 1}
-  healAmount: 30
+  displayHealAmount: 20
   directDamage: 50
+  ApplyForPlayerFaction: 1
   appliedBuff: 5
+  otherBuffs: 
   persistTurns: 2
   oneShotVfxPrefab: {fileID: 0}
   persistentVfxPrefab: {fileID: 107076, guid: 7126f4258b683574ea5df5dc1f8246eb, type: 3}

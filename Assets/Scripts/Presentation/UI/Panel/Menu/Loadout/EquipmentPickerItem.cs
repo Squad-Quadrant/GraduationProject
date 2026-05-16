@@ -13,6 +13,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 	{
 		[SerializeField, Required, ChildGameObjectsOnly] private Button button;
 		[SerializeField, Required, ChildGameObjectsOnly] private Image iconImage;
+		[SerializeField, Required, ChildGameObjectsOnly] private AspectRatioFitter aspectRatioFitter;
 		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI nameText;
 		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI classText;
 
@@ -38,7 +39,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				{
 					iconImage.sprite = config.icon;
 					iconImage.enabled = config.icon;
-					if (iconImage.enabled) iconImage.SetNativeSize();
+					if (iconImage.enabled) aspectRatioFitter.aspectRatio = config.icon.rect.width / config.icon.rect.height;
 				}
 				if (nameText) nameText.text = config.nName;
 				if (classText) classText.text = config.type;

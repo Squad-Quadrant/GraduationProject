@@ -13,6 +13,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 	{
 		[SerializeField, Required, ChildGameObjectsOnly] private Button button;
 		[SerializeField, Required, ChildGameObjectsOnly] private Image iconImage;
+		[SerializeField, Required, ChildGameObjectsOnly] private AspectRatioFitter aspectRatioFitter;
 		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI nameText;
 		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI subtitleText;   // 描述/型号
 
@@ -56,7 +57,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			{
 				iconImage.sprite = hasEquipment ? config.icon : null;
 				iconImage.enabled = hasEquipment && config.icon;
-				if (iconImage.enabled) iconImage.SetNativeSize();
+				if (iconImage.enabled) aspectRatioFitter.aspectRatio = config.icon.rect.width / config.icon.rect.height;
 			}
 			if (nameText) nameText.text = hasEquipment ? config.nName : "";
 			if (subtitleText) subtitleText.text = hasEquipment ? config.type : "";
@@ -90,5 +91,12 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		}
 
 		private void OnDestroy() => button.onClick.RemoveAllListeners();
+
+		[Button]
+		private void SetAspectRatio()
+		{
+			if (!aspectRatioFitter || !iconImage || !iconImage.sprite) return;
+			aspectRatioFitter.aspectRatio = iconImage.sprite.rect.width / iconImage.sprite.rect.height;
+		}
 	}
 }
