@@ -1,7 +1,4 @@
 ﻿using System;
-using Core.Events;
-using Data.Runtime.Events.UI;
-using Presentation.Bootstrap;
 using Sirenix.OdinInspector;
 using Systems.Unit.Equipment;
 using TMPro;
@@ -16,6 +13,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 	{
 		[SerializeField, Required] private Button button;
 		[SerializeField, Required] private Image icon;
+		[SerializeField, Required] private AspectRatioFitter aspectRatioFitter;
 		[SerializeField, Required] private TextMeshProUGUI remainingUses;
 
 		[SerializeField] private Sprite normalSprite;
@@ -37,7 +35,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 
 			icon.sprite = container.Config.icon;
 			icon.enabled = container.Config.icon;
-			icon.SetNativeSize();
+			aspectRatioFitter.aspectRatio = container.Config.icon.rect.width / container.Config.icon.rect.height;
 
 			remainingUses.text = remainingUseAmount.ToString();
 
@@ -65,6 +63,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 		private void SetVisuals(bool interactable)
 		{
 			button.image.sprite = interactable ? normalSprite : hoverSprite;
+			if (remainingUses) remainingUses.color = interactable ? normalColor : hoverColor;
 			icon.color = interactable ? normalColor : hoverColor;
 		}
 	}
