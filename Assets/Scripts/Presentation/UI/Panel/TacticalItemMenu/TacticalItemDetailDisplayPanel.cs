@@ -29,29 +29,29 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 			{
 				case ETacticalItemKind.InstantMedpack:
 					if (config.appliedBuff == BuffType.InstantAddHP)
-						lines[3].SetPair("治疗量", $"{config.displayHealAmount}");
+						lines[2].SetPair("治疗量", $"{config.displayHealAmount}");
 					if (config.appliedBuff == BuffType.SlowAddHP)
-						lines[3].SetPair("每回合治疗量", $"{config.displayHealAmount}");
+						lines[2].SetPair("每回合治疗量", $"{config.displayHealAmount}");
 					// if (config.appliedBuff == BuffType.RemoveDebuff)
 					// 	lines[3].SetPair("治疗量", "");
 					break;
 				case ETacticalItemKind.Grenade:
-					lines[3].SetPair("范围", $"{config.throwRange}格");
-					lines[4].SetPair("伤害", $"{config.directDamage}");
+					lines[2].SetPair("范围", $"{config.throwRange}格");
+					lines[3].SetPair("伤害", $"{config.directDamage}");
 					break;
 				case ETacticalItemKind.Burn:
 				case ETacticalItemKind.Light:
 				case ETacticalItemKind.Smoke:
-					lines[3].SetPair("范围", $"{config.throwRange}格");
-					lines[4].SetPair("持续回合", $"{config.persistTurns}回合");
+					lines[2].SetPair("范围", $"{config.throwRange}格");
+					lines[3].SetPair("持续回合", $"{config.persistTurns}回合");
 					break;
 				case ETacticalItemKind.TimerBomb:
-					lines[3].SetPair("范围", $"{config.throwRange}格");
-					lines[4].SetPair("倒计时", $"{config.persistTurns}回合");
+					lines[2].SetPair("范围", $"{config.throwRange}格");
+					lines[3].SetPair("倒计时", $"{config.persistTurns}回合");
 					break;
 				case ETacticalItemKind.ScoutEye:
-					lines[3].SetPair("持续回合", $"{config.persistTurns}回合");
-					lines[4].SetPair("视野范围", $"{config.visionReach}格");
+					lines[2].SetPair("持续回合", $"{config.persistTurns}回合");
+					lines[3].SetPair("视野范围", $"{config.visionReach}格");
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
