@@ -34,8 +34,10 @@ namespace Systems.Turn
 
 		private void OnUnitCreated(UnitCreatedEvent e)
 		{
-			if (e.Unit is ITurnUnit turnUnit)
-				AddUnit(turnUnit);
+			if (e.Unit is not ITurnUnit turnUnit) return;
+			if (turnUnit.Faction == EUnitFaction.Enemy) return;
+
+			AddUnit(turnUnit);
 		}
 
 		private void OnUnitDestroyed(UnitDestroyedEvent e) => RemoveUnit(e.Unit.id);
@@ -54,10 +56,12 @@ namespace Systems.Turn
 				return;
 			}
 
-			var activeUnits = _unitService.GetAllAliveUnits()
-				.OfType<ITurnUnit>()
-				.Where(u => u.CanAct)
-				.ToList();
+			var activeUnits = new List<ITurnUnit>(_data.RegisteredUnits.Count);
+			foreach (var unit in _data.RegisteredUnits.Values)
+			{
+				if (!_unitService.HasUnit(unit.Id)) continue;
+				activeUnits.Add(unit);
+			}
 
 			if (activeUnits.Count == 0)
 			{
@@ -184,6 +188,12 @@ namespace Systems.Turn
 				return;
 			}
 
+			if (!_data.RegisteredUnits.TryAdd(unit.Id, unit))
+			{
+				this.LogWarning($"Unit '{unit.Id}' is already registered, skipping");
+				return;
+			}
+
 			if (!_data.IsTurnActive)
 			{
 				this.Log($"Unit '{unit.Id}' will join queue on next turn start");
@@ -197,16 +207,19 @@ namespace Systems.Turn
 
 		public void RemoveUnit(string unitId)
 		{
+			bool wasRegistered = _data.RegisteredUnits.Remove(unitId);
+
 			if (_data.IsUnitActing && _data.ActiveUnit?.Id == unitId)
 			{
 				this.Log($"Removing currently acting unit '{unitId}', ending their turn");
 				_data.IsUnitActing = false;
 			}
 
-			if (!_data.Queue.Remove(unitId))
-				return;
+			bool wasInQueue = _data.Queue.Remove(unitId);
 
-			this.Log($"Removed unit '{unitId}' from queue");
+			if (!wasRegistered && !wasInQueue) return;
+
+			this.Log($"Removed unit '{unitId}' (registered:{wasRegistered}, inQueue:{wasInQueue})");
 			_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitRemoved, unitId));
 		}
 

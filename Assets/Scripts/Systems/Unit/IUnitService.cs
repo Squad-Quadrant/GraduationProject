@@ -14,7 +14,8 @@ namespace Systems.Unit
 			UnitConfig config,
 			Loadout loadout,
 			Vector2Int position,
-			IReadOnlyList<Vector2Int> patrolWaypoints = null);
+			IReadOnlyList<Vector2Int> patrolWaypoints = null,
+			int activationGroupId = 0);
 
 		void DestroyUnit(string unitId, string killerUnitId = null);
 

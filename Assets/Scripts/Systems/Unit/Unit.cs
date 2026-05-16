@@ -50,6 +50,7 @@ namespace Systems.Unit
         public int maxDefense;
         public float defenseRate;
         public AIArchetype aiArchetype;
+        public int activationGroupId;
 
 		[TitleGroup("Presentation")]
 		public UnitAnimationConfig animationConfig;

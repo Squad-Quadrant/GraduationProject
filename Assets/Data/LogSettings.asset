@@ -496,3 +496,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Turn.Activation.EnemyActivationService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

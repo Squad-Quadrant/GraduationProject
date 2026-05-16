@@ -106,13 +106,6 @@ namespace Systems.AI
 				return;
 			}
 
-			if (!_regionService.IsCellUnlocked(_currentUnit.position)) // 未解锁区域的单位不响应
-			{
-				this.Log($"'{_currentUnit.name}' is in locked region — skipping turn");
-				EndTurn();
-				return;
-			}
-
 			var context = BuildContext(_currentUnit);
 
 			var level = _alertService.GetAlertLevel(_currentUnit.id);

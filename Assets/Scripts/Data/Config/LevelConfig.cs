@@ -34,6 +34,10 @@ namespace Data.Config
 		[InfoBox("仅 AIArchetype.idleBehavior=Patrol 时使用；按顺序循环。", InfoMessageType.None)]
 		public List<Vector2Int> patrolWaypoints = new();
 
+		[LabelText("激活组 ID"), ShowIf("CurrentUnitFaction", EUnitFaction.Enemy)]
+		[InfoBox("0 = 独立激活（不与其他敌人连锁）。同组任一成员被激活时，全组激活。", InfoMessageType.None)]
+		public int activationGroupId = 0;
+
 		private EUnitFaction CurrentUnitFaction => unitConfig.faction;
 	}
 

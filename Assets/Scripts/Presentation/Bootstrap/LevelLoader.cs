@@ -30,6 +30,7 @@ using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.PathFinding.TraversalRule;
 using Systems.Turn;
+using Systems.Turn.Activation;
 using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;
@@ -214,6 +215,9 @@ namespace Presentation.Bootstrap
 			IAIBlackboardService aiBlackboardService = new AIBlackboardService(_eventBus, unitService, turnService, visionCalculator);
 			_levelContainer.Services.RegisterInstance(aiBlackboardService);
 
+			var enemyActivationService = new EnemyActivationService(_eventBus, unitService, turnService, regionService);
+			_levelContainer.Services.RegisterInstance<IEnemyActivationService>(enemyActivationService);
+
 			IAlertService alertService = new AlertService(_eventBus, unitService, visionCalculator, regionService, aiBlackboardService);
 			_levelContainer.Services.RegisterInstance(alertService);
 			_levelContainer.Services.Register<IAIService, AIService>();
@@ -307,7 +311,8 @@ namespace Presentation.Bootstrap
 					placement.unitConfig,
 					loadout,
 					placement.startPosition,
-					placement.patrolWaypoints);
+					placement.patrolWaypoints,
+					placement.activationGroupId);
 
 				mapService.OccupyCell(placement.startPosition, placement.unitId);
 				spawned++;

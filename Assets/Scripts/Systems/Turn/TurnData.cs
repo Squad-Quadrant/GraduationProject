@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Systems.Turn
 {
@@ -13,6 +14,8 @@ namespace Systems.Turn
 
 		public TurnQueue Queue { get; } = new();
 
+		public Dictionary<string, ITurnUnit> RegisteredUnits { get; } = new();
+
 		public ITurnUnit ActiveUnit => IsUnitActing ? Queue.CurrentUnit : null;
 
 		public void Reset()
@@ -21,6 +24,7 @@ namespace Systems.Turn
 			IsTurnActive = false;
 			IsUnitActing = false;
 			Queue.Clear();
+			RegisteredUnits.Clear();
 		}
 
 		public override string ToString()

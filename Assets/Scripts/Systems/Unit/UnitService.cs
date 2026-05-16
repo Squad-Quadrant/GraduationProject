@@ -37,7 +37,8 @@ namespace Systems.Unit
 			UnitConfig config,
 			Loadout loadout,
 			Vector2Int position,
-			IReadOnlyList<Vector2Int> patrolWaypoints = null)
+			IReadOnlyList<Vector2Int> patrolWaypoints = null,
+			int activationGroupId = 0)
 		{
 			if (string.IsNullOrEmpty(unitId))
 				throw new ArgumentException("Unit ID cannot be null or empty.", nameof(unitId));
@@ -53,6 +54,7 @@ namespace Systems.Unit
 			var resolvedTacticalItems = ResolveTacticalItems(loadout);
 
 			var unit = Unit.LoadFromConfig(unitId, config, position, patrolWaypoints);
+			unit.activationGroupId = activationGroupId;
 			unit.InitEquipment(resolvedMain, resolvedSecondary, resolvedTacticalItems);
 
 			_units[unitId] = unit;
