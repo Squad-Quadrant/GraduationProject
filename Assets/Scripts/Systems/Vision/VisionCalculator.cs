@@ -16,10 +16,21 @@ namespace Systems.Vision
 			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
 
 		// 按曼哈顿距离遍历所有visionRange中的格子，一个个调用HasLineOfSight
-		public HashSet<Vector2Int> CalculateVisibleCells(Vector2Int origin, int visionRange, List<Vector2Int> ignoredCells = null)
+		public HashSet<Vector2Int> CalculateVisibleCells(
+			Vector2Int origin,
+			int visionRange,
+			List<Vector2Int> ignoredCells = null,
+			IReadOnlyCollection<Vector2Int> visionBlockers = null)
 		{
 			var visible = new HashSet<Vector2Int> { origin };
 			var mapData = _mapService.Data;
+			var blockerSet = NormalizeBlockers(visionBlockers);
+
+			if (blockerSet != null && blockerSet.Contains(origin))
+			{
+				visible.ExceptWith(ignoredCells ?? new List<Vector2Int>());
+				return visible;
+			}
 
 			for (int dx = -visionRange; dx <= visionRange; dx++)
 			{
@@ -30,7 +41,7 @@ namespace Systems.Vision
 
 					var target = new Vector2Int(origin.x + dx, origin.y + dy);
 					if (!mapData.IsInBounds(target)) continue;
-					if (TraceRay(origin, target, mapData, null, out _))
+					if (TraceRay(origin, target, mapData, blockerSet, out _))
 						visible.Add(target);
 				}
 			}
@@ -40,15 +51,20 @@ namespace Systems.Vision
 			return visible;
 		}
 
-		// todo: PassedCells放在TraceRayInfo里
-		public bool TraceRay(Vector2Int from, Vector2Int to,  out TraceRayInfo info, List<Vector2Int> passedCells = null) =>
-			TraceRay(from, to, _mapService.Data, passedCells, out info);
+		public bool TraceRay(
+			Vector2Int from, Vector2Int to,
+			out TraceRayInfo info,
+			IReadOnlyCollection<Vector2Int> visionBlockers = null) =>
+			TraceRay(from, to, _mapService.Data, NormalizeBlockers(visionBlockers), out info);
 
 
 		// f(t) = from + t * to DDA步进（因为需要检测SceneActor对于视野的影响，所以需要获得视线经过的每个格子，无法单纯枚举网格线）
 		// 本质上是在沿射线方向一个个访问其与网格线的交点（沿t从0-1）的方向，核心在于确保顺序
 		// 原理上，每轮循环里，计算出和下一个x格线与下一个y格线交点的t值 -> 比较谁的小（先经过谁） -> 步进，迭代
-		private static bool TraceRay(Vector2Int from, Vector2Int to, MapData mapData, List<Vector2Int> passedCells, 
+		private static bool TraceRay(
+			Vector2Int from, Vector2Int to,
+			MapData mapData,
+			HashSet<Vector2Int> blockerSet,
 			out TraceRayInfo info)
 		{
 			info = new TraceRayInfo();
@@ -62,8 +78,8 @@ namespace Systems.Vision
 			int dx = to.x - from.x;
 			int dy = to.y - from.y;
 
-			if (dx == 0) return MarchAxis(from, to, mapData, false, passedCells, info); // 一条直线，特殊处理
-			if (dy == 0) return MarchAxis(from, to, mapData, true, passedCells, info);
+			if (dx == 0) return MarchAxis(from, to, mapData, false, blockerSet, info); // 一条直线，特殊处理
+			if (dy == 0) return MarchAxis(from, to, mapData, true, blockerSet, info);
 
 			int cellX = from.x; // 目前所在的格子
 			int cellY = from.y;
@@ -118,7 +134,6 @@ namespace Systems.Vision
 				}
 
 				var enteredCell = new Vector2Int(cellX, cellY);
-				passedCells?.Add(enteredCell);
 				info.passedCells.Add(enteredCell);
 				
 				AddSceneActorInfo(enteredCell, mapData, info);
@@ -129,16 +144,22 @@ namespace Systems.Vision
 					return true;
 				}
 
-				if (IsCellBlocking(new Vector2Int(cellX, cellY), mapData))
-				{
+				if (blockerSet != null && blockerSet.Contains(enteredCell))
 					return false;
-				}
+
+				if (IsCellBlocking(new Vector2Int(cellX, cellY), mapData))
+					return false;
 			}
 
 			return false;
 		}
 
-		private static bool MarchAxis(Vector2Int from, Vector2Int to, MapData mapData, bool horizontal, List<Vector2Int> passedCells, TraceRayInfo info)
+		private static bool MarchAxis(
+			Vector2Int from, Vector2Int to,
+			MapData mapData,
+			bool horizontal,
+			HashSet<Vector2Int> blockerSet,
+			TraceRayInfo info)
 		{
 			int start = horizontal ? from.x : from.y;
 			int end = horizontal ? to.x : to.y;
@@ -155,7 +176,6 @@ namespace Systems.Vision
 
 				pos += step;
 				var entered = horizontal ? new Vector2Int(pos, axis) : new Vector2Int(axis, pos);
-				passedCells?.Add(entered);
 				info.passedCells.Add(entered);
 
 				if (pos == end)
@@ -163,11 +183,23 @@ namespace Systems.Vision
 					info.CanPass = true;
 					return true;
 				}
+
+				if (blockerSet != null && blockerSet.Contains(entered)) return false;
 				if (IsCellBlocking(entered, mapData)) return false;
 			}
 
 			info.CanPass = true;
 			return true;
+		}
+
+		private static HashSet<Vector2Int> NormalizeBlockers(IReadOnlyCollection<Vector2Int> blockers)
+		{
+			return blockers switch
+			{
+				null => null,
+				HashSet<Vector2Int> hs => hs,
+				_ => new HashSet<Vector2Int>(blockers)
+			};
 		}
 
 		private static bool CheckWall(Vector2Int cell1, Vector2Int cell2, MapData mapData, TraceRayInfo info)

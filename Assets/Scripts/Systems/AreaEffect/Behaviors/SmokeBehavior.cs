@@ -6,7 +6,7 @@ namespace Systems.AreaEffect.Behaviors
 {
 	public class SmokeBehavior : AreaEffectBehavior
 	{
-		private ObscureToken _token = ObscureToken.Invalid;
+		private VisionBlockerToken _token = VisionBlockerToken.Invalid;
 
 		public SmokeBehavior(
 			string displayName,
@@ -17,16 +17,15 @@ namespace Systems.AreaEffect.Behaviors
 		}
 		public override void OnCreated(AreaEffect self, AreaEffectContext ctx)
 		{
-			// var visibleCells = ctx.VisionCalculator.CalculateVisibleCells(self.TargetCell, 1);
-			_token = ctx.VisionService.AddTemporaryObscure(Cells.ToList());
+			_token = ctx.VisionService.AddVisionBlocker(Cells.ToList());
             ctx.AIService.AddObscuresCells(Cells.ToList());
 		}
 
 		public override void OnRemoved(AreaEffect self, AreaEffectContext ctx)
 		{
 			if (!_token.IsValid) return;
-			ctx.VisionService.RemoveTemporaryObscure(_token);
-			_token = ObscureToken.Invalid;
+			ctx.VisionService.RemoveVisionBlocker(_token);
+			_token = VisionBlockerToken.Invalid;
             ctx.AIService.RemoveObscuresCells(Cells.ToList());
 		}
 	}

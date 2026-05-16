@@ -18,10 +18,15 @@ namespace Systems.PathFinding.MovementSimulation
 			IVisionService visionService,
 			IUnitService unitService)
 		{
+			var blockers = visionService.VisionBlockingCells;
+
 			if (path == null || path.Count < 2)
 			{
 				Debug.LogWarning($"{Tag} Trivial or null path, skipping simulation");
-				var trivialVisible = visionCalculator.CalculateVisibleCells(path?[0] ?? movingUnit.position, movingUnit.visionRange);
+				var trivialVisible = visionCalculator.CalculateVisibleCells(
+					path?[0] ?? movingUnit.position,
+					movingUnit.visionRange,
+					visionBlockers: blockers);
 				return MovementSimulationResult.Completed(path ?? new List<Vector2Int>(), trivialVisible);
 			}
 
@@ -29,7 +34,10 @@ namespace Systems.PathFinding.MovementSimulation
 
 			for (int i = 1; i < path.Count; i++)
 			{
-				var stepVisible = visionCalculator.CalculateVisibleCells(path[i], movingUnit.visionRange);
+				var stepVisible = visionCalculator.CalculateVisibleCells(
+					path[i],
+					movingUnit.visionRange,
+					visionBlockers: blockers);
 
 				var newlyRevealed = new HashSet<Vector2Int>(stepVisible);
 				newlyRevealed.ExceptWith(everSeen);

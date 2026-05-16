@@ -15,16 +15,16 @@ namespace Systems.Vision
 		private readonly IUnitService _unitService;
 
 		private readonly Dictionary<string, HashSet<Vector2Int>> _perUnitVision = new();
-		private HashSet<Vector2Int> _mergedVisibleCells = new(); // per unit vision + temporary reveals - temporary obscures
+		private HashSet<Vector2Int> _mergedVisibleCells = new(); // per unit vision + temporary reveals
 		private readonly Dictionary<int, HashSet<Vector2Int>> _temporaryReveals = new(); // tokenId → revealed cells
-		private readonly Dictionary<int, HashSet<Vector2Int>> _temporaryObscures = new(); // tokenId → obscured cells
+		private readonly Dictionary<int, HashSet<Vector2Int>> _visionBlockers = new(); // tokenId → vision blocker cells
+		private HashSet<Vector2Int> _allBlockerCells = new(); // merged from visionBlockers
 		private readonly Dictionary<string, Vector2Int> _spottedEnemies = new(); // unitId → last known position
 
 		private int _nextTokenId = 1;
-		private int _nextObscureTokenId = 1;
+		private int _nextBlockerTokenId = 1;
 
 		public IReadOnlyCollection<Vector2Int> CurrentVisibleCells => _mergedVisibleCells;
-		public IReadOnlyDictionary<string, Vector2Int> SpottedEnemies => _spottedEnemies;
 
 		public VisionService(IEventBus eventBus, IVisionCalculator calculator, IUnitService unitService)
 		{
@@ -36,8 +36,6 @@ namespace Systems.Vision
 		}
 
 		public bool IsCellVisible(Vector2Int cell) => _mergedVisibleCells.Contains(cell);
-		public bool IsEnemySpotted(string unitId) => _spottedEnemies.ContainsKey(unitId);
-		public Vector2Int? GetSpottedPosition(string unitId) => _spottedEnemies.TryGetValue(unitId, out var pos) ? pos : null;
 
 		public void RecalculateSharedVision()
 		{
@@ -48,7 +46,10 @@ namespace Systems.Vision
 			{
 				if (unit.faction != EUnitFaction.Player) continue;
 
-				var cells = _calculator.CalculateVisibleCells(unit.position, unit.visionRange);
+				var cells = _calculator.CalculateVisibleCells(
+					unit.position,
+					unit.visionRange,
+					visionBlockers: _allBlockerCells);
 				_perUnitVision[unit.id] = cells;
 			}
 
@@ -58,7 +59,10 @@ namespace Systems.Vision
 
 		public void UpdateUnitVision(string unitId, Vector2Int position, int visionRange)
 		{
-			var cells = _calculator.CalculateVisibleCells(position, visionRange);
+			var cells = _calculator.CalculateVisibleCells(
+				position,
+				visionRange,
+				visionBlockers: _allBlockerCells);
 			_perUnitVision[unitId] = cells;
 
 			RebuildMergedAndPublish();
@@ -71,6 +75,10 @@ namespace Systems.Vision
 			this.Log($"Removed vision for unit '{unitId}'");
 			RebuildMergedAndPublish();
 		}
+
+		#region Temporary Reveals
+
+		public IReadOnlyDictionary<string, Vector2Int> SpottedEnemies => _spottedEnemies;
 
 		public RevealToken AddTemporaryReveal(IReadOnlyList<Vector2Int> cells)
 		{
@@ -89,22 +97,46 @@ namespace Systems.Vision
 			RebuildMergedAndPublish();
 		}
 
-		public ObscureToken AddTemporaryObscure(IReadOnlyList<Vector2Int> cells)
+		#endregion
+
+		#region Vision Blockers
+
+		public IReadOnlyCollection<Vector2Int> VisionBlockingCells => _allBlockerCells;
+
+		public VisionBlockerToken AddVisionBlocker(IReadOnlyList<Vector2Int> cells)
 		{
-			var token = new ObscureToken(_nextObscureTokenId++);
-			_temporaryObscures[token.Id] = new HashSet<Vector2Int>(cells);
-			this.Log($"Added temporary obscure {token} ({cells.Count} cells)");
-			RebuildMergedAndPublish();
+			var token = new VisionBlockerToken(_nextBlockerTokenId++);
+			_visionBlockers[token.Id] = new HashSet<Vector2Int>(cells);
+			RebuildBlockerCache();
+
+			this.Log($"Added vision blocker {token} ({cells.Count} cells); total blocker cells = {_allBlockerCells.Count}");
+			RecalculateSharedVision();
 			return token;
 		}
 
-		public void RemoveTemporaryObscure(ObscureToken token)
+		public void RemoveVisionBlocker(VisionBlockerToken token)
 		{
 			if (!token.IsValid) return;
-			if (!_temporaryObscures.Remove(token.Id)) return;
-			this.Log($"Removed temporary obscure {token}");
-			RebuildMergedAndPublish();
+			if (!_visionBlockers.Remove(token.Id)) return;
+			RebuildBlockerCache();
+			this.Log($"Removed vision blocker {token}; total blocker cells = {_allBlockerCells.Count}");
+			RecalculateSharedVision();
 		}
+
+		private void RebuildBlockerCache()
+		{
+			_allBlockerCells = new HashSet<Vector2Int>();
+			foreach (var set in _visionBlockers.Values)
+				_allBlockerCells.UnionWith(set);
+		}
+
+		#endregion
+
+		#region Enemy Spotting
+
+		public bool IsEnemySpotted(string unitId) => _spottedEnemies.ContainsKey(unitId);
+
+		public Vector2Int? GetSpottedPosition(string unitId) => _spottedEnemies.TryGetValue(unitId, out var pos) ? pos : null;
 
 		public void MarkEnemySpotted(string unitId, Vector2Int position)
 		{
@@ -125,32 +157,28 @@ namespace Systems.Vision
 			_eventBus.Publish(new EnemySpotClearedEvent(unitId));
 		}
 
+		#endregion
+
 		private void RebuildMergedAndPublish()
 		{
 			var previous = _mergedVisibleCells;
 
 			var merged = new HashSet<Vector2Int>();
             
-            // 1. 单位视野
+            // 单位视野
             foreach (var unitCells in _perUnitVision.Values)
                 merged.UnionWith(unitCells);
             
-            // 2. 临时揭示
+            // 临时揭示
 			foreach (var reveal in _temporaryReveals.Values)
 				merged.UnionWith(reveal);
 
-            // 3. 临时隐藏
-			foreach (var obscure in _temporaryObscures.Values)
-				merged.ExceptWith(obscure);
-
-            // 4. 单位位置
+            // 单位位置
 			var allUnits = _unitService.GetAllAliveUnits();
 			foreach (var unit in allUnits)
 			{
-				if (unit.faction == EUnitFaction.Player && !merged.Contains(unit.position))
-				{
+				if (unit.faction == EUnitFaction.Player)
 					merged.Add(unit.position);
-				}
 			}
 
 			_mergedVisibleCells = merged;
