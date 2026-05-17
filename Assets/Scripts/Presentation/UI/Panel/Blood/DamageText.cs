@@ -17,22 +17,34 @@ namespace Presentation.UI.Panel.Blood
         [SerializeField] private float floatSpeed = 50f;
         [SerializeField] private float fadeDuration = 1.0f;
         [SerializeField] private Vector2 positionRandom = new(0, 0);
+        [SerializeField] private Color damageColor = Color.red;
+        [SerializeField] private Color recoveryColor = Color.green;
 
         public void Init(DamageExecutingContext context, ICoordinateConverter coordinateConverter)
         {
             _context = context;
             _coordinateConverter = coordinateConverter;
-
-            if (context.isMiss)
+            
+            if (context.DamageType == DamageType.Recover)
             {
-                damageText.text = "Miss";
-                defenseDamageText.enabled = false;
+                damageText.text = context.Damage.ToString();
+                damageText.color = recoveryColor;
+                defenseDamageText.enabled = false;    
             }
             else
             {
-                damageText.text = context.Damage.ToString();
-                defenseDamageText.enabled = context.DefenceDamage > 0;
-                defenseDamageText.text = context.DefenceDamage.ToString();
+                damageText.color = damageColor;
+                if (context.isMiss)
+                {
+                    damageText.text = "Miss";
+                    defenseDamageText.enabled = false;
+                }
+                else
+                {
+                    damageText.text = context.Damage.ToString();
+                    defenseDamageText.enabled = context.DefenceDamage > 0;
+                    defenseDamageText.text = context.DefenceDamage.ToString();
+                }
             }
 
             Vector3 worldPosition = _coordinateConverter.CellToWorld(_context.Defender.position) +

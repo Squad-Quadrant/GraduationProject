@@ -69,7 +69,8 @@ namespace Systems.Damage
             {
                 case DamageType.General:
                     return new GeneralDamageExecutingChain(context, _eventBus);
-                
+                case DamageType.Recover:
+                    return new RecoverExecutingChain(context, _eventBus);
                 case DamageType.Bullet:
                     var bulletInfo = info as BulletDamageTriggeringInfo;
                     context.ActionType = bulletInfo.ActionType;
@@ -87,5 +88,6 @@ namespace Systems.Damage
     {
         General,
         Bullet,
+        Recover
     }
 }

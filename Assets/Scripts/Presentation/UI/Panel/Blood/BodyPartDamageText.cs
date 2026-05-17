@@ -30,7 +30,7 @@ namespace Presentation.UI.Panel.Blood
             {
                 damageText.text = $"击中{context.bodyPartType.ToStr()}";
             }
-
+            
             Vector3 worldPosition = _coordinateConverter.CellToWorld(_context.Defender.position) +
                                     new Vector3(xOffset, yOffset, 0) +
                                     new Vector3(Random.Range(-positionRandom.x, positionRandom.x), Random.Range(-positionRandom.y, positionRandom.y), 0);

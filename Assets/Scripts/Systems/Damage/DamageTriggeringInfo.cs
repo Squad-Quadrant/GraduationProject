@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Data.Runtime;
+using Systems.Buff.Influence;
 
 namespace Systems.Damage
 {
@@ -36,5 +38,18 @@ namespace Systems.Damage
         }
 
         public override DamageType DamageType => DamageType.General;
+    }
+    
+    public class RecoverTriggeringInfo : DamageTriggeringInfo
+    {
+        public int Changer;
+        public RecoverTriggeringInfo(IDamageInfluencer attacker, Unit.Unit defender, int changer)
+        {
+            Changer = changer;
+            Attacker = attacker;
+            Defender = defender;
+        }
+
+        public override DamageType DamageType => DamageType.Recover;
     }
 }

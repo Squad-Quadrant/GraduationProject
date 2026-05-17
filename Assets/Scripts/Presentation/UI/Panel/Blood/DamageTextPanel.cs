@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Log;
 using Data.Runtime.Events.Damage;
 using Presentation.UI.Core;
+using Systems.Damage;
 using Systems.Interfaces;
 using Systems.Unit;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Presentation.UI.Panel.Blood
         [SerializeField] private BodyPartDamageText bodyPartDamageTextPrototype; 
         [SerializeField] private float interval = 0.1f;
         
-        private readonly Queue<DamageAppliedEvent> _damageEventQueue = new();
+        private readonly Queue<DamageExecutingContext> _damageContextQueue = new();
         private bool _isProcessingDamageEvents;
         
         
@@ -32,14 +33,33 @@ namespace Presentation.UI.Panel.Blood
             _unitService = unitService;
         }
 
-        protected override void OnOpen() => EventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
+        protected override void OnOpen()
+        {
+            EventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
+            EventBus.Subscribe<RecoverAppliedEvent>(OnRecoverApplied);
+        }
 
-        protected override void OnClose() => EventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+        protected override void OnClose()
+        {
+            EventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            EventBus.Unsubscribe<RecoverAppliedEvent>(OnRecoverApplied);
+        }
 
         private void OnDamageApplied(DamageAppliedEvent e)
         {
             // 制造e的浅拷贝
-            _damageEventQueue.Enqueue(e);
+            _damageContextQueue.Enqueue(e.Context);
+            if (!_isProcessingDamageEvents)
+            {
+                StartCoroutine(ProcessDamageEvents());
+            }
+            var bodyPartDamageText = Instantiate(bodyPartDamageTextPrototype, transform);
+            bodyPartDamageText.Init(e.Context, _coordinateConverter);
+        }
+
+        private void OnRecoverApplied(RecoverAppliedEvent e)
+        {
+            _damageContextQueue.Enqueue(e.Context);
             if (!_isProcessingDamageEvents)
             {
                 StartCoroutine(ProcessDamageEvents());
@@ -51,11 +71,11 @@ namespace Presentation.UI.Panel.Blood
         private IEnumerator ProcessDamageEvents()
         {
             _isProcessingDamageEvents = true;
-            while (_damageEventQueue.Count > 0)
+            while (_damageContextQueue.Count > 0)
             {
-                var e = _damageEventQueue.Dequeue();
+                var c = _damageContextQueue.Dequeue();
                 var damageText = Instantiate(damageTextPrototype, transform);
-                damageText.Init(e.Context, _coordinateConverter);
+                damageText.Init(c, _coordinateConverter);
                 yield return new WaitForSeconds(interval);
             }
             _isProcessingDamageEvents = false;
