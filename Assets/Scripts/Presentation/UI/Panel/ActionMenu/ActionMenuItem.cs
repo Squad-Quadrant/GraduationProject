@@ -1,6 +1,7 @@
 ﻿using System;
 using Data.Runtime;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +13,12 @@ namespace Presentation.UI.Panel.ActionMenu
 	{
         [Title("General")]
         [SerializeField] private EActionType actionType;
+
+        [InfoBox("Attack: 0=普通, 1=精确\n" +
+                 "UseTacticalItem: 槽位 0/1/2\n" +
+                 "其他: 0")]
+        [SerializeField] private int payload;
+
 		[Title("Desc")]
 		[SerializeField] private string description;
 
@@ -22,12 +29,17 @@ namespace Presentation.UI.Panel.ActionMenu
 
 		[Title("Icon")]
 		[SerializeField, Required] private Image icon;
+		[SerializeField, Required] private AspectRatioFitter iconAspectRatio;
 		[SerializeField] private Color normalColor;
 		[SerializeField] private Color hoverColor;
+
+		[Title("Dynamic Slot Display")]
+		[SerializeField] private TextMeshProUGUI usesText;
 
 		public Button Button => button;
 		public string Description => description;
         public EActionType ActionType => actionType;
+        public int Payload => payload;
 
         public bool Interactable
         {
@@ -38,10 +50,25 @@ namespace Presentation.UI.Panel.ActionMenu
 		public event Action<string> OnHoverEnter;
 		public event Action<string> OnHoverExit;
 
+		public void SetContent(Sprite iconSprite, string desc, int? remainingUses)
+		{
+			if (iconSprite) icon.sprite = iconSprite;
+			if (desc != null) description = desc;
+			if (usesText) usesText.text = remainingUses?.ToString() ?? "";
+		}
+
+		[Button]
+		public void SetIconAspectRatio()
+		{
+			if (iconAspectRatio && icon && icon.sprite)
+				iconAspectRatio.aspectRatio = icon.sprite.rect.width / icon.sprite.rect.height;
+		}
+
 		public void OnPointerEnter(PointerEventData eventData)
 		{
 			button.image.sprite = button.interactable ? hoverSprite : normalSprite;
 			icon.color = button.interactable ? hoverColor : normalColor;
+			if (usesText.isActiveAndEnabled) usesText.color = button.interactable ? hoverColor : normalColor;
 			OnHoverEnter?.Invoke(Description);
 		}
 
@@ -49,6 +76,7 @@ namespace Presentation.UI.Panel.ActionMenu
 		{
 			button.image.sprite = normalSprite;
 			icon.color = normalColor;
+			if (usesText.isActiveAndEnabled) usesText.color = normalColor;
 			OnHoverExit?.Invoke(description);
 		}
 

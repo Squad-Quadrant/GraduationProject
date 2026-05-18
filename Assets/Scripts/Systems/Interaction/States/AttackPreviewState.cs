@@ -24,13 +24,13 @@ namespace Systems.Interaction.States
 		private Action<BackInputEvent> _onBack;
 		private Action<EscInputEvent> _onEsc;
 		private Action<PointerHoverEvent> _onPointerHover;
-		private Action<TargetConfirmEvent> _onTargetConfirm;
-		private Action<ActionSelectedEvent> _onActionSelected;
 
 		private IReadOnlyList<Vector2Int> _validTargetCells;
-		private Unit.Unit _target;
-		private bool hasConfirmed;
-		
+
+		private static readonly Vector2Int[] Directions =
+		{
+			Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
+		};
 
         public AttackPreviewState() : base(InteractionStates.AttackPreview) { }
 
@@ -43,7 +43,7 @@ namespace Systems.Interaction.States
 
 			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
-			_validTargetCells = CalculateAttackableTarget(ctx).Select(u => u.position).ToList();
+			_validTargetCells = CalculateSelectableTargets(ctx).Select(u => u.position).ToList();
             
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Attack,
@@ -56,16 +56,12 @@ namespace Systems.Interaction.States
 			_onBack = OnBack;
 			_onEsc = OnEsc;
 			_onPointerHover = OnPointerHover;
-			_onTargetConfirm = OnTargetConfirm;
-			_onActionSelected = OnActionSelected;
 
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onCellClicked);
 			Subscribe(ctx, _onBack);
 			Subscribe(ctx, _onEsc);
 			Subscribe(ctx, _onPointerHover);
-			Subscribe(ctx, _onTargetConfirm);
-			Subscribe(ctx, _onActionSelected);
 		}
 
 		public override void OnExit(InteractionContext ctx)
@@ -77,88 +73,69 @@ namespace Systems.Interaction.States
 			Publish(ctx, CursorInfoEvent.Hide());
 			Publish(ctx, TargetingEvent.Clear());
             Publish(Context, new RemoveGunLineEvent());
+            Publish(ctx, DisplayAttackContextEvent.Invalid());
             
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onCellClicked);
 			Unsubscribe(ctx, _onBack);
 			Unsubscribe(ctx, _onEsc);
 			Unsubscribe(ctx, _onPointerHover);
-			Unsubscribe(ctx, _onTargetConfirm);
-			Unsubscribe(ctx, _onActionSelected);
 
 			_onUnitClicked = null;
 			_onCellClicked = null;
 			_onBack = null;
 			_onEsc = null;
 			_onPointerHover = null;
-			_onTargetConfirm = null;
-			_onActionSelected = null;
 
 			_validTargetCells = null;
-			_target = null;
 
 			base.OnExit(ctx);
 		}
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-			if (!Context.UnitService.TryGetUnit(e.UnitId, out var target) ||
-			    !_validTargetCells.Contains(target.position))
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var target))
 			{
 				this.LogError($"invalid unit {e.UnitId}.");
 				return;
 			}
-
-			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
-				
-			if (!info.CanGunLinePass())
-			{
-				return;
-			}
-
-			_target = target;
-			hasConfirmed = true;
-			Publish(Context, new TargetingEvent(target.position));
+			TryAttackTarget(target);
 		}
 
 		private void OnCellClicked(CellClickedEvent e)
 		{
 			var target = Context.UnitService.GetUnitAtPosition(e.CellPosition);
 			if (target == null) return;
+			TryAttackTarget(target);
+		}
 
-			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
-				
-			if (!info.CanGunLinePass())
+		private void TryAttackTarget(Unit.Unit target)
+		{
+			if (!_validTargetCells.Contains(target.position))
 			{
+				this.Log($"Target {target.name} at {target.position} not in valid cells, ignored");
 				return;
 			}
 
-			_target = target;
-			hasConfirmed = true;
-			Publish(Context, new TargetingEvent(target.position));
+			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
+			if (!info.CanGunLinePass())
+			{
+				this.Log($"Gun line blocked to {target.name}, ignored");
+				return;
+			}
+
+			ExecuteAttack(target);
 		}
 
 		private void OnBack(BackInputEvent e)
 		{
-			if (_target != null)
-			{
-				this.Log($"Back -> clear target: {_target.name}");
-				_target = null;
-				Publish(Context, TargetingEvent.Clear());
-				hasConfirmed = false;
-				Publish(Context, new RemoveGunLineEvent());
-				return;
-			}
-			
 			this.Log("Back -> UnitSelected");
-			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
 			this.Log("ESC → UnitSelected");
-			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
 		}
 
@@ -170,134 +147,54 @@ namespace Systems.Interaction.States
 				return;
 			}
 
-			Unit.Unit target = null;
-			if (e.HoveredUnitId != null
-			    && Context.UnitService.TryGetUnit(e.HoveredUnitId, out target)
-			    && _validTargetCells.Contains(target.position))
-			{
-			}
-			else if (e.CellPosition.HasValue && _validTargetCells.Contains(e.CellPosition.Value))
-			{
-				target = Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
-			}
+			var hoveredTarget = ResolveHoveredAttackable(e);
 
-			if (target != null)
-			{
-				List<IDamageInfluencer> environment = new();
-
-				Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
-				
-				var mapData = Context.MapService.Data;
-				var lowWalls = new List<WallKey>();
-				
-				Vector2Int[] dirs =
-				{
-					Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right,
-				};
-				foreach (var dir in dirs)
-				{
-					var neighborPos = target.position + dir;
-					var neighborWallKey = new Map.WallKey(target.position, neighborPos);
-					var neighborWall = mapData.GetWall(neighborWallKey);
-					if (neighborWall != null && neighborWall.Type == WallType.LowWall)
-					{
-						if (!environment.Contains(neighborWall) && info.lowWalls.Contains(neighborWallKey))
-						{
-							lowWalls.Add(neighborWallKey);
-							environment.Add(neighborWall);
-						}
-					}
-				}
-
-				var damageContext = Context.DamageService.GetSimulatedDamage(
-					new BulletDamageTriggeringInfo(
-						Context.selectedUnit,
-						target,
-						Context.currentAction,
-						environment), out var contextDic);
-
-				int hitPercent = Mathf.RoundToInt(damageContext.HitRate * 100f);
-				hitPercent = Mathf.Clamp(hitPercent, 0, 100);
-				
-				if (!hasConfirmed && target.faction != EUnitFaction.Player)
-				{
-					Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, lowWalls));
-				}
-				
-				if (!info.CanGunLinePass())
-				{
-					PublishBasicCursorInfo(Context, e);
-					Publish(Context, DisplayAttackContextEvent.Invalid());
-					_target = null;
-					hasConfirmed = false;
-				}
-				else
-				{
-					Publish(Context, CursorInfoEvent.ForAttack(
-						target.position, e.WorldPosition,
-						hitPercent, target.name, target.CurrentHp, target.maxHp));
-					Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
-				}
-			}
-			else
+			if (hoveredTarget == null)
 			{
 				PublishBasicCursorInfo(Context, e);
-				Publish(Context, DisplayAttackContextEvent.Invalid());
-				if (!hasConfirmed)
-				{
-					Publish(Context, new RemoveGunLineEvent());
-				}
-			}
-		}
-
-		private void OnTargetConfirm(TargetConfirmEvent e)
-		{
-			if (_target == null)
-			{
-				this.LogError("Target Confirm, but target is null");
 				return;
 			}
 
-			ExecuteAttack(_target);
-		}
-
-		private void OnActionSelected(ActionSelectedEvent e)
-		{
-			if (e.ActionType != EActionType.Back)
+			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, hoveredTarget.position, out var visionInfo);
+			if (!visionInfo.CanGunLinePass())
 			{
-				this.LogError($"Unexcepted actionType: {e.ActionType}");
+				PublishBasicCursorInfo(Context, e);
 				return;
 			}
 
-			this.Log("Back -> UnitSelected");
-			CancelPreview();
-			Context.StateMachine.ChangeState<UnitSelectedState>();
+			ShowAttackPreview(hoveredTarget, e.WorldPosition);
 		}
 
-		private List<Unit.Unit> CalculateAttackableTarget(InteractionContext ctx)
+		private Unit.Unit ResolveHoveredAttackable(PointerHoverEvent e)
+		{
+			if (e.HoveredUnitId != null &&
+			    Context.UnitService.TryGetUnit(e.HoveredUnitId, out var unit) &&
+			    _validTargetCells.Contains(unit.position))
+				return unit;
+
+			if (e.CellPosition.HasValue &&
+			    _validTargetCells.Contains(e.CellPosition.Value))
+				return Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
+
+			return null;
+		}
+
+		private List<Unit.Unit> CalculateSelectableTargets(InteractionContext ctx)
 		{
 			var unit = ctx.selectedUnit;
 
             var currentEquipment = unit.CurrentWeaponContainer;
             
             // 搜索范围内的敌人
-            var reachableEnemyUnits = ctx.UnitService.GetAllAliveUnits()
+            var reachableEnemies = ctx.UnitService.GetAllAliveUnits()
                 .Where(u => currentEquipment.Logic.CheckAttackable(u)).ToList();
 
             // 剔除看不见的敌人
             var visibleCells = ctx.VisionService.CurrentVisibleCells;
-            List<Unit.Unit> enemyUnits = reachableEnemyUnits.Where(enemyUnit => visibleCells.Contains(enemyUnit.position)).ToList();
+            var enemies = reachableEnemies.Where(enemy => visibleCells.Contains(enemy.position)).ToList();
             
-            this.Log($"Found {enemyUnits.Count} valid targets for attack.");
-
-            return enemyUnits;
-		}
-
-		private void CancelPreview()
-		{
-			hasConfirmed = false;
-			Publish(Context, new RemoveGunLineEvent());
-			Publish(Context, PathPreviewEvent.Hide());
+            this.Log($"Found {enemies.Count} valid targets for attack.");
+            return enemies;
 		}
 
 		private void ExecuteAttack(Unit.Unit target)
@@ -319,5 +216,62 @@ namespace Systems.Interaction.States
 			Context.CommandQueue.EnqueueAndExecute(attackCommand);
             Context?.StateMachine.ChangeState<ExecutingState>();
 		}
+
+		private void ShowAttackPreview(Unit.Unit target, Vector3 cursorWorldPosition)
+		{
+			var damageContext = ComputeDamageContext(target, out var contextDic, out var lowWallKeys);
+			int hitPercent = Mathf.Clamp(Mathf.RoundToInt(damageContext.HitRate * 100f), 0, 100);
+
+			Publish(Context, CursorInfoEvent.ForAttack(
+				target.position, cursorWorldPosition,
+				hitPercent, target.name, target.CurrentHp, target.maxHp));
+
+			PublishAttackPreviewEvents(target, damageContext, contextDic, lowWallKeys);
+		}
+
+		private void PublishAttackPreviewEvents(
+			Unit.Unit target,
+			DamageExecutingContext damageContext,
+			Dictionary<BodyPartType, DamageExecutingContext> contextDic,
+			List<WallKey> lowWallKeys)
+		{
+			if (target.faction != EUnitFaction.Player)
+				Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, lowWallKeys));
+
+			Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
+		}
+
+		private DamageExecutingContext ComputeDamageContext(
+			Unit.Unit target,
+			out Dictionary<BodyPartType, DamageExecutingContext> contextDic,
+			out List<WallKey> lowWallKeys)
+		{
+			var environment = new List<IDamageInfluencer>();
+			lowWallKeys = new List<WallKey>();
+
+			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
+			var mapData = Context.MapService.Data;
+
+			foreach (var dir in Directions)
+			{
+				var key = new WallKey(target.position, target.position + dir);
+				var wall = mapData.GetWall(key);
+				if (wall is not { Type: WallType.LowWall }) continue;
+				if (!info.lowWalls.Contains(key)) continue;
+				if (environment.Contains(wall)) continue;
+
+				environment.Add(wall);
+				lowWallKeys.Add(key);
+			}
+
+			return Context.DamageService.GetSimulatedDamage(
+				new BulletDamageTriggeringInfo(
+					Context.selectedUnit,
+					target,
+					Context.currentAction,
+					environment),
+				out contextDic);
+		}
+
 	}
 }

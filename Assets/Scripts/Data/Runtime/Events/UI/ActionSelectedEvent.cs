@@ -2,33 +2,20 @@
 
 namespace Data.Runtime.Events.UI
 {
-	/// <summary>
-	/// Published by UI when player selects an action from the action menu.
-	///
-	/// Example flow:
-	/// 1. Player clicks on their unit → UnitSelectedState shows action menu
-	/// 2. Player clicks "Move" button → ActionSelectedEvent(Move) published
-	/// 3. State machine transitions to MovementPreviewState
-	/// </summary>
 	public readonly struct ActionSelectedEvent : IEvent
 	{
 		public EActionType ActionType { get; }
 
-		/// <summary>
-		/// Optional: ID of a specific skill or item selected.
-		/// </summary>
-		public string ActionId { get; }
+		// Attack: 0 = 普通射击, 1 = 精确射击
+		// UseTacticalItem: 战术道具槽位索引 (0/1/2)
+		public int Payload { get; }
 
-		public ActionSelectedEvent(EActionType actionType, string actionId = null)
+		public ActionSelectedEvent(EActionType actionType, int payload = 0)
 		{
 			ActionType = actionType;
-			ActionId = actionId;
+			Payload = payload;
 		}
 
-		public override string ToString()
-		{
-			var idInfo = ActionId != null ? $", Id:{ActionId}" : "";
-			return $"[ActionSelected] {ActionType}{idInfo}";
-		}
+		public override string ToString() => $"[ActionSelected] {ActionType}, Payload: {Payload}";
 	}
 }

@@ -29,7 +29,7 @@ namespace Systems.Unit.Equipment
         private static TacticalItemLogic CreateTacticalItemLogic(TacticalItemConfig config, Unit owner) =>
 	        config.kind switch
 	        {
-		        ETacticalItemKind.InstantMedpack => new InstantMedpackLogic(config, owner),
+		        ETacticalItemKind.InstantMedpack => new MedpackLogic(config, owner),
 		        ETacticalItemKind.Grenade        => new ThrowableGrenadeLogic(config, owner),
 		        ETacticalItemKind.Burn           => new ThrowableBurnLogic(config, owner),
 		        ETacticalItemKind.TimerBomb      => new ThrowableTimerBombLogic(config, owner),

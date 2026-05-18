@@ -104,7 +104,7 @@ namespace Presentation.Interaction
 		public void StopInteraction()
 		{
 			StateMachine?.Clear();
-			_context?.ClearSelection();
+			_context?.Clear();
 			_isRunning = false;
 			this.Log("Interaction stopped");
 		}

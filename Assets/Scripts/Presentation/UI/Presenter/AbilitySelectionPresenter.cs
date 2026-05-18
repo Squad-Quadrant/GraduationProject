@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using Core.Events;
 using Core.FSM;
 using Core.Log;
 using Data.Runtime;
-using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel.SkillMenu;
 using Presentation.UI.Panel.TacticalItemMenu;
 using Systems.Interaction;
+using Systems.Unit.Equipment;
 
 namespace Presentation.UI.Presenter
 {
@@ -15,16 +16,14 @@ namespace Presentation.UI.Presenter
 	{
 		private readonly UIManager _uiManager;
 		private readonly IEventBus _eventBus;
-		private readonly InteractionController _interactionController;
 
 		private TacticalItemMenuPanel _tacticalItemPanel;
 		private SkillMenuPanel _skillPanel;
 
-		public AbilitySelectionPresenter(UIManager uiManager, IEventBus eventBus, InteractionController interactionController)
+		public AbilitySelectionPresenter(UIManager uiManager, IEventBus eventBus)
 		{
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-			_interactionController = interactionController ?? throw new ArgumentNullException(nameof(interactionController));
 
 			_eventBus.Subscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 
@@ -38,7 +37,7 @@ namespace Presentation.UI.Presenter
 			var current = e.CurrentState?.Name;
 			var previous = e.PreviousState?.Name;
 
-			if (previous == InteractionStates.AbilitySelection)
+			if (previous == InteractionStates.AbilityTargeting)
 			{
 				if (_tacticalItemPanel)
 				{
@@ -53,27 +52,52 @@ namespace Presentation.UI.Presenter
 				}
 			}
 
-			if (current == InteractionStates.AbilitySelection)
+			if (current != InteractionStates.AbilityTargeting) return;
+
+			var ctx = e.Context;
+			if (ctx.selectedUnit == null)
 			{
-				var unit = e.Context.selectedUnit;
-				if (unit == null)
-				{
-					this.LogError("Entered AbilitySelection without selectedUnit. Panel not opened.");
-					return;
-				}
-
-				switch (e.Context.currentAction)
-				{
-					case EActionType.UseTacticalItem:
-						_tacticalItemPanel = _uiManager.Open<TacticalItemMenuPanel, Systems.Unit.Unit>(unit);
-						_tacticalItemPanel.Init(_interactionController);
-						break;
-
-					case EActionType.UseSkill:
-						_skillPanel = _uiManager.Open<SkillMenuPanel, Systems.Unit.Unit>(unit);
-						break;
-				}
+				this.LogError("Entered AbilityTargeting without selectedUnit. Panel not opened.");
+				return;
 			}
+
+			switch (ctx.currentAction)
+			{
+				case EActionType.UseTacticalItem:
+					OpenTacticalItemPanel(ctx);
+					break;
+
+				case EActionType.UseSkill:
+					_skillPanel = _uiManager.Open<SkillMenuPanel, Systems.Unit.Unit>(ctx.selectedUnit);
+					break;
+
+				default:
+					this.LogError($"Entered AbilityTargeting with unexpected currentAction: {ctx.currentAction}");
+					break;
+			}
+		}
+
+		private void OpenTacticalItemPanel(InteractionContext ctx)
+		{
+			var container = FindTacticalItemContainerFor(ctx);
+			if (container == null)
+			{
+				this.LogError(
+					$"Cannot find tactical item container for PendingAbility {ctx.PendingAbility?.GetType().Name ?? "null"}. Panel not opened.");
+				return;
+			}
+
+			_tacticalItemPanel = _uiManager.Open<TacticalItemMenuPanel, EquipmentContainer>(container);
+		}
+
+		private static EquipmentContainer FindTacticalItemContainerFor(InteractionContext ctx)
+		{
+			if (ctx.PendingAbility == null) return null;
+
+			var items = ctx.selectedUnit?.TacticalItems;
+			return items?.FirstOrDefault(container =>
+				!container.IsNullOrEmpty() &&
+				ReferenceEquals(container.Logic, ctx.PendingAbility));
 		}
 	}
 }

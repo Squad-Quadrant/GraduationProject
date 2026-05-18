@@ -73,7 +73,7 @@ namespace Presentation.Debugger
 		[EnableIf("@IsApplicationPlaying && IsConnected && HasSelectedUnit")]
 		private void ClearSelection()
 		{
-			_cachedController?.Context?.ClearSelection();
+			_cachedController?.Context?.Clear();
 			Debug.Log("[InteractionDebugger] Selection cleared");
 		}
 

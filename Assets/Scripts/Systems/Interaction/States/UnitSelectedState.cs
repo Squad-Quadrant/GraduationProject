@@ -5,6 +5,8 @@ using Data.Runtime.Commands;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.UI;
+using Systems.Interaction.Targeting;
+using Systems.Unit.Equipment;
 
 namespace Systems.Interaction.States
 {
@@ -74,11 +76,15 @@ namespace Systems.Interaction.States
 					break;
 
 				case EActionType.Attack:
-                    StateMachine(Context).ChangeState<AttackPreviewState>();
-					break;
-
-				case EActionType.Wait:
-					ExecuteWait();
+					bool precise = e.Payload == 1;
+					var weapon = Context.selectedUnit.CurrentWeaponLogic;
+					if (weapon == null)
+					{
+						this.LogError("Attack selected but no weapon equipped");
+						return;
+					}
+					weapon.IsOnPreciseShoot = precise;
+					StateMachine(Context).ChangeState<AttackPreviewState>();
 					break;
 
                 case EActionType.Reload:
@@ -105,12 +111,50 @@ namespace Systems.Interaction.States
 					break;
 
 				case EActionType.UseTacticalItem:
-				case EActionType.UseSkill:
-					StateMachine(Context).ChangeState<AbilitySelectionState>();
+					int slotIndex = e.Payload;
+					var container = Context.selectedUnit.GetTacticalItem(slotIndex);
+					if (container.IsNullOrEmpty())
+					{
+						this.LogError($"Tactical item slot {slotIndex} is empty");
+						return;
+					}
+					if (container.Logic is not ITargeted tacticalItemLogic)
+					{
+						this.LogError($"Tactical item logic at slot {slotIndex} does not implement ITargeted: {container.Logic?.GetType().Name ?? "null"}.");
+						return;
+					}
+					Context.PendingAbility = tacticalItemLogic;
+					StateMachine(Context).ChangeState<AbilityTargetingState>();
 					break;
+
+				case EActionType.UseSkill:
+					var skill = Context.selectedUnit.Skill;
+					if (skill == null)
+					{
+						this.LogError("UseSkill selected but unit has no skill");
+						return;
+					}
+					if (skill is not ITargeted skillLogic)
+					{
+						this.LogError(
+							$"Skill logic {skill.GetType().Name} does not implement ITargeted.");
+						return;
+					}
+					Context.PendingAbility = skillLogic;
+					StateMachine(Context).ChangeState<AbilityTargetingState>();
+					break;
+
+				case EActionType.Wait:
+					this.Log("Executing Wait action");
+					DeselectUnit();
+					Context.TurnService.EndUnitTurn(); // => 发出 UnitTurnEndedEvent,GameServer 监听 UnitTurnEndedEvent 会接管后续逻辑
+					break;
+
 				case EActionType.None:
 				case EActionType.Defend:
 				case EActionType.Count:
+				case EActionType.Back:
+				case EActionType.AI:
 				default:
 					this.LogWarning($"Unhandled action: {e.ActionType}");
 					break;
@@ -119,32 +163,22 @@ namespace Systems.Interaction.States
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-
 		}
 
 		private void OnBack(BackInputEvent e)
 		{
-
 		}
 
 		private void OnEsc(EscInputEvent e)
 		{
-
 		}
 
 		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);
-
-		private void ExecuteWait()
-		{
-			this.Log("Executing Wait action");
-			DeselectUnit();
-			Context.TurnService.EndUnitTurn(); // => 发出 UnitTurnEndedEvent,GameServer 监听 UnitTurnEndedEvent 会接管后续逻辑
-		}
         
         private void DeselectUnit()
         {
 	        Publish(Context, new UnitDeselectedEvent(Context.selectedUnit.id));
-	        Context.ClearSelection();
+	        Context.Clear();
         }
 	}
 }

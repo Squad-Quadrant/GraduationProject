@@ -206,42 +206,72 @@ namespace Systems.Unit
 
 		public List<ActionAbility> GetAvailableActions()
 		{
+			var actions = new List<ActionAbility>();
+
+			// move
+			if (HasAp && RemainingMovementAp > 0)
+				actions.Add(new ActionAbility(EActionType.Move));
+
+			// interact
 			var neighbors = MapService.Data.GetNeighborCells(position);
 			neighbors.Add(MapService.Data.GetCell(position));
 			bool hasInteractableNeighbor = neighbors.Any(neighbor => neighbor.SceneActor is InteractableSceneActor { CanInteract: true });
+			if (HasAp && hasInteractableNeighbor)
+				actions.Add(new ActionAbility(EActionType.Interact));
 
-			var actions = new List<ActionAbility>
+			// attack (normal + precise)
+			bool canAttack = !CurrentWeaponContainer.IsNullOrEmpty() && HasAmmo && CanAttack &&
+			                 (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon());
+			if (HasAp && canAttack)
 			{
-				new (EActionType.Move, RemainingMovementAp > 0),
-				new (EActionType.Interact, hasInteractableNeighbor),
-				new (EActionType.Attack, !CurrentWeaponContainer.IsNullOrEmpty() && HasAp && HasAmmo && CanAttack &&
-				                         (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon())),
-				new (EActionType.Wait)
-			};
-
-			bool hasAnyTacticalItem = TacticalItems != null && TacticalItems.Any(t => !t.IsNullOrEmpty());
-			if (hasAnyTacticalItem)
-			{
-				bool hasAnyUsable = TacticalItems.Any(container => !container.IsNullOrEmpty() && container.Logic is TacticalItemLogic { CanUse: true });
-				actions.Add(new ActionAbility(EActionType.UseTacticalItem, HasAp && hasAnyUsable));
+				actions.Add(new ActionAbility(EActionType.Attack, payload: 0));
+				if (CurrentWeaponLogic.CanPreciseShoot())
+					actions.Add(new ActionAbility(EActionType.Attack, payload: 1));
 			}
 
-			if (Skill != null)
-				actions.Add(new ActionAbility(EActionType.UseSkill, Skill.CanUse));
+			// reload
+			bool canReload = CurrentWeaponLogic is { FullAmmo: false } &&
+			                 (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon());
+			if (HasAp && canReload)
+				actions.Add(new ActionAbility(EActionType.Reload));
 
-			if (CurrentWeaponLogic!= null)
-	            actions.Add(new ActionAbility(EActionType.Reload, HasAp && !CurrentWeaponLogic.FullAmmo &&
-	                                                              (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon())));
-
-			if (!MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty())
+			// switch weapon
+			bool canSwitchWeapon = !MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty();
+			if (canSwitchWeapon)
 				actions.Add(new ActionAbility(EActionType.SwitchWeapon));
+
+			// tactical items
+			if (TacticalItems != null)
+			{
+				for (int i = 0; i < TacticalItems.Length; i++)
+				{
+					var container = TacticalItems[i];
+					if (container.IsNullOrEmpty()) continue;
+
+					bool slotUsable = container.Logic is TacticalItemLogic { CanUse: true };
+					if (HasAp && slotUsable)
+						actions.Add(new ActionAbility(EActionType.UseTacticalItem, payload: i));
+				}
+			}
+
+			// skill
+			if (HasAp && Skill is { CanUse: true })
+				actions.Add(new ActionAbility(EActionType.UseSkill));
+
+			actions.Add(new ActionAbility(EActionType.Wait));
 
 			return actions;
 		}
 
-		public bool CanUseAction(EActionType type)
+		public bool CanUseAction(EActionType type, int payload = 0)
 		{
-			return GetAvailableActions().FirstOrDefault(a => a.ActionType == type).IsAvailable;
+			var allAvailable = GetAvailableActions();
+			foreach (var action in allAvailable)
+			{
+				if (type == action.ActionType && payload == action.Payload)
+					return action.IsAvailable;
+			}
+			return false;
 		}
 
 		public int CalculateMovementApCost(int pathCost)
@@ -402,10 +432,13 @@ namespace Systems.Unit
     {
         public readonly EActionType ActionType;
         public readonly bool IsAvailable;
-        public ActionAbility(EActionType actionType = EActionType.None, bool isAvailable = true)
+        public readonly int Payload;
+
+        public ActionAbility(EActionType actionType = EActionType.None, bool isAvailable = true, int payload = 0)
         {
             ActionType = actionType;
             IsAvailable = isAvailable;
+            Payload = payload;
         }
     }
 }

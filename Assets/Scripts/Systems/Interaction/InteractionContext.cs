@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Core.Commands;
 using Core.Events;
 using Core.FSM;
@@ -15,7 +14,6 @@ using Systems.PathFinding.MovementSimulation;
 using Systems.Turn;
 using Systems.Unit;
 using Systems.Vision;
-using UnityEngine;
 
 namespace Systems.Interaction
 {
@@ -47,7 +45,7 @@ namespace Systems.Interaction
 
 		public MovementSimulationResult LastSimulationResult;
 
-		// public ITargeted PendingTarget;
+		public ITargeted PendingAbility;
 
 		public InteractionContext(
 			IEventBus eventBus,
@@ -77,9 +75,12 @@ namespace Systems.Interaction
             AudioService = audioService;
 		}
 
-		public void ClearSelection()
+		public void Clear()
 		{
 			selectedUnit = null;
+			currentAction = EActionType.None;
+			LastSimulationResult = null;
+			PendingAbility = null;
 		}
 
 		public Unit.Unit GetCurrentTurnUnit()

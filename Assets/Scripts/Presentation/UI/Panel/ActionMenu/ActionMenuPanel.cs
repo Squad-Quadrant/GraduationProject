@@ -6,6 +6,9 @@ using Data.Runtime.Events.Unit;
 using Presentation.UI.Component;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
+using Systems.Unit;
+using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Logic;
 using TMPro;
 using UnityEngine;
 
@@ -20,14 +23,14 @@ namespace Presentation.UI.Panel.ActionMenu
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-	        _items = itemsParent.GetComponentsInChildren<ActionMenuItem>(false).ToList();
+	        _items = itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
 
             foreach (var item in _items)
             {
-                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType)));
-                
-                item.OnHoverEnter += SetDescription;
-                item.OnHoverExit += ClearDescription;
+                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType, item.Payload)));
+
+                item.OnHoverEnter += desc => currentActionText.text = desc;
+                item.OnHoverExit += _ => currentActionText.text = "";
                 item.SetActive(false);
             }
             Refresh(unit);
@@ -41,21 +44,50 @@ namespace Presentation.UI.Panel.ActionMenu
 
         private void Refresh(Systems.Unit.Unit unit)
         {
-            var availableActions = unit.GetAvailableActions();
+	        foreach (var item in _items) item.SetActive(false);
 
+            var availableActions = unit.GetAvailableActions();
             foreach (var action in availableActions)
             {
-                var item = GetItem(action.ActionType);
+                var item = GetItem(action.ActionType, action.Payload);
                 if (!item) continue;
+
                 item.SetActive(true);
                 item.Interactable = action.IsAvailable;
+
+                SetContent(item, unit, action);
+
+                item.SetIconAspectRatio();
             }
         }
 
-        private void SetDescription(string desc) => currentActionText.text = desc;
-        private void ClearDescription(string _) => currentActionText.text = "";
+        private static void SetContent(ActionMenuItem item, Systems.Unit.Unit unit, ActionAbility action)
+        {
+	        switch (action.ActionType)
+	        {
+		        case EActionType.UseTacticalItem:
+		        {
+			        var container = unit.GetTacticalItem(action.Payload);
+			        if (container.IsNullOrEmpty()) return;
+			        if (container.Logic is not TacticalItemLogic itemLogic) return;
 
-        private ActionMenuItem GetItem(EActionType actionType) =>
-	        _items.FirstOrDefault(item => item.ActionType == actionType);
+			        item.SetContent(
+				        container.Config.icon,
+				        container.Config.description,
+				        itemLogic.RemainingUses);
+			        return;
+		        }
+		        case EActionType.UseSkill:
+			        if (unit.Skill == null) return;
+			        item.SetContent(
+				        unit.Skill.Config.icon,
+				        unit.Skill.Config.description,
+				        unit.Skill.CurrentCooldown);
+			        return;
+	        }
+        }
+
+        private ActionMenuItem GetItem(EActionType actionType, int payload) =>
+	        _items.FirstOrDefault(item => item.ActionType == actionType && item.Payload == payload);
     }
 }

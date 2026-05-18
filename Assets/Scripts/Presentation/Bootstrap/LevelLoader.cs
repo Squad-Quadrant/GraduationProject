@@ -251,14 +251,14 @@ namespace Presentation.Bootstrap
             var gameFlowController = RootContainer.Instance.Resolve<GameFlowController>();
 
             _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
-            _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus, damageService, unitService));
+            _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
             _levelContainer.Services.RegisterInstance(new UnitInfoPresenter(uiManager, _eventBus, unitService));
             _levelContainer.Services.RegisterInstance(new TargetInfoPresenter(uiManager, _eventBus, unitService, interactionController, visionService));
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
-            _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus, interactionController));
+            _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new BattleOverPresenter(uiManager, _eventBus, gameFlowController));
         }
 
