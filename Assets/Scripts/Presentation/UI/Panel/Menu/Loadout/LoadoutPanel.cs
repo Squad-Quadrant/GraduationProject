@@ -278,11 +278,11 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				var slot = tacticalItemSlots[i];
 				if (!slot) continue;
 
-				var itemCfg = _data.DataManager.GetEquipment(loadout.tacticalItemIds[i]);
+				var itemConfig = _data.DataManager.GetEquipment(loadout.tacticalItemIds[i]);
 				slot.Bind(
 					ELoadoutSlotKind.TacticalItem,
 					slotIndex: captured,
-					itemCfg,
+					itemConfig,
 					equipmentDetailView,
 					onClick: () => OpenDropdownForSlot(slot));
 			}
@@ -298,6 +298,9 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 			var options = _data.DataManager.GetEquipmentsForSlot(slot.SlotKind);
 
+			if (slot.SlotKind == ELoadoutSlotKind.TacticalItem)
+				options = FilterOutOtherEquippedTacticalItems(options, slot.SlotIndex);
+
 			// 主武器强制不能空；副武器和道具允许空
 			bool allowEmpty = slot.SlotKind != ELoadoutSlotKind.MainWeapon;
 
@@ -308,6 +311,27 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				equipmentDetailView,
 				onSelect: selected => ApplyEquipmentChange(slot, selected),
 				onDismiss: null);
+		}
+
+		private IReadOnlyList<EquipmentConfig> FilterOutOtherEquippedTacticalItems(
+			IReadOnlyList<EquipmentConfig> source, int currentSlotIndex)
+		{
+			var loadout = _data.DataManager.GetPlayerLoadoutForEditing(_currentUnit, _data.Level);
+			if (loadout == null) return source;
+
+			loadout.NormalizeTacticalSlots();
+
+			var excludedIds = new HashSet<int>(Data.Config.Loadout.TacticalItemSlotCount);
+			for (int i = 0; i < loadout.tacticalItemIds.Length; i++)
+			{
+				if (i == currentSlotIndex) continue;
+				int id = loadout.tacticalItemIds[i];
+				if (id > 0) excludedIds.Add(id);
+			}
+
+			return excludedIds.Count == 0
+				? source
+				: source.Where(c => c && !excludedIds.Contains(c.id)).ToList();
 		}
 
 		// 写入 PlayerLoadouts + 刷新对应槽位 UI + 刷新开始按钮状态
