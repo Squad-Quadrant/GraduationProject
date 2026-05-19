@@ -171,6 +171,11 @@ namespace Presentation.Unit
 			view.CancelMovement();
 			view.PlayAction("hitdown", () =>
 			{
+				_eventBus.Publish(new PresentationCompleteEvent(
+					category: EPresentationCategory.Animation,
+					type: PresentationType.Animation.Death,
+					entityId: unitId));
+
 				if (!view) return;
 				view.PlayAction("dead");
 				view.FadeOut(() =>

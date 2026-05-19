@@ -32,6 +32,7 @@ namespace Systems.BattleFlow
 		private readonly PlayerTurnController _playerController;
 		private readonly AITurnController _aiController;
 
+		private bool _isResolvingTurnTransition;
 		private bool _isGameOver;
 
 		public BattleServer(
@@ -124,6 +125,8 @@ namespace Systems.BattleFlow
 				return;
 			}
 
+			_isResolvingTurnTransition = true;
+
 			bool visibleToPlayer;
 			var faction = turnUnit.Faction;
 
@@ -153,13 +156,48 @@ namespace Systems.BattleFlow
 					_turnService.TurnNumber,
 					visibleToPlayer,
 					turnUnit.CellPosition)),
-				() => StartNewUnitTurn(turnUnit),
+				() => OnAfterUnitTransition(turnUnit),
 				cmd => cmd
 					.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
 					.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
 			);
 
 			this.Log($"TurnUnit '{turnUnit.DisplayName}'({turnUnit.Id}, {turnUnit.Faction}) turn starting{(visibleToPlayer ? "" : " [hidden from player]")}");
+		}
+
+		private void OnAfterUnitTransition(ITurnUnit turnUnit)
+		{
+			_eventBus.Publish(new UnitTurnEffectsResolvingEvent(turnUnit.Id, _turnService.TurnNumber));
+
+			if (_unitService.HasUnit(turnUnit.Id))
+			{
+				_isResolvingTurnTransition = false;
+				StartNewUnitTurn(turnUnit);
+				return;
+			}
+
+			this.Log($"Unit '{turnUnit.Id}' died from start-of-turn effects, awaiting death animation");
+			AwaitThen(
+				trigger: null,
+				onComplete: AfterDeathContinue,
+				configure: cmd => cmd
+					.Expect(EPresentationCategory.Animation, PresentationType.Animation.Death, turnUnit.Id));
+		}
+
+		private void AfterDeathContinue()
+		{
+			_isResolvingTurnTransition = false;
+
+			if (_turnService.IsTurnComplete)
+			{
+				this.Log("All units have acted after death, ending turn");
+				EndCurrentTurn();
+			}
+			else
+			{
+				this.Log("Advancing to next unit after death");
+				AdvanceToNextUnit();
+			}
 		}
 
 		private void StartNewUnitTurn(ITurnUnit turnUnit) // 实际开始一个新的单位回合
@@ -179,7 +217,7 @@ namespace Systems.BattleFlow
 
 		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
 		{
-			if (_isGameOver) return;
+			if (_isGameOver || _isResolvingTurnTransition) return;
 
 			this.Log($"Unit '{e.TurnUnitId}' finished acting");
 

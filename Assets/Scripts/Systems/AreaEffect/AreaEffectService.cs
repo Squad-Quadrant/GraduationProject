@@ -38,7 +38,7 @@ namespace Systems.AreaEffect
 			_ctx = new AreaEffectContext(eventBus, unitService, damageService, visionService, visionCalculator, buffService, aiService);
 
 			_eventBus.Subscribe<TurnStartedEvent>(OnTurnStarted);
-			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+			_eventBus.Subscribe<UnitTurnEffectsResolvingEvent>(OnUnitTurnEffectsResolving);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 
@@ -48,7 +48,7 @@ namespace Systems.AreaEffect
 		public void Dispose()
 		{
 			_eventBus.Unsubscribe<TurnStartedEvent>(OnTurnStarted);
-			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+			_eventBus.Unsubscribe<UnitTurnEffectsResolvingEvent>(OnUnitTurnEffectsResolving);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 
@@ -161,14 +161,15 @@ namespace Systems.AreaEffect
 		}
 
 		// 某单位开启自己的回合 → 若站在某 effect 覆盖格内，触发 OnUnitTurnStartInside
-		private void OnUnitTurnStarted(UnitTurnStartedEvent e)
+		private void OnUnitTurnEffectsResolving(UnitTurnEffectsResolvingEvent e)
 		{
-			if (!_cellIndex.TryGetValue(e.CellPosition, out var effectsAtCell)) return;
 			if (!_ctx.UnitService.TryGetUnit(e.TurnUnitId, out var unit)) return;
+			var cellPosition = unit.position;
+			if (!_cellIndex.TryGetValue(cellPosition, out var effectsAtCell)) return;
 
 			var snapshot = new List<AreaEffect>(effectsAtCell);
 			foreach (var effect in snapshot)
-				effect.Behavior.OnUnitTurnStart(effect, unit, e.CellPosition, _ctx);
+				effect.Behavior.OnUnitTurnStart(effect, unit, cellPosition, _ctx);
 		}
 
 		// 某单位完成一次移动 → Path 每一格（排除起点）触发 OnUnitEntered

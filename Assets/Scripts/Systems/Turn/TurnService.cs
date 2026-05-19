@@ -159,7 +159,7 @@ namespace Systems.Turn
 			}
 		}
 
-		public void EndUnitTurn() // 实际上只是把IsUnitActing设为false并发出事件，下一次调用NextUnit()时会自动前进到下一个单位
+		public void EndUnitTurn()
 		{
 			if (!_data.IsUnitActing)
 			{

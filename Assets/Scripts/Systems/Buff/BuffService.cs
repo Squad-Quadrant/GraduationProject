@@ -27,14 +27,14 @@ namespace Systems.Buff
             // _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             this.Log("Initialized");
             
-            _eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+            _eventBus.Subscribe<UnitTurnEffectsResolvingEvent>(OnUnitTurnEffectsResolving);
             // _eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
             // _eventBus.Subscribe<UnitDestroyedEvent>(ONUnitDestroyed);
         }
         
         public void Dispose()
         {
-            _eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
+	        _eventBus.Unsubscribe<UnitTurnEffectsResolvingEvent>(OnUnitTurnEffectsResolving);
             // _eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
             // _eventBus.Unsubscribe<UnitDestroyedEvent>(ONUnitDestroyed);
         }
@@ -83,7 +83,7 @@ namespace Systems.Buff
             }
         }
 
-        private void OnUnitTurnStarted(UnitTurnStartedEvent e)
+        private void OnUnitTurnEffectsResolving(UnitTurnEffectsResolvingEvent e)
         {
 	        var unit = _buffProxies.Keys.FirstOrDefault(u => (u as Unit.Unit)?.id == e.TurnUnitId);
 	        if (unit == null) return;    // 无 proxy 就静默跳过
