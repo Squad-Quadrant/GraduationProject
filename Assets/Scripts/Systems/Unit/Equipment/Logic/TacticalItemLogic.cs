@@ -23,7 +23,7 @@ namespace Systems.Unit.Equipment.Logic
 
 		public int RemainingUses { get; private set; }
 
-		public virtual bool CanUse => RemainingUses > 0 && Owner.CurrentAp >= ItemConfig.apCost;
+		public virtual bool CanUse => Owner.CurrentAp >= ItemConfig.apCost && RemainingUses > 0;
 
 		protected TacticalItemLogic(TacticalItemConfig itemConfig, Unit owner) : base(itemConfig, owner)
 		{

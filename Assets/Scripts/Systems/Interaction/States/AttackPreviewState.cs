@@ -43,7 +43,7 @@ namespace Systems.Interaction.States
 
 			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
-			_validTargetCells = CalculateSelectableTargets(ctx).Select(u => u.position).ToList();
+			_validTargetCells = ctx.selectedUnit.CalculateSelectableTargets(ctx.UnitService, ctx.VisionService).Select(u => u.position).ToList();
             
 			Publish(ctx, new RangeDisplayEvent(
 				ERangeType.Attack,
@@ -177,24 +177,6 @@ namespace Systems.Interaction.States
 				return Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
 
 			return null;
-		}
-
-		private List<Unit.Unit> CalculateSelectableTargets(InteractionContext ctx)
-		{
-			var unit = ctx.selectedUnit;
-
-            var currentEquipment = unit.CurrentWeaponContainer;
-            
-            // 搜索范围内的敌人
-            var reachableEnemies = ctx.UnitService.GetAllAliveUnits()
-                .Where(u => currentEquipment.Logic.CheckAttackable(u)).ToList();
-
-            // 剔除看不见的敌人
-            var visibleCells = ctx.VisionService.CurrentVisibleCells;
-            var enemies = reachableEnemies.Where(enemy => visibleCells.Contains(enemy.position)).ToList();
-            
-            this.Log($"Found {enemies.Count} valid targets for attack.");
-            return enemies;
 		}
 
 		private void ExecuteAttack(Unit.Unit target)

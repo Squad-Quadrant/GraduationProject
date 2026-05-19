@@ -10,6 +10,8 @@ namespace Systems.Unit.Equipment.Logic
 {
 	public class MedpackLogic : TacticalItemLogic, ITargeted
 	{
+		public override bool CanUse => Owner.CurrentHp < Owner.maxHp && base.CanUse;
+
 		public MedpackLogic(TacticalItemConfig config, Unit owner) : base(config, owner) { }
 
 		public IReadOnlyList<Vector2Int> GetValidCells(InteractionContext ctx) => new[] { Owner.position };

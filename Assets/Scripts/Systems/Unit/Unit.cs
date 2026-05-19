@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Events;
+using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Events.Unit;
 using Presentation.Bootstrap;
@@ -19,6 +20,7 @@ using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
 using Systems.Unit.Equipment.Logic;
 using Systems.Unit.Skill.Logic;
+using Systems.Vision;
 using UnityEngine;
 
 namespace Systems.Unit
@@ -153,16 +155,19 @@ namespace Systems.Unit
         public int RemainingMovementAp => Mathf.Min(CurrentAp, maxMovementAp - apSpentOnMovement);
 
         private IEventBus _eventBus;
-        private IEventBus EventBus => _eventBus ??= LevelContainer.Instance.Resolve<IEventBus>();
+        private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
 
         private IMapService _mapService;
-        private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
-		
+        private IMapService MapService => _mapService ??= RootContainer.Instance.Resolve<IMapService>();
+
+        private IUnitService _unitService;
+        private IUnitService UnitService => _unitService ??= RootContainer.Instance.Resolve<IUnitService>();
+
+        private IVisionService _visionService;
+        private IVisionService VisionService => _visionService ??= RootContainer.Instance.Resolve<IVisionService>();
+
 		internal static Unit LoadFromConfig(
-			string unitId,
-			UnitConfig config,
-			Vector2Int startPosition,
-			IReadOnlyList<Vector2Int> patrolWaypoints = null)
+			string unitId, UnitConfig config, Vector2Int startPosition, IReadOnlyList<Vector2Int> patrolWaypoints)
 		{
 			var unit = new Unit
 			{
@@ -214,8 +219,8 @@ namespace Systems.Unit
 			var actions = new List<ActionAbility>();
 
 			// move
-			if (HasAp && RemainingMovementAp > 0)
-				actions.Add(new ActionAbility(EActionType.Move));
+			bool canMove = HasAp && RemainingMovementAp > 0;
+			actions.Add(new ActionAbility(EActionType.Move, canMove));
 
 			// interact
 			var neighbors = MapService.Data.GetNeighborCells(position);
@@ -229,11 +234,12 @@ namespace Systems.Unit
 			                 HasAmmo &&
 			                 CanAttack &&
 			                 (IsUsingMainWeapon && CanUseMainWeapon || IsUsingSecondaryWeapon);
+			bool hasSelectable = CalculateSelectableTargets(UnitService, VisionService).Count > 0;
 			if (HasAp && canAttack)
 			{
-				actions.Add(new ActionAbility(EActionType.Attack, payload: 0));
+				actions.Add(new ActionAbility(EActionType.Attack, hasSelectable, payload: 0));
 				if (CurrentWeaponLogic.CanPreciseShoot())
-					actions.Add(new ActionAbility(EActionType.Attack, payload: 1));
+					actions.Add(new ActionAbility(EActionType.Attack, hasSelectable, payload: 1));
 			}
 
 			// reload
@@ -253,18 +259,20 @@ namespace Systems.Unit
 				for (int i = 0; i < _tacticalItems.Length; i++)
 				{
 					var container = _tacticalItems[i];
-					if (container.IsNullOrEmpty()) continue;
+					if (container.IsNullOrEmpty() || container.Logic is not TacticalItemLogic tacticalItemLogic) continue;
 
-					bool slotUsable = container.Logic is TacticalItemLogic { CanUse: true };
-					if (HasAp && slotUsable)
-						actions.Add(new ActionAbility(EActionType.UseTacticalItem, payload: i));
+					bool hasRemainingUses = tacticalItemLogic.RemainingUses > 0;
+					bool canUseSlot = HasAp && tacticalItemLogic.CanUse;
+					if (hasRemainingUses)
+						actions.Add(new ActionAbility(EActionType.UseTacticalItem, canUseSlot, payload: i));
 				}
 			}
 
 			// skill
-			if (HasAp && Skill is { CanUse: true })
-				actions.Add(new ActionAbility(EActionType.UseSkill));
+			bool canUseSkill = HasAp && Skill is { CanUse: true };
+			actions.Add(new ActionAbility(EActionType.UseSkill, canUseSkill));
 
+			// Wait
 			actions.Add(new ActionAbility(EActionType.Wait));
 
 			return actions;
@@ -286,6 +294,18 @@ namespace Systems.Unit
 			return moveRange <= 0
 				? pathCost
 				: Mathf.CeilToInt((float)pathCost / moveRange);
+		}
+
+		public List<Unit> CalculateSelectableTargets(IUnitService unitService, IVisionService visionService)
+		{
+			var reachableEnemies = unitService.GetAllAliveUnits()
+				.Where(u => CurrentWeaponLogic.CheckAttackable(u)).ToList();
+
+			var visibleCells = visionService.CurrentVisibleCells;
+			var enemies = reachableEnemies.Where(enemy => visibleCells.Contains(enemy.position)).ToList();
+
+			this.Log($"Found {enemies.Count} valid targets for attack.");
+			return enemies;
 		}
 
 		public bool IsHostile(Unit other)
