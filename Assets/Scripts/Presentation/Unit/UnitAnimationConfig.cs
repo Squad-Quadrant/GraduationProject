@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using Spine.Unity;
+using Systems.Unit.Equipment.Config;
 using UnityEngine;
 
 namespace Presentation.Unit
@@ -11,8 +12,7 @@ namespace Presentation.Unit
 	{
 		Stand,
 		Bend,
-		Aim,
-		Hit
+		Aim
 	}
 
 	public enum EGripType
@@ -26,14 +26,53 @@ namespace Presentation.Unit
 	[Serializable]
 	public struct AnimationEntry
 	{
+#if UNITY_EDITOR
+		private static readonly string[] ActionKeys =
+		{
+			"idle", "shoot", "reload", "beHit", "throw",
+			"move_start", "move_loop", "move_end",
+			"hitdown", "dead"
+		};
+		[ValueDropdown(nameof(ActionKeys))]
+#endif
 		public string action;
+
 		public EUnitStance stance;
+
 		public EGripType grip;
+
+#if UNITY_EDITOR
+		[ValueDropdown(nameof(AllWeaponKeysEditor))]
+#endif
+		public string weaponKey;
+
+		[SpineAnimation(dataField: "skeletonDataAsset")]
 		public string clipName;
+
 		public bool loop;
 
-		public bool Matches(string a, EUnitStance s, EGripType g) =>
-			action == a && stance == s && grip == g;
+		public bool Matches(string a, EUnitStance s, EGripType g, string w) =>
+			KeyEquals(action, a) && stance == s && grip == g && KeyEquals(weaponKey, w);
+
+		private static bool KeyEquals(string a, string b) =>
+			string.IsNullOrEmpty(a) ? string.IsNullOrEmpty(b) : a == b;
+
+#if UNITY_EDITOR
+		private static IEnumerable<string> AllWeaponKeysEditor()
+		{
+			// 空 key 选项放第一位，表示"通用"
+			var keys = new SortedSet<string> { "" };
+			var guids = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(WeaponConfig));
+			foreach (var guid in guids)
+			{
+				var path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+				var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<WeaponConfig>(path);
+				if (asset && !string.IsNullOrEmpty(asset.animKey))
+					keys.Add(asset.animKey);
+			}
+			return keys;
+		}
+#endif
 	}
 
 	[Serializable]
@@ -42,6 +81,8 @@ namespace Presentation.Unit
 		public EUnitStance from;
 		public EUnitStance to;
 		public EGripType grip;
+
+		[SpineAnimation(dataField: "skeletonDataAsset")]
 		public string clipName;
 
 		public bool Matches(EUnitStance f, EUnitStance t, EGripType g) =>
@@ -228,20 +269,26 @@ namespace Presentation.Unit
 		private static readonly System.Random SharedRandom = new();
 
 		// 如果有多个相同状态相同名字的，会随机返回一个
-		public AnimationResult GetAnimation(string action, EUnitStance stance, EGripType grip)
+		public AnimationResult GetAnimation(string action, EUnitStance stance, EGripType grip, string weaponKey)
 		{
-			var result = MatchAnimation(action, stance, grip);
+			if (!string.IsNullOrEmpty(weaponKey))
+			{
+				var r = MatchAnimation(action, stance, grip, weaponKey);
+				if (r.IsValid) return r;
+			}
+
+			var result = MatchAnimation(action, stance, grip, null);
 			if (result.IsValid) return result;
 
 			if (grip != defaultGrip)
 			{
-				result = MatchAnimation(action, stance, defaultGrip);
+				result = MatchAnimation(action, stance, defaultGrip, null);
 				if (result.IsValid) return result;
 			}
 
 			if (stance != defaultStance || grip != defaultGrip)
 			{
-				result = MatchAnimation(action, defaultStance, defaultGrip);
+				result = MatchAnimation(action, defaultStance, defaultGrip, null);
 				if (result.IsValid) return result;
 			}
 
@@ -261,29 +308,35 @@ namespace Presentation.Unit
 			return null;
 		}
 
-		public IdleSet GetIdleSet(EUnitStance stance, EGripType grip)
+		public IdleSet GetIdleSet(EUnitStance stance, EGripType grip, string weaponKey)
 		{
-			var set = MatchIdleSet(stance, grip);
+			if (!string.IsNullOrEmpty(weaponKey))
+			{
+				var s = MatchIdleSet(stance, grip, weaponKey);
+				if (s.IsValid) return s;
+			}
+
+			var set = MatchIdleSet(stance, grip, null);
 			if (set.IsValid) return set;
 
 			if (grip != defaultGrip)
 			{
-				set = MatchIdleSet(stance, defaultGrip);
+				set = MatchIdleSet(stance, defaultGrip, null);
 				if (set.IsValid) return set;
 			}
 
 			if (stance != defaultStance || grip != defaultGrip)
 			{
-				set = MatchIdleSet(defaultStance, defaultGrip);
+				set = MatchIdleSet(defaultStance, defaultGrip, null);
 				if (set.IsValid) return set;
 			}
 
 			return IdleSet.Empty;
 		}
 
-		private AnimationResult MatchAnimation(string action, EUnitStance stance, EGripType grip)
+		private AnimationResult MatchAnimation(string action, EUnitStance stance, EGripType grip, string weaponKey)
 		{
-			var matches = animations.Where(entry => entry.Matches(action, stance, grip)).ToList();
+			var matches = animations.Where(entry => entry.Matches(action, stance, grip, weaponKey)).ToList();
 			if (matches.Count == 0) return AnimationResult.Empty;
 
 			var picked = matches[SharedRandom.Next(matches.Count)];
@@ -298,9 +351,9 @@ namespace Presentation.Unit
 				.FirstOrDefault();
 		}
 
-		private IdleSet MatchIdleSet(EUnitStance stance, EGripType grip)
+		private IdleSet MatchIdleSet(EUnitStance stance, EGripType grip, string weaponKey)
 		{
-			var matches = animations.Where(e => e.Matches("idle", stance, grip)).ToList();
+			var matches = animations.Where(e => e.Matches("idle", stance, grip, weaponKey)).ToList();
 			if (matches.Count == 0) return IdleSet.Empty;
 
 			var bases = matches.Where(e => e.loop)

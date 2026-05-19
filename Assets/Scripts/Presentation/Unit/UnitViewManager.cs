@@ -18,6 +18,7 @@ using Systems.Map;
 using Systems.Map.Config;
 using Systems.Unit;
 using Systems.Unit.Equipment;
+using Systems.Unit.Equipment.Config;
 using Systems.Vision;
 using UnityEngine;
 
@@ -133,9 +134,10 @@ namespace Presentation.Unit
 			var currentEquipment = e.Unit.CurrentWeaponContainer;
 			if (!currentEquipment.IsNullOrEmpty())
 			{
-				
-				viewInstance.SetWeaponSkin(e.Unit.CurrentWeaponContainer?.Config.spineName);
-				viewInstance.SetGrip(e.Unit.CurrentWeaponContainer.Config.gripType);
+				var cfg = currentEquipment.Config;
+				viewInstance.SetWeaponSkin(cfg.spineName);
+				viewInstance.SetGrip(cfg.gripType);
+				viewInstance.SetWeaponAnimKey((cfg as WeaponConfig)?.animKey);
 			}
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -374,6 +376,7 @@ namespace Presentation.Unit
                 var config = e.Unit.CurrentWeaponContainer.Config;
                 view.SetGrip(config.gripType);
                 view.SetWeaponSkin(config.spineName);
+                view.SetWeaponAnimKey((config as WeaponConfig)?.animKey);
             }
         }
 

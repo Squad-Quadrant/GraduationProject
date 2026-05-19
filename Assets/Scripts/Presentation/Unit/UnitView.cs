@@ -41,6 +41,7 @@ namespace Presentation.Unit
 		private EUnitStance _stance;
 		public EUnitStance Stance => _stance;
 		private EGripType _grip;
+		private string _weaponAnimKey;
 		private bool _facingRight;
 
 		private string _frontBodySkinName;
@@ -119,7 +120,7 @@ namespace Presentation.Unit
 		{
 			if (action == "idle")
 			{
-				var idleSet = _config.GetIdleSet(_stance, _grip);
+				var idleSet = _config.GetIdleSet(_stance, _grip, _weaponAnimKey);
 				if (idleSet.HasFidgets)
 				{
 					animator.PlayLoopWithFidgets(
@@ -130,7 +131,7 @@ namespace Presentation.Unit
 				}
 			}
 
-			var result = _config.GetAnimation(action, _stance, _grip);
+			var result = _config.GetAnimation(action, _stance, _grip, _weaponAnimKey);
 			if (!result.IsValid)
 			{
 				this.LogError($"No animation found for action '{action}' with stance '{_stance}' and grip '{_grip}'");
@@ -176,6 +177,18 @@ namespace Presentation.Unit
 		{
 			if (_grip == newGrip) return;
 			_grip = newGrip;
+			if (_moveCoroutine == null)
+				PlayAction("idle");
+		}
+
+		public void SetWeaponAnimKey(string newKey)
+		{
+			var normalized = string.IsNullOrEmpty(newKey) ? "" : newKey;
+			var current = string.IsNullOrEmpty(_weaponAnimKey) ? "" : _weaponAnimKey;
+			if (normalized == current) return;
+
+			_weaponAnimKey = normalized;
+
 			if (_moveCoroutine == null)
 				PlayAction("idle");
 		}

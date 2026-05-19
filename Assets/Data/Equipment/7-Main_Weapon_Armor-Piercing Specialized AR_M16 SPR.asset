@@ -41,6 +41,7 @@ MonoBehaviour:
   canPreciseShoot: 1
   preciseShootSpeed: 1
   preciseShootHitRateBonus: 0.25
+  animKey: m16
   fireClip: {fileID: 8300000, guid: 65971a7b2fd9f17448b951f9a7d57976, type: 3}
   reloadClip: {fileID: 8300000, guid: 726d47e27f794c7429f0d8bf9ffdff31, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}
