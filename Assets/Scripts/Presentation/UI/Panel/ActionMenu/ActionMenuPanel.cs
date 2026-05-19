@@ -3,7 +3,6 @@ using System.Linq;
 using Data.Runtime;
 using Data.Runtime.Events.UI;
 using Data.Runtime.Events.Unit;
-using Presentation.UI.Component;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit;
@@ -16,7 +15,8 @@ namespace Presentation.UI.Panel.ActionMenu
 {
     public class ActionMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
-        [SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI currentActionText;
+	    [SerializeField, Required, ChildGameObjectsOnly] private GameObject actionDescPanel;
+        [SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI actionDesc;
         [SerializeField, Required, ChildGameObjectsOnly] private Transform itemsParent;
 
         private List<ActionMenuItem> _items;
@@ -29,8 +29,8 @@ namespace Presentation.UI.Panel.ActionMenu
             {
                 item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType, item.Payload)));
 
-                item.OnHoverEnter += desc => currentActionText.text = desc;
-                item.OnHoverExit += _ => currentActionText.text = "";
+                item.OnHoverEnter += SetActionDesc;
+                item.OnHoverExit += _ => SetActionDesc(null);
                 item.SetActive(false);
             }
             Refresh(unit);
@@ -45,6 +45,7 @@ namespace Presentation.UI.Panel.ActionMenu
         private void Refresh(Systems.Unit.Unit unit)
         {
 	        foreach (var item in _items) item.SetActive(false);
+	        SetActionDesc(null);
 
             var availableActions = unit.GetAvailableActions();
             foreach (var action in availableActions)
@@ -61,6 +62,12 @@ namespace Presentation.UI.Panel.ActionMenu
             }
         }
 
+        private void SetActionDesc(string desc)
+        {
+	        actionDescPanel.SetActive(!string.IsNullOrEmpty(desc));
+	        actionDesc.text = desc;
+        }
+
         private static void SetContent(ActionMenuItem item, Systems.Unit.Unit unit, ActionAbility action)
         {
 	        switch (action.ActionType)
@@ -73,7 +80,7 @@ namespace Presentation.UI.Panel.ActionMenu
 
 			        item.SetContent(
 				        container.Config.icon,
-				        container.Config.description,
+				        container.Config.nName,
 				        itemLogic.RemainingUses);
 			        return;
 		        }
@@ -81,7 +88,7 @@ namespace Presentation.UI.Panel.ActionMenu
 			        if (unit.Skill == null) return;
 			        item.SetContent(
 				        unit.Skill.Config.icon,
-				        unit.Skill.Config.description,
+				        unit.Skill.Config.skillName,
 				        unit.Skill.CurrentCooldown);
 			        return;
 	        }

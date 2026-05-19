@@ -48,6 +48,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Data.Runtime.Commands.ThrowCommand
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Data.Runtime.Commands.UnitAttackCommand
     enabled: 1
     minLogLevel: 1
@@ -70,6 +74,10 @@ MonoBehaviour:
     autoDiscovered: 1
   - typeName: Presentation.Audio.AudioService
     enabled: 1
+    minLogLevel: 2
+    autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.GameFlowController
+    enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Bootstrap.LevelLoader
@@ -77,6 +85,10 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Bootstrap.MenuFlowController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Bootstrap.SceneTransitioner
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -152,6 +164,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.AttackPreview.AttackPreviewPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Panel.AttackPreviewPanel
     enabled: 1
     minLogLevel: 1
@@ -193,6 +209,10 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.UI.Panel.Menu.MainMenuPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.SceneTransition.SceneTransitionPanel
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -240,6 +260,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Presenter.BattleOverPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Presentation.UI.Presenter.CommonPanelPresenter
     enabled: 1
     minLogLevel: 1
@@ -273,6 +297,18 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Presentation.Unit.UnitViewManager
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vfx.OneShotVfxView
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vfx.ThrowPresenter
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Vfx.ThrowProjectileView
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -313,6 +349,18 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.AreaEffect.Behaviors.AttachBuffAreaBehavior
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.AITurnController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.BattleServer
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.BattleFlow.PlayerTurnController
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -357,6 +405,10 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.Interaction.States.AbilitySelectionState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.AbilityTargetingState
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -408,6 +460,10 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Turn.Activation.EnemyActivationService
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Turn.TurnQueue
     enabled: 1
     minLogLevel: 1
@@ -416,7 +472,27 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableBurnLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
   - typeName: Systems.Unit.Equipment.Logic.ThrowableGrenadeLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableLightLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableScoutEyeLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableSmokeLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Unit.Equipment.Logic.ThrowableTimerBombLogic
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
@@ -429,82 +505,6 @@ MonoBehaviour:
     minLogLevel: 1
     autoDiscovered: 1
   - typeName: Systems.Vision.VisionService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Bootstrap.SceneTransitioner
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.SceneTransition.SceneTransitionPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Bootstrap.GameFlowController
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Vfx.OneShotVfxView
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.BattleFlow.BattleServer
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.BattleFlow.PlayerTurnController
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.BattleFlow.AITurnController
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Vfx.ThrowPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Presenter.BattleOverPresenter
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Data.Runtime.Commands.ThrowCommand
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.Vfx.ThrowProjectileView
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableBurnLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableTimerBombLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableScoutEyeLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableLightLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Unit.Equipment.Logic.ThrowableSmokeLogic
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Turn.Activation.EnemyActivationService
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Presentation.UI.Panel.AttackPreview.AttackPreviewPanel
-    enabled: 1
-    minLogLevel: 1
-    autoDiscovered: 1
-  - typeName: Systems.Interaction.States.AbilityTargetingState
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
