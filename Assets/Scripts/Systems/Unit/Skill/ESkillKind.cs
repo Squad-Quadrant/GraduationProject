@@ -8,15 +8,15 @@ namespace Systems.Unit.Skill
         None = 0,
         // -------------------------
         [InspectorName("区域检测")] AreaReconnaissance,
-        [InspectorName("侦查装备")] ReconnaissanceEquipment,
+        // [InspectorName("侦查装备")] ReconnaissanceEquipment,
         [InspectorName("战术翻滚")] TacticalRoll,
-        [InspectorName("精准打击")] PrecisionShot,
+        // [InspectorName("精准打击")] PrecisionShot,
         [InspectorName("斗志昂扬")] FightMorale,
-        [InspectorName("屏息凝神")] DeepConcentration,
+        // [InspectorName("屏息凝神")] DeepConcentration,
         [InspectorName("守护")] Guard,
-        [InspectorName("铜墙铁壁")] IronWall,
+        // [InspectorName("铜墙铁壁")] IronWall,
         [InspectorName("冲锋陷阵")] ChargeForward,
-        [InspectorName("防爆盾")] Shield,
+        // [InspectorName("防爆盾")] Shield,
         // -------------------------
         Count,
 	}

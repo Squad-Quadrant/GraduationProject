@@ -4,12 +4,9 @@ using UnityEngine;
 namespace Systems.Unit.Skill
 {
     // 每个技能逻辑都非常独特，不存在逻辑复用，因此不共用一个基类。每有一个新加的技能，拉出子类配置。
-	[CreateAssetMenu(fileName = "SkillConfig", menuName = "Game/Unit/Skill Config")]
 	public class SkillConfig : ScriptableObject
 	{
 		[Title("基础信息")]
-		// [LabelText("ID")]
-		// public string id = "skill_001";
         [LabelText("技能种类")]
         public ESkillKind kind = ESkillKind.None;
 

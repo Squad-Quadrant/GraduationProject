@@ -12,6 +12,12 @@ namespace Systems.Unit.Skill.Logic
 
 		public virtual bool CanUse => _currentCooldown == 0 && Owner.CurrentAp >= Config.apCost;
 
+        public virtual string Name => Config.skillName;
+        
+        public virtual int ApCost => Config.apCost;
+        
+        public virtual string Description => Config.description;
+
 		protected SkillLogic(SkillConfig config, Unit owner)
 		{
 			Config = config;
@@ -31,5 +37,6 @@ namespace Systems.Unit.Skill.Logic
 			_currentCooldown--;
 			Owner.TriggerInfoChanged();
 		}
+        
 	}
 }
