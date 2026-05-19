@@ -161,7 +161,7 @@ namespace Systems.Unit.Equipment.Logic
 				target,
 				new AttachBuffAreaBehavior(
 					buffType:    ItemConfig.appliedBuff,
-					displayName: ItemConfig.nName,
+					displayName: ItemConfig.displayName,
 					displayIcon: ItemConfig.icon,
 					persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
 				ctx);
@@ -177,7 +177,7 @@ namespace Systems.Unit.Equipment.Logic
 				target,
 				new CountdownExplosionBehavior(
 					damage:      ItemConfig.directDamage,
-					displayName: ItemConfig.nName,
+					displayName: ItemConfig.displayName,
 					displayIcon: ItemConfig.icon,
 					persistentVfxPrefab: ItemConfig.persistentVfxPrefab,
 					explosionVfxPrefab: ItemConfig.oneShotVfxPrefab,
@@ -195,7 +195,7 @@ namespace Systems.Unit.Equipment.Logic
 				target,
 				new ScoutEyeBehavior(
 					visionRadius: ItemConfig.visionReach,
-					displayName:  ItemConfig.nName,
+					displayName:  ItemConfig.displayName,
 					displayIcon:  ItemConfig.icon,
 					persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
 				ctx);
@@ -211,7 +211,7 @@ namespace Systems.Unit.Equipment.Logic
             BuildAreaEffectCommand(
                 target,
                 new LightBehavior(
-                    displayName:  ItemConfig.nName,
+                    displayName:  ItemConfig.displayName,
                     displayIcon:  ItemConfig.icon,
                     persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
                 ctx);
@@ -226,7 +226,7 @@ namespace Systems.Unit.Equipment.Logic
             BuildAreaEffectCommand(
                 target,
                 new SmokeBehavior(
-                    displayName:  ItemConfig.nName,
+                    displayName:  ItemConfig.displayName,
                     displayIcon:  ItemConfig.icon,
                     persistentVfxPrefab: ItemConfig.persistentVfxPrefab),
                 ctx);

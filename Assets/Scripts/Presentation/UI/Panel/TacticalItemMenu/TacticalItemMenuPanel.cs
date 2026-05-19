@@ -27,7 +27,7 @@ namespace Presentation.UI.Panel.TacticalItemMenu
 				return;
 			}
 
-			titleText.text = container.Config.nName;
+			titleText.text = container.Config.displayName;
 			descText.text = container.Config.description;
 			tacticalItemDetailDisplayPanel.gameObject.SetActive(true);
 			tacticalItemDetailDisplayPanel.Show(container);

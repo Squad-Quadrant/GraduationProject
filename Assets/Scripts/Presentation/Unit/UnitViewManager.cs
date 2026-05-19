@@ -131,13 +131,16 @@ namespace Presentation.Unit
 			viewInstance.SetVisible(false);
 			_eventBus.Publish(new UnitViewSpawnedEvent(unit.id, viewInstance));
 			
-			var currentEquipment = e.Unit.CurrentWeaponContainer;
-			if (!currentEquipment.IsNullOrEmpty())
+			var currentWeapon = e.Unit.CurrentWeaponContainer;
+			if (!currentWeapon.IsNullOrEmpty())
 			{
-				var cfg = currentEquipment.Config;
-				viewInstance.SetWeaponSkin(cfg.spineName);
-				viewInstance.SetGrip(cfg.gripType);
-				viewInstance.SetWeaponAnimKey((cfg as WeaponConfig)?.animKey);
+				var config = currentWeapon.Config as WeaponConfig;
+				if (config)
+				{
+					viewInstance.SetWeaponSkin(config.spineName);
+					viewInstance.SetGrip(config.gripType);
+					viewInstance.SetWeaponAnimKey(config.animKey);
+				}
 			}
 			this.Log($"Unit view created for unit '{unit.id}'");
 		}
@@ -371,12 +374,16 @@ namespace Presentation.Unit
                 return;
             }
 
-            if (!e.Unit.CurrentWeaponContainer.IsNullOrEmpty())
+            var currentWeapon = e.Unit.CurrentWeaponContainer;
+            if (!currentWeapon.IsNullOrEmpty())
             {
-                var config = e.Unit.CurrentWeaponContainer.Config;
-                view.SetGrip(config.gripType);
-                view.SetWeaponSkin(config.spineName);
-                view.SetWeaponAnimKey((config as WeaponConfig)?.animKey);
+	            var config = currentWeapon.Config as WeaponConfig;
+	            if (!config)
+	            {
+		            view.SetGrip(config.gripType);
+		            view.SetWeaponSkin(config.spineName);
+		            view.SetWeaponAnimKey(config.animKey);
+	            }
             }
         }
 

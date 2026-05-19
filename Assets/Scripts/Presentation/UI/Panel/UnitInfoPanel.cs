@@ -69,7 +69,7 @@ namespace Presentation.UI.Panel
 			bool hasWeapon = unit.CurrentWeaponContainer != null && unit.CurrentWeaponLogic != null;
 			weaponRoot.gameObject.SetActive(hasWeapon);
 			if (!hasWeapon) return;
-			weaponText.text = unit.CurrentWeaponContainer.Config.nName;
+			weaponText.text = unit.CurrentWeaponContainer.Config.displayName;
 			weaponIcon.sprite = unit.CurrentWeaponContainer.Config.icon;
 			weaponIcon.SetNativeSize();
 			remainingAmmoText.text = $"{unit.CurrentWeaponLogic.CurrentAmmo()}";

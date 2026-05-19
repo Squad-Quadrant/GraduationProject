@@ -4,6 +4,7 @@ using Presentation.Unit;
 using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Systems.Unit.Equipment.Config
 {
@@ -31,13 +32,10 @@ namespace Systems.Unit.Equipment.Config
     public abstract class EquipmentConfig : ScriptableObject
     {
         [LabelText("ID(必要)")] public int id;
-        [LabelText("名称")] public string nName;
+        [LabelText("名称")] [FormerlySerializedAs("nName")] public string displayName;
         [LabelText("类型")] public string type;
         [LabelText("描述")] public string description;
-        [LabelText("战斗描述（如：使用xx对敌方造成xxx）")] public string battleDescription;
         [LabelText("图标")] public Sprite icon;
         [LabelText("重量")] public float weight;
-        [LabelText("Spine动画使用的名称")] public string spineName;
-        [LabelText("握持方式")] public EGripType gripType;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Presentation.Unit;
 using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,6 +12,10 @@ namespace Systems.Unit.Equipment.Config
 	[CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game/Unit/Equipment/Weapon", order = 0)]
 	public class WeaponConfig : EquipmentConfig
 	{
+		[LabelText("Spine动画使用的名称")] public string spineName;
+
+		[LabelText("握持方式")] public EGripType gripType;
+
         [LabelText("伤害")]
         public int damage;
 

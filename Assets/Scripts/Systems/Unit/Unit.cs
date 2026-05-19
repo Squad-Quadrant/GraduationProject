@@ -29,6 +29,12 @@ namespace Systems.Unit
 		None, // 用于占位或特殊情况
 	}
 
+	public enum EWeaponSlot
+	{
+		Main,
+		Secondary
+	}
+
 	[Serializable]
 	public class Unit : ITurnUnit, IBuffAble, IDamageInfluencer
 	{
@@ -72,7 +78,6 @@ namespace Systems.Unit
         public bool isStunned;
         public BuffProperty<bool> CanUseMainWeapon = new(PropertyType.CanUseMainWeapon, true);
         public BuffProperty<bool> CanAttack = new(PropertyType.CanAttack, false);
-
         public BuffProperty<bool> CanAIUseEye = new(PropertyType.CanAIUseEye, true);
 
         // for ai only
@@ -220,8 +225,10 @@ namespace Systems.Unit
 				actions.Add(new ActionAbility(EActionType.Interact));
 
 			// attack (normal + precise)
-			bool canAttack = !CurrentWeaponContainer.IsNullOrEmpty() && HasAmmo && CanAttack &&
-			                 (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon());
+			bool canAttack = !CurrentWeaponContainer.IsNullOrEmpty() &&
+			                 HasAmmo &&
+			                 CanAttack &&
+			                 (IsUsingMainWeapon && CanUseMainWeapon || IsUsingSecondaryWeapon);
 			if (HasAp && canAttack)
 			{
 				actions.Add(new ActionAbility(EActionType.Attack, payload: 0));
@@ -231,7 +238,7 @@ namespace Systems.Unit
 
 			// reload
 			bool canReload = CurrentWeaponLogic is { FullAmmo: false } &&
-			                 (IsUsingMainWeapon() && CanUseMainWeapon || IsUseSecondaryWeapon());
+			                 (IsUsingMainWeapon && CanUseMainWeapon || IsUsingSecondaryWeapon);
 			if (HasAp && canReload)
 				actions.Add(new ActionAbility(EActionType.Reload));
 
@@ -241,11 +248,11 @@ namespace Systems.Unit
 				actions.Add(new ActionAbility(EActionType.SwitchWeapon));
 
 			// tactical items
-			if (TacticalItems != null)
+			if (_tacticalItems != null)
 			{
-				for (int i = 0; i < TacticalItems.Length; i++)
+				for (int i = 0; i < _tacticalItems.Length; i++)
 				{
-					var container = TacticalItems[i];
+					var container = _tacticalItems[i];
 					if (container.IsNullOrEmpty()) continue;
 
 					bool slotUsable = container.Logic is TacticalItemLogic { CanUse: true };
@@ -344,36 +351,17 @@ namespace Systems.Unit
         public EquipmentContainer MainWeapon { get; private set; }
         public EquipmentContainer SecondaryWeapon { get; private set; }
 
-        public EquipmentContainer[] TacticalItems { get; private set; }
+        private EquipmentContainer[] _tacticalItems;
+        public IReadOnlyList<EquipmentContainer> TacticalItems => _tacticalItems;
 
-        public IReadOnlyList<EquipmentContainer> TacticalItemInfos => TacticalItems;
+        public EWeaponSlot CurrentWeaponSlot { get; private set; } = EWeaponSlot.Main;
 
-        private EquipmentContainer _currentWeaponContainer;
-
-        public EquipmentContainer CurrentWeaponContainer
-        {
-            get
-            {
-                _currentWeaponContainer ??= MainWeapon.IsNullOrEmpty() ? SecondaryWeapon : MainWeapon;
-                return _currentWeaponContainer;
-            }
-            set
-            {
-                _currentWeaponContainer = value;
-                EventBus.Publish(new UnitInfoChangedEvent(this));
-            }
-        }
+        public EquipmentContainer CurrentWeaponContainer => CurrentWeaponSlot == EWeaponSlot.Main ? MainWeapon : SecondaryWeapon;
         
-        public WeaponLogic CurrentWeaponLogic
-        {
-            get
-            {
-                if (CurrentWeaponContainer.IsNullOrEmpty()) return null;
-                if (CurrentWeaponContainer.Logic is WeaponLogic weaponLogic)
-                    return weaponLogic;
-                return null;
-            }
-        }
+        public WeaponLogic CurrentWeaponLogic => CurrentWeaponContainer?.Logic as WeaponLogic;
+
+        public bool IsUsingMainWeapon => CurrentWeaponSlot == EWeaponSlot.Main;
+        public bool IsUsingSecondaryWeapon => CurrentWeaponSlot == EWeaponSlot.Secondary;
 
         public void InitEquipment(EquipmentConfig main, EquipmentConfig secondary, EquipmentConfig[] tacticalItems)
         {
@@ -382,41 +370,33 @@ namespace Systems.Unit
             MainWeapon.Init(main, this);
             SecondaryWeapon.Init(secondary, this);
 
-            TacticalItems = new EquipmentContainer[tacticalItems.Length];
+            _tacticalItems = new EquipmentContainer[tacticalItems.Length];
             for (int i = 0; i < tacticalItems.Length; i++)
             {
-	            TacticalItems[i] = new EquipmentContainer();
-	            TacticalItems[i].Init(tacticalItems[i], this);
+	            _tacticalItems[i] = new EquipmentContainer();
+	            _tacticalItems[i].Init(tacticalItems[i], this);
             }
 
-            _currentWeaponContainer = MainWeapon;
+            CurrentWeaponSlot = MainWeapon.IsNullOrEmpty() && !SecondaryWeapon.IsNullOrEmpty()
+	            ? EWeaponSlot.Secondary
+	            : EWeaponSlot.Main;
         }
 
         public EquipmentContainer GetTacticalItem(int slotIndex)
         {
-	        if (TacticalItems == null)
+	        if (_tacticalItems == null)
 		        throw new InvalidOperationException("TacticalItems not initialized. Call InitEquipment first.");
-	        if (slotIndex < 0 || slotIndex >= TacticalItems.Length)
-		        throw new ArgumentOutOfRangeException(nameof(slotIndex), slotIndex, $"Slot index must be in [0, {TacticalItems.Length}).");
-	        return TacticalItems[slotIndex];
+	        if (slotIndex < 0 || slotIndex >= _tacticalItems.Length)
+		        throw new ArgumentOutOfRangeException(nameof(slotIndex), slotIndex, $"Slot index must be in [0, {_tacticalItems.Length}).");
+	        return _tacticalItems[slotIndex];
         }
 
         public void SwitchWeapon()
         {
-            CurrentWeaponContainer = _currentWeaponContainer == MainWeapon ? SecondaryWeapon : MainWeapon;
+	        CurrentWeaponSlot = CurrentWeaponSlot == EWeaponSlot.Main
+		        ? EWeaponSlot.Secondary
+		        : EWeaponSlot.Main;
             TriggerInfoChanged();
-        }
-
-        public bool IsUsingMainWeapon()
-        {
-	        if (MainWeapon  == null) return false;
-	        return _currentWeaponContainer == MainWeapon;
-        }
-
-        public bool IsUseSecondaryWeapon()
-        {
-	        if (SecondaryWeapon  == null) return false;
-	        return _currentWeaponContainer == SecondaryWeapon;
         }
         
         #endregion

@@ -59,7 +59,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				iconImage.enabled = hasEquipment && config.icon;
 				if (iconImage.enabled) aspectRatioFitter.aspectRatio = config.icon.rect.width / config.icon.rect.height;
 			}
-			if (nameText) nameText.text = hasEquipment ? config.nName : "";
+			if (nameText) nameText.text = hasEquipment ? config.displayName : "";
 			if (subtitleText) subtitleText.text = hasEquipment ? config.type : "";
 			if (emptyPlaceholder) emptyPlaceholder.SetActive(!hasEquipment);
 		}

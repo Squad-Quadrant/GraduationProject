@@ -52,7 +52,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			}
 
 			ClearText();
-			detailName.text = config.nName;
+			detailName.text = config.displayName;
 			detailDescription.text = config.description;
 			switch (config)
 			{

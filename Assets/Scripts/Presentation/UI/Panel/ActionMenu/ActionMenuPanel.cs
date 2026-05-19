@@ -80,7 +80,7 @@ namespace Presentation.UI.Panel.ActionMenu
 
 			        item.SetContent(
 				        container.Config.icon,
-				        container.Config.nName,
+				        container.Config.displayName,
 				        itemLogic.RemainingUses);
 			        return;
 		        }

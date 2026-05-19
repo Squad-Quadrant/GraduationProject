@@ -19,7 +19,7 @@ namespace Systems.Unit.Equipment.Logic
             Config = config;
         }
 
-        public virtual string Name() => Config.nName;
+        public virtual string Name() => Config.displayName;
 
         public abstract int GetDamage();
         public virtual Sprite Icon() => Config.icon;

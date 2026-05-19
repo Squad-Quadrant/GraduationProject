@@ -41,7 +41,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 					iconImage.enabled = config.icon;
 					if (iconImage.enabled) aspectRatioFitter.aspectRatio = config.icon.rect.width / config.icon.rect.height;
 				}
-				if (nameText) nameText.text = config.nName;
+				if (nameText) nameText.text = config.displayName;
 				if (classText) classText.text = config.type;
 			}
 			else

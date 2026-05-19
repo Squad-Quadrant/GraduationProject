@@ -343,7 +343,7 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			slot.Refresh(selected);   // 立即更新槽位显示，无需整个 Refresh
 			RefreshStartButtonState();
 
-			this.Log($"Equipped {(selected ? selected.nName : "<empty>")} to {_currentUnit.configId}/{slot.SlotKind}[{slot.SlotIndex}]");
+			this.Log($"Equipped {(selected ? selected.displayName : "<empty>")} to {_currentUnit.configId}/{slot.SlotKind}[{slot.SlotIndex}]");
 		}
 
 		#endregion
