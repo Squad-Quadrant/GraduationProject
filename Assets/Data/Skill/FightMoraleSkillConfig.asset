@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf559b79c33b42c28040e2889d73dfe3, type: 3}
+  m_Name: FightMoraleSkillConfig
+  m_EditorClassIdentifier: 
+  kind: 3
+  skillName: "\u6597\u5FD7\u6602\u626C"
+  description: "\u6062\u590D2\u70B9AP\uFF0C\u5E76\u5237\u65B0\u672C\u56DE\u5408\u4E2D\u81EA\u8EAB\u7684\u653B\u51FB\u6B21\u6570\u9650\u5236"
+  icon: {fileID: 781877260, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
+  apCost: 0
+  cooldown: 5
+  apRecover: 2
