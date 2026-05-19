@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 94e571b02df2c074fbcb7cdd7e22dcc6
+guid: 2842331d294e52c439c2dc054c67a0c9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icon_move
+      name: ICON_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 76
-        width: 30
-        height: 40
+        x: 90
+        y: 902
+        width: 74
+        height: 102
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dedc4e8ee5b80484c92af040cc5c261a
-      internalID: 1221503175
+      spriteID: 7883d8c42e5adf04794a7e6c3b23888b
+      internalID: 271975545
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_wait
+      name: ICON_1
       rect:
         serializedVersion: 2
-        x: 71
-        y: 74
-        width: 40
-        height: 41
+        x: 226
+        y: 902
+        width: 101
+        height: 105
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 413cdfc2fa5801b43a82d332bdbbea5b
-      internalID: 163261127
+      spriteID: fc582ba2479d4904dbac97c746efcea4
+      internalID: -1742949670
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_reload
+      name: ICON_2
       rect:
         serializedVersion: 2
-        x: 144
-        y: 77
-        width: 44
-        height: 36
+        x: 389
+        y: 906
+        width: 110
+        height: 93
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 55e0e3b8247191241adf21a1f585116b
-      internalID: 1832788225
+      spriteID: 88af3cc555f602c4f86f18f9b41c827d
+      internalID: 1788421077
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_switch
+      name: ICON_3
       rect:
         serializedVersion: 2
-        x: 292
-        y: 74
-        width: 46
-        height: 40
+        x: 559
+        y: 914
+        width: 101
+        height: 74
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,20 +187,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 83f90809afe3d3a44b0bb342dddf9c0f
-      internalID: -175504021
+      spriteID: 2d8c54936aae16544b5f7b2d58deac0d
+      internalID: 328342413
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_grenade
+      name: ICON_4
       rect:
         serializedVersion: 2
-        x: 374
-        y: 79
-        width: 32
-        height: 35
+        x: 715
+        y: 904
+        width: 99
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,20 +208,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40569f7b3a57c01479db5096841651f1
-      internalID: 1417140676
+      spriteID: 30548819d7d70f541b909faadde710ac
+      internalID: -111608550
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_look
+      name: ICON_5
       rect:
         serializedVersion: 2
-        x: 221
-        y: 80
-        width: 39
-        height: 29
+        x: 863
+        y: 903
+        width: 134
+        height: 109
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,20 +229,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2835df02ec54b5248a3fd4849574a181
-      internalID: 556128933
+      spriteID: e189ce23712dc544284679c894152a4a
+      internalID: 1263837722
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_grenade_fire
+      name: ICON_6
       rect:
         serializedVersion: 2
-        x: 444
-        y: 75
-        width: 41
-        height: 39
+        x: 1057
+        y: 904
+        width: 107
+        height: 106
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,20 +250,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: beb3e5fc3ec926f4e8506f33f73d5342
-      internalID: -2115003371
+      spriteID: b5b03762b3f9af94d831f9f5cccdc9c4
+      internalID: -228085815
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_grenade_poison
+      name: ICON_7
       rect:
         serializedVersion: 2
-        x: 519
-        y: 74
-        width: 38
-        height: 41
+        x: 75
+        y: 782
+        width: 103
+        height: 17
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -271,20 +271,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5477b237b0345b3438b0afed7155eaa3
-      internalID: -742619750
+      spriteID: 9692ad3432fb6874d8396e681db95935
+      internalID: 175205638
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_greande_gas
+      name: ICON_8
       rect:
         serializedVersion: 2
-        x: 593
-        y: 76
-        width: 42
-        height: 39
+        x: 227
+        y: 767
+        width: 140
+        height: 46
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -292,20 +292,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 84ec4eb1daadd434cbf668b08a18dee0
-      internalID: -1663724687
+      spriteID: 65fd6f5c1c030864b81eb68ace34221a
+      internalID: 531938260
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_grenade_flash
+      name: ICON_9
       rect:
         serializedVersion: 2
-        x: 674
-        y: 74
-        width: 31
-        height: 41
+        x: 415
+        y: 754
+        width: 141
+        height: 74
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -313,20 +313,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d92a167d9bbbaa41a2ba670ee123e2a
-      internalID: -1167115508
+      spriteID: 13d859f12fb38b143aca4848c7e69894
+      internalID: -1125189860
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_grenade_light
+      name: ICON_10
       rect:
         serializedVersion: 2
-        x: 738
-        y: 71
-        width: 31
-        height: 48
+        x: 600
+        y: 738
+        width: 105
+        height: 104
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -334,20 +334,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e25ae15bcc7b52498aebb55d743f311
-      internalID: 1744820678
+      spriteID: 3705fdf9bc9c8bd44bd6cb47b773d8ba
+      internalID: -1025792509
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_shoot
+      name: ICON_11
       rect:
         serializedVersion: 2
-        x: 0
-        y: 5
-        width: 37
-        height: 32
+        x: 93
+        y: 575
+        width: 107
+        height: 94
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -355,20 +355,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87b240d0af42c124da67f42b9d6f56dc
-      internalID: -176276302
+      spriteID: 1e6275cc5557895479bab8d34a4a67ae
+      internalID: -1271880537
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_shoot_precise
+      name: ICON_12
       rect:
         serializedVersion: 2
-        x: 71
-        y: 0
-        width: 42
-        height: 42
+        x: 264
+        y: 573
+        width: 105
+        height: 98
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -376,20 +376,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 809eb5d24e7843543b501d1c791b4699
-      internalID: -1408362252
+      spriteID: 07474f693ee6ad24083c6e85a746eca4
+      internalID: 381657393
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_check
+      name: ICON_13
       rect:
         serializedVersion: 2
-        x: 148
-        y: 3
-        width: 36
-        height: 36
+        x: 427
+        y: 571
+        width: 101
+        height: 109
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -397,20 +397,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3a075aae529390408405bac3d1a8ebd
-      internalID: 2135784927
+      spriteID: 111d1c802771e984db0bb16415cf2764
+      internalID: 736032151
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_interact
+      name: ICON_14
       rect:
         serializedVersion: 2
-        x: 224
-        y: 4
-        width: 29
-        height: 34
+        x: 582
+        y: 569
+        width: 105
+        height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -418,92 +418,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d87553ea996a8e544a612099784cdbb7
-      internalID: 232335171
+      spriteID: ad457df21e4f3c14dab79021bf61d022
+      internalID: -1594841911
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_hemostat
+      name: ICON_15
       rect:
         serializedVersion: 2
-        x: 299
-        y: 5
-        width: 33
-        height: 33
+        x: 95
+        y: 397
+        width: 113
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef1136c685df36c4a9ee2c1340a13ec0
-      internalID: -1573005816
+      spriteID: 00db3339060a62e42b8f6ed56028be1b
+      internalID: 1612189228
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_medpack
+      name: ICON_16
       rect:
         serializedVersion: 2
-        x: 370
-        y: 5
-        width: 38
-        height: 33
+        x: 262
+        y: 390
+        width: 112
+        height: 121
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8d20c35fe402f34c881333c1a394dc2
-      internalID: -1314032032
+      spriteID: ba4df3b1e8cca1740bc0648991fe7a22
+      internalID: -2097954336
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: icon_epinephrine
+      name: ICON_17
       rect:
         serializedVersion: 2
-        x: 446
-        y: 2
-        width: 36
-        height: 39
+        x: 415
+        y: 384
+        width: 123
+        height: 116
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 115793ee59d744148b3765ed1764cb31
-      internalID: 2074295329
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: icon_heal
-      rect:
-        serializedVersion: 2
-        x: 520
-        y: 1
-        width: 38
-        height: 37
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ab4235904eb12f749b7f2827ba806df2
-      internalID: -1677688624
+      spriteID: f1ffcc24c75adab4685c9268ae47c34b
+      internalID: 585156107
       vertices: []
       indices: 
       edges: []
@@ -519,25 +498,24 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      icon_check: 2135784927
-      icon_epinephrine: 2074295329
-      icon_greande_gas: -1663724687
-      icon_grenade: 1417140676
-      icon_grenade_fire: -2115003371
-      icon_grenade_flash: -1167115508
-      icon_grenade_light: 1744820678
-      icon_grenade_poison: -742619750
-      icon_heal: -1677688624
-      icon_hemostat: -1573005816
-      icon_interact: 232335171
-      icon_look: 556128933
-      icon_medpack: -1314032032
-      icon_move: 1221503175
-      icon_reload: 1832788225
-      icon_shoot: -176276302
-      icon_shoot_precise: -1408362252
-      icon_switch: -175504021
-      icon_wait: 163261127
+      ICON_0: 271975545
+      ICON_1: -1742949670
+      ICON_10: -1025792509
+      ICON_11: -1271880537
+      ICON_12: 381657393
+      ICON_13: 736032151
+      ICON_14: -1594841911
+      ICON_15: 1612189228
+      ICON_16: -2097954336
+      ICON_17: 585156107
+      ICON_2: 1788421077
+      ICON_3: 328342413
+      ICON_4: -111608550
+      ICON_5: 1263837722
+      ICON_6: -228085815
+      ICON_7: 175205638
+      ICON_8: 531938260
+      ICON_9: -1125189860
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
