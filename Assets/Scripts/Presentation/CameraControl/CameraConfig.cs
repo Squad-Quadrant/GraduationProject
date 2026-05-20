@@ -61,6 +61,18 @@ namespace Presentation.CameraControl
 		[FoldoutGroup("Discovery")]
 		public Ease discoveryEase = Ease.OutCubic;
 
+		[FoldoutGroup("Attack")]
+		[Range(1f, 20f)]
+		public float attackZoom = 2f;
+
+		[FoldoutGroup("Attack")]
+		[SuffixLabel("sec"), Range(0.05f, 1f)]
+		public float attackFocusDuration = 0.25f;
+
+		[FoldoutGroup("Attack")]
+		[Range(0.05f, 1f)]
+		public float attackSlowMotionScale = 0.3f;
+
 		[FoldoutGroup("Shake")]
 		[SuffixLabel("sec"), Range(0.05f, 1f)]
 		public float shakeDuration = 0.2f;

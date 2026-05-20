@@ -53,7 +53,7 @@ namespace Presentation.Unit
 			_eventBus.Subscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Subscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Subscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Subscribe<DealDamageEvent>(OnUnitAttacked);
+			_eventBus.Subscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
             _eventBus.Subscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Subscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Subscribe<UnitReloadedEvent>(OnUnitReload);
@@ -73,7 +73,7 @@ namespace Presentation.Unit
 			_eventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
 			_eventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
 			_eventBus.Unsubscribe<UnitMovedEvent>(OnUnitMoved);
-            _eventBus.Unsubscribe<DealDamageEvent>(OnUnitAttacked);
+			_eventBus.Unsubscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
             _eventBus.Unsubscribe<DamageAppliedEvent>(OnUnitBeHit);
             _eventBus.Unsubscribe<VisionChangedEvent>(OnVisionChanged);
             _eventBus.Unsubscribe<UnitReloadedEvent>(OnUnitReload);
@@ -284,32 +284,51 @@ namespace Presentation.Unit
 			return view;
 		}
         
-        private void OnUnitAttacked(DealDamageEvent e)
+		private void OnUnitAttackStarted(UnitAttackStartedEvent e)
         {
-	        var info = e.Info;
-	        if (info.DamageType != DamageType.Bullet) return;
+	        if (!_views.TryGetValue(e.AttackerId, out var view))
+	        {
+		        this.LogWarning($"No view found for attacker '{e.AttackerId}'.");
+		        _eventBus.Publish(new UnitAttackFiredEvent(e.AttackerId, e.TargetId));
+		        _eventBus.Publish(new PresentationCompleteEvent(
+			        EPresentationCategory.Animation, PresentationType.Animation.Attack, e.AttackerId));
+		        return;
+	        }
 
-	        var attacker = info.Attacker as Systems.Unit.Unit;
-            if (attacker == null)
-            {
-                this.LogError("UnitAttackedEvent has null Unit");
-                return;
-            }
+	        var attackerId = e.AttackerId;
+	        var targetId = e.TargetId;
+	        bool fired = false;
 
-            if (!_views.TryGetValue(attacker.id, out var view))
-            {
-                this.LogWarning($"No view found for attacked unit '{attacker.id}'.");
-                return;
-            }
+	        if (_unitService.TryGetUnit(attackerId, out var attacker) &&
+	            _unitService.TryGetUnit(targetId, out var target))
+	        {
+		        var dir = target.position - attacker.position;
+		        if (dir != Vector2Int.zero)
+		        {
+			        view.SetFacing(dir);
+			        if (_views.TryGetValue(targetId, out var targetView))
+				        targetView.SetFacing(-dir);
+		        }
+	        }
 
             view.PlayAction("shoot", () =>
             {
-                _eventBus.Publish(new PresentationCompleteEvent(
-                    category: EPresentationCategory.Animation,
-                    type: PresentationType.Animation.Attack,
-                    entityId: attacker.id
-                ));
-                view.PlayAction("idle");
+	            if (!fired)
+	            {
+		            this.LogWarning($"'fire' spine event was not triggered during shoot animation for '{attackerId}'.");
+		            fired = true;
+		            _eventBus.Publish(new UnitAttackFiredEvent(attackerId, targetId));
+	            }
+	            _eventBus.Publish(new PresentationCompleteEvent(
+		            EPresentationCategory.Animation, PresentationType.Animation.Attack, attackerId));
+	            view.PlayAction("idle");
+            });
+
+            view.ListenForSpineEvent("fire", () =>
+            {
+	            if (fired) return;
+	            fired = true;
+	            _eventBus.Publish(new UnitAttackFiredEvent(attackerId, targetId));
             });
         }
         
@@ -325,19 +344,23 @@ namespace Presentation.Unit
             if (!_views.TryGetValue(defender.id, out var view))
             {
                 this.LogWarning($"No view found for hit unit '{defender.id}'.");
+                _eventBus.Publish(new PresentationCompleteEvent(
+	                EPresentationCategory.Animation, PresentationType.Animation.BeHit, defender.id));
                 return;
             }
-            if (!e.Context.isMiss)
+
+            if (e.Context.isMiss)
             {
-                view.PlayAction("beHit", () =>
-                {
-                    _eventBus.Publish(new PresentationCompleteEvent(
-                        category: EPresentationCategory.Animation,
-                        type: PresentationType.Animation.BeHit,
-                        entityId: defender.id
-                    ));
-                });
+	            _eventBus.Publish(new PresentationCompleteEvent(
+		            EPresentationCategory.Animation, PresentationType.Animation.BeHit, defender.id));
+	            return;
             }
+
+            view.PlayAction("beHit", () =>
+            {
+	            _eventBus.Publish(new PresentationCompleteEvent(
+		            EPresentationCategory.Animation, PresentationType.Animation.BeHit, defender.id));
+            });
         }
 
         private void OnUnitReload(UnitReloadedEvent e)

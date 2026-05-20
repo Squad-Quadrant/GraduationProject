@@ -1,5 +1,6 @@
 ﻿using Core.Commands;
 using Core.Events;
+using Systems.Time;
 using UnityEngine;
 
 namespace Presentation.Bootstrap
@@ -49,6 +50,7 @@ namespace Presentation.Bootstrap
 
 			Services.Register<IEventBus, EventBus>();
 			Services.Register<ICommandQueue, CommandQueue>();
+			Services.Register<ITimeService, TimeService>();
 
 			Debug.Log($"[RootContainer] Service registration complete.");
 		}

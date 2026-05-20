@@ -6,6 +6,7 @@ using Core.Log;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.View;
+using DG.Tweening;
 using Presentation.Audio;
 using Systems.Damage;
 using Systems.Map;
@@ -26,11 +27,16 @@ namespace Data.Runtime.Commands
 		private readonly IEventBus _eventBus;
 		private readonly AudioService _audioService;
 
-        private bool _attackAnimationDone = false;
-        private bool _beHitAnimationDone = false;
+		private Unit _attacker;
+
+		private bool _fireResolved;
+		private bool _attackAnimationDone;
+		private bool _beHitAnimationDone;
+		private bool _destroyAnimationDone;
 
 		public bool WaitForAnimation { get; set; } = true;
 
+		private Action<UnitAttackFiredEvent> _onUnitAttackFired;
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
 		public override string Name => $"Attack({_unitId} → {_targetUnitId})";
@@ -61,40 +67,36 @@ namespace Data.Runtime.Commands
 		{
 			this.Log($"Executing: {Name}");
 
-			if (!_unitService.TryGetUnit(_unitId, out var unit))
+			if (!_unitService.TryGetUnit(_unitId, out _attacker))
 			{
 				this.LogError($"Unit '{_unitId}' not found!");
 				CompleteExecution();
 				return;
 			}
-            
-            if (!_unitService.TryGetUnit(_targetUnitId, out var targetUnit))
-            {
-                this.LogError($"Target unit '{_targetUnitId}' not found!");
-                CompleteExecution();
-                return;
-            }
 
-            // _eventBus.Publish(new UnitBeHitEvent(unit));
-            var info = new BulletDamageTriggeringInfo(unit, targetUnit, _actionType);
-            _eventBus.Publish(new DealDamageEvent(info));
-            
-			unit.CanAttack.Value = false;
-            unit.CurrentAp -= _apCost;
+			if (!_unitService.TryGetUnit(_targetUnitId, out _))
+			{
+				this.LogError($"Target unit '{_targetUnitId}' not found!");
+				CompleteExecution();
+				return;
+			}
 
-            _audioService.PlaySfx(
-	            unit.CurrentWeaponLogic.CurrentAmmo() <= 0
-		            ? unit.CurrentWeaponLogic.WeaponConfig.emptyClip
-		            : unit.CurrentWeaponLogic.WeaponConfig.fireClip, 5);
+            _attacker.CanAttack.Value = false;
+            _attacker.CurrentAp -= _apCost;
+
+            _eventBus.Publish(new UnitAttackStartedEvent(_unitId, _targetUnitId));
 
             if (WaitForAnimation)
 			{
+				_onUnitAttackFired = OnUnitAttackFired;
 				_onPresentationComplete = OnPresentationComplete;
+				_eventBus.Subscribe(_onUnitAttackFired);
 				_eventBus.Subscribe(_onPresentationComplete);
 			}
 			else
             {
-                var units = _unitService.GetAllAliveUnits().ToList();
+	            ResolveFire();
+	            _eventBus.Publish(new UnitAttackEndedEvent(_unitId, _targetUnitId));
                 CompleteExecution();
             }
 		}
@@ -105,27 +107,64 @@ namespace Data.Runtime.Commands
 			CompleteUndo();
 		}
 
+		private void OnUnitAttackFired(UnitAttackFiredEvent e)
+		{
+			if (e.AttackerId != _unitId) return;
+			ResolveFire();
+		}
+
+		private void ResolveFire()
+		{
+			if (_fireResolved) return;
+			_fireResolved = true;
+
+			this.Log($"Fire resolved for {_unitId} → {_targetUnitId}");
+
+			if (!_unitService.TryGetUnit(_targetUnitId, out var targetUnit))
+			{
+				this.LogError($"Target unit '{_targetUnitId}' not found at fire time!");
+				return;
+			}
+
+			var weaponLogic = _attacker.CurrentWeaponLogic;
+			var weaponConfig = weaponLogic.WeaponConfig;
+
+			_audioService.PlaySfx(
+				weaponLogic.CurrentAmmo() <= 0 ? weaponConfig.emptyClip : weaponConfig.fireClip,
+				5);
+
+			var info = new BulletDamageTriggeringInfo(_attacker, targetUnit, _actionType);
+			_eventBus.Publish(new DealDamageEvent(info));
+		}
+
 		private void OnPresentationComplete(PresentationCompleteEvent e)
         {
-            if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Attack, _unitId))
-                _attackAnimationDone = true;
-            
-            if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.BeHit, _targetUnitId))
-                _beHitAnimationDone = true;
-            
-            if (!_attackAnimationDone || !_beHitAnimationDone) return;
+	        if (!e.Matches(EPresentationCategory.Animation, PresentationType.Animation.Attack, _unitId))
+		        return;
 
-			this.Log($"Animation complete for {_unitId}");
+	        this.Log($"Animation complete for {_unitId}");
 
-			Cleanup();
-			CompleteExecution();
-		}
+	        DOVirtual.DelayedCall(0.5f, () =>
+	        {
+		        Cleanup();
+		        _eventBus.Publish(new UnitAttackEndedEvent(_unitId, _targetUnitId));
+		        CompleteExecution();
+	        }).SetUpdate(true);
+        }
 
 		private void Cleanup()
 		{
-			if (_onPresentationComplete == null) return;
-			_eventBus.Unsubscribe(_onPresentationComplete);
-			_onPresentationComplete = null;
+			if (_onUnitAttackFired != null)
+			{
+				_eventBus.Unsubscribe(_onUnitAttackFired);
+				_onUnitAttackFired = null;
+			}
+
+			if (_onPresentationComplete != null)
+			{
+				_eventBus.Unsubscribe(_onPresentationComplete);
+				_onPresentationComplete = null;
+			}
 		}
 	}
 }

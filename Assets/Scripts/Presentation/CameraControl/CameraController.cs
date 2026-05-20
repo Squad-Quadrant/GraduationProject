@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Input;
+using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
@@ -13,6 +14,7 @@ using Sirenix.OdinInspector;
 using Systems.Damage;
 using Systems.Interfaces;
 using Systems.Map;
+using Systems.Time;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,6 +40,7 @@ namespace Presentation.CameraControl
 		private ICoordinateConverter _coordinateConverter;
 		private IMapService _mapService;
 		private IUnitService _unitService;
+		private ITimeService _timeService;
 
 		private Tween _focusTween;
 		private Vector3 _dragWorldOrigin;
@@ -52,13 +55,15 @@ namespace Presentation.CameraControl
 			_coordinateConverter = services.Resolve<ICoordinateConverter>();
 			_mapService = services.Resolve<IMapService>();
 			_unitService = services.Resolve<IUnitService>();
+			_timeService = services.Resolve<ITimeService>();
 
 			_targetZoom = mainCamera.orthographicSize;
 
 			ComputeWorldBounds();
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
-			_eventBus.Subscribe<DealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Subscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
+			_eventBus.Subscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Subscribe<SpaceInputEvent>(OnSpaceInput);
 
 			_isInitialized = true;
@@ -69,7 +74,8 @@ namespace Presentation.CameraControl
 		{
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
-			_eventBus.Unsubscribe<DealDamageEvent>(OnAttackDealDamage);
+			_eventBus.Unsubscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
+			_eventBus.Unsubscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Unsubscribe<SpaceInputEvent>(OnSpaceInput);
 			KillFocusTween();
 		}
@@ -109,16 +115,36 @@ namespace Presentation.CameraControl
 			FocusOnCellSequence(positions);
 		}
 
-		private void OnAttackDealDamage(DealDamageEvent e)
+		private void OnUnitAttackStarted(UnitAttackStartedEvent e)
 		{
-			var info = e.Info;
-			if (info.DamageType != DamageType.Bullet) return;
+			if (!_unitService.TryGetUnit(e.AttackerId, out var attacker))
+			{
+				this.LogWarning($"Attacker '{e.AttackerId}' not found, skipping attack presentation.");
+				return;
+			}
 
-			if (info.Attacker is not Systems.Unit.Unit unit) return;
+			if (!_unitService.TryGetUnit(e.TargetId, out var target))
+			{
+				this.LogWarning($"Target '{e.TargetId}' not found, skipping attack presentation.");
+				return;
+			}
 
-			var worldPos = _coordinateConverter.CellToWorld(unit.position);
-			FocusOn(worldPos);
-			this.Log($"Unit attacked: {unit.id}, focusing on attacker position");
+			var attackerWorld = _coordinateConverter.CellToWorld(attacker.position);
+			var targetWorld = _coordinateConverter.CellToWorld(target.position);
+			var midpoint = (attackerWorld + targetWorld) * 0.5f;
+
+			FocusOn(midpoint, config.attackZoom, config.attackFocusDuration);
+
+			_timeService.SetTimeScale(config.attackSlowMotionScale);
+
+			this.Log($"Attack Started: focus midpoint={midpoint}, zoom={config.attackZoom}");
+		}
+
+		private void OnUnitAttackEnded(UnitAttackEndedEvent e)
+		{
+			_targetZoom = config.standardZoom;
+			_timeService.ResetTimeScale();
+			this.Log($"Attack ended: restoring zoom to {config.standardZoom}");
 		}
 
 		private void OnSpaceInput(SpaceInputEvent e)
@@ -128,7 +154,7 @@ namespace Presentation.CameraControl
 			_targetZoom = config.standardZoom;
 		}
 
-		public void FocusOn(Vector3 worldPos)
+		public void FocusOn(Vector3 worldPos, float? zoomOverride = null, float? durationOverride = null)
 		{
 			KillFocusTween();
 
@@ -136,9 +162,14 @@ namespace Presentation.CameraControl
 			var cameraTransform = mainCamera.transform;
 			var targetPos = new Vector3(target.x, target.y, cameraTransform.position.z);
 
+			if (zoomOverride.HasValue)
+				_targetZoom = zoomOverride.Value;
+
+			var duration = durationOverride ?? config.focusDuration;
+
 			_isFocusing = true;
 			_focusTween = cameraTransform
-				.DOMove(targetPos, config.focusDuration)
+				.DOMove(targetPos, duration)
 				.SetEase(config.focusEase)
 				.OnComplete(() =>
 				{
