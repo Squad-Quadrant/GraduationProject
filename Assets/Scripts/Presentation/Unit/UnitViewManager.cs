@@ -134,8 +134,7 @@ namespace Presentation.Unit
 			var currentWeapon = e.Unit.CurrentWeaponContainer;
 			if (!currentWeapon.IsNullOrEmpty())
 			{
-				var config = currentWeapon.Config as WeaponConfig;
-				if (config)
+				if (currentWeapon.Config is WeaponConfig config)
 				{
 					viewInstance.SetWeaponSkin(config.spineName);
 					viewInstance.SetGrip(config.gripType);
@@ -382,8 +381,7 @@ namespace Presentation.Unit
             var currentWeapon = e.Unit.CurrentWeaponContainer;
             if (!currentWeapon.IsNullOrEmpty())
             {
-	            var config = currentWeapon.Config as WeaponConfig;
-	            if (!config)
+	            if (currentWeapon.Config is WeaponConfig config)
 	            {
 		            view.SetGrip(config.gripType);
 		            view.SetWeaponSkin(config.spineName);
