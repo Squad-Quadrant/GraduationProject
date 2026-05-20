@@ -61,6 +61,8 @@ namespace Systems.Buff.Config
         SlowAddHP,
         [InspectorName("移除负面Buff")]
         RemoveDebuff,
+        [InspectorName("冲锋陷阵")]
+        ChargeForward,
     }
 
     [Configurable("Buff/BuffData")]

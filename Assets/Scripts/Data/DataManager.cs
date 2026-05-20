@@ -16,15 +16,15 @@ namespace Data
     public class DataManager : MonoBehaviour
     {
 	    [Title("装备配置")]
-	    [SerializeField, AssetList(Path = "Data/Equipment")]
+	    [SerializeField, AssetList(Path = "Data/Equipment", AutoPopulate = true)]
 	    private List<EquipmentConfig> equipmentConfigs = new();
 
 	    [Title("Buff 配置")]
-	    [SerializeField, AssetList(Path = "Data/Buff/BuffData")]
+	    [SerializeField, AssetList(Path = "Data/Buff/BuffData", AutoPopulate = true)]
 	    private List<BuffData> buffs = new();
 
 	    [Title("关卡配置")]
-	    [SerializeField, AssetList(Path = "Data/Levels")]
+	    [SerializeField, AssetList(Path = "Data/Levels", AutoPopulate = true)]
 	    private List<LevelConfig> levels = new();
 
 	    [Title("玩家装备覆盖 (Runtime)")]
