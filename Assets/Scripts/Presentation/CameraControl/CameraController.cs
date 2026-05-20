@@ -64,6 +64,7 @@ namespace Presentation.CameraControl
 			_eventBus.Subscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Subscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 			_eventBus.Subscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
+			_eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
 			_eventBus.Subscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Subscribe<SpaceInputEvent>(OnSpaceInput);
 
@@ -76,6 +77,7 @@ namespace Presentation.CameraControl
 			_eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 			_eventBus.Unsubscribe<EnemiesDiscoveredEvent>(OnEnemiesDiscovered);
 			_eventBus.Unsubscribe<UnitAttackStartedEvent>(OnUnitAttackStarted);
+			_eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
 			_eventBus.Unsubscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Unsubscribe<SpaceInputEvent>(OnSpaceInput);
 			KillFocusTween();
@@ -142,6 +144,11 @@ namespace Presentation.CameraControl
 			_timeService.SetTimeScale(config.attackSlowMotionScale);
 
 			this.Log($"Attack Started: focus midpoint={midpoint}, zoom={config.attackZoom}");
+		}
+
+		private void OnDamageApplied(DamageAppliedEvent e)
+		{
+			Shake();
 		}
 
 		private void OnUnitAttackEnded(UnitAttackEndedEvent e)

@@ -29,4 +29,4 @@ MonoBehaviour:
   attackFocusDuration: 0.25
   attackSlowMotionScale: 0.5
   shakeDuration: 0.2
-  shakeStrength: 0.15
+  shakeStrength: 0.3
