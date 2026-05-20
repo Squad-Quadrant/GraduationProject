@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
+  m_Name: BattleSettingPanel
+  m_EditorClassIdentifier: 
+  panelId: BattleSettingPanel
+  prefab: {fileID: 541301232110590023, guid: 329fad4085d81df498c62af9b33bcfc3, type: 3}
+  layer: 2
+  cacheOnClose: 0

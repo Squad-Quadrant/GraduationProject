@@ -29,6 +29,7 @@ using Systems.Map;
 using Systems.Map.Region;
 using Systems.PathFinding;
 using Systems.PathFinding.TraversalRule;
+using Systems.Time;
 using Systems.Turn;
 using Systems.Turn.Activation;
 using Systems.Unit;
@@ -131,6 +132,7 @@ namespace Presentation.Bootstrap
 			}
 
 			inputService.SetEnabled(true);
+			cameraController.SetEnabled(true);
 			_levelContainer.Resolve<IBattleServer>().StartBattle();
 		}
 
@@ -241,14 +243,16 @@ namespace Presentation.Bootstrap
 
         private void RegisterPresenter()
         {
-            var uiManager = RootContainer.Instance.Resolve<UIManager>();
+            var uiManager = _levelContainer.Services.Resolve<UIManager>();
             var turnService = _levelContainer.Services.Resolve<ITurnService>();
             var unitService = _levelContainer.Services.Resolve<IUnitService>();
             var coordinateConverter = _levelContainer.Services.Resolve<ICoordinateConverter>();
             var damageService = _levelContainer.Services.Resolve<IDamageService>();
             var visionCalculator = _levelContainer.Services.Resolve<IVisionCalculator>();
             var visionService = _levelContainer.Services.Resolve<IVisionService>();
-            var gameFlowController = RootContainer.Instance.Resolve<GameFlowController>();
+            var gameFlowController = _levelContainer.Services.Resolve<GameFlowController>();
+            var audioService = _levelContainer.Services.Resolve<AudioService>();
+            var timeService = _levelContainer.Services.Resolve<ITimeService>();
 
             _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus));
@@ -260,6 +264,7 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
             _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new BattleOverPresenter(uiManager, _eventBus, gameFlowController));
+            _levelContainer.Services.RegisterInstance(new BattleSettingPresenter(uiManager, _eventBus, audioService, gameFlowController, cameraController, timeService));
         }
 
         private void LoadMap()

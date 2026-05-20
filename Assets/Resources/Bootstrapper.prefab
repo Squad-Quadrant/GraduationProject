@@ -347,14 +347,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2988318211280345560, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
-      propertyPath: defaultBgmVolume
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2988318211280345560, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
-      propertyPath: defaultSfxVolume
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 4160560906937627221, guid: 2a7e6c279e0587c4a9101ab8df2ef1e3, type: 3}
       propertyPath: m_Name
       value: AudioService

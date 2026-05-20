@@ -520,3 +520,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.SettingPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.BattleSettingPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

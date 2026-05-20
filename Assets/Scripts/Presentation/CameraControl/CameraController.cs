@@ -48,6 +48,7 @@ namespace Presentation.CameraControl
 		private Vector3? _lastUnitPos;
 
 		private bool _isInitialized;
+		private bool _isEnabled;
 
 		public void Initialize(ServiceContainer services)
 		{
@@ -82,12 +83,15 @@ namespace Presentation.CameraControl
 
 		private void LateUpdate()
 		{
+			if (!_isInitialized || !_isEnabled) return;
 			HandleDragInput();
 			HandleKeyboardPan();
 			HandleZoomInput();
 			ApplyZoomSmoothing();
 			ClampCameraPosition();
 		}
+
+		#region Event Handlers
 
 		private void OnUnitTurnStarted(UnitTurnStartedEvent e)
 		{
@@ -152,6 +156,14 @@ namespace Presentation.CameraControl
 			if (!_lastUnitPos.HasValue) return;
 			FocusOn(_lastUnitPos.Value);
 			_targetZoom = config.standardZoom;
+		}
+
+		#endregion
+
+		public void SetEnabled(bool enable)
+		{
+			_isEnabled = enable;
+			this.Log($"{(enable ? "Enabled" : "Disabled")}");
 		}
 
 		public void FocusOn(Vector3 worldPos, float? zoomOverride = null, float? durationOverride = null)

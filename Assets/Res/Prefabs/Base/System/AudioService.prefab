@@ -50,7 +50,9 @@ MonoBehaviour:
   uiSoundConfig: {fileID: 11400000, guid: 304e6741df2cee94994f372972f44e9f, type: 2}
   bgmSource: {fileID: 2468759270898224698}
   sfxSource: {fileID: 4372555375533004690}
-  defaultVolume: 0.8
+  defaultGlobalVolume: 0.5
+  defaultBgmVolume: 0.25
+  defaultSfxVolume: 0.7
 --- !u!1 &6436820330359655703
 GameObject:
   m_ObjectHideFlags: 0
