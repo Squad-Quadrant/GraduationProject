@@ -12,10 +12,11 @@ namespace Systems.Unit.Skill.Logic
             {
                 case ESkillKind.FightMorale:
                     return new FightMoraleSkillLogic(config, owner);
+                case ESkillKind.ChargeForward:
+	                return new ChargeForwardSkillLogic(config, owner);
                 case ESkillKind.AreaReconnaissance:
                 case ESkillKind.TacticalRoll:
                 case ESkillKind.Guard:
-                case ESkillKind.ChargeForward:
                 case ESkillKind.Count:
                 case ESkillKind.None:
                 default:
