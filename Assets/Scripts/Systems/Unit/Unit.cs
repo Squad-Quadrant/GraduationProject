@@ -155,16 +155,16 @@ namespace Systems.Unit
         public int RemainingMovementAp => Mathf.Min(CurrentAp, maxMovementAp - apSpentOnMovement);
 
         private IEventBus _eventBus;
-        private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
+        private IEventBus EventBus => _eventBus ??= LevelContainer.Instance.Resolve<IEventBus>();
 
         private IMapService _mapService;
-        private IMapService MapService => _mapService ??= RootContainer.Instance.Resolve<IMapService>();
+        private IMapService MapService => _mapService ??= LevelContainer.Instance.Resolve<IMapService>();
 
         private IUnitService _unitService;
-        private IUnitService UnitService => _unitService ??= RootContainer.Instance.Resolve<IUnitService>();
+        private IUnitService UnitService => _unitService ??= LevelContainer.Instance.Resolve<IUnitService>();
 
         private IVisionService _visionService;
-        private IVisionService VisionService => _visionService ??= RootContainer.Instance.Resolve<IVisionService>();
+        private IVisionService VisionService => _visionService ??= LevelContainer.Instance.Resolve<IVisionService>();
 
 		internal static Unit LoadFromConfig(
 			string unitId, UnitConfig config, Vector2Int startPosition, IReadOnlyList<Vector2Int> patrolWaypoints)
