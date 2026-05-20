@@ -230,17 +230,15 @@ namespace Systems.Unit
 				actions.Add(new ActionAbility(EActionType.Interact));
 
 			// attack (normal + precise)
-			bool canAttack = !CurrentWeaponContainer.IsNullOrEmpty() &&
+			bool canAttackNow = !CurrentWeaponContainer.IsNullOrEmpty() &&
 			                 HasAmmo &&
-			                 CanAttack &&
-			                 (IsUsingMainWeapon && CanUseMainWeapon || IsUsingSecondaryWeapon);
-			bool hasSelectable = CalculateSelectableTargets(UnitService, VisionService).Count > 0;
-			if (HasAp && canAttack)
-			{
-				actions.Add(new ActionAbility(EActionType.Attack, hasSelectable, payload: 0));
-				if (CurrentWeaponLogic.CanPreciseShoot())
-					actions.Add(new ActionAbility(EActionType.Attack, hasSelectable, payload: 1));
-			}
+			                 CanAttack && HasAp &&
+			                 (IsUsingMainWeapon && CanUseMainWeapon || IsUsingSecondaryWeapon) &&
+			                 CalculateSelectableTargets(UnitService, VisionService).Count > 0;
+			actions.Add(new ActionAbility(EActionType.Attack, canAttackNow, payload: 0));
+			if (CurrentWeaponLogic.CanPreciseShoot())
+				actions.Add(new ActionAbility(EActionType.Attack, canAttackNow, payload: 1));
+
 
 			// reload
 			bool canReload = CurrentWeaponLogic is { FullAmmo: false } &&
