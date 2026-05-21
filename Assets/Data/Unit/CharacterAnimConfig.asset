@@ -157,6 +157,12 @@ MonoBehaviour:
   - action: reload
     stance: 0
     grip: 0
+    weaponKey: 
+    clipName: reload/reloading ak
+    loop: 0
+  - action: reload
+    stance: 0
+    grip: 0
     weaponKey: m16
     clipName: reload/reloading m16
     loop: 0
@@ -231,6 +237,6 @@ MonoBehaviour:
     clipName: trans/stand to bend hg
   footstepClip: {fileID: 8300000, guid: 72f430dc397b5bb4bbb00e3fb75ad881, type: 3}
   footstepPitch: 2
-  animIndex: 5
+  animIndex: 23
   transIndex: 0
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}

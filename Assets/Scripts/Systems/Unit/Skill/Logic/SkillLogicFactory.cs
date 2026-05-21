@@ -23,8 +23,6 @@ namespace Systems.Unit.Skill.Logic
                     throw new NotSupportedException(
                         $"Unknown ESkillKind: {config.kind}. Add a case to SkillLogicFactory.Create.");
             }
-
-            return null;
-        }
+		}
 	}
 }
