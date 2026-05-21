@@ -360,6 +360,7 @@ namespace Presentation.Unit
             {
 	            _eventBus.Publish(new PresentationCompleteEvent(
 		            EPresentationCategory.Animation, PresentationType.Animation.BeHit, defender.id));
+	            view.PlayAction("idle");
             });
         }
 
@@ -384,6 +385,7 @@ namespace Presentation.Unit
                     type: PresentationType.Animation.Reload,
                     entityId: unit.id
                 ));
+                view.PlayAction("idle");
             });
         }
 
