@@ -15,7 +15,7 @@ MonoBehaviour:
   characterId: char_spectra
   displayName: spectra
   mode: 0
-  portraitPrefab: {fileID: 1403761746848140229, guid: 1d1f4c1971833d849a3ae7d899b8d7f7, type: 3}
+  portraitPrefab: {fileID: 7728822536041076440, guid: 1d1f4c1971833d849a3ae7d899b8d7f7, type: 3}
   skeletonDataAsset: {fileID: 11400000, guid: 4b4886776dbbd2247bb3f81df1fd56d2, type: 2}
   defaultPoseName: idle
   defaultSkinName: default

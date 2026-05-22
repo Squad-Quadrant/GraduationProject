@@ -15,7 +15,7 @@ MonoBehaviour:
   characterId: char_dagger
   displayName: dagger
   mode: 1
-  portraitPrefab: {fileID: 7337744544277752994, guid: 918a6e540b4143a46ba9eb65a8b48690, type: 3}
+  portraitPrefab: {fileID: 2563998485430238329, guid: 918a6e540b4143a46ba9eb65a8b48690, type: 3}
   skeletonDataAsset: {fileID: 0}
   defaultPoseName: default
   defaultSkinName: default
