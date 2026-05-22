@@ -8,6 +8,7 @@ using Data.Runtime.Events;
 using Presentation.AreaEffect;
 using Presentation.Audio;
 using Presentation.CameraControl;
+using Presentation.Dialogue;
 using Presentation.Input;
 using Presentation.Interaction;
 using Presentation.Map;
@@ -56,6 +57,7 @@ namespace Presentation.Bootstrap
 		[SerializeField, Required] private AreaEffectView areaEffectView;
 		[SerializeField, Required] private OneShotVfxView oneShotVfxView;
 		[SerializeField, Required] private ThrowPresenter throwPresenter;
+		[SerializeField, Required] private DialogueController dialogueController;
 
 		[Title("Configuration")]
 		[SerializeField, Required] private LevelConfig levelConfig;
@@ -92,7 +94,7 @@ namespace Presentation.Bootstrap
 
 		private void OnDestroy() => UnloadLevel();
 
-		public void LoadLevel(LevelConfig config)
+		private void LoadLevel(LevelConfig config)
 		{
 			if (!config)
 			{
@@ -103,9 +105,22 @@ namespace Presentation.Bootstrap
 			levelConfig = config;
 			BuildSteps();
 			RunAllSteps();
+
+			if (levelConfig.battleBgm)
+			{
+				var audioService = RootContainer.Instance.Resolve<AudioService>();
+				audioService.PlayBGM(levelConfig.battleBgm, levelConfig.bgmFadeIn);
+			}
+
+			if (!autoStartGame) return;
+
+			if (config.openingDialogue)
+				dialogueController.Play(config.openingDialogue, StartGame);
+			else
+				StartGame();
 		}
 
-		public void UnloadLevel()
+		private void UnloadLevel()
 		{
 			if (!_levelContainer) return;
 
@@ -166,17 +181,6 @@ namespace Presentation.Bootstrap
 			this.Log("============ Level Loaded ============", format: false);
 
 			_eventBus.Publish(new LevelLoadedEvent(levelConfig.levelId, levelConfig.levelName));
-
-			if (levelConfig.battleBgm)
-			{
-				var audioService = RootContainer.Instance.Resolve<AudioService>();
-				audioService.PlayBGM(levelConfig.battleBgm, levelConfig.bgmFadeIn);
-			}
-
-			if (autoStartGame)
-				StartGame();
-			else
-				this.Log("autoStartGame=false: waiting for external StartGame() call (e.g. cutscene system).");
 		}
 
 		private void SetupLevelContainer()
@@ -228,6 +232,7 @@ namespace Presentation.Bootstrap
 			_levelContainer.Services.RegisterInstance(interactionController);
 			_levelContainer.Services.RegisterInstance(unitViewManager);
 			_levelContainer.Services.RegisterInstance(inputService);
+			_levelContainer.Services.RegisterInstance(cameraController);
 		}
         
         private void InitializeComponents()
@@ -239,6 +244,10 @@ namespace Presentation.Bootstrap
             areaEffectView.Initialize(_levelContainer.Services);
             oneShotVfxView.Initialize(_levelContainer.Services);
             throwPresenter.Initialize(_levelContainer.Services);
+            dialogueController.Initialize(
+	            _levelContainer.Services.Resolve<UIManager>(),
+	            _levelContainer.Services.Resolve<AudioService>(),
+	            _levelContainer.Services.Resolve<CameraController>());
         }
 
         private void RegisterPresenter()
@@ -263,17 +272,17 @@ namespace Presentation.Bootstrap
             _levelContainer.Services.RegisterInstance(new CommonPanelPresenter(uiManager, _eventBus, coordinateConverter, unitService, unitViewManager));
             _levelContainer.Services.RegisterInstance(new GunLineRevealPresenter(_eventBus, visionCalculator, visionService));
             _levelContainer.Services.RegisterInstance(new AbilitySelectionPresenter(uiManager, _eventBus));
-            _levelContainer.Services.RegisterInstance(new BattleOverPresenter(uiManager, _eventBus, gameFlowController));
+            _levelContainer.Services.RegisterInstance(new BattleOverPresenter(uiManager, _eventBus, gameFlowController, dialogueController, levelConfig.victoryDialogue, levelConfig.defeatDialogue));
             _levelContainer.Services.RegisterInstance(new BattleSettingPresenter(uiManager, _eventBus, audioService, gameFlowController, cameraController, timeService));
         }
 
         private void LoadMap()
-		{
-			if (!levelConfig.mapConfig)
-			{
-				this.LogError("Map config is missing.");
-				return;
-			}
+        {
+            if (!levelConfig.mapConfig)
+            {
+                this.LogError("Map config is missing.");
+                return;
+            }
 
 			_levelContainer.Resolve<IRegionService>().Initialize(levelConfig.mapConfig);
 

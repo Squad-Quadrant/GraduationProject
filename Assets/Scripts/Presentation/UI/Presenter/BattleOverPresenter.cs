@@ -4,6 +4,8 @@ using Core.Log;
 using Data.Runtime.Events.BattleFlow;
 using DG.Tweening;
 using Presentation.Bootstrap;
+using Presentation.Dialogue;
+using Presentation.Dialogue.Config;
 using Presentation.UI.Core;
 using Presentation.UI.Panel.BattleFlow;
 
@@ -16,17 +18,26 @@ namespace Presentation.UI.Presenter
 		private readonly UIManager _uiManager;
 		private readonly IEventBus _eventBus;
 		private readonly GameFlowController _gameFlowController;
+		private readonly DialogueController _dialogueController;
+		private readonly DialogueConfig _victoryDialogue;
+		private readonly DialogueConfig _defeatDialogue;
 
 		private Tween _delayTween;
 
 		public BattleOverPresenter(
 			UIManager uiManager,
 			IEventBus eventBus,
-			GameFlowController gameFlowController)
+			GameFlowController gameFlowController,
+			DialogueController dialogueController,
+			DialogueConfig victoryDialogue,
+			DialogueConfig defeatDialogue)
 		{
 			_uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
 			_eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 			_gameFlowController = gameFlowController ?? throw new ArgumentNullException(nameof(gameFlowController));
+			_dialogueController = dialogueController ?? throw new ArgumentNullException(nameof(dialogueController));
+			_victoryDialogue = victoryDialogue;
+			_defeatDialogue = defeatDialogue;
 
 			_eventBus.Subscribe<BattleOverEvent>(OnBattleOver);
 			this.Log("Initialized");
@@ -49,7 +60,11 @@ namespace Presentation.UI.Presenter
 				() =>
 				{
 					_delayTween = null;
-					ShowPanel(e.IsVictory);
+					var dialogue = e.IsVictory ? _victoryDialogue : _defeatDialogue;
+					if (dialogue)
+						_dialogueController.Play(dialogue, () => ShowPanel(e.IsVictory));
+					else
+						ShowPanel(e.IsVictory);
 				},
 				ignoreTimeScale: true);
 		}

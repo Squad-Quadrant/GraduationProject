@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db57e99ec9e94e4d91fbe5d3498370c1, type: 3}
+  m_Name: DialoguePanel
+  m_EditorClassIdentifier: 
+  panelId: DialoguePanel
+  prefab: {fileID: 8820537649682417004, guid: f05b4758b8fa58e479ad394e9fa13694, type: 3}
+  layer: 2
+  cacheOnClose: 0

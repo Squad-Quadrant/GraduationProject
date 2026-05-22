@@ -528,3 +528,11 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.Dialogue.DialogueController
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.Dialogue.DialoguePanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

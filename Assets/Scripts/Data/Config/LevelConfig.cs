@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Presentation.Dialogue.Config;
 using PurpleFlowerCore;
 using Sirenix.OdinInspector;
 using Systems.Map.Config;
@@ -74,6 +75,16 @@ namespace Data.Config
 		[Title("音效", bold: true)]
 		[LabelText("战斗 BGM")] public AudioClip battleBgm;
 		[LabelText("BGM 淡入时长(秒)")] [Range(0f, 3f)] public float bgmFadeIn = 1f;
+
+		[Title("对话", bold: true)]
+		[LabelText("开场对话")]
+		public DialogueConfig openingDialogue;
+
+		[LabelText("胜利对话")]
+		public DialogueConfig victoryDialogue;
+
+		[LabelText("失败对话")]
+		public DialogueConfig defeatDialogue;
 
 
 		[Button("验证配置", ButtonSizes.Large), GUIColor(0.4f, 0.8f, 1f)]
