@@ -25,8 +25,8 @@ MonoBehaviour:
   discoveryFocusDuration: 0.3
   discoveryDwellDuration: 0.6
   discoveryEase: 9
-  attackZoom: 1.5
+  attackZoom: 2
   attackFocusDuration: 0.25
-  attackSlowMotionScale: 0.5
+  attackSlowMotionScale: 0.45
   shakeDuration: 0.2
   shakeStrength: 0.3
