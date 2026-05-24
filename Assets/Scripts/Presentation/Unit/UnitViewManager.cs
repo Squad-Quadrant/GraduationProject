@@ -6,6 +6,7 @@ using Data.Runtime.Events.Buff;
 using Data.Runtime.Events.Damage;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
+using Data.Runtime.Events.Skill;
 using Data.Runtime.Events.Turn;
 using Data.Runtime.Events.Unit;
 using Data.Runtime.Events.View;
@@ -65,6 +66,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<BuffAttachedEvent>(OnBuffAttach);
             _eventBus.Subscribe<BuffLostEvent>(OnBuffLost);
             _eventBus.Subscribe<BuffTurnEvent>(OnBuffTurn);
+            _eventBus.Subscribe<SkillUsedEvent>(OnSkillUsed);
 			this.Log("Initialized");
 		}
 
@@ -85,7 +87,8 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<BuffAttachedEvent>(OnBuffAttach);
             _eventBus.Unsubscribe<BuffLostEvent>(OnBuffLost);
             _eventBus.Unsubscribe<BuffTurnEvent>(OnBuffTurn);
-
+            _eventBus.Unsubscribe<SkillUsedEvent>(OnSkillUsed);
+            
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
 				Destroy(view.gameObject);
@@ -474,6 +477,29 @@ namespace Presentation.Unit
             }
 
             var turnVFX = e.BuffInfo.TurnVfxPrefab;
+            if (turnVFX)
+            {
+                var go = Instantiate(turnVFX, view.transform.position, Quaternion.identity, transform);
+                go.name = $"Buff_Turn_{turnVFX.name}_f{Time.frameCount}";
+            }
+        }
+
+        private void OnSkillUsed(SkillUsedEvent e)
+        {
+            var unit = e.Owner as Systems.Unit.Unit;
+            if(unit == null)
+            {
+                this.LogError("OnSkillUsed has null Unit");
+                return;
+            }
+            
+            if (!_views.TryGetValue(unit.id, out var view))
+            {
+                this.LogWarning($"No view found for attached unit '{unit.id}'.");
+                return;
+            }
+
+            var turnVFX = e.Logic.Config.oneShotVfxPrefab;
             if (turnVFX)
             {
                 var go = Instantiate(turnVFX, view.transform.position, Quaternion.identity, transform);

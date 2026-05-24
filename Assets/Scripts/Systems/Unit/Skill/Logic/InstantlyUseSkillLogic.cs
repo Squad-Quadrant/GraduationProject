@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Commands;
+using Data.Runtime.Events.Skill;
 using DG.Tweening;
 using Systems.Interaction;
 using Systems.Interaction.Targeting;
@@ -39,7 +40,7 @@ namespace Systems.Unit.Skill.Logic
                     Consume();
 
                     Use();
-                    
+                    EventBus.Publish(new SkillUsedEvent(Owner, this));
                     DOVirtual.DelayedCall(0.2f, () => onComplete());
                 });
         }

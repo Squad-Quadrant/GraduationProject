@@ -18,4 +18,5 @@ MonoBehaviour:
   icon: {fileID: 781877260, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
   apCost: 0
   cooldown: 5
+  oneShotVfxPrefab: {fileID: 147642, guid: dd23981d6aa0c694081c5d118aa22d5e, type: 3}
   apRecover: 2

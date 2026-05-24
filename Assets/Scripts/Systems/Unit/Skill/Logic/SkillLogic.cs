@@ -1,4 +1,6 @@
 ﻿using System;
+using Core.Events;
+using Presentation.Bootstrap;
 
 namespace Systems.Unit.Skill.Logic
 {
@@ -8,6 +10,7 @@ namespace Systems.Unit.Skill.Logic
 		public Unit Owner { get; }
 
 		private int _currentCooldown;
+        protected IEventBus EventBus => LevelContainer.Instance.Resolve<IEventBus>();
 		public int CurrentCooldown => _currentCooldown;
 
 		public virtual bool CanUse => _currentCooldown == 0 && Owner.CurrentAp >= Config.apCost;
@@ -22,7 +25,7 @@ namespace Systems.Unit.Skill.Logic
 		{
 			Config = config;
 			Owner = owner;
-		}
+        }
 
 		public void Consume()
 		{

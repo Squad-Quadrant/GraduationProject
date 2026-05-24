@@ -25,6 +25,9 @@ namespace Systems.Unit.Skill
 		[LabelText("冷却回合数"), MinValue(0)]
 		[InfoBox("0 = 无冷却（只受 AP 限制）。N = 使用后过 N 个自己的回合才能再用。")]
 		public int cooldown = 2;
+        
+        [LabelText("特效(对使用者单次)")]
+        public GameObject oneShotVfxPrefab;
 
 		// [Title("InstantHeal 参数"), ShowIf(nameof(kind), ESkillKind.InstantHeal)]
 		// [LabelText("治疗量"), MinValue(1)]
