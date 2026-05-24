@@ -34,4 +34,4 @@ MonoBehaviour:
   defenseRate: 0.1
   san: 100
   aiArchetype: {fileID: 0}
-  skillConfig: {fileID: 11400000, guid: 03f05460d5b584a099b7540a1111625b, type: 2}
+  skillConfig: {fileID: 11400000, guid: 6822463650c59f44ba29a262b1bb3a7b, type: 2}

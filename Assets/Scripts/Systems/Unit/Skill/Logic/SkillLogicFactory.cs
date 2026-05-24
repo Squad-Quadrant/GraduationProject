@@ -14,7 +14,8 @@ namespace Systems.Unit.Skill.Logic
                     return new FightMoraleSkillLogic(config, owner);
                 case ESkillKind.ChargeForward:
 	                return new ChargeForwardSkillLogic(config, owner);
-                case ESkillKind.AreaReconnaissance:
+                case ESkillKind.AreaCheck:
+                    return new AreaCheckSkillLogic(config, owner);
                 case ESkillKind.TacticalRoll:
                 case ESkillKind.Guard:
                 case ESkillKind.Count:

@@ -536,3 +536,7 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Systems.Unit.Skill.Logic.AreaCheckSkillLogic
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

@@ -35,7 +35,8 @@ namespace Systems.Damage
         {
             foreach (var influencer in influencers)
             {
-                influences.AddRange(influencer.GetDamageInfluences(context));
+                var toAddInfluences = influencer.GetDamageInfluences(context);
+                influences.AddRange(toAddInfluences);
             }
             influences.Sort((a, b) => b.Priority - a.Priority);
 

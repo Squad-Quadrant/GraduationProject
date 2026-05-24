@@ -7,7 +7,7 @@ namespace Systems.Unit.Skill
 	{
         None = 0,
         // -------------------------
-        [InspectorName("区域检测")] AreaReconnaissance,
+        [InspectorName("区域检测")] AreaCheck,
         // [InspectorName("侦查装备")] ReconnaissanceEquipment,
         [InspectorName("战术翻滚")] TacticalRoll,
         // [InspectorName("精准打击")] PrecisionShot,

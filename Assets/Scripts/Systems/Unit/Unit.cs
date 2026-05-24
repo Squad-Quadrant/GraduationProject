@@ -88,6 +88,7 @@ namespace Systems.Unit
         public int patrolCursor;
 
         public List<DamageInfluence> DamageInfluences { get; } = new();
+        public List<DamageInfluence> BeHitDamageInfluences { get; } = new();
         
         public Dictionary<BodyPartType, int> BodyPartInfo = new()
 		{
@@ -328,8 +329,19 @@ namespace Systems.Unit
 
         public List<DamageInfluence> GetDamageInfluences(DamageExecutingContext context)
         {
-            DamageInfluences.RemoveAll(influence => influence == null);
-            return DamageInfluences;
+            if (context.Attacker == this)
+            {
+                DamageInfluences.RemoveAll(influence => influence == null);
+                return DamageInfluences;
+            }
+
+            if (context.Defender == this)
+            {
+                BeHitDamageInfluences.RemoveAll(influence => influence == null);
+                return BeHitDamageInfluences;
+            }
+            
+            return new List<DamageInfluence>();
         }
 
         #endregion
