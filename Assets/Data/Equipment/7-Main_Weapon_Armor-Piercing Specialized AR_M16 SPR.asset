@@ -13,17 +13,16 @@ MonoBehaviour:
   m_Name: 7-Main_Weapon_Armor-Piercing Specialized AR_M16 SPR
   m_EditorClassIdentifier: 
   id: 7
-  nName: M16 SPR
+  displayName: M16 SPR
   type: "\u7A7F\u7532\u7279\u5316\u7A81\u51FB\u6B65\u67AA"
   description: "\u5B89\u88C5\u6709\u7784\u51C6\u955C\u4E0E\u957F\u6D88\u97F3\u5668\u7684\u6539\u88C5\u578BM16A1\u6B65\u67AA\uFF0C\u901A\u5E38\u7528\u4E8E\u6267\u884C\u4E2D\u8DDD\u79BB\u7684\u7CBE\u786E\u5C04\u51FB\u4EFB\u52A1\uFF0C\u540C\u65F6\u914D\u5907\u4E86\u7279\u79CD\u7528\u7A7F\u7532\u5F39\u3002"
-  battleDescription: 
   icon: {fileID: -290963117, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_a1spr
   gripType: 0
-  damage: 33
+  damage: 30
   mentalDamage: 0
-  ammoCapacity: 24
+  ammoCapacity: 25
   shotRanges:
   - min: 0
     hitRate: 0.8
@@ -36,7 +35,7 @@ MonoBehaviour:
   damageAttenuation:
     perGrid: 5
     multiplier: 0.95
-  penetrationRate: 0.9
+  penetrationRate: 0.95
   shootSpeed: 3
   canPreciseShoot: 1
   preciseShootSpeed: 1

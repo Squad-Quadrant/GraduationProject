@@ -13,20 +13,19 @@ MonoBehaviour:
   m_Name: 104-Secondary_Weapon_Machine P_MAC-11
   m_EditorClassIdentifier: 
   id: 104
-  nName: MAC-11
-  type: "\u51B2\u950B\u624B\u67AA"
+  displayName: MAC-11
+  type: "\u5C0F\u5A01\u529B\u51B2\u950B\u624B\u67AA"
   description: ".380ACP\u53E3\u5F84\u7684\u5FAE\u578B\u51B2\u950B\u67AA\uFF0C\u6709\u9650\u7684\u67AA\u7BA1\u957F\u5EA6\u4E0E\u6781\u9AD8\u7684\u5C04\u901F\u53EA\u5F97\u5B83\u4EC5\u9002\u5408\u8FD1\u8DDD\u79BB\u626B\u5C04\u3002"
-  battleDescription: 
   icon: {fileID: -409057103, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_m11
   gripType: 1
-  damage: 13
+  damage: 12
   mentalDamage: 0
-  ammoCapacity: 20
+  ammoCapacity: 25
   shotRanges:
   - min: 0
-    hitRate: 1
+    hitRate: 0.7
   - min: 2
     hitRate: 0.6
   - min: 4
@@ -37,10 +36,11 @@ MonoBehaviour:
     perGrid: 2
     multiplier: 0.65
   penetrationRate: 0.35
-  shootSpeed: 10
+  shootSpeed: 13
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  animKey: 
   fireClip: {fileID: 8300000, guid: 22a473f7f8a44d24b84539fd4e9a4053, type: 3}
   reloadClip: {fileID: 8300000, guid: 79309f3ab2da12943afef7b8fe101e09, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

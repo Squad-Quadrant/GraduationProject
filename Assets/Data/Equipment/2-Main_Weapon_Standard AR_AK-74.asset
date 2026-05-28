@@ -13,32 +13,31 @@ MonoBehaviour:
   m_Name: 2-Main_Weapon_Standard AR_AK-74
   m_EditorClassIdentifier: 
   id: 2
-  nName: AK74
+  displayName: AK74
   type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
   description: "\u82CF\u80545.45mm\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA\u3002\u4F5C\u4E3AAKM\u7684\u7EE7\u4EFB\u8005\uFF0C\u5176\u7ED3\u6784\u4F9D\u7136\u53EF\u9760\uFF0C\u540C\u65F6\u7A33\u5B9A\u6027\u6709\u4E86\u663E\u8457\u7684\u63D0\u5347\u3002"
-  battleDescription: 
   icon: {fileID: -1714735755, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_ak74
   gripType: 0
-  damage: 33
+  damage: 30
   mentalDamage: 0
-  ammoCapacity: 24
+  ammoCapacity: 30
   shotRanges:
   - min: 0
     hitRate: 0.85
   - min: 5
     hitRate: 0.8
   - min: 10
-    hitRate: 0.7
+    hitRate: 0.75
   damageAttenuation:
     perGrid: 4
     multiplier: 0.9
-  penetrationRate: 0.7
+  penetrationRate: 0.75
   shootSpeed: 4
   canPreciseShoot: 1
   preciseShootSpeed: 2
-  preciseShootHitRateBonus: 0.15
+  preciseShootHitRateBonus: 0.2
   animKey: ak
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}

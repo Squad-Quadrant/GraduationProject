@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: 101-Secondary_Weapon_Standard P_Glock
   m_EditorClassIdentifier: 
   id: 101
-  nName: Glock
-  type: "\u6807\u51C6\u624B\u67AA"
+  displayName: Glock
+  type: "\u5927\u5BB9\u91CF\u624B\u67AA"
   description: "\u5965\u5730\u5229\u751F\u4EA7\u7684\u65B0\u578B9mm\u624B\u67AA\uFF0C\u91C7\u7528\u805A\u5408\u7269\u6750\u8D28\u90E8\u4EF6\u51CF\u91CD\uFF0C\u5E76\u62E5\u6709\u8F83\u9AD8\u7684\u5F39\u5BB9\u91CF\u3002"
-  battleDescription: 
   icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_glock
@@ -28,17 +27,18 @@ MonoBehaviour:
   - min: 0
     hitRate: 0.85
   - min: 3
-    hitRate: 0.7
-  - min: 8
+    hitRate: 0.65
+  - min: 7
     hitRate: 0.45
   damageAttenuation:
     perGrid: 2
     multiplier: 0.75
-  penetrationRate: 0.5
+  penetrationRate: 0.6
   shootSpeed: 3
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  animKey: 
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

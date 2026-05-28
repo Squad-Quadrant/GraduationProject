@@ -13,17 +13,16 @@ MonoBehaviour:
   m_Name: 103-Secondary_Weapon_Suppressed P_MK22
   m_EditorClassIdentifier: 
   id: 103
-  nName: MK22
-  type: "\u6D88\u97F3\u624B\u67AA"
+  displayName: MK22
+  type: "\u9AD8\u7CBE\u5EA6\u6D88\u97F3\u624B\u67AA"
   description: "\u7F8E\u519B\u5728\u8D8A\u6218\u671F\u95F4\u4E3A\u6F5C\u5165\u4F5C\u6218\u800C\u7814\u53D1\u76849mm\u6D88\u97F3\u624B\u67AA\uFF0C\u5B89\u88C5\u6709\u4E13\u5C5E\u7684\u9AD8\u6548\u6D88\u97F3\u5668\u3002"
-  battleDescription: 
   icon: {fileID: 733355011, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_mk22
   gripType: 1
-  damage: 18
+  damage: 20
   mentalDamage: 0
-  ammoCapacity: 12
+  ammoCapacity: 8
   shotRanges:
   - min: 0
     hitRate: 0.9
@@ -34,11 +33,12 @@ MonoBehaviour:
   damageAttenuation:
     perGrid: 4
     multiplier: 0.8
-  penetrationRate: 0.5
+  penetrationRate: 0.55
   shootSpeed: 3
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  animKey: 
   fireClip: {fileID: 8300000, guid: 8210480051bd37d4d84dcc30f021627d, type: 3}
   reloadClip: {fileID: 8300000, guid: 2abf701fa0957e3458823e34ac511305, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

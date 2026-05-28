@@ -10,33 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: 8-Main_Weapon_Standard SMG_MP5
+  m_Name: 10-Main_Weapon_Tri SMG_MP5 SD
   m_EditorClassIdentifier: 
-  id: 8
-  displayName: MP5
-  type: "\u6807\u51C6\u51B2\u950B\u67AA"
-  description: "\u4EE5\u5176\u4F18\u5F02\u7684\u7CBE\u5EA6\u548C\u7A33\u5B9A\u6027\uFF0C\u897F\u5FB7\u751F\u4EA7\u7684MP5\u5728\u540C\u7C7B\u4EA7\u54C1\u4E2D\u8131\u9896\u800C\u51FA\u3002"
-  icon: {fileID: -336969454, guid: d723e6b88f967c846a38343439950a03, type: 3}
+  id: 10
+  displayName: MP5 SD
+  type: "\u4E09\u8FDE\u53D1\u51B2\u950B\u67AA"
+  description: 
+  icon: {fileID: -601466920, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
-  spineName: weapon_mp5
+  spineName: weapon_mp5sd
   gripType: 0
-  damage: 25
+  damage: 23
   mentalDamage: 0
-  ammoCapacity: 40
+  ammoCapacity: 30
   shotRanges:
   - min: 0
-    hitRate: 0.85
+    hitRate: 0.9
   - min: 2
-    hitRate: 0.7
+    hitRate: 0.8
   - min: 4
-    hitRate: 0.6
+    hitRate: 0.65
   - min: 8
     hitRate: 0.5
   damageAttenuation:
     perGrid: 2
-    multiplier: 0.8
+    multiplier: 0.85
   penetrationRate: 0.5
-  shootSpeed: 10
+  shootSpeed: 9
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0

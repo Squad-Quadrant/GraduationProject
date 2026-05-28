@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: 1-Main_Weapon_Standard AR_M16A1
   m_EditorClassIdentifier: 
   id: 1
-  nName: M16A1
+  displayName: M16A1
   type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
   description: "M16A1\u662F\u7F8E\u519B\u5728\u8D8A\u6218\u65F6\u671F\u5217\u88C5\u7684\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA,\u4E00\u822C\u914D\u88C530\u53D1\u5F39\u5323\uFF0C\u62E5\u6709\u8F83\u9AD8\u7684\u5C04\u901F\u3002"
-  battleDescription: 
   icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_a1
@@ -26,11 +25,11 @@ MonoBehaviour:
   ammoCapacity: 30
   shotRanges:
   - min: 0
-    hitRate: 0.9
-  - min: 5
     hitRate: 0.85
-  - min: 10
+  - min: 5
     hitRate: 0.8
+  - min: 10
+    hitRate: 0.7
   damageAttenuation:
     perGrid: 3
     multiplier: 0.95

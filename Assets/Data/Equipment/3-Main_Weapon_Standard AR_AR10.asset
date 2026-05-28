@@ -13,32 +13,32 @@ MonoBehaviour:
   m_Name: 3-Main_Weapon_Standard AR_AR10
   m_EditorClassIdentifier: 
   id: 3
-  nName: AR10
-  type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
+  displayName: AR10
+  type: "\u5927\u5A01\u529B\u7A81\u51FB\u6B65\u67AA"
   description: "\u4E8C\u6218\u540E\u7F8E\u56FD\u8BBE\u8BA1\u7684\u5168\u5A01\u529B\u5F39\u7A81\u51FB\u6B65\u67AA\uFF0C\u4E5F\u662FM16\u7CFB\u5217\u6B66\u5668\u7684\u524D\u8EAB\u3002\u76F8\u6BD4\u540C\u7C7B\u5927\u5A01\u529B\u81EA\u52A8\u6B65\u67AA\u66F4\u52A0\u8F7B\u91CF\u5316\u3002"
-  battleDescription: 
   icon: {fileID: 1011357527, guid: d723e6b88f967c846a38343439950a03, type: 3}
   weight: 0
   spineName: weapon_ar10
   gripType: 0
-  damage: 35
+  damage: 38
   mentalDamage: 0
   ammoCapacity: 20
   shotRanges:
   - min: 0
-    hitRate: 0.85
+    hitRate: 0.8
   - min: 4
-    hitRate: 0.75
-  - min: 8
     hitRate: 0.7
+  - min: 8
+    hitRate: 0.6
   damageAttenuation:
-    perGrid: 5
+    perGrid: 4
     multiplier: 0.85
-  penetrationRate: 0.75
+  penetrationRate: 0.7
   shootSpeed: 4
   canPreciseShoot: 1
-  preciseShootSpeed: 1
-  preciseShootHitRateBonus: 0.3
+  preciseShootSpeed: 2
+  preciseShootHitRateBonus: 0.1
+  animKey: 
   fireClip: {fileID: 8300000, guid: e066bb02aee778048b91412fd7d3d18b, type: 3}
   reloadClip: {fileID: 8300000, guid: f5148bf31eb33264ab78548526624c2e, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}
