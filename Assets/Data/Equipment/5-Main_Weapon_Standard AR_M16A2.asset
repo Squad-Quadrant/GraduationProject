@@ -26,14 +26,16 @@ MonoBehaviour:
   shotRanges:
   - min: 0
     hitRate: 1
-  - min: 5
+  - min: 3
     hitRate: 0.9
-  - min: 10
-    hitRate: 0.8
+  - min: 5
+    hitRate: 0.85
+  - min: 8
+    hitRate: 0.7
   damageAttenuation:
     perGrid: 3
     multiplier: 0.95
-  penetrationRate: 0.7
+  penetrationRate: 0.8
   shootSpeed: 3
   canPreciseShoot: 0
   preciseShootSpeed: 0

@@ -20,7 +20,7 @@ MonoBehaviour:
   weight: 0
   spineName: weapon_a1spr
   gripType: 0
-  damage: 30
+  damage: 25
   mentalDamage: 0
   ammoCapacity: 25
   shotRanges:
@@ -36,9 +36,9 @@ MonoBehaviour:
     perGrid: 5
     multiplier: 0.95
   penetrationRate: 0.95
-  shootSpeed: 3
+  shootSpeed: 4
   canPreciseShoot: 1
-  preciseShootSpeed: 1
+  preciseShootSpeed: 2
   preciseShootHitRateBonus: 0.25
   animKey: m16
   fireClip: {fileID: 8300000, guid: 65971a7b2fd9f17448b951f9a7d57976, type: 3}

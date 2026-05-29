@@ -69,6 +69,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e607312c3627e43ae90fc71e8b926c19, type: 2}
   - {fileID: 11400000, guid: 2cb0a6cae33ce459c8cc4f5132f926ea, type: 2}
   - {fileID: 11400000, guid: d6db2b09b957941d3b4fdb03d3ffa5e7, type: 2}
+  - {fileID: 11400000, guid: 71bf634d667b25b47b712613d0062bb7, type: 2}
+  - {fileID: 11400000, guid: 8c2cc72675195944ba35a5de47bee11f, type: 2}
+  - {fileID: 11400000, guid: 0229636d2876b844f8c8b75c0d65d3fa, type: 2}
   buffs:
   - {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
   - {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}

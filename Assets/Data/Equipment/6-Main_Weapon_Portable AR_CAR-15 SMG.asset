@@ -38,7 +38,7 @@ MonoBehaviour:
   penetrationRate: 0.6
   shootSpeed: 6
   canPreciseShoot: 1
-  preciseShootSpeed: 3
+  preciseShootSpeed: 4
   preciseShootHitRateBonus: 0.1
   animKey: 
   fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
