@@ -25,8 +25,12 @@ MonoBehaviour:
   ammoCapacity: 40
   shotRanges:
   - min: 0
+    hitRate: 0.9
+  - min: 1
     hitRate: 0.85
   - min: 2
+    hitRate: 0.75
+  - min: 3
     hitRate: 0.7
   - min: 4
     hitRate: 0.6
@@ -34,7 +38,7 @@ MonoBehaviour:
     hitRate: 0.5
   damageAttenuation:
     perGrid: 2
-    multiplier: 0.8
+    multiplier: 0.92
   penetrationRate: 0.5
   shootSpeed: 10
   canPreciseShoot: 0
