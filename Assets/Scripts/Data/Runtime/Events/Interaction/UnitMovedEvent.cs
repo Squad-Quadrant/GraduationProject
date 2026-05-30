@@ -14,16 +14,20 @@ namespace Data.Runtime.Events.Interaction
 
 		public IReadOnlyList<Vector2Int> Path { get; }
 
+		public readonly float MovementSpeedMultiplier;
+
 		public UnitMovedEvent(
 			Systems.Unit.Unit unit,
 			Vector2Int fromPosition,
 			Vector2Int toPosition,
-			IReadOnlyList<Vector2Int> path = null)
+			IReadOnlyList<Vector2Int> path = null,
+			float movementSpeedMultiplier = 1f)
 		{
 			Unit = unit;
 			FromPosition = fromPosition;
 			ToPosition = toPosition;
 			Path = path;
+			MovementSpeedMultiplier = Mathf.Max(0.01f, movementSpeedMultiplier);
 		}
 
 		public override string ToString() => $"[UnitMoved] {Unit.id}: {FromPosition} -> {ToPosition}";

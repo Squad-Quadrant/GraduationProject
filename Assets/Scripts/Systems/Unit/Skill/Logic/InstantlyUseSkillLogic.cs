@@ -14,22 +14,22 @@ namespace Systems.Unit.Skill.Logic
         {
         }
 
-        public IReadOnlyList<Vector2Int> GetValidCells(InteractionContext ctx)
+            public virtual IReadOnlyList<Vector2Int> GetValidCells(InteractionContext ctx)
         {
             return new[] { Owner.position };
         }
 
-        public bool ValidateTarget(Vector2Int cell, InteractionContext ctx)
+            public virtual bool ValidateTarget(Vector2Int cell, InteractionContext ctx)
         {
             return cell == Owner.position;
         }
 
-        public IReadOnlyList<Vector2Int> GetAreaEffectPreview(Vector2Int hoverCell)
+            public virtual IReadOnlyList<Vector2Int> GetAreaEffectPreview(Vector2Int hoverCell)
         {
             return new[] { hoverCell };
         }
 
-        public ICommand CreateCommand(Vector2Int target, InteractionContext ctx)
+            public virtual ICommand CreateCommand(Vector2Int target, InteractionContext ctx)
         {
             return 
             new AsyncLambdaCommand(

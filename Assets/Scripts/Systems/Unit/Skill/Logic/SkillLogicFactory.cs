@@ -17,9 +17,7 @@ namespace Systems.Unit.Skill.Logic
                 case ESkillKind.AreaCheck:
                     return new AreaCheckSkillLogic(config, owner);
                 case ESkillKind.TacticalRoll:
-                case ESkillKind.Guard:
-                case ESkillKind.Count:
-                case ESkillKind.None:
+                    return new TacticalRollSkillLogic(config, owner);
                 default:
                     throw new NotSupportedException(
                         $"Unknown ESkillKind: {config.kind}. Add a case to SkillLogicFactory.Create.");

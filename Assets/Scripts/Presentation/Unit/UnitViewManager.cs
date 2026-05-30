@@ -223,6 +223,7 @@ namespace Presentation.Unit
 			var movingUnit = e.Unit;
 			view.Move(
 				e.Path,
+				e.MovementSpeedMultiplier,
 				onStep: cell =>
 				{
 					if (e.Unit.faction != EUnitFaction.Player)

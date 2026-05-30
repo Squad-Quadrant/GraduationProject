@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Core.Commands;
 using Core.Events;
 using Core.Log;
@@ -25,6 +24,8 @@ namespace Data.Runtime.Commands
 		private readonly IEventBus _eventBus;
 
 		public bool WaitForAnimation { get; set; } = true;
+		public bool CountAsMovementSpend { get; set; } = true;
+		public float AnimationSpeedMultiplier { get; set; } = 1f;
 
 		private Action<PresentationCompleteEvent> _onPresentationComplete;
 
@@ -66,14 +67,16 @@ namespace Data.Runtime.Commands
 			_mapService.ReleaseCell(_fromPosition);
 			_mapService.OccupyCell(_toPosition, _unitId);
 			unit.CurrentAp -= _apCost;
-			unit.apSpentOnMovement += _apCost;
+			if (CountAsMovementSpend)
+				unit.apSpentOnMovement += _apCost;
 			unit.position = _toPosition;
 
 			_eventBus.Publish(new UnitMovedEvent(
 				unit,
 				_fromPosition,
 				_toPosition,
-				_path
+				_path,
+				AnimationSpeedMultiplier
 			));
             
 			if (WaitForAnimation)

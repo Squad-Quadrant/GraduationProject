@@ -48,6 +48,8 @@ namespace Presentation.Unit
 		private string _backBodySkinName;
 
 		private Coroutine _moveCoroutine;
+		private bool _movementAnimationSpeedOverridden;
+		private float _movementAnimationTimeScaleBeforeOverride = 1f;
 
 		private Tween _fadeTween;
 
@@ -206,7 +208,7 @@ namespace Presentation.Unit
 
 		public void SetWeaponSkin(string skinName) => animator.SetWeaponSkin(skinName);
 
-		public void Move(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep = null, Action onComplete = null)
+		public void Move(IReadOnlyList<Vector2Int> path, float speedMultiplier = 1f, Action<Vector2Int> onStep = null, Action onComplete = null)
 		{
 			if (path == null || path.Count < 2)
 			{
@@ -219,10 +221,11 @@ namespace Presentation.Unit
 			{
 				StopCoroutine(_moveCoroutine);
 				_moveCoroutine = null;
+				RestoreMovementAnimationSpeed();
 				this.LogWarning("Interrupted ongoing movement.");
 			}
 
-			_moveCoroutine = StartCoroutine(MoveCoroutine(path, onStep, onComplete));
+			_moveCoroutine = StartCoroutine(MoveCoroutine(path, Mathf.Max(0.01f, speedMultiplier), onStep, onComplete));
 		}
 
 		public void CancelMovement()
@@ -231,6 +234,7 @@ namespace Presentation.Unit
 
 			StopCoroutine(_moveCoroutine);
 			_moveCoroutine = null;
+			RestoreMovementAnimationSpeed();
 			PlayAction("idle");
 			this.Log("Movement cancelled.");
 		}
@@ -337,7 +341,7 @@ namespace Presentation.Unit
 
 		#endregion
 
-		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, Action<Vector2Int> onStep, Action onComplete)
+		private IEnumerator MoveCoroutine(IReadOnlyList<Vector2Int> path, float speedMultiplier, Action<Vector2Int> onStep, Action onComplete)
 		{
 			if (path == null || path.Count < 2)
 			{
@@ -347,6 +351,7 @@ namespace Presentation.Unit
 			}
 
 			SetFacing(path[1] - path[0]);
+			ApplyMovementAnimationSpeed(speedMultiplier);
 
 			bool startDone = false;
 			bool moveSignal = false;
@@ -378,7 +383,7 @@ namespace Presentation.Unit
 				}
 
 				SetFacing(path[i] - path[i - 1]);
-				yield return LerpSegment(path[i - 1], path[i]);
+				yield return LerpSegment(path[i - 1], path[i], speedMultiplier);
 				onStep?.Invoke(path[i]);
 			}
 
@@ -398,7 +403,7 @@ namespace Presentation.Unit
 			var fromWorld = _coordConverter.CellToWorld(path[lastIdx - 1]);
 			var toWorld = _coordConverter.CellToWorld(path[lastIdx]);
 			var dist = Vector3.Distance(fromWorld, toWorld);
-			var duration = dist > 0.001f ? dist / moveSpeed : 0f;
+			var duration = dist > 0.001f ? dist / (moveSpeed * speedMultiplier) : 0f;
 			var elapsed = 0f;
 
 			while (elapsed < duration && !stopSignal)
@@ -421,6 +426,7 @@ namespace Presentation.Unit
 
 			while (!endDone) yield return null; // Wait for move_end animation to finish
 
+			RestoreMovementAnimationSpeed();
 			PlayAction("idle");
 			_moveCoroutine = null;
 			onComplete?.Invoke();
@@ -428,12 +434,12 @@ namespace Presentation.Unit
 			this.Log($"Move complete → {path[lastIdx]}");
 		}
 
-		private IEnumerator LerpSegment(Vector2Int fromCell, Vector2Int toCell)
+		private IEnumerator LerpSegment(Vector2Int fromCell, Vector2Int toCell, float speedMultiplier)
 		{
 			var fromWorld = _coordConverter.CellToWorld(fromCell);
 			var toWorld = _coordConverter.CellToWorld(toCell);
 			var distance = Vector3.Distance(fromWorld, toWorld);
-			var duration = distance > 0.001f ? distance / moveSpeed : 0f;
+			var duration = distance > 0.001f ? distance / (moveSpeed * speedMultiplier) : 0f;
 			var elapsed = 0f;
 
 			while (elapsed < duration)
@@ -444,6 +450,27 @@ namespace Presentation.Unit
 				yield return null;
 			}
 			transform.position = toWorld;
+		}
+
+		private void ApplyMovementAnimationSpeed(float speedMultiplier)
+		{
+			if (!animator || !animator.SkeletonAnimation) return;
+
+			if (!_movementAnimationSpeedOverridden)
+			{
+				_movementAnimationTimeScaleBeforeOverride = animator.SkeletonAnimation.timeScale;
+				_movementAnimationSpeedOverridden = true;
+			}
+
+			animator.SkeletonAnimation.timeScale = _movementAnimationTimeScaleBeforeOverride * speedMultiplier;
+		}
+
+		private void RestoreMovementAnimationSpeed()
+		{
+			if (!_movementAnimationSpeedOverridden) return;
+			if (animator && animator.SkeletonAnimation)
+				animator.SkeletonAnimation.timeScale = _movementAnimationTimeScaleBeforeOverride;
+			_movementAnimationSpeedOverridden = false;
 		}
 
         public void OnAttachBuff(BuffInfo info)
