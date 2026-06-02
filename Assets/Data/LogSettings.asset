@@ -540,3 +540,15 @@ MonoBehaviour:
     enabled: 1
     minLogLevel: 1
     autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.UnitInfo.UnitInfoPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Presentation.UI.Panel.UnitInfo.TargetInfoPanel
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1
+  - typeName: Systems.Interaction.States.UnitInspectState
+    enabled: 1
+    minLogLevel: 1
+    autoDiscovered: 1

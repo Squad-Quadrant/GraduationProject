@@ -16,7 +16,7 @@ namespace Presentation.UI.Component
 		private Button _button;
 		private AudioService _audioService;
 
-		private void Awake()
+		private void OnEnable()
 		{
 			_audioService = RootContainer.Instance.TryResolve<AudioService>();
 
@@ -24,7 +24,7 @@ namespace Presentation.UI.Component
 			_button.onClick.AddListener(OnClick);
 		}
 
-		private void OnDestroy()
+		private void OnDisable()
 		{
 			if (_button) _button.onClick.RemoveListener(OnClick);
 		}

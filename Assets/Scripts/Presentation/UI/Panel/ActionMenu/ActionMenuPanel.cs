@@ -19,19 +19,26 @@ namespace Presentation.UI.Panel.ActionMenu
         [SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI actionDesc;
         [SerializeField, Required, ChildGameObjectsOnly] private Transform itemsParent;
 
+        [SerializeField] private string playerLockedMessage = "行动选择";
+        [SerializeField] private string allyLockedMessage = "未到该单位的回合，无法操作";
+        [SerializeField] private string enemyLockedMessage = "敌方单位，无法操作";
+
         private List<ActionMenuItem> _items;
+
+        private bool _locked;
 
         public void DataInitialize(Systems.Unit.Unit unit)
         {
-	        _items = itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
+	        _items ??= itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
 
             foreach (var item in _items)
             {
                 item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType, item.Payload)));
 
                 item.OnHoverEnter += SetActionDesc;
-                item.OnHoverExit += _ => SetActionDesc(null);
+                item.OnHoverExit += _ => SetActionDesc(playerLockedMessage);
                 item.SetActive(false);
+                item.SetAudioEnabled(true);
             }
             Refresh(unit);
         }
@@ -40,12 +47,37 @@ namespace Presentation.UI.Panel.ActionMenu
 
         protected override void OnClose() => EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
 
-        private void OnUnitInfoChanged(UnitInfoChangedEvent e) => Refresh(e.Unit);
+        public void ShowLocked(Systems.Unit.Unit unit)
+        {
+	        _locked = true;
+	        _items ??= itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
+	        foreach (var item in _items)
+	        {
+		        item.Button.onClick.RemoveAllListeners();
+		        item.OnHoverEnter = null;
+		        item.OnHoverExit = null;
+		        item.Button.interactable = false;
+		        item.SetAudioEnabled(false);
+	        }
+	        SetActionDesc(unit.faction == EUnitFaction.Player ? allyLockedMessage : enemyLockedMessage);
+        }
+
+        public void ShowActions(Systems.Unit.Unit unit)
+        {
+	        _locked = false;
+	        Refresh(unit);
+        }
+
+        private void OnUnitInfoChanged(UnitInfoChangedEvent e)
+        {
+	        if (_locked) return;
+	        Refresh(e.Unit);
+        }
 
         private void Refresh(Systems.Unit.Unit unit)
         {
 	        foreach (var item in _items) item.SetActive(false);
-	        SetActionDesc(null);
+	        SetActionDesc(playerLockedMessage);
 
             var availableActions = unit.GetAvailableActions();
             foreach (var action in availableActions)

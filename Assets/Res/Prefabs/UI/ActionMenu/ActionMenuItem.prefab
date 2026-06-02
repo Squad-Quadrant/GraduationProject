@@ -408,6 +408,7 @@ MonoBehaviour:
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   hoverColor: {r: 0, g: 0, b: 0, a: 1}
   usesText: {fileID: 8921453414546456519}
+  sfx: {fileID: -1508960169985553338}
 --- !u!114 &1470281411949280586
 MonoBehaviour:
   m_ObjectHideFlags: 0

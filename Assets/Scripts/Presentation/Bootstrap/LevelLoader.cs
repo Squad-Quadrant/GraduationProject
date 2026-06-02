@@ -263,7 +263,7 @@ namespace Presentation.Bootstrap
             var audioService = _levelContainer.Services.Resolve<AudioService>();
             var timeService = _levelContainer.Services.Resolve<ITimeService>();
 
-            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus));
+            _levelContainer.Services.RegisterInstance(new ActionMenuPresenter(uiManager, _eventBus, interactionController));
             _levelContainer.Services.RegisterInstance(new AttackPreviewPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnBannerPresenter(uiManager, _eventBus));
             _levelContainer.Services.RegisterInstance(new TurnOrderPresenter(uiManager, _eventBus, turnService, unitService));
