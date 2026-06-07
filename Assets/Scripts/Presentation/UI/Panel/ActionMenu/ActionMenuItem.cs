@@ -1,5 +1,6 @@
 ﻿using System;
 using Data.Runtime;
+using Presentation.UI.Component;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -36,6 +37,9 @@ namespace Presentation.UI.Panel.ActionMenu
 		[Title("Dynamic Slot Display")]
 		[SerializeField] private TextMeshProUGUI usesText;
 
+		[Title("Audio")]
+		[SerializeField] private UIButtonSfx sfx;
+
 		public Button Button => button;
 		public string Description => description;
         public EActionType ActionType => actionType;
@@ -47,8 +51,8 @@ namespace Presentation.UI.Panel.ActionMenu
             set => button.interactable = value;
         }
 
-		public event Action<string> OnHoverEnter;
-		public event Action<string> OnHoverExit;
+		public Action<string> OnHoverEnter;
+		public Action<string> OnHoverExit;
 
 		public void SetContent(Sprite iconSprite, string desc, int? remainingUses)
 		{
@@ -56,6 +60,8 @@ namespace Presentation.UI.Panel.ActionMenu
 			if (desc != null) description = desc;
 			if (usesText) usesText.text = remainingUses?.ToString() ?? "";
 		}
+
+		public void SetAudioEnabled(bool isAudioEnabled) => sfx.enabled = isAudioEnabled;
 
 		[Button]
 		public void SetIconAspectRatio()

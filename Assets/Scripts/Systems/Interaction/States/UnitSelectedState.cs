@@ -14,8 +14,6 @@ namespace Systems.Interaction.States
 	{
 		private Action<ActionSelectedEvent> _onActionSelected;
 		private Action<UnitClickedEvent> _onUnitClicked;
-		private Action<BackInputEvent> _onBack;
-		private Action<EscInputEvent> _onEsc;
 		private Action<PointerHoverEvent> _onPointerHover;
 
 		public UnitSelectedState() : base(InteractionStates.UnitSelected) { }
@@ -31,14 +29,10 @@ namespace Systems.Interaction.States
 
 			_onActionSelected = OnActionSelected;
 			_onUnitClicked = OnUnitClicked;
-			_onBack = OnBack;
-			_onEsc = OnEsc;
 			_onPointerHover = OnPointerHover;
             
 			Subscribe(ctx, _onActionSelected);
 			Subscribe(ctx, _onUnitClicked);
-			Subscribe(ctx, _onBack);
-			Subscribe(ctx, _onEsc);
 			Subscribe(ctx, _onPointerHover);
 		}
 
@@ -48,14 +42,10 @@ namespace Systems.Interaction.States
 
 			Unsubscribe(ctx, _onActionSelected);
 			Unsubscribe(ctx, _onUnitClicked);
-			Unsubscribe(ctx, _onBack);
-			Unsubscribe(ctx, _onEsc);
 			Unsubscribe(ctx, _onPointerHover);
 
 			_onActionSelected = null;
 			_onUnitClicked = null;
-			_onBack = null;
-			_onEsc = null;
 			_onPointerHover = null;
 
 			Publish(ctx, CursorInfoEvent.Hide());
@@ -163,14 +153,16 @@ namespace Systems.Interaction.States
 
 		private void OnUnitClicked(UnitClickedEvent e)
 		{
-		}
+			if (!Context.UnitService.TryGetUnit(e.UnitId, out var unit))
+			{
+				this.LogWarning($"Clicked unit '{e.UnitId}' not found.");
+				return;
+			}
 
-		private void OnBack(BackInputEvent e)
-		{
-		}
+			if (unit.id == Context.selectedUnit.id) return;
 
-		private void OnEsc(EscInputEvent e)
-		{
+			Context.inspectedUnit = unit;
+			StateMachine(Context).ChangeState<UnitInspectState>();
 		}
 
 		private void OnPointerHover(PointerHoverEvent e) => PublishBasicCursorInfo(Context, e);

@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_SilhouetteStrength("Silhouette Strength", Range(0, 1)) = 0.6
+		_SilhouetteStrength("Silhouette Strength", Range(0, 2)) = 0.6
 	}
 	SubShader
 	{

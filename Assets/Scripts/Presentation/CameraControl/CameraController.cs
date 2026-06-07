@@ -67,6 +67,7 @@ namespace Presentation.CameraControl
 			_eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
 			_eventBus.Subscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Subscribe<SpaceInputEvent>(OnSpaceInput);
+			_eventBus.Subscribe<UnitInspectedEvent>(OnUnitInspected);
 
 			_isInitialized = true;
 			this.Log("Initialized");
@@ -80,6 +81,7 @@ namespace Presentation.CameraControl
 			_eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
 			_eventBus.Unsubscribe<UnitAttackEndedEvent>(OnUnitAttackEnded);
 			_eventBus.Unsubscribe<SpaceInputEvent>(OnSpaceInput);
+			_eventBus.Unsubscribe<UnitInspectedEvent>(OnUnitInspected);
 			KillFocusTween();
 		}
 
@@ -163,6 +165,12 @@ namespace Presentation.CameraControl
 			if (!_lastUnitPos.HasValue) return;
 			FocusOn(_lastUnitPos.Value);
 			_targetZoom = config.standardZoom;
+		}
+
+		private void OnUnitInspected(UnitInspectedEvent e)
+		{
+			if (!_unitService.TryGetUnit(e.UnitId, out var unit)) return;
+			FocusOnCell(unit.position);
 		}
 
 		#endregion

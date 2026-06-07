@@ -41,6 +41,8 @@ namespace Systems.Interaction
 
 		public Unit.Unit selectedUnit; // 现在的selectedUnit在绝大多数情况下都不应该为空
 
+		public Unit.Unit inspectedUnit;
+
 		public EActionType currentAction;
 
 		public MovementSimulationResult LastSimulationResult;
@@ -78,6 +80,7 @@ namespace Systems.Interaction
 		public void Clear()
 		{
 			selectedUnit = null;
+			inspectedUnit = null;
 			currentAction = EActionType.None;
 			LastSimulationResult = null;
 			PendingAbility = null;

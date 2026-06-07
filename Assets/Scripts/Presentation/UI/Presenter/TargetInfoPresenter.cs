@@ -7,6 +7,7 @@ using Data.Runtime.Events.Interaction;
 using Presentation.Interaction;
 using Presentation.UI.Core;
 using Presentation.UI.Panel;
+using Presentation.UI.Panel.UnitInfo;
 using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;

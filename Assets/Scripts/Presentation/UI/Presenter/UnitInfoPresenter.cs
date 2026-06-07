@@ -3,7 +3,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Interaction;
 using Presentation.UI.Core;
-using Presentation.UI.Panel;
+using Presentation.UI.Panel.UnitInfo;
 using Systems.Unit;
 
 namespace Presentation.UI.Presenter
@@ -23,6 +23,7 @@ namespace Presentation.UI.Presenter
 
 			_eventBus.Subscribe<UnitSelectedEvent>(OnUnitSelected);
 			_eventBus.Subscribe<UnitDeselectedEvent>(OnUnitDeselected);
+			_eventBus.Subscribe<UnitInspectedEvent>(OnUnitInspected);
 
 			this.Log("Initialized");
 		}
@@ -31,19 +32,13 @@ namespace Presentation.UI.Presenter
 		{
 			_eventBus.Unsubscribe<UnitSelectedEvent>(OnUnitSelected);
 			_eventBus.Unsubscribe<UnitDeselectedEvent>(OnUnitDeselected);
+			_eventBus.Unsubscribe<UnitInspectedEvent>(OnUnitInspected);
 			_panel = null;
 		}
 
-		private void OnUnitSelected(UnitSelectedEvent e)
-		{
-			if (!_unitService.TryGetUnit(e.UnitId, out var unit))
-			{
-				this.LogWarning($"Unit '{e.UnitId}' not found, cannot show info panel");
-				return;
-			}
+		private void OnUnitSelected(UnitSelectedEvent e) => ShowUnit(e.UnitId);
 
-			_panel = _uiManager.Open<UnitInfoPanel, Systems.Unit.Unit>(unit);
-		}
+		private void OnUnitInspected(UnitInspectedEvent e) => ShowUnit(e.UnitId);
 
 		private void OnUnitDeselected(UnitDeselectedEvent e)
 		{
@@ -51,6 +46,16 @@ namespace Presentation.UI.Presenter
 
 			_uiManager.Close(_panel);
 			_panel = null;
+		}
+
+		private void ShowUnit(string unitId)
+		{
+			if (!_unitService.TryGetUnit(unitId, out var unit))
+			{
+				this.LogWarning($"Unit '{unitId}' not found, cannot show info panel");
+				return;
+			}
+			_panel = _uiManager.Open<UnitInfoPanel, Systems.Unit.Unit>(unit);
 		}
 	}
 }
