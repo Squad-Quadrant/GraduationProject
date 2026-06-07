@@ -11,6 +11,7 @@ using Data.Runtime.Events.UI;
 using Systems.Damage;
 using Systems.Map;
 using Systems.Map.Config;
+using Systems.Map.SceneActor;
 using Systems.Unit;
 using Systems.Vision;
 using UnityEngine;
@@ -144,39 +145,50 @@ namespace Systems.Interaction.States
 			if (!e.CellPosition.HasValue && string.IsNullOrEmpty(e.HoveredUnitId))
 			{
 				Publish(Context, CursorInfoEvent.Hide());
+				ClearAttackPreview();
 				return;
 			}
 
-			var hoveredTarget = ResolveHoveredAttackable(e);
+			var hoveredTarget = ResolveHoveredVisibleEnemy(e);
 
 			if (hoveredTarget == null)
 			{
 				PublishBasicCursorInfo(Context, e);
-				return;
-			}
-
-			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, hoveredTarget.position, out var visionInfo);
-			if (!visionInfo.CanGunLinePass())
-			{
-				PublishBasicCursorInfo(Context, e);
+				ClearAttackPreview();
 				return;
 			}
 
 			ShowAttackPreview(hoveredTarget, e.WorldPosition);
 		}
 
-		private Unit.Unit ResolveHoveredAttackable(PointerHoverEvent e)
+		private void ClearAttackPreview()
+		{
+			Publish(Context, new RemoveGunLineEvent());
+			Publish(Context, DisplayAttackContextEvent.Invalid());
+		}
+
+		private Unit.Unit ResolveHoveredVisibleEnemy(PointerHoverEvent e)
 		{
 			if (e.HoveredUnitId != null &&
 			    Context.UnitService.TryGetUnit(e.HoveredUnitId, out var unit) &&
-			    _validTargetCells.Contains(unit.position))
+			    IsVisibleEnemy(unit))
 				return unit;
 
-			if (e.CellPosition.HasValue &&
-			    _validTargetCells.Contains(e.CellPosition.Value))
-				return Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
+			if (e.CellPosition.HasValue)
+			{
+				var unitAtCell = Context.UnitService.GetUnitAtPosition(e.CellPosition.Value);
+				if (IsVisibleEnemy(unitAtCell))
+					return unitAtCell;
+			}
 
 			return null;
+		}
+
+		private bool IsVisibleEnemy(Unit.Unit unit)
+		{
+			return unit != null &&
+			       Context.selectedUnit.IsHostile(unit) &&
+			       Context.VisionService.CurrentVisibleCells.Contains(unit.position);
 		}
 
 		private void ExecuteAttack(Unit.Unit target)
@@ -201,24 +213,33 @@ namespace Systems.Interaction.States
 
 		private void ShowAttackPreview(Unit.Unit target, Vector3 cursorWorldPosition)
 		{
-			var damageContext = ComputeDamageContext(target, out var contextDic, out var lowWallKeys);
+			var damageContext = ComputeDamageContext(target, out var contextDic, out var lowWallKeys, out var highWallKeys, out var sceneActors);
 			int hitPercent = Mathf.Clamp(Mathf.RoundToInt(damageContext.HitRate * 100f), 0, 100);
 
 			Publish(Context, CursorInfoEvent.ForAttack(
 				target.position, cursorWorldPosition,
 				hitPercent, target.name, target.CurrentHp, target.maxHp));
 
-			PublishAttackPreviewEvents(target, damageContext, contextDic, lowWallKeys);
+			PublishAttackPreviewEvents(target, damageContext, contextDic, lowWallKeys, highWallKeys, sceneActors);
 		}
 
 		private void PublishAttackPreviewEvents(
 			Unit.Unit target,
 			DamageExecutingContext damageContext,
 			Dictionary<BodyPartType, DamageExecutingContext> contextDic,
-			List<WallKey> lowWallKeys)
+			List<WallKey> lowWallKeys,
+			List<WallKey> highWallKeys,
+			List<SceneActorBase> sceneActors)
 		{
+			var highlightedWalls = lowWallKeys.Concat(highWallKeys).Distinct().ToList();
 			if (target.faction != EUnitFaction.Player)
-				Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, lowWallKeys));
+				Publish(Context, new UpdateGunLineEvent(Context.selectedUnit, target, highlightedWalls, sceneActors));
+
+			if (highWallKeys.Count > 0 || sceneActors.Count > 0)
+			{
+				Publish(Context, DisplayAttackContextEvent.Invalid());
+				return;
+			}
 
 			Publish(Context, DisplayAttackContextEvent.Valid(damageContext, Context.selectedUnit.id, contextDic));
 		}
@@ -226,12 +247,16 @@ namespace Systems.Interaction.States
 		private DamageExecutingContext ComputeDamageContext(
 			Unit.Unit target,
 			out Dictionary<BodyPartType, DamageExecutingContext> contextDic,
-			out List<WallKey> lowWallKeys)
+			out List<WallKey> lowWallKeys,
+			out List<WallKey> highWallKeys,
+			out List<SceneActorBase> sceneActors)
 		{
 			var environment = new List<IDamageInfluencer>();
 			lowWallKeys = new List<WallKey>();
 
 			Context.VisionCalculator.TraceRay(Context.selectedUnit.position, target.position, out var info);
+			highWallKeys = info.highWalls;
+			sceneActors = info.sceneActors;
 			var mapData = Context.MapService.Data;
 
 			foreach (var dir in Directions)

@@ -38,6 +38,17 @@ namespace Presentation.Map.SceneActor
 			}
 		}
 
+		public void SetHighlight(bool highlighted)
+		{
+			foreach (var r in _sliceRenderers)
+			{
+				var alpha = r.color.a;
+				var color = highlighted ? Color.red : Color.white;
+				color.a = alpha;
+				r.color = color;
+			}
+		}
+
 		private void BuildSlices(Vector2Int basePosition, IReadOnlyList<SpriteSlice> slices, ICoordinateConverter converter)
 		{
 			if (slices == null) return;

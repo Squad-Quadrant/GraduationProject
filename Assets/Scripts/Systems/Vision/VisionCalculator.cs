@@ -171,6 +171,7 @@ namespace Systems.Vision
 				pos += step;
 				var entered = horizontal ? new Vector2Int(pos, axis) : new Vector2Int(axis, pos);
 				info.passedCells.Add(entered);
+				AddSceneActorInfo(entered, mapData, info);
 
 				if (pos == end)
 				{

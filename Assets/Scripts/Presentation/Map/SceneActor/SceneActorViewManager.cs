@@ -34,6 +34,8 @@ namespace Presentation.Map.SceneActor
 			EventBus.Subscribe<MapViewInitEvent>(OnMapViewInit);
 			EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 			EventBus.Subscribe<SceneActorVisualChangedEvent>(OnVisualChanged);
+			EventBus.Subscribe<UpdateGunLineEvent>(OnUpdateGunLine);
+			EventBus.Subscribe<RemoveGunLineEvent>(OnRemoveGunLine);
 		}
 
 		private void OnDisable()
@@ -42,6 +44,8 @@ namespace Presentation.Map.SceneActor
 			EventBus.Unsubscribe<MapViewInitEvent>(OnMapViewInit);
 			EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 			EventBus.Unsubscribe<SceneActorVisualChangedEvent>(OnVisualChanged);
+			EventBus.Unsubscribe<UpdateGunLineEvent>(OnUpdateGunLine);
+			EventBus.Unsubscribe<RemoveGunLineEvent>(OnRemoveGunLine);
 			ClearAll();
 		}
 
@@ -103,6 +107,33 @@ namespace Presentation.Map.SceneActor
 			}
 
 			view.RefreshSlices(actor.BaseCell.Position, actor.CurrentSlices, CoordinateConverter);
+		}
+
+		private void OnUpdateGunLine(UpdateGunLineEvent e)
+		{
+			ClearAllHighLight();
+			if (e.sceneActors == null) return;
+
+			foreach (var actor in e.sceneActors)
+			{
+				if (actor == null) continue;
+				if (_viewLookup.TryGetValue(actor.Uid, out var view))
+					view.SetHighlight(true);
+			}
+		}
+
+		private void OnRemoveGunLine(RemoveGunLineEvent e)
+		{
+			ClearAllHighLight();
+		}
+
+		private void ClearAllHighLight()
+		{
+			foreach (var view in _viewLookup.Values)
+			{
+				if (view)
+					view.SetHighlight(false);
+			}
 		}
 
 		private void ClearAll()
