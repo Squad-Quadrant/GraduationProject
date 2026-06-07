@@ -36,6 +36,5 @@ namespace Systems.Unit.Equipment.Config
         [LabelText("类型")] public string type;
         [LabelText("描述")] public string description;
         [LabelText("图标")] public Sprite icon;
-        [LabelText("重量")] public float weight;
     }
 }

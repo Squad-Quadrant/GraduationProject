@@ -55,10 +55,10 @@ namespace Systems.Unit
 
 			var unit = Unit.LoadFromConfig(unitId, config, position, patrolWaypoints);
 			unit.activationGroupId = activationGroupId;
+            _buffService.Register(unit); // 确保Buff系统的注册早于装备注册，这是一个临时问题
 			unit.InitEquipment(resolvedMain, resolvedSecondary, resolvedTacticalItems);
 
 			_units[unitId] = unit;
-			_buffService.Register(unit);
 			
 			this.Log($"Created unit: {unit}");
 			_eventBus.Publish(new UnitCreatedEvent(unit));

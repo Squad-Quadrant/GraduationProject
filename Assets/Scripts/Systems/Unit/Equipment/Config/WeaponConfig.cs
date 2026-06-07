@@ -45,6 +45,10 @@ namespace Systems.Unit.Equipment.Config
 
 		[LabelText("精确射击模式下的命中率加成")]
 		public float preciseShootHitRateBonus;
+        
+        [LabelText("重量-SP")] public int weightSpeed;
+        
+        [LabelText("重量-MP")] public int weightMoveRange;
 
 		[Title("Animation")]
 		[LabelText("动画键(可空)")]
