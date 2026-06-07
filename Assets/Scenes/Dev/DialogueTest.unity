@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b879634e744ecc9d79e77c2587b790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testDialogue: {fileID: 11400000, guid: 82d74f70dbcee67418a4d0ffcc984021, type: 2}
+  testDialogue: {fileID: 11400000, guid: 645927391ae7e0945b38d5c7985267fb, type: 2}
   testStartIndex: 0
 --- !u!4 &1526628736
 Transform:
