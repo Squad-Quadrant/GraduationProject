@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterId: char_dagger
   displayName: dagger
-  mode: 1
-  portraitPrefab: {fileID: 2563998485430238329, guid: 918a6e540b4143a46ba9eb65a8b48690, type: 3}
-  skeletonDataAsset: {fileID: 0}
-  defaultPoseName: default
+  mode: 0
+  portraitPrefab: {fileID: 6427781741292342774, guid: 918a6e540b4143a46ba9eb65a8b48690, type: 3}
+  skeletonDataAsset: {fileID: 11400000, guid: 68c205d9e350de84fae91903a24307fb, type: 2}
+  defaultPoseName: idle
   defaultSkinName: default
   entranceStyle: 1
   exitStyle: 1

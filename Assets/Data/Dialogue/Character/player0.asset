@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b74e4feb1c419ab57742db54de5d1d, type: 3}
+  m_Name: player0
+  m_EditorClassIdentifier: 
+  characterId: char_player0
+  displayName: "\u961F\u53CB"
+  mode: 1
+  portraitPrefab: {fileID: 4987604248124500223, guid: e322f4581c0a23347b8d4206f6de172e, type: 3}
+  skeletonDataAsset: {fileID: 0}
+  defaultPoseName: idle
+  defaultSkinName: default
+  entranceStyle: 1
+  exitStyle: 1
