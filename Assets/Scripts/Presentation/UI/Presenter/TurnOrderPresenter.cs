@@ -79,14 +79,16 @@ namespace Presentation.UI.Presenter
 
 				Sprite icon = null;
 				var factionBg = _panel.GetFactionBg(EUnitFaction.Neutral);
+				string unitName = "unit";
 
 				if (_unitService.TryGetUnit(turnUnit.Id, out var unit))
 				{
 					icon = unit.icon;
 					factionBg = _panel.GetFactionBg(unit.faction);
+					unitName = unit.name;
 				}
 
-				result[i] = new SlotData(turnUnit.Id, icon, factionBg, state);
+				result[i] = new SlotData(turnUnit.Id, icon, factionBg, unitName, state);
 			}
 
 			return result;

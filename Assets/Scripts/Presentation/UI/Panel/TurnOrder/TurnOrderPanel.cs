@@ -17,13 +17,15 @@ namespace Presentation.UI.Panel.TurnOrder
 		public readonly string UnitId;
 		public readonly Sprite Icon;
 		public readonly Sprite FactionBg;
+		public readonly string UnitName;
 		public readonly ESlotState State;
 
-		public SlotData(string unitId, Sprite icon, Sprite factionBg, ESlotState state)
+		public SlotData(string unitId, Sprite icon, Sprite factionBg, string unitName, ESlotState state)
 		{
 			UnitId = unitId;
 			Icon = icon;
 			FactionBg = factionBg;
+			UnitName = unitName;
 			State = state;
 		}
 	}
@@ -119,7 +121,7 @@ namespace Presentation.UI.Panel.TurnOrder
 				else
 				{
 					var slot = AcquireSlot();
-					slot.Setup(data.UnitId, data.Icon, data.FactionBg);
+					slot.Setup(data.UnitId, data.Icon, data.FactionBg, data.UnitName);
 					slot.SetX(x);
 					slot.PlayEntrance(visual, entranceDuration, delay: addedCount * entranceStagger);
 

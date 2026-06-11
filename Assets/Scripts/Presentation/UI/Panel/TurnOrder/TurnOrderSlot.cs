@@ -1,6 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,9 @@ namespace Presentation.UI.Panel.TurnOrder
 
 		[TitleGroup("References")]
 		[SerializeField, Required] private CanvasGroup canvasGroup;
+
+		[TitleGroup("References")]
+		[SerializeField, Required] private TextMeshProUGUI nameText;
 
 		[TitleGroup("Animation")]
 		[SerializeField ]private Ease slideEase = Ease.OutCubic;
@@ -45,12 +49,13 @@ namespace Presentation.UI.Panel.TurnOrder
 		private Tween _entranceSeq;
 		private Tween _exitSeq;
 
-		public void Setup(string unitId, Sprite icon, Sprite factionBg)
+		public void Setup(string unitId, Sprite icon, Sprite factionBg, string unitName)
 		{
 			UnitId = unitId;
 			iconImage.sprite = icon;
 			iconImage.enabled = icon;
 			borderImage.sprite = factionBg;
+			nameText.text = unitName;
 		}
 
 		public void SetX(float x)
