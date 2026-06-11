@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Unit
-  - 
+  - Highlighted
   - 
   - 
   - 
@@ -41,9 +41,6 @@ TagManager:
   - name: Background
     uniqueID: 4146595719
     locked: 0
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Ground
     uniqueID: 975103653
     locked: 0
@@ -55,4 +52,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 4039949325
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0

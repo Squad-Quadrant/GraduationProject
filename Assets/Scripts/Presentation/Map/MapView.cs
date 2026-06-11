@@ -4,9 +4,11 @@ using Core.Log;
 using Data.Runtime.Events.Input;
 using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.Map;
+using HighlightPlus2D;
 using Presentation.Bootstrap;
 using Presentation.Map.GunLine;
 using Presentation.Map.PathPreview;
+using Presentation.Map.SceneActor;
 using Presentation.Map.Wall;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
@@ -19,8 +21,9 @@ namespace Presentation.Map
 {
 	public class MapView : MonoBehaviour
 	{
-		[Title("References")] [SerializeField, Required]
-		private SpriteRenderer groundRenderer;
+		[Title("References")]
+		[SerializeField, Required] private SpriteRenderer groundRenderer;
+		[SerializeField, Required] private SceneActorViewManager sceneActorViewManager;
 
 		[SerializeField, Required] private Tilemap cursorHoverTilemap;
 		[SerializeField, Required] private Tilemap targetingTilemap;
@@ -28,7 +31,9 @@ namespace Presentation.Map
 		[Title("Cursor Hover")] [SerializeField]
 		private TileBase baseSingleTile;
 
+		[Title("GunLine")]
 		[SerializeField] private GunLineView gunline;
+		[SerializeField, Required] private HighlightEffect2D gunlineHighlightEffect;
 		
 		private IEventBus _eventBus;
 		private IEventBus EventBus => _eventBus ??= RootContainer.Instance.Resolve<IEventBus>();
@@ -133,21 +138,19 @@ namespace Presentation.Map
 			Vector3 position0 = _coordinateConverter.CellToWorld(e.attacker.position);
 			Vector3 position1 = _coordinateConverter.CellToWorld(e.target.position);
 
-			_wallViewManager.ClearAllHighLight();
-			if (e.heightWalls != null)
-            {
-				foreach (var wallKey in e.heightWalls)
-				{
-					_wallViewManager.SetWallHighlight(wallKey);
-				}
-            }
+			_wallViewManager.SetHighlightedWalls(e.heightWalls);
+			sceneActorViewManager.SetHighlightedActors(e.sceneActors);
+			gunlineHighlightEffect.Refresh();
 			
 			gunline.Refresh(position0, position1);
 		}
 
 		private void RemoveGunLine(RemoveGunLineEvent e)
 		{
-            _wallViewManager.ClearAllHighLight();
+			_wallViewManager.ClearAllHighLight();
+			sceneActorViewManager.ClearAllHighLight();
+			gunlineHighlightEffect.Refresh();
+
 			gunline.Remove();
 		}
     }

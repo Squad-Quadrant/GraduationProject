@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Presentation.Map.GunLine;
 using Sirenix.OdinInspector;
 using Systems.Interfaces;
 using Systems.Map.Config;
@@ -15,6 +16,9 @@ namespace Presentation.Map.SceneActor
 		private readonly List<SpriteRenderer> _sliceRenderers = new();
 
 		public uint Uid => uid;
+
+		private bool _highlighted;
+		private int _baseLayer;
 
 		public void Setup(uint id, Vector2Int basePosition, IReadOnlyList<SpriteSlice> slices, ICoordinateConverter converter)
 		{
@@ -40,13 +44,13 @@ namespace Presentation.Map.SceneActor
 
 		public void SetHighlight(bool highlighted)
 		{
-			foreach (var r in _sliceRenderers)
-			{
-				var alpha = r.color.a;
-				var color = highlighted ? Color.red : Color.white;
-				color.a = alpha;
-				r.color = color;
-			}
+			if (_highlighted == highlighted) return;
+			_highlighted = highlighted;
+
+			if (!GunLineHighlightLayerMask.IsValid) return;
+			int layer = highlighted ? GunLineHighlightLayerMask.Id : _baseLayer;
+			foreach (var r in _sliceRenderers.Where(r => r))
+				r.gameObject.layer = layer;
 		}
 
 		private void BuildSlices(Vector2Int basePosition, IReadOnlyList<SpriteSlice> slices, ICoordinateConverter converter)
@@ -69,6 +73,9 @@ namespace Presentation.Map.SceneActor
 				sR.sortingLayerName = "OnGround";
 				sR.spriteSortPoint = SpriteSortPoint.Pivot; // Y-sort 用 pivot 而非 GameObject center
 
+				_baseLayer = go.layer;
+				if (_highlighted && GunLineHighlightLayerMask.IsValid)
+					go.layer = GunLineHighlightLayerMask.Id;
 				_sliceRenderers.Add(sR);
 			}
 		}

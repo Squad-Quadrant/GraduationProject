@@ -4,6 +4,7 @@ using Core.Events;
 using Core.Log;
 using Data.Runtime.Events.Map;
 using Presentation.Bootstrap;
+using Presentation.Map.GunLine;
 using Sirenix.OdinInspector;
 using Systems.Map;
 using Systems.Map.Config;
@@ -25,6 +26,9 @@ namespace Presentation.Map.Wall
 		private IRegionService RegionService => _regionService ??= LevelContainer.Instance.Resolve<IRegionService>();
 
 		private Dictionary<WallKey, WallView> _wallLookup;
+
+		private readonly Dictionary<WallKey, int> _highlightedWalls = new();
+		private readonly List<WallKey> _removeBuffer = new();
 
 		private void OnEnable()
 		{
@@ -108,19 +112,44 @@ namespace Presentation.Map.Wall
 			visual.Renderer.color = new Color(c.r, c.g, c.b, alpha);
 		}
         
-        public void SetWallHighlight(WallKey key)
-        {
-            if (_wallLookup == null) return;
-            if (!_wallLookup.TryGetValue(key, out var visual)) return;
-            visual.Renderer.color = Color.red;
-        }
+		public void SetHighlightedWalls(IReadOnlyCollection<WallKey> walls)
+		{
+			if (_wallLookup == null) return;
+			if (!GunLineHighlightLayerMask.IsValid) return;
+
+			var targetSet = walls == null ? new HashSet<WallKey>() : new HashSet<WallKey>(walls);
+
+			_removeBuffer.Clear();
+			foreach (var key in _highlightedWalls.Keys.Where(key => !targetSet.Contains(key)))
+				_removeBuffer.Add(key);
+			foreach (var key in _removeBuffer)
+				RestoreWallLayer(key);
+
+			foreach (var key in targetSet.Where(key => !_highlightedWalls.ContainsKey(key)))
+			{
+				if (!_wallLookup.TryGetValue(key, out var view)) continue;
+
+				_highlightedWalls[key] = view.gameObject.layer; // 记录原Layer
+				view.gameObject.layer = GunLineHighlightLayerMask.Id;
+			}
+		}
+
+		private void RestoreWallLayer(WallKey key)
+		{
+			if (_wallLookup.TryGetValue(key, out var view))
+				view.gameObject.layer = _highlightedWalls[key];
+			_highlightedWalls.Remove(key);
+		}
 
         public void ClearAllHighLight()
         {
-            foreach (var wall in _wallLookup.Values)
-            {
-                wall.Renderer.color = new Color(1, 1, 1, wall.Renderer.color.a);
-            }
+	        if (_wallLookup != null)
+	        {
+		        foreach (var (key, originalLayer) in _highlightedWalls)
+			        if (_wallLookup.TryGetValue(key, out var view))
+				        view.gameObject.layer = originalLayer;
+	        }
+	        _highlightedWalls.Clear();
         }
 
 		private bool IsWallRegionVisible(WallKey wallKey)

@@ -29,13 +29,15 @@ namespace Presentation.Map.SceneActor
 		private readonly Dictionary<uint, SceneActorView> _viewLookup = new();
 		private readonly Dictionary<uint, SceneActorBase> _actorLookup = new();
 
+		private readonly HashSet<uint> _highlightedActors = new();
+		private readonly HashSet<uint> _targetBuffer = new();
+		private readonly List<uint> _removeBuffer = new();
+
 		private void OnEnable()
 		{
 			EventBus.Subscribe<MapViewInitEvent>(OnMapViewInit);
 			EventBus.Subscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 			EventBus.Subscribe<SceneActorVisualChangedEvent>(OnVisualChanged);
-			EventBus.Subscribe<UpdateGunLineEvent>(OnUpdateGunLine);
-			EventBus.Subscribe<RemoveGunLineEvent>(OnRemoveGunLine);
 		}
 
 		private void OnDisable()
@@ -44,8 +46,6 @@ namespace Presentation.Map.SceneActor
 			EventBus.Unsubscribe<MapViewInitEvent>(OnMapViewInit);
 			EventBus.Unsubscribe<RegionUnlockedEvent>(OnRegionUnlocked);
 			EventBus.Unsubscribe<SceneActorVisualChangedEvent>(OnVisualChanged);
-			EventBus.Unsubscribe<UpdateGunLineEvent>(OnUpdateGunLine);
-			EventBus.Unsubscribe<RemoveGunLineEvent>(OnRemoveGunLine);
 			ClearAll();
 		}
 
@@ -109,31 +109,39 @@ namespace Presentation.Map.SceneActor
 			view.RefreshSlices(actor.BaseCell.Position, actor.CurrentSlices, CoordinateConverter);
 		}
 
-		private void OnUpdateGunLine(UpdateGunLineEvent e)
+		public void SetHighlightedActors(IReadOnlyCollection<SceneActorBase> actors)
 		{
-			ClearAllHighLight();
-			if (e.sceneActors == null) return;
+			_targetBuffer.Clear();
+			if (actors != null)
+				foreach (var actor in actors)
+					if (actor != null)
+						_targetBuffer.Add(actor.Uid);
 
-			foreach (var actor in e.sceneActors)
+			_removeBuffer.Clear();
+			foreach (var uid in _highlightedActors.Where(uid => !_targetBuffer.Contains(uid)))
+				_removeBuffer.Add(uid);
+			foreach (var uid in _removeBuffer)
 			{
-				if (actor == null) continue;
-				if (_viewLookup.TryGetValue(actor.Uid, out var view))
-					view.SetHighlight(true);
-			}
-		}
-
-		private void OnRemoveGunLine(RemoveGunLineEvent e)
-		{
-			ClearAllHighLight();
-		}
-
-		private void ClearAllHighLight()
-		{
-			foreach (var view in _viewLookup.Values)
-			{
-				if (view)
+				if (_viewLookup.TryGetValue(uid, out var view) && view)
 					view.SetHighlight(false);
+				_highlightedActors.Remove(uid);
 			}
+
+			foreach (var uid in _targetBuffer.Where(uid => !_highlightedActors.Contains(uid)))
+			{
+				if (!_viewLookup.TryGetValue(uid, out var view) || !view) continue;
+
+				view.SetHighlight(true);
+				_highlightedActors.Add(uid);
+			}
+		}
+
+		public void ClearAllHighLight()
+		{
+			foreach (var uid in _highlightedActors)
+				if (_viewLookup.TryGetValue(uid, out var view) && view)
+					view.SetHighlight(false);
+			_highlightedActors.Clear();
 		}
 
 		private void ClearAll()

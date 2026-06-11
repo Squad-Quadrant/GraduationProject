@@ -146,7 +146,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -338,7 +338,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -574,7 +574,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 30
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -765,7 +765,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: -2
   m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -962,7 +962,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 20
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1019,6 +1019,7 @@ GameObject:
   - component: {fileID: 6600589940686590176}
   - component: {fileID: 2970457760337099386}
   - component: {fileID: 8113960242886681935}
+  - component: {fileID: 8947410758000020188}
   m_Layer: 0
   m_Name: MapView
   m_TagString: Untagged
@@ -1078,10 +1079,92 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundRenderer: {fileID: 8472750806785375910}
+  sceneActorViewManager: {fileID: 1274903228393542848}
   cursorHoverTilemap: {fileID: 7109044757245858994}
   targetingTilemap: {fileID: 4646231023097586506}
   baseSingleTile: {fileID: 11400000, guid: 9df4867eb6914454c894a7e159efde5c, type: 2}
   gunline: {fileID: 6026206011385533314}
+  gunlineHighlightEffect: {fileID: 8947410758000020188}
+--- !u!114 &8947410758000020188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4713970211982079851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c503353ae16e0438ab7a973ce8ca421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  previewInEditor: 1
+  renderingLayer: 0
+  alwaysOnTop: 0
+  effectGroup: 4
+  effectGroupLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  occluder: 0
+  _highlighted: 1
+  ignore: 0
+  polygonPacking: 0
+  preserveMesh: 0
+  outlineExclusive: 0
+  fadeInDuration: 0
+  fadeOutDuration: 0
+  overlay: 0.5
+  overlayColor: {r: 1, g: 0.0088038845, b: 0, a: 1}
+  overlayAnimationSpeed: 0.5
+  overlayMinIntensity: 0.5
+  overlayBlending: 1
+  overlayRenderQueue: 3001
+  outline: 1
+  outlineColor: {r: 1, g: 0.045656387, b: 0, a: 1}
+  outlineWidth: 0.5
+  outlineQuality: 2
+  outlineSmooth: 1
+  glow: 0
+  glowWidth: 1.5
+  glowDithering: 1
+  glowMagicNumber1: 0.75
+  glowMagicNumber2: 0.5
+  glowAnimationSpeed: 1
+  glowSmooth: 0
+  glowQuality: 0
+  glowPasses:
+  - offset: 4
+    alpha: 0.1
+    color: {r: 0.64, g: 1, b: 0, a: 1}
+  - offset: 3
+    alpha: 0.2
+    color: {r: 0.64, g: 1, b: 0, a: 1}
+  - offset: 2
+    alpha: 0.3
+    color: {r: 0.64, g: 1, b: 0, a: 1}
+  - offset: 1
+    alpha: 0.4
+    color: {r: 0.64, g: 1, b: 0, a: 1}
+  zoomScale: 1
+  shadowIntensity: 0
+  shadowColor: {r: 0, g: 0, b: 0, a: 0.2}
+  shadowOffset: {x: 0.1, y: -0.1}
+  shadow3D: 0
+  shadowDithering: 0
+  seeThrough: 2
+  seeThroughIntensity: 0.8
+  seeThroughTintAlpha: 0.5
+  seeThroughTintColor: {r: 1, g: 0, b: 0, a: 1}
+  seeThroughNoise: 1
+  pixelSnap: 0
+  alphaCutOff: 0.05
+  autoSize: 1
+  center: {x: 0, y: 0}
+  scale: {x: 1, y: 1}
+  aspectRatio: 1
+  pivotPos: {x: 0, y: 0}
+  rmsCount: 0
+  scaleBeforeZoom: {x: 0, y: 0, z: 0}
+  scaleAfterZoom: {x: 0, y: 0, z: 0}
 --- !u!1 &5650590189757595907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,7 +1450,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 5
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1602,7 +1685,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: -2
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1796,7 +1879,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 975103653
-  m_SortingLayer: 1
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1955,7 +2038,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 15
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -2147,7 +2230,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1250996355
-  m_SortingLayer: 2
+  m_SortingLayer: -3
   m_SortingOrder: 25
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -2337,7 +2420,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1499799387
-  m_SortingLayer: 3
+  m_SortingLayer: -2
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
