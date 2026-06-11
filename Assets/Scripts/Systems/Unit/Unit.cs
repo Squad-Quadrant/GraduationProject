@@ -412,17 +412,9 @@ namespace Systems.Unit
 	            : EWeaponSlot.Main;
 
             // todo:这是一个临时写法，预期是武器为unit添加一个buff，但是buff现在没做支持参数的初始化，而我们现在也没有扔武器一说，所以暂时可以直接调整基础数值
-            if (!MainWeapon.IsNullOrEmpty() && main)
-            {
-                moveRange.Value -= (main as WeaponConfig).weightMoveRange;
-                speed.Value -= (main as WeaponConfig).weightSpeed;
-            }
-            
-            if (!SecondaryWeapon.IsNullOrEmpty() && secondary)
-            {
-                moveRange.Value -= (secondary as WeaponConfig).weightMoveRange;
-                speed.Value -= (secondary as WeaponConfig).weightSpeed;
-            }
+            var (speedPenalty, moveRangePenalty) = WeaponWeight.SumPenalty(main, secondary);
+            speed.Value = WeaponWeight.ApplyPenalty(speed.Value, speedPenalty);
+            moveRange.Value = WeaponWeight.ApplyPenalty(moveRange.Value, moveRangePenalty);
         }
 
         public EquipmentContainer GetTacticalItem(int slotIndex)

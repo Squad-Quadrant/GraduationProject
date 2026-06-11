@@ -8,6 +8,7 @@ using Presentation.UI.Component.UnitPortrait;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit;
+using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
 using TMPro;
 using UnityEngine;
@@ -38,7 +39,9 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[SerializeField, Required, ChildGameObjectsOnly] private Slider hpSlider;
 		[SerializeField, ChildGameObjectsOnly] private Slider defenseSlider;
 		[SerializeField, ChildGameObjectsOnly] private Slider moveRangeSlider;
+		[SerializeField, ChildGameObjectsOnly] private Image moveRangePenaltyFill;
 		[SerializeField, ChildGameObjectsOnly] private Slider speedSlider;
+		[SerializeField, ChildGameObjectsOnly] private Image speedPenaltyFill;
 		[SerializeField, ChildGameObjectsOnly] private Slider visionSlider;
 		[SerializeField, ChildGameObjectsOnly] private Transform apRoot;
 		[SerializeField, AssetsOnly] private GameObject apPrefab;
@@ -208,14 +211,36 @@ namespace Presentation.UI.Panel.Menu.Loadout
 
 			SetSliderValue(hpSlider, unit.maxHp, hpScaleMax);
 			SetSliderValue(defenseSlider, unit.defense, defenseScaleMax);
-			SetSliderValue(moveRangeSlider, unit.moveRange, moveRangeScaleMax);
-			SetSliderValue(speedSlider, unit.speed, speedScaleMax);
 			SetSliderValue(visionSlider, unit.visionRange, visionScaleMax);
+			RefreshStatSliders(unit);
 
 			for (int i = apRoot.childCount - 1; i >= 0; i--)
 				Destroy(apRoot.GetChild(i).gameObject);
 			for (int i = 0; i < unit.actionPoints; i++)
 				Instantiate(apPrefab, apRoot);
+		}
+
+		private void RefreshStatSliders(UnitConfig unit)
+		{
+			var loadout = _data.DataManager.GetPlayerLoadoutForEditing(unit, _data.Level);
+			var main = loadout != null ? _data.DataManager.GetEquipment(loadout.mainWeaponId) : null;
+			var secondary = loadout != null ? _data.DataManager.GetEquipment(loadout.secondaryWeaponId) : null;
+
+			var (speedPenalty, moveRangePenalty) = WeaponWeight.SumPenalty(main, secondary);
+
+			SetPenaltySlider(speedSlider, speedPenaltyFill,
+				WeaponWeight.ApplyPenalty(unit.speed, speedPenalty), unit.speed, speedScaleMax);
+			SetPenaltySlider(moveRangeSlider, moveRangePenaltyFill,
+				WeaponWeight.ApplyPenalty(unit.moveRange, moveRangePenalty), unit.moveRange, moveRangeScaleMax);
+		}
+
+		private static void SetPenaltySlider(Slider slider, Image penaltyFill, int effective, int baseValue, int scaleMax)
+		{
+			SetSliderValue(slider, effective, scaleMax);
+
+			if (!penaltyFill) return;
+			penaltyFill.fillAmount = Mathf.Clamp01((float)baseValue / Mathf.Max(1, scaleMax));
+			penaltyFill.enabled = effective < baseValue;
 		}
 
 		private UnitPortraitView _currentPortrait;
@@ -364,7 +389,9 @@ namespace Presentation.UI.Panel.Menu.Loadout
 					throw new ArgumentOutOfRangeException();
 			}
 
-			slot.Refresh(selected);   // 立即更新槽位显示，无需整个 Refresh
+			slot.Refresh(selected);
+			if (slot.SlotKind is ELoadoutSlotKind.MainWeapon or ELoadoutSlotKind.SecondaryWeapon)
+				RefreshStatSliders(_currentUnit);
 			RefreshStartButtonState();
 
 			this.Log($"Equipped {(selected ? selected.displayName : "<empty>")} to {_currentUnit.configId}/{slot.SlotKind}[{slot.SlotIndex}]");
