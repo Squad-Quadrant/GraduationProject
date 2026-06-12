@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u8D85\u7D27\u51D1\u8FD1\u6218\u7A81\u51FB\u6B65\u67AA"
   description: "\u8FD9\u79CD\u8D85\u77ED\u578BM16\u5361\u5BBE\u67AA\u7684\u8BBE\u8BA1\u76EE\u7684\u662F\u53D6\u4EE3\u7F8E\u519B\u4E8C\u6218\u65F6\u671F\u7684\u8001\u5F0F\u51B2\u950B\u67AA\uFF0C\u8FD1\u8DDD\u79BB\u706B\u529B\u867D\u5F3A\u52B2\uFF0C\u4F46\u566A\u97F3\u4E0E\u540E\u5750\u529B\u5DE8\u5927\u3002"
   icon: {fileID: -211006167, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_a1car
   gripType: 0
   damage: 26
@@ -40,6 +39,8 @@ MonoBehaviour:
   canPreciseShoot: 1
   preciseShootSpeed: 4
   preciseShootHitRateBonus: 0.1
+  weightSpeed: 10
+  weightMoveRange: 1
   animKey: 
   fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
   reloadClip: {fileID: 8300000, guid: 6790eff764492f24d9b9743d8c0b350b, type: 3}

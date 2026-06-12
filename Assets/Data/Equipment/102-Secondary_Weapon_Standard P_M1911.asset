@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u4E2D\u5A01\u529B\u624B\u67AA"
   description: "\u4E00\u6B3E\u7ECF\u5178\u7684\u7F8E\u56FD.45\u53E3\u5F84\u519B\u7528\u624B\u67AA\uFF0C\u4EE5\u5176\u5A01\u529B\u53CA\u53EF\u9760\u6027\u800C\u95FB\u540D\u3002"
   icon: {fileID: 2077321407, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_m1911
   gripType: 1
   damage: 23
@@ -38,6 +37,8 @@ MonoBehaviour:
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  weightSpeed: 5
+  weightMoveRange: 0
   animKey: 
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}

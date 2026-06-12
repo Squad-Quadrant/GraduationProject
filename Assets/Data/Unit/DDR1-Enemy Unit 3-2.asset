@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fe1742d0f494787a9923bbde5816c0a, type: 3}
-  m_Name: RU1-Enemy Unit 1
+  m_Name: DDR1-Enemy Unit 3-2
   m_EditorClassIdentifier: 
-  configId: enemy_unit_001
-  unitName: RU1
-  description: "\u654C\u65B9\u91CD\u88C5\u58EB\u5175"
-  unitClass: Shield
+  configId: enemy_unit_003_2
+  unitName: DDR1-2
+  description: "\u654C\u65B9\u6807\u51C6\u58EB\u5175"
+  unitClass: Standard
   icon: {fileID: 557660248, guid: 9613e9408c2ac0d419d836d8f03417da, type: 3}
   portraitPrefabLoadout: {fileID: -7329017297306985217, guid: e6f9749d236bf4840814fa6979519372, type: 3}
   portraitPrefabUnitInfo: {fileID: 8232878118925338526, guid: 00bad59aabfdda44e8a9c61fa0a73abf, type: 3}
   animationConfig: {fileID: 11400000, guid: 5d12cfb5622897144afe8f2766dc119b, type: 2}
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}
-  frontBodySkin: ru1 front
-  backBodySkin: ru1 back
+  frontBodySkin: ddr1 front
+  backBodySkin: ddr1 back
   maxHp: 100
-  speed: 80
-  moveRange: 3
+  speed: 100
+  moveRange: 4
   maxMovementAp: 2
   actionPoints: 3
-  visionRange: 5
+  visionRange: 6
   faction: 1
-  defense: 135
-  defenseRate: 0.3
+  defense: 90
+  defenseRate: 0
   san: 100
-  aiArchetype: {fileID: 11400000, guid: 7f7b62f7d36cc004f9fbec10a7655668, type: 2}
+  aiArchetype: {fileID: 11400000, guid: 29cfae672d0edf04a983b1bc1871f7e2, type: 2}
   skillConfig: {fileID: 0}

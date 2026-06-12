@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u9AD8\u7CBE\u5EA6\u6D88\u97F3\u624B\u67AA"
   description: "\u7F8E\u519B\u5728\u8D8A\u6218\u671F\u95F4\u4E3A\u6F5C\u5165\u4F5C\u6218\u800C\u7814\u53D1\u76849mm\u6D88\u97F3\u624B\u67AA\uFF0C\u5B89\u88C5\u6709\u4E13\u5C5E\u7684\u9AD8\u6548\u6D88\u97F3\u5668\u3002"
   icon: {fileID: 733355011, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_mk22
   gripType: 1
   damage: 20
@@ -38,6 +37,8 @@ MonoBehaviour:
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  weightSpeed: 5
+  weightMoveRange: 0
   animKey: 
   fireClip: {fileID: 8300000, guid: 8210480051bd37d4d84dcc30f021627d, type: 3}
   reloadClip: {fileID: 8300000, guid: 2abf701fa0957e3458823e34ac511305, type: 3}

@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u7D27\u51D1\u7A81\u51FB\u6B65\u67AA"
   description: "AKS-74U\u662FAK-74\u7684\u77ED\u67AA\u7BA1\u5361\u5BBE\u67AA\u578B\u53F7\uFF0C\u5C04\u901F\u7565\u9AD8\uFF0C\u7528\u4E8E\u88C5\u5907\u534E\u7EA6\u7A7A\u964D\u5175\u90E8\u961F\u6216\u8F7D\u5177\u4E58\u5458\u3002"
   icon: {fileID: -2124218511, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_ak74u
   gripType: 0
   damage: 30
@@ -38,6 +37,8 @@ MonoBehaviour:
   canPreciseShoot: 1
   preciseShootSpeed: 2
   preciseShootHitRateBonus: 0.15
+  weightSpeed: 10
+  weightMoveRange: 1
   animKey: 
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}

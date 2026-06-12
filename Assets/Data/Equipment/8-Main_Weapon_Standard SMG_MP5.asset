@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u6807\u51C6\u51B2\u950B\u67AA"
   description: "\u4EE5\u5176\u4F18\u5F02\u7684\u7CBE\u5EA6\u548C\u7A33\u5B9A\u6027\uFF0C\u897F\u5FB7\u751F\u4EA7\u7684MP5\u5728\u540C\u7C7B\u4EA7\u54C1\u4E2D\u8131\u9896\u800C\u51FA\u3002"
   icon: {fileID: -336969454, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_mp5
   gripType: 0
   damage: 25
@@ -44,6 +43,8 @@ MonoBehaviour:
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  weightSpeed: 5
+  weightMoveRange: 1
   animKey: mp5
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}

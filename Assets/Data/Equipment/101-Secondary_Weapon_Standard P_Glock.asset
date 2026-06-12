@@ -17,7 +17,6 @@ MonoBehaviour:
   type: "\u5927\u5BB9\u91CF\u624B\u67AA"
   description: "\u5965\u5730\u5229\u751F\u4EA7\u7684\u65B0\u578B9mm\u624B\u67AA\uFF0C\u91C7\u7528\u805A\u5408\u7269\u6750\u8D28\u90E8\u4EF6\u51CF\u91CD\uFF0C\u5E76\u62E5\u6709\u8F83\u9AD8\u7684\u5F39\u5BB9\u91CF\u3002"
   icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
   spineName: weapon_glock
   gripType: 1
   damage: 20
@@ -38,6 +37,8 @@ MonoBehaviour:
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
+  weightSpeed: 5
+  weightMoveRange: 0
   animKey: 
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
