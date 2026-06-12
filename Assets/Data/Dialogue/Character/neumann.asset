@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: neumann
   m_EditorClassIdentifier: 
   characterId: char_neumann
-  displayName: neumann
+  displayName: Neumann
   mode: 0
   portraitPrefab: {fileID: 3733426873229618925, guid: a9b488f94b4f076428c8172c311885e2, type: 3}
   skeletonDataAsset: {fileID: 11400000, guid: 070e361cdb60d59499c8dd62fcac2724, type: 2}

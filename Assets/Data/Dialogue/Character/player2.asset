@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: player2
   m_EditorClassIdentifier: 
   characterId: char_player2
-  displayName: "\u961F\u53CB"
+  displayName: "P.C.B.\u6307\u6325\u5B98"
   mode: 1
   portraitPrefab: {fileID: 7962149958589559327, guid: 2bac8ab9f5f70e54f8168fade0aa42cb, type: 3}
   skeletonDataAsset: {fileID: 0}
