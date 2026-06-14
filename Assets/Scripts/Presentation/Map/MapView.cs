@@ -138,11 +138,63 @@ namespace Presentation.Map
 			Vector3 position0 = _coordinateConverter.CellToWorld(e.attacker.position);
 			Vector3 position1 = _coordinateConverter.CellToWorld(e.target.position);
 
+			Vector3 endPosition = position1;
+			float lineSqrMag = (position1 - position0).sqrMagnitude;
+			if (lineSqrMag > 0.0001f)
+			{
+				float minDistanceSqr = lineSqrMag;
+
+				if (e.heightWalls != null)
+				{
+					foreach (var highWall in e.heightWalls)
+					{
+						var posAndIsLeft = highWall.ToPositionAndIsLeft();
+						Vector2Int p1 = posAndIsLeft.Item1;
+						Vector2Int p2 = posAndIsLeft.Item2 ? new Vector2Int(p1.x, p1.y + 1) : new Vector2Int(p1.x + 1, p1.y);
+						Vector3 w1 = _coordinateConverter.CellToWorld(p1);
+						Vector3 w2 = _coordinateConverter.CellToWorld(p2);
+						Vector3 wallCenter = (w1 + w2) / 2f;
+						
+						float t = Vector3.Dot(wallCenter - position0, position1 - position0) / lineSqrMag;
+						if (t > 0 && t < 1)
+						{
+							Vector3 proj = position0 + t * (position1 - position0);
+							float distSqr = (proj - position0).sqrMagnitude;
+							if (distSqr < minDistanceSqr)
+							{
+								minDistanceSqr = distSqr;
+								endPosition = proj;
+							}
+						}
+					}
+				}
+
+				if (e.sceneActors != null)
+				{
+					foreach (var actor in e.sceneActors)
+					{
+						if (actor.BaseCell == null) continue;
+						Vector3 actorPos = _coordinateConverter.CellToWorld(actor.BaseCell.Position);
+						float t = Vector3.Dot(actorPos - position0, position1 - position0) / lineSqrMag;
+						if (t > 0 && t < 1)
+						{
+							Vector3 proj = position0 + t * (position1 - position0);
+							float distSqr = (proj - position0).sqrMagnitude;
+							if (distSqr < minDistanceSqr)
+							{
+								minDistanceSqr = distSqr;
+								endPosition = proj;
+							}
+						}
+					}
+				}
+			}
+
 			_wallViewManager.SetHighlightedWalls(e.heightWalls);
 			sceneActorViewManager.SetHighlightedActors(e.sceneActors);
 			gunlineHighlightEffect.Refresh();
 			
-			gunline.Refresh(position0, position1);
+			gunline.Refresh(position0, endPosition);
 		}
 
 		private void RemoveGunLine(RemoveGunLineEvent e)
