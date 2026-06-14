@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
   m_Name: 13-TestShotGun
   m_EditorClassIdentifier: 
-  id: 1
+  id: 13
   displayName: M16A1
-  type: "\u6807\u51C6\u7A81\u51FB\u6B65\u67AA"
-  description: "M16A1\u662F\u7F8E\u519B\u5728\u8D8A\u6218\u65F6\u671F\u5217\u88C5\u7684\u5C0F\u53E3\u5F84\u7A81\u51FB\u6B65\u67AA,\u4E00\u822C\u914D\u88C525\u53D1\u5F39\u5323\uFF0C\u62E5\u6709\u8F83\u9AD8\u7684\u5C04\u901F\u3002"
+  type: "\u9730\u5F39\u67AA"
+  description: "\u8FD9\u662F\u4E00\u4E2A\u6D4B\u8BD5\u7528\u7684\u9730\u5F39\u67AA"
   icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_a1
   gripType: 0
   damage: 28
   mentalDamage: 0
-  weaponType: 0
+  weaponType: 1
   ammoCapacity: 25
   shotRanges:
   - min: 0
@@ -35,9 +35,9 @@ MonoBehaviour:
     multiplier: 0.95
   penetrationRate: 0.65
   shootSpeed: 5
-  canPreciseShoot: 1
-  preciseShootSpeed: 3
-  preciseShootHitRateBonus: 0.15
+  canPreciseShoot: 0
+  preciseShootSpeed: 0
+  preciseShootHitRateBonus: 0
   weightSpeed: 20
   weightMoveRange: 1
   animKey: m16
