@@ -30,6 +30,8 @@ namespace Systems.Unit.Equipment.Logic
             Owner.TriggerInfoChanged();
             return Ammo;
         }
+        
+        public virtual WeaponType WeaponType() => WeaponConfig.weaponType;
 
         public virtual int ShootSpeed() => WeaponConfig.shootSpeed;
 

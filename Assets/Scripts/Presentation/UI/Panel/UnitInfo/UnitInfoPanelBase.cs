@@ -1,8 +1,11 @@
-﻿using Data.Runtime.Events.Unit;
+﻿using System;
+using Data.Runtime.Events.Unit;
 using Presentation.UI.Component.UnitPortrait;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit;
+using Systems.Unit.Equipment.Config;
+using Systems.Unit.Equipment.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -86,8 +89,23 @@ namespace Presentation.UI.Panel.UnitInfo
 			weaponText.text = unit.CurrentWeaponContainer.Config.displayName;
 			weaponIcon.sprite = unit.CurrentWeaponContainer.Config.icon;
 			weaponIcon.SetNativeSize();
-			remainingAmmoText.text = $"{unit.CurrentWeaponLogic.CurrentAmmo()}";
-			maxAmmoText.text = $"{unit.CurrentWeaponLogic.AmmoCapacity()}";
+
+			var weaponType = unit.CurrentWeaponLogic.WeaponType();
+			var currentWeaponLogic = unit.CurrentWeaponLogic;
+			switch (weaponType)
+			{
+				case WeaponType.Normal:
+					remainingAmmoText.text = $"{currentWeaponLogic.CurrentAmmo()}";
+					maxAmmoText.text = $"{currentWeaponLogic.AmmoCapacity()}";
+					break;
+				case WeaponType.Grapeshot:
+					remainingAmmoText.text = $"{currentWeaponLogic.CurrentAmmo()/currentWeaponLogic.ShootSpeed()}";
+					maxAmmoText.text = $"{currentWeaponLogic.AmmoCapacity()/currentWeaponLogic.ShootSpeed()}";
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
 		}
 
 		private void RefreshPortrait(Systems.Unit.Unit unit)

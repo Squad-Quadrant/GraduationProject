@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace Systems.Unit.Equipment.Config
 {
+	public enum WeaponType
+	{
+		Normal,
+		Grapeshot
+	}
+	
 	// 射击类武器配置
 	[Configurable("Equipment/Weapon")]
 	[CreateAssetMenu(fileName = "WeaponConfig", menuName = "Game/Unit/Equipment/Weapon", order = 0)]
@@ -21,6 +27,9 @@ namespace Systems.Unit.Equipment.Config
 
         [LabelText("精神伤害")]
         public int mentalDamage;
+        
+        [LabelText("枪械类型")]
+        public WeaponType weaponType;
         
 		[LabelText("射击类武器的弹容量")]
 		public int ammoCapacity;
