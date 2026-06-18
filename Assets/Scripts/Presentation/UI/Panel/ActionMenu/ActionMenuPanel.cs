@@ -27,21 +27,7 @@ namespace Presentation.UI.Panel.ActionMenu
 
         private bool _locked;
 
-        public void DataInitialize(Systems.Unit.Unit unit)
-        {
-	        _items ??= itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
-
-            foreach (var item in _items)
-            {
-                item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType, item.Payload)));
-
-                item.OnHoverEnter += SetActionDesc;
-                item.OnHoverExit += _ => SetActionDesc(playerLockedMessage);
-                item.SetActive(false);
-                item.SetAudioEnabled(true);
-            }
-            Refresh(unit);
-        }
+        public void DataInitialize(Systems.Unit.Unit unit) { }
 
         protected override void OnOpen() => EventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
 
@@ -65,6 +51,24 @@ namespace Presentation.UI.Panel.ActionMenu
         public void ShowActions(Systems.Unit.Unit unit)
         {
 	        _locked = false;
+	        _items ??= itemsParent.GetComponentsInChildren<ActionMenuItem>(true).ToList();
+	        foreach (var item in _items)
+	        {
+		        item.Button.onClick.AddListener(() => EventBus.Publish(new ActionSelectedEvent(item.ActionType, item.Payload)));
+
+		        item.OnHoverEnter += SetActionDesc;
+		        item.OnHoverEnter += _ =>
+		        {
+			        if (item.Interactable)
+				        EventBus.Publish(new ActionHoverEvent(item.ActionType, item.Payload, true));
+		        };
+
+		        item.OnHoverExit += _ => SetActionDesc(playerLockedMessage);
+		        item.OnHoverExit  += _ => EventBus.Publish(new ActionHoverEvent(item.ActionType, item.Payload, false));
+
+		        item.SetActive(false);
+		        item.SetAudioEnabled(true);
+	        }
 	        Refresh(unit);
         }
 

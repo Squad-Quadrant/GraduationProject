@@ -12,7 +12,7 @@ namespace Data.Runtime.Events.Interaction
 		Interact,
 		AreaEffectPreview,
 		AreaEffectOverlay,
-		HoverMovementPreview,
+		HoverRangePreview,
 	}
 
 	/// <summary>

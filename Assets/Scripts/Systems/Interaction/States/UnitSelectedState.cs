@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Log;
 using Data.Runtime;
 using Data.Runtime.Commands;
@@ -7,12 +8,14 @@ using Data.Runtime.Events.Interaction;
 using Data.Runtime.Events.UI;
 using Systems.Interaction.Targeting;
 using Systems.Unit.Equipment;
+using UnityEngine;
 
 namespace Systems.Interaction.States
 {
 	public class UnitSelectedState : InteractionState
 	{
 		private Action<ActionSelectedEvent> _onActionSelected;
+		private Action<ActionHoverEvent> _onActionHover;
 		private Action<UnitClickedEvent> _onUnitClicked;
 		private Action<PointerHoverEvent> _onPointerHover;
 
@@ -28,10 +31,12 @@ namespace Systems.Interaction.States
 			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
 			_onActionSelected = OnActionSelected;
+			_onActionHover = OnActionHover;
 			_onUnitClicked = OnUnitClicked;
 			_onPointerHover = OnPointerHover;
             
 			Subscribe(ctx, _onActionSelected);
+			Subscribe(ctx, _onActionHover);
 			Subscribe(ctx, _onUnitClicked);
 			Subscribe(ctx, _onPointerHover);
 		}
@@ -41,14 +46,17 @@ namespace Systems.Interaction.States
 			this.Log("Exited");
 
 			Unsubscribe(ctx, _onActionSelected);
+			Unsubscribe(ctx, _onActionHover);
 			Unsubscribe(ctx, _onUnitClicked);
 			Unsubscribe(ctx, _onPointerHover);
 
 			_onActionSelected = null;
+			_onActionHover = null;
 			_onUnitClicked = null;
 			_onPointerHover = null;
 
 			Publish(ctx, CursorInfoEvent.Hide());
+			Publish(ctx, RangeDisplayEvent.Clear(ERangeType.HoverRangePreview));
 
 			base.OnExit(ctx);
 		}
@@ -148,6 +156,45 @@ namespace Systems.Interaction.States
 				default:
 					this.LogWarning($"Unhandled action: {e.ActionType}");
 					break;
+			}
+		}
+
+		private void OnActionHover(ActionHoverEvent e)
+		{
+			if (!e.IsEntering)
+			{
+				Publish(Context, RangeDisplayEvent.Clear(ERangeType.HoverRangePreview));
+				return;
+			}
+
+			var cells = ResolveHoverRangeCells(e.ActionType, e.Payload);
+			if (cells == null || cells.Count == 0) return;
+
+			Publish(Context, new RangeDisplayEvent(
+				ERangeType.HoverRangePreview,
+				cells,
+				origin: Context.selectedUnit.position,
+				sourceUnitId: Context.selectedUnit.id));
+		}
+
+		private IReadOnlyList<Vector2Int> ResolveHoverRangeCells(EActionType type, int payload)
+		{
+			switch (type)
+			{
+				case EActionType.Move:
+					return Context.selectedUnit
+						.GetReachableArea(Context.PathFindingService, Context.VisionService.CurrentVisibleCells)
+						.GetStoppableCellsList();
+
+				case EActionType.UseTacticalItem:
+					var container = Context.selectedUnit.GetTacticalItem(payload);
+					return container.Logic is ITargeted throwable ? throwable.GetValidCells(Context) : null;
+
+				case EActionType.UseSkill:
+					return Context.selectedUnit.Skill is ITargeted skill ? skill.GetValidCells(Context) : null;
+
+				default:
+					return null; // 攻击/换弹/等待等不预览范围
 			}
 		}
 

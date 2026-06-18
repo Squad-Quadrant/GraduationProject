@@ -31,7 +31,7 @@ namespace Systems.Interaction.States
 
 			this.Log($"Entered - Unit: {ctx.selectedUnit.name}");
 
-			_reachableArea = CalculateReachableArea(ctx.selectedUnit, ctx.PathFindingService, ctx.VisionService.CurrentVisibleCells);
+			_reachableArea = ctx.selectedUnit.GetReachableArea(ctx.PathFindingService, ctx.VisionService.CurrentVisibleCells);
 			var stoppableCells = _reachableArea.GetStoppableCellsList();
 			var apMap = _reachableArea.CostMap
 				.ToDictionary(
@@ -134,33 +134,6 @@ namespace Systems.Interaction.States
 			this.Log("ESC → UnitSelected");
 			CancelPreview();
 			Context.StateMachine.ChangeState<UnitSelectedState>();
-		}
-
-		private ReachableAreaResult CalculateReachableArea(Unit.Unit selectedUnit, IPathFindingService pathfinding, IReadOnlyCollection<Vector2Int> visibleCells)
-		{
-			var options = new PathFindingOptions(
-				canPassThroughAllies: true,
-				enemiesBlockMovement: true,
-				movingUnitFaction: selectedUnit.faction,
-				movingUnitId: selectedUnit.id,
-				canCrossLowWalls: false,
-				canCrossHighWalls: false,
-				ignoreTerrainWalkability: false,
-				visibleCells: visibleCells
-			);
-
-			var maxMovementPoints = selectedUnit.moveRange * selectedUnit.RemainingMovementAp;
-
-			var reachableArea = pathfinding.GetReachableArea(
-				selectedUnit.position,
-				maxMovementPoints,
-				options);
-
-			this.Log($"Calculated reachable area: {reachableArea.StoppableCount} stoppable cells, " +
-			         $"{reachableArea.ReachableCount} total reachable" +
-			         $"(vision: {visibleCells.Count} cells)");
-
-			return reachableArea;
 		}
 
 		private PathResult GetPath(Vector2Int target)

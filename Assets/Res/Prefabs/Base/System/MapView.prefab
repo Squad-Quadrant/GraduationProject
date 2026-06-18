@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 617261135932189148}
   - component: {fileID: 1322001253397811503}
   m_Layer: 0
-  m_Name: Layer_HoverMovementPreview
+  m_Name: Layer_HoverRangePreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,10 +360,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 177bafbbc31c4fafa26792de270513f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerId: Movement
+  layerId: Preview
   servingRangeTypes: 06000000
   baseTile: {fileID: 11400000, guid: 1ea7f23fe2862fa49a260a33680e3358, type: 2}
-  color: {r: 0, g: 1, b: 0.016897917, a: 0.5}
+  color: {r: 0.24256852, g: 0.6509434, b: 0.24502863, a: 0.3137255}
   movementApColors:
   - {r: 0.46083373, g: 1, b: 0.19999999, a: 0.55}
   - {r: 0.34901965, g: 1, b: 0.6509982, a: 0.45}

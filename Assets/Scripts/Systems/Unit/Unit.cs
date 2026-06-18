@@ -15,6 +15,7 @@ using Systems.Buff;
 using Systems.Damage;
 using Systems.Map;
 using Systems.Map.SceneActor;
+using Systems.PathFinding;
 using Systems.Turn;
 using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Config;
@@ -293,6 +294,23 @@ namespace Systems.Unit
 			return moveRange <= 0
 				? pathCost
 				: Mathf.CeilToInt((float)pathCost / moveRange);
+		}
+
+		public ReachableAreaResult GetReachableArea(IPathFindingService pathfinding, IReadOnlyCollection<Vector2Int> visibleCells)
+		{
+			var options = new PathFindingOptions(
+				canPassThroughAllies: true,
+				enemiesBlockMovement: true,
+				movingUnitFaction: faction,
+				movingUnitId: id,
+				canCrossLowWalls: false,
+				canCrossHighWalls: false,
+				ignoreTerrainWalkability: false,
+				visibleCells: visibleCells);
+
+			int maxMovementPoints = moveRange * RemainingMovementAp;
+
+			return pathfinding.GetReachableArea(position, maxMovementPoints, options);
 		}
 
 		public List<Unit> CalculateSelectableTargets(IUnitService unitService, IVisionService visionService)
