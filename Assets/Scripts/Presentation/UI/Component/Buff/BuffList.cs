@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Systems.Buff;
 using UnityEngine;
 
@@ -8,34 +9,59 @@ namespace Presentation.UI.Component.Buff
     {
         [SerializeField] private Transform buffContainer;
         [SerializeField] private BuffListItem itemPrefab;
-        private IBuffAble _owner;
+        [SerializeField] private BuffTooltip tooltip;
+
         private BuffProxy _proxy;
-        
-        private Dictionary<BuffInfo, BuffListItem> itemDict = new();
+        private readonly Dictionary<BuffInfo, BuffListItem> _itemDict = new();
         
         public void Init(IBuffAble owner)
         {
-            _owner = owner;
-            _proxy = owner.BuffProxy;
-            _proxy.OnAttach += Attach;
-            _proxy.OnLost += Lost;
+	        Unbind();
+
+	        if (owner?.BuffProxy == null) return;
+	        _proxy = owner.BuffProxy;
+
+	        foreach (var info in _proxy.BuffInfos)
+		        Attach(info);
+
+	        _proxy.OnAttach += Attach;
+	        _proxy.OnLost += Lost;
+        }
+
+        private void OnDestroy() => Unbind();
+
+        public void Unbind()
+        {
+	        if (_proxy != null)
+	        {
+		        _proxy.OnAttach -= Attach;
+		        _proxy.OnLost -= Lost;
+		        _proxy = null;
+	        }
+	        ClearItems();
         }
 
         private void Attach(BuffInfo info)
         {
             if (!info.BuffData.showInUI) return;
+            if (_itemDict.ContainsKey(info)) return;
             var item = Instantiate(itemPrefab, buffContainer);
-            item.Init(info);
-            itemDict.Add(info, item);
+            item.Init(info, tooltip);
+            _itemDict.Add(info, item);
         }
 
         private void Lost(BuffInfo info)
         {
-            if (itemDict.ContainsKey(info))
-            {
-                Destroy(itemDict[info].gameObject);
-                itemDict.Remove(info);
-            }
+	        if (!_itemDict.TryGetValue(info, out var item)) return;
+	        if (item) Destroy(item.gameObject);
+	        _itemDict.Remove(info);
+        }
+
+        private void ClearItems()
+        {
+	        foreach (var item in _itemDict.Values.Where(item => item))
+		        Destroy(item.gameObject);
+	        _itemDict.Clear();
         }
     }
 }

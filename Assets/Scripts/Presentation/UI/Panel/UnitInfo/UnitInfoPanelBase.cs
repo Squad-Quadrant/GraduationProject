@@ -1,11 +1,11 @@
 ﻿using System;
 using Data.Runtime.Events.Unit;
+using Presentation.UI.Component.Buff;
 using Presentation.UI.Component.UnitPortrait;
 using Presentation.UI.Core;
 using Sirenix.OdinInspector;
 using Systems.Unit;
 using Systems.Unit.Equipment.Config;
-using Systems.Unit.Equipment.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +28,7 @@ namespace Presentation.UI.Panel.UnitInfo
 		[SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI maxAmmoText;
 		[SerializeField, Required, ChildGameObjectsOnly] private Transform apRoot;
 		[SerializeField, AssetsOnly] private GameObject apPrefab;
+		[SerializeField, Required, ChildGameObjectsOnly] private BuffList buffList;
 
 		[TitleGroup("Background")]
 		[SerializeField, Required, ChildGameObjectsOnly] private Image background;
@@ -44,6 +45,7 @@ namespace Presentation.UI.Panel.UnitInfo
 		{
 			if (unit == null) return;
 			_currentUnit = unit;
+			buffList.Init(unit);
 			Refresh(unit);
 		}
 
@@ -52,6 +54,7 @@ namespace Presentation.UI.Panel.UnitInfo
 		protected override void OnClose()
 		{
 			EventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+			buffList.Unbind();
 			if (!_currentPortrait) return;
 			Destroy(_currentPortrait.gameObject);
 			_currentPortrait = null;
