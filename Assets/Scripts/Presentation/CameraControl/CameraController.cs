@@ -10,11 +10,13 @@ using Data.Runtime.Events.View;
 using Data.Runtime.Events.Vision;
 using DG.Tweening;
 using Presentation.Bootstrap;
+using Presentation.Unit;
 using Sirenix.OdinInspector;
 using Systems.Damage;
 using Systems.Interfaces;
 using Systems.Map;
 using Systems.Time;
+using Systems.Turn;
 using Systems.Unit;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,13 +41,12 @@ namespace Presentation.CameraControl
 		private IEventBus _eventBus;
 		private ICoordinateConverter _coordinateConverter;
 		private IMapService _mapService;
-		private IUnitService _unitService;
+		private ITurnService _turnService;
+		private UnitViewManager _unitViewManager;
 		private ITimeService _timeService;
 
 		private Tween _focusTween;
 		private Vector3 _dragWorldOrigin;
-
-		private Vector3? _lastUnitPos;
 
 		private bool _isInitialized;
 		private bool _isEnabled;
@@ -55,7 +56,8 @@ namespace Presentation.CameraControl
 			_eventBus = services.Resolve<IEventBus>();
 			_coordinateConverter = services.Resolve<ICoordinateConverter>();
 			_mapService = services.Resolve<IMapService>();
-			_unitService = services.Resolve<IUnitService>();
+			_turnService = services.Resolve<ITurnService>();
+			_unitViewManager = services.Resolve<UnitViewManager>();
 			_timeService = services.Resolve<ITimeService>();
 
 			_targetZoom = mainCamera.orthographicSize;
@@ -106,7 +108,6 @@ namespace Presentation.CameraControl
 			}
 
 			var worldPos = _coordinateConverter.CellToWorld(e.CellPosition);
-			_lastUnitPos = worldPos;
 			FocusOn(worldPos);
 		}
 
@@ -125,21 +126,19 @@ namespace Presentation.CameraControl
 
 		private void OnUnitAttackStarted(UnitAttackStartedEvent e)
 		{
-			if (!_unitService.TryGetUnit(e.AttackerId, out var attacker))
+			if (!_unitViewManager.TryGetView(e.AttackerId, out var attacker))
 			{
 				this.LogWarning($"Attacker '{e.AttackerId}' not found, skipping attack presentation.");
 				return;
 			}
 
-			if (!_unitService.TryGetUnit(e.TargetId, out var target))
+			if (!_unitViewManager.TryGetView(e.TargetId, out var target))
 			{
 				this.LogWarning($"Target '{e.TargetId}' not found, skipping attack presentation.");
 				return;
 			}
 
-			var attackerWorld = _coordinateConverter.CellToWorld(attacker.position);
-			var targetWorld = _coordinateConverter.CellToWorld(target.position);
-			var midpoint = (attackerWorld + targetWorld) * 0.5f;
+			var midpoint = (attacker.transform.position + target.transform.position) * 0.5f;
 
 			FocusOn(midpoint, config.attackZoom, config.attackFocusDuration);
 
@@ -148,10 +147,7 @@ namespace Presentation.CameraControl
 			this.Log($"Attack Started: focus midpoint={midpoint}, zoom={config.attackZoom}");
 		}
 
-		private void OnDamageApplied(DamageAppliedEvent e)
-		{
-			Shake();
-		}
+		private void OnDamageApplied(DamageAppliedEvent e) => Shake();
 
 		private void OnUnitAttackEnded(UnitAttackEndedEvent e)
 		{
@@ -162,15 +158,17 @@ namespace Presentation.CameraControl
 
 		private void OnSpaceInput(SpaceInputEvent e)
 		{
-			if (!_lastUnitPos.HasValue) return;
-			FocusOn(_lastUnitPos.Value);
+			var turnUnit = _turnService.ActiveUnit;
+			if (turnUnit == null) return;
+			if (!_unitViewManager.TryGetView(turnUnit.Id, out var unitView)) return;
+			FocusOn(unitView.transform.position);
 			_targetZoom = config.standardZoom;
 		}
 
 		private void OnUnitInspected(UnitInspectedEvent e)
 		{
-			if (!_unitService.TryGetUnit(e.UnitId, out var unit)) return;
-			FocusOnCell(unit.position);
+			if (!_unitViewManager.TryGetView(e.UnitId, out var unit)) return;
+			FocusOn(unit.transform.position);
 		}
 
 		#endregion
