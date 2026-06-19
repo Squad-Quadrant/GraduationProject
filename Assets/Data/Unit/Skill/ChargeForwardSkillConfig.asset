@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b3e434bd12458f863168d22f2c0252, type: 3}
   m_Name: ChargeForwardSkillConfig
   m_EditorClassIdentifier: 
-  kind: 5
+  kind: 4
   skillName: "\u51B2\u950B\u9677\u9635"
   description: "\u6D88\u80171\u70B9AP\uFF0C\u51B7\u5374\u65F6\u95F45\u56DE\u5408\u3002\u4F7F\u81EA\u8EAB\u672C\u56DE\u5408\u4E2D\uFF0C\u79FB\u52A8\u529B+3\u683C/AP\u3002"
   icon: {fileID: 571752949, guid: 194f2c71bee55874bbca61bb3be255b7, type: 3}
