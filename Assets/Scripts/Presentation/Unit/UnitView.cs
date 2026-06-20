@@ -11,6 +11,7 @@ using Sirenix.OdinInspector;
 using Spine.Unity;
 using Systems.Buff;
 using Systems.Interfaces;
+using Systems.Unit.Skill.Logic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -57,6 +58,7 @@ namespace Presentation.Unit
 		private SfxHandle _footstepHandle;
 
         private Dictionary<BuffInfo, GameObject> _buffVFX = new();
+        private Dictionary<SkillLogic, GameObject> _skillVFX = new();
 
 		public bool IsMoving => _moveCoroutine != null;
 
@@ -496,6 +498,44 @@ namespace Presentation.Unit
                 }
             }
         }
+
+		public void OnUseSkill(SkillLogic logic)
+		{
+			if (logic == null) return;
+
+			if (logic.CurrentCooldown <= 0)
+			{
+				OnLostSkill(logic);
+				return;
+			}
+
+			var persistentVfxPrefab = logic.Config.persistentUnitVfxPrefab;
+			if (!persistentVfxPrefab) return;
+
+			OnLostSkill(logic);
+
+			var go = Instantiate(persistentVfxPrefab, transform.position, Quaternion.identity, transform);
+			go.name = $"Skill_persistent_{persistentVfxPrefab.name}_f{Time.frameCount}";
+			_skillVFX[logic] = go;
+		}
+
+		public void SyncSkillPersistentVfx(SkillLogic logic)
+		{
+			if (logic == null) return;
+			if (logic.CurrentCooldown <= 0)
+				OnLostSkill(logic);
+		}
+
+		private void OnLostSkill(SkillLogic logic)
+		{
+			if (logic == null) return;
+
+			if (_skillVFX.TryGetValue(logic, out var go))
+			{
+				if (go) Destroy(go);
+				_skillVFX.Remove(logic);
+			}
+		}
 
 		#region Debug
 

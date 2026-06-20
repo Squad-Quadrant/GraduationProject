@@ -408,15 +408,17 @@ namespace Presentation.Unit
             }
 
             var currentWeapon = e.Unit.CurrentWeaponContainer;
-            if (!currentWeapon.IsNullOrEmpty())
-            {
-	            if (currentWeapon.Config is WeaponConfig config)
-	            {
-		            view.SetGrip(config.gripType);
-		            view.SetWeaponSkin(config.spineName);
-		            view.SetWeaponAnimKey(config.animKey);
-	            }
-            }
+			if (!currentWeapon.IsNullOrEmpty())
+			{
+				if (currentWeapon.Config is WeaponConfig config)
+				{
+					view.SetGrip(config.gripType);
+					view.SetWeaponSkin(config.spineName);
+					view.SetWeaponAnimKey(config.animKey);
+				}
+			}
+
+			view.SyncSkillPersistentVfx(e.Unit.Skill);
         }
 
         private void OnBuffAttach(BuffAttachedEvent e)
@@ -485,28 +487,36 @@ namespace Presentation.Unit
             }
         }
 
-        private void OnSkillUsed(SkillUsedEvent e)
-        {
-            var unit = e.Owner as Systems.Unit.Unit;
-            if(unit == null)
-            {
-                this.LogError("OnSkillUsed has null Unit");
-                return;
-            }
-            
-            if (!_views.TryGetValue(unit.id, out var view))
-            {
-                this.LogWarning($"No view found for attached unit '{unit.id}'.");
-                return;
-            }
+		private void OnSkillUsed(SkillUsedEvent e)
+		{
+			if (e.Logic == null)
+			{
+				this.LogError("OnSkillUsed has null SkillLogic");
+				return;
+			}
 
-            var turnVFX = e.Logic.Config.oneShotVfxPrefab;
-            if (turnVFX)
-            {
-                var go = Instantiate(turnVFX, view.transform.position, Quaternion.identity, transform);
-                go.name = $"Buff_Turn_{turnVFX.name}_f{Time.frameCount}";
-            }
-        }
+			var unit = e.Owner as Systems.Unit.Unit;
+			if(unit == null)
+			{
+				this.LogError("OnSkillUsed has null Unit");
+				return;
+			}
+            
+			if (!_views.TryGetValue(unit.id, out var view))
+			{
+				this.LogWarning($"No view found for attached unit '{unit.id}'.");
+				return;
+			}
+
+			var oneShotVFX = e.Logic.Config.oneShotVfxPrefab;
+			if (oneShotVFX)
+			{
+				var go = Instantiate(oneShotVFX, view.transform.position, Quaternion.identity, transform);
+				go.name = $"Skill_OneShot_{oneShotVFX.name}_f{Time.frameCount}";
+			}
+
+			view.OnUseSkill(e.Logic);
+		}
 
         private void OnVisionChanged(VisionChangedEvent e)
         {
