@@ -42,9 +42,9 @@ namespace Presentation.Unit
 		public EGripType grip;
 
 #if UNITY_EDITOR
-		[ValueDropdown(nameof(AllWeaponKeysEditor))]
+		[ValueDropdown(nameof(AllWeaponKeysEditor), IsUniqueList = true)]
 #endif
-		public string weaponKey;
+		public List<string> weaponKeys;
 
 		[SpineAnimation(dataField: "skeletonDataAsset")]
 		public string clipName;
@@ -52,16 +52,23 @@ namespace Presentation.Unit
 		public bool loop;
 
 		public bool Matches(string a, EUnitStance s, EGripType g, string w) =>
-			KeyEquals(action, a) && stance == s && grip == g && KeyEquals(weaponKey, w);
+			KeyEquals(action, a) && stance == s && grip == g && WeaponKeyMatches(w);
 
 		private static bool KeyEquals(string a, string b) =>
 			string.IsNullOrEmpty(a) ? string.IsNullOrEmpty(b) : a == b;
 
+		private bool WeaponKeyMatches(string w)
+		{
+			bool hasKey = weaponKeys != null && weaponKeys.Any(k => !string.IsNullOrEmpty(k));
+			return hasKey
+				? !string.IsNullOrEmpty(w) && weaponKeys.Contains(w)
+				: string.IsNullOrEmpty(w);
+		}
+
 #if UNITY_EDITOR
 		private static IEnumerable<string> AllWeaponKeysEditor()
 		{
-			// 空 key 选项放第一位，表示"通用"
-			var keys = new SortedSet<string> { "" };
+			var keys = new SortedSet<string>();
 			var guids = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(WeaponConfig));
 			foreach (var guid in guids)
 			{
