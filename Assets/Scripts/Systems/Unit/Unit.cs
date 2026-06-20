@@ -269,7 +269,7 @@ namespace Systems.Unit
 			}
 
 			// skill
-			bool canUseSkill = HasAp && Skill is { CanUse: true };
+			bool canUseSkill = Skill is { CanUse: true };
 			actions.Add(new ActionAbility(EActionType.UseSkill, canUseSkill));
 
 			// Wait
