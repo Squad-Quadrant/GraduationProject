@@ -21,6 +21,7 @@ MonoBehaviour:
   gripType: 0
   damage: 30
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 30
   shotRanges:
   - min: 0
@@ -39,7 +40,7 @@ MonoBehaviour:
   preciseShootHitRateBonus: 0.15
   weightSpeed: 10
   weightMoveRange: 1
-  animKey: 
+  animKey: ak74u
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

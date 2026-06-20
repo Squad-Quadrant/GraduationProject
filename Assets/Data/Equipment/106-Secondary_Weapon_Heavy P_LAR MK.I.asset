@@ -40,7 +40,7 @@ MonoBehaviour:
   preciseShootHitRateBonus: 0
   weightSpeed: 15
   weightMoveRange: 0
-  animKey: 
+  animKey: shg
   fireClip: {fileID: 8300000, guid: a4230f217f9d33941b625cc8c2752df9, type: 3}
   reloadClip: {fileID: 8300000, guid: 5f9a49befa8c00c499ac6f9c544c0268, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

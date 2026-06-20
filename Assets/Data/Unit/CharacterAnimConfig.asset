@@ -48,6 +48,18 @@ MonoBehaviour:
     loop: 0
   - action: shoot
     stance: 0
+    grip: 0
+    weaponKeys: []
+    clipName: shoot/fire semi strong
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 0
+    weaponKeys: []
+    clipName: shoot/fire 3semi strong
+    loop: 0
+  - action: shoot
+    stance: 0
     grip: 1
     weaponKeys: []
     clipName: shoot/fire 3burst hg
@@ -55,14 +67,29 @@ MonoBehaviour:
   - action: shoot
     stance: 0
     grip: 1
-    weaponKeys: []
+    weaponKeys:
+    - hg
     clipName: shoot/fire semi hg
     loop: 0
   - action: shoot
     stance: 0
     grip: 1
-    weaponKeys: []
+    weaponKeys:
+    - mac11
     clipName: shoot/fire auto hg
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 1
+    weaponKeys: []
+    clipName: shoot/fire 3semi hg
+    loop: 0
+  - action: shoot
+    stance: 0
+    grip: 1
+    weaponKeys:
+    - shg
+    clipName: shoot/fire semi hg strong
     loop: 0
   - action: idle
     stance: 1
@@ -184,7 +211,10 @@ MonoBehaviour:
   - action: reload
     stance: 0
     grip: 1
-    weaponKeys: []
+    weaponKeys:
+    - mac11
+    - hg
+    - shg
     clipName: reload/reloading hg
     loop: 0
   - action: dead
@@ -240,6 +270,6 @@ MonoBehaviour:
     clipName: trans/stand to bend hg
   footstepClip: {fileID: 8300000, guid: 72f430dc397b5bb4bbb00e3fb75ad881, type: 3}
   footstepPitch: 2
-  animIndex: 7
+  animIndex: 5
   transIndex: 0
   skeletonDataAsset: {fileID: 11400000, guid: a3e7b5adf88ae854bb4914e0911c936a, type: 2}

@@ -21,6 +21,7 @@ MonoBehaviour:
   gripType: 0
   damage: 26
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 30
   shotRanges:
   - min: 0
@@ -41,7 +42,7 @@ MonoBehaviour:
   preciseShootHitRateBonus: 0.1
   weightSpeed: 10
   weightMoveRange: 1
-  animKey: 
+  animKey: car
   fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
   reloadClip: {fileID: 8300000, guid: 6790eff764492f24d9b9743d8c0b350b, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}
