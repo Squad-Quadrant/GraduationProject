@@ -29,6 +29,9 @@ namespace Systems.Unit.Skill
         [LabelText("特效(对使用者单次)")]
         public GameObject oneShotVfxPrefab;
 
+		[LabelText("持续特效(对使用者/冷却期间)")]
+		public GameObject persistentUnitVfxPrefab;
+
 		// [Title("InstantHeal 参数"), ShowIf(nameof(kind), ESkillKind.InstantHeal)]
 		// [LabelText("治疗量"), MinValue(1)]
 		// public int healAmount = 30;
