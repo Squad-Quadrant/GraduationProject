@@ -19,37 +19,48 @@ MonoBehaviour:
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - mp5sd
+    - m16a2
     clipName: shoot/fire 3burst
     loop: 0
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - ak
+    - ar10
     clipName: shoot/fire 5burst
     loop: 0
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - mp5
+    - ak74ub
+    - m16a1
     clipName: shoot/fire auto
     loop: 0
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - car
+    - ak74u
     clipName: shoot/fire auto2
     loop: 0
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - m16spr
     clipName: shoot/fire semi
     loop: 0
   - action: shoot
     stance: 0
     grip: 0
-    weaponKeys: []
+    weaponKeys:
+    - shotgun
     clipName: shoot/fire semi strong
     loop: 0
   - action: shoot
@@ -76,12 +87,14 @@ MonoBehaviour:
     grip: 1
     weaponKeys:
     - mac11
+    - mp5k
     clipName: shoot/fire auto hg
     loop: 0
   - action: shoot
     stance: 0
     grip: 1
-    weaponKeys: []
+    weaponKeys:
+    - 3semihg
     clipName: shoot/fire 3semi hg
     loop: 0
   - action: shoot
@@ -191,7 +204,11 @@ MonoBehaviour:
     stance: 0
     grip: 0
     weaponKeys:
-    - m16
+    - car
+    - m16a1
+    - m16a2
+    - m16spr
+    - ar10
     clipName: reload/reloading m16
     loop: 0
   - action: reload
@@ -199,6 +216,8 @@ MonoBehaviour:
     grip: 0
     weaponKeys:
     - mp5
+    - mp5k
+    - mp5sd
     clipName: reload/reloading mp5
     loop: 0
   - action: reload
@@ -206,6 +225,9 @@ MonoBehaviour:
     grip: 0
     weaponKeys:
     - ak
+    - shotgun
+    - ak74u
+    - ak74ub
     clipName: reload/reloading ak
     loop: 0
   - action: reload
@@ -215,6 +237,7 @@ MonoBehaviour:
     - mac11
     - hg
     - shg
+    - 3semihg
     clipName: reload/reloading hg
     loop: 0
   - action: dead

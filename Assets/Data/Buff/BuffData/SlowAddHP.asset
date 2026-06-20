@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buffType: 12
   buffName: "\u6301\u7EED\u56DE\u8840"
-  description: 
+  description: "\u6BCF\u56DE\u5408\u6062\u590D10\u70B9\u751F\u547D\u503C\uFF0C\u6301\u7EED\u6570\u4E2A\u56DE\u5408"
   icon: {fileID: 381657393, guid: 2842331d294e52c439c2dc054c67a0c9, type: 3}
   maxStack: 1
   tags: []
