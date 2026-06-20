@@ -11,6 +11,7 @@ namespace Presentation.UI.Panel.Menu
 		[Title("Buttons")]
 		[SerializeField, Required, ChildGameObjectsOnly] private Button startButton;
 		[SerializeField, Required, ChildGameObjectsOnly] private Button quitButton;
+		[SerializeField, Required, ChildGameObjectsOnly] private Button crewButton;
 
 		private MainMenuPanelData _data;
 
@@ -20,21 +21,25 @@ namespace Presentation.UI.Panel.Menu
 		{
 			startButton.onClick.AddListener(OnStartButtonClicked);
 			quitButton.onClick.AddListener(OnQuitButtonClicked);
+			crewButton.onClick.AddListener(OnCrewButtonClicked);
 		}
 
 		protected override void OnClose()
 		{
 			startButton.onClick.RemoveListener(OnStartButtonClicked);
 			quitButton.onClick.RemoveListener(OnQuitButtonClicked);
+			crewButton.onClick.RemoveListener(OnCrewButtonClicked);
 		}
 
 		private void OnStartButtonClicked() => _data.OnStart?.Invoke();
 		private void OnQuitButtonClicked() => _data.OnQuit?.Invoke();
+		private void OnCrewButtonClicked() => _data.OnCrew?.Invoke();
 	}
 
 	public struct MainMenuPanelData
 	{
 		public Action OnStart;
 		public Action OnQuit;
+		public Action OnCrew;
 	}
 }

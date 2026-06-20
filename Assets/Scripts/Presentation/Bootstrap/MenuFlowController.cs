@@ -49,6 +49,7 @@ namespace Presentation.Bootstrap
 			{
 				OnStart = ShowLevelSelect,
 				OnQuit = QuitGame,
+				OnCrew = ShowCrew,
 			});
 		}
 
@@ -79,6 +80,15 @@ namespace Presentation.Bootstrap
 				DataManager = _dataManager,
 				OnStartBattle = StartBattle,
 				OnBack = ShowLevelSelect,
+			});
+		}
+
+		private void ShowCrew()
+		{
+			if (_openedPanel) _uiManager.Close(_openedPanel);
+			_openedPanel = _uiManager.Open<CrewPanel, CrewPanelData>(new CrewPanelData
+			{
+				OnBack = ShowMainMenu,
 			});
 		}
 
