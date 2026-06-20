@@ -15,12 +15,13 @@ MonoBehaviour:
   id: 10
   displayName: MP5 SD
   type: "\u4E09\u8FDE\u53D1\u51B2\u950B\u67AA"
-  description: 
+  description: "\u5E26\u6709\u4E00\u4F53\u5F0F\u6D88\u97F3\u5668\u7684\u70B9\u5C04\u5F0F\u6218\u672F\u51B2\u950B\u67AA\uFF0C\u5177\u6709\u5F88\u9AD8\u7684\u7CBE\u5EA6\u3002"
   icon: {fileID: -601466920, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_mp5sd
   gripType: 0
   damage: 23
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 30
   shotRanges:
   - min: 0
@@ -46,6 +47,6 @@ MonoBehaviour:
   weightSpeed: 5
   weightMoveRange: 1
   animKey: mp5
-  fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
-  reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
+  fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
+  reloadClip: {fileID: 8300000, guid: 79309f3ab2da12943afef7b8fe101e09, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

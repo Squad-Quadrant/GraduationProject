@@ -21,6 +21,7 @@ MonoBehaviour:
   gripType: 0
   damage: 25
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 40
   shotRanges:
   - min: 0
@@ -46,6 +47,6 @@ MonoBehaviour:
   weightSpeed: 5
   weightMoveRange: 1
   animKey: mp5
-  fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
-  reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
+  fireClip: {fileID: 8300000, guid: 66f2955dab729dc44b4cd305c9de5523, type: 3}
+  reloadClip: {fileID: 8300000, guid: 79309f3ab2da12943afef7b8fe101e09, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
+  m_Name: 16-Main_Weapon_Standard AR_AKM
+  m_EditorClassIdentifier: 
+  id: 16
+  displayName: AKM
+  type: "\u4E2D\u5A01\u529B\u7A81\u51FB\u6B65\u67AA"
+  description: "\u534E\u7EA6\u5236\u5F0F7.62mm\u7A81\u51FB\u6B65\u67AA\uFF0C\u62E5\u6709\u4F18\u5F02\u7684\u53EF\u9760\u6027\u548C\u6740\u4F24\u80FD\u529B\u3002"
+  icon: {fileID: 1592591417, guid: 3f2b0fa961da95547bae78398036f247, type: 3}
+  spineName: weapon_akm
+  gripType: 0
+  damage: 34
+  mentalDamage: 0
+  weaponType: 0
+  ammoCapacity: 40
+  shotRanges:
+  - min: 0
+    hitRate: 0.8
+  - min: 4
+    hitRate: 0.65
+  - min: 8
+    hitRate: 0.6
+  damageAttenuation:
+    perGrid: 5
+    multiplier: 0.85
+  penetrationRate: 0.67
+  shootSpeed: 4
+  canPreciseShoot: 1
+  preciseShootSpeed: 2
+  preciseShootHitRateBonus: 0.2
+  weightSpeed: 25
+  weightMoveRange: 1
+  animKey: 
+  fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
+  reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
+  emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}
