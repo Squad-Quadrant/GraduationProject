@@ -10,37 +10,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: 13-TestShotGun
+  m_Name: 14-Main_Weapon_Shotgun_Benelli M1
   m_EditorClassIdentifier: 
-  id: 13
-  displayName: M16A1
-  type: "\u9730\u5F39\u67AA"
-  description: "\u8FD9\u662F\u4E00\u4E2A\u6D4B\u8BD5\u7528\u7684\u9730\u5F39\u67AA"
-  icon: {fileID: 315217693, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  spineName: weapon_a1
+  id: 14
+  displayName: Benelli M1
+  type: "\u6218\u672F\u534A\u81EA\u52A8\u9730\u5F39\u67AA "
+  description: "\u610F\u5927\u5229\u6218\u672F\u9730\u5F39\u67AA\uFF0C\u62E5\u6709\u52A0\u957F\u7684\u5F39\u4ED3\uFF0C\u9002\u5408\u8FD1\u8DDD\u79BB\u4F5C\u6218\u3002"
+  icon: {fileID: 21300000, guid: 60e1dce3ab62e894f822e807ae5dd0e1, type: 3}
+  spineName: weapon_benelli m1
   gripType: 0
-  damage: 28
+  damage: 24
   mentalDamage: 0
   weaponType: 1
-  ammoCapacity: 119
+  ammoCapacity: 96
   shotRanges:
   - min: 0
-    hitRate: 0.85
-  - min: 5
+    hitRate: 1
+  - min: 1
     hitRate: 0.8
-  - min: 10
-    hitRate: 0.7
+  - min: 2
+    hitRate: 0.6
+  - min: 3
+    hitRate: 0.45
+  - min: 4
+    hitRate: 0.35
+  - min: 5
+    hitRate: 0.3
+  - min: 6
+    hitRate: 0.25
+  - min: 8
+    hitRate: 0.2
   damageAttenuation:
-    perGrid: 3
-    multiplier: 0.95
-  penetrationRate: 0.65
-  shootSpeed: 17
+    perGrid: 2
+    multiplier: 0.8
+  penetrationRate: 0.37
+  shootSpeed: 12
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
-  weightSpeed: 20
+  weightSpeed: 15
   weightMoveRange: 1
-  animKey: m16
+  animKey: shotgun
   fireClip: {fileID: 8300000, guid: 9b741acaedf772e4388cdff82efb4f47, type: 3}
   reloadClip: {fileID: 8300000, guid: d933f986c785f2941bcacb9cf643d84f, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

@@ -129,6 +129,6 @@ MonoBehaviour:
     activationGroupId: 0
   battleBgm: {fileID: 8300000, guid: 0825044c2d6047b4ba348c6dfd36e380, type: 3}
   bgmFadeIn: 1
-  openingDialogue: {fileID: 0}
+  openingDialogue: {fileID: 11400000, guid: 645927391ae7e0945b38d5c7985267fb, type: 2}
   victoryDialogue: {fileID: 0}
   defeatDialogue: {fileID: 0}

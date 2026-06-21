@@ -21,6 +21,7 @@ MonoBehaviour:
   gripType: 1
   damage: 23
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 8
   shotRanges:
   - min: 0
@@ -39,7 +40,7 @@ MonoBehaviour:
   preciseShootHitRateBonus: 0
   weightSpeed: 5
   weightMoveRange: 0
-  animKey: 
-  fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
-  reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
+  animKey: 3semihg
+  fireClip: {fileID: 8300000, guid: a4230f217f9d33941b625cc8c2752df9, type: 3}
+  reloadClip: {fileID: 8300000, guid: 5f9a49befa8c00c499ac6f9c544c0268, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

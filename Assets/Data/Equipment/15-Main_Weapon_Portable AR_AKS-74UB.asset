@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: 11-Main_Weapon_Portable AR_AKS-74U
+  m_Name: 15-Main_Weapon_Portable AR_AKS-74UB
   m_EditorClassIdentifier: 
-  id: 11
-  displayName: AKS-74U
+  id: 15
+  displayName: AKS-74UB
   type: "\u7D27\u51D1\u7A81\u51FB\u6B65\u67AA"
-  description: "AKS-74U\u662FAK-74\u7684\u77ED\u67AA\u7BA1\u5361\u5BBE\u67AA\u578B\u53F7\uFF0C\u5C04\u901F\u7565\u9AD8\uFF0C\u7528\u4E8E\u88C5\u5907\u534E\u7EA6\u7A7A\u964D\u5175\u90E8\u961F\u6216\u8F7D\u5177\u4E58\u5458\u3002"
-  icon: {fileID: -2124218511, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  spineName: weapon_ak74u
+  description: "\u5B89\u88C5\u4E86\u6D88\u97F3\u5668\u7684\u534E\u7EA6\u5FAE\u58F0\u7A81\u51FB\u5361\u5BBE\u67AA\uFF0C\u7528\u4E8E\u591C\u95F4\u53CA\u9690\u853D\u4F5C\u6218\u3002"
+  icon: {fileID: -777750737, guid: 3f2b0fa961da95547bae78398036f247, type: 3}
+  spineName: weapon_ak74ub
   gripType: 0
   damage: 30
   mentalDamage: 0
@@ -25,22 +25,24 @@ MonoBehaviour:
   ammoCapacity: 30
   shotRanges:
   - min: 0
+    hitRate: 0.85
+  - min: 2
     hitRate: 0.8
   - min: 4
-    hitRate: 0.7
+    hitRate: 0.75
   - min: 7
-    hitRate: 0.6
+    hitRate: 0.65
   damageAttenuation:
-    perGrid: 3
+    perGrid: 4
     multiplier: 0.9
-  penetrationRate: 0.6
-  shootSpeed: 5
+  penetrationRate: 0.65
+  shootSpeed: 4
   canPreciseShoot: 1
   preciseShootSpeed: 2
   preciseShootHitRateBonus: 0.15
   weightSpeed: 10
   weightMoveRange: 1
-  animKey: ak74u
+  animKey: ak74ub
   fireClip: {fileID: 8300000, guid: 957933c6bcdc20947ad2b0502a89029b, type: 3}
   reloadClip: {fileID: 8300000, guid: fff48239a6a67404e95dc386af9b5dc0, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

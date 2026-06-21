@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buffType: 6
   buffName: "\u7729\u6655"
-  description: 
+  description: "\u611F\u77E5\u529B\u5927\u5E45\u5EA6\u4E0B\u964D\uFF0C\u547D\u4E2D\u7387-30%\uFF0C\u65E0\u6CD5\u4F7F\u7528\u7CBE\u786E\u5C04\u51FB\u6A21\u5F0F"
   icon: {fileID: 957059444, guid: 44ecee74a25452443943eec6f3be52fb, type: 3}
   maxStack: 0
   tags: []
@@ -22,6 +22,9 @@ MonoBehaviour:
   durationTurn: 2
   attachType: 2
   lostType: 0
+  oneShotVfxPrefab: {fileID: 0}
+  persistentVfxPrefab: {fileID: 0}
+  turnVfxPrefab: {fileID: 0}
   onAttachEvents:
   - {fileID: 11400000, guid: cc5d6b2733d7fff40ae07fddf748cbc8, type: 2}
   - {fileID: 11400000, guid: e05885801fcde7d4eb9949b6fa448da8, type: 2}

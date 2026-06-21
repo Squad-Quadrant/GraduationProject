@@ -10,37 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08f5096f991e4de6a566bac1ca914153, type: 3}
-  m_Name: 105-Secondary_Weapon_Heavy P_AMT Hardballer
+  m_Name: 106-Secondary_Weapon_Heavy P_LAR MK.I
   m_EditorClassIdentifier: 
-  id: 105
-  displayName: AMT-LS
-  type: "\u957F\u67AA\u7BA1\u4E2D\u5A01\u529B\u624B\u67AA"
-  description: "\u62E5\u6709\u4E0D\u9508\u94A2\u957F\u5957\u7B52\u7684\u5B9A\u52361911\u624B\u67AA\uFF0C\u62E5\u6709\u66F4\u597D\u7684\u7CBE\u5EA6\u4E0E\u5C04\u7A0B\u8868\u73B0\u3002"
-  icon: {fileID: 1452205263, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  spineName: weapon_m1911ct
+  id: 106
+  displayName: LAR MK.I
+  type: "\u5927\u5A01\u529B\u624B\u67AA"
+  description: "\u53D1\u5C04.45\u6E29\u5F7B\u65AF\u7279\u9A6C\u683C\u5357\u5F39\u7684\u5927\u5A01\u529B\u624B\u67AA\uFF0C\u901A\u5E38\u7528\u4E8E\u72E9\u730E\u4E0E\u9776\u573A\u5C04\u51FB\u3002"
+  icon: {fileID: 21300000, guid: 97ffea657cc00994aa80dae751d75049, type: 3}
+  spineName: weapon_mki
   gripType: 1
-  damage: 25
+  damage: 35
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 7
   shotRanges:
   - min: 0
-    hitRate: 0.85
-  - min: 4
     hitRate: 0.75
+  - min: 3
+    hitRate: 0.6
   - min: 8
-    hitRate: 0.55
+    hitRate: 0.4
   damageAttenuation:
-    perGrid: 3
-    multiplier: 0.85
-  penetrationRate: 0.65
+    perGrid: 4
+    multiplier: 0.9
+  penetrationRate: 0.75
   shootSpeed: 2
   canPreciseShoot: 0
   preciseShootSpeed: 0
   preciseShootHitRateBonus: 0
-  weightSpeed: 10
+  weightSpeed: 15
   weightMoveRange: 0
-  animKey: hg
+  animKey: shg
   fireClip: {fileID: 8300000, guid: a4230f217f9d33941b625cc8c2752df9, type: 3}
   reloadClip: {fileID: 8300000, guid: 5f9a49befa8c00c499ac6f9c544c0268, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

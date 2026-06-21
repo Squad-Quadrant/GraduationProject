@@ -17,10 +17,11 @@ MonoBehaviour:
   type: "\u8F7B\u578B\u7A81\u51FB\u6B65\u67AA"
   description: "M723\u662FM16A2\u7684\u5168\u81EA\u52A8\u5361\u5BBE\u578B\u53F7\uFF0C\u5728\u6574\u4F53\u4FBF\u643A\u6027\u4E0E\u5C04\u7A0B\u8868\u73B0\u4E0A\u8F83\u4E3A\u5E73\u8861\u3002"
   icon: {fileID: -1227786794, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  spineName: weapon_m723
+  spineName: weapon_m177
   gripType: 0
   damage: 30
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 20
   shotRanges:
   - min: 0
@@ -39,7 +40,7 @@ MonoBehaviour:
   preciseShootHitRateBonus: 0.15
   weightSpeed: 10
   weightMoveRange: 1
-  animKey: 
+  animKey: m16a1
   fireClip: {fileID: 8300000, guid: 9b741acaedf772e4388cdff82efb4f47, type: 3}
   reloadClip: {fileID: 8300000, guid: d933f986c785f2941bcacb9cf643d84f, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

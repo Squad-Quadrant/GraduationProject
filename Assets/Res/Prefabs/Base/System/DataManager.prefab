@@ -73,6 +73,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8c2cc72675195944ba35a5de47bee11f, type: 2}
   - {fileID: 11400000, guid: 0229636d2876b844f8c8b75c0d65d3fa, type: 2}
   - {fileID: 11400000, guid: 0f8b72a9e906f4c1c92ce902f41bacc7, type: 2}
+  - {fileID: 11400000, guid: 39b42c5e0581236498c3963698044b40, type: 2}
+  - {fileID: 11400000, guid: 0883ac99f7c2f9546a6452e1b4216bab, type: 2}
+  - {fileID: 11400000, guid: 4fcb3b8648548e6439f0b4e7613d428c, type: 2}
+  - {fileID: 11400000, guid: d940b281ca9cb894f8026eb5e58ef145, type: 2}
   buffs:
   - {fileID: 11400000, guid: b6d779d1381a54c65b1412db8e437b37, type: 2}
   - {fileID: 11400000, guid: e101eb36c68164e29b06c19fb6fddc84, type: 2}
