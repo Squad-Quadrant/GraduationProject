@@ -112,6 +112,8 @@ namespace Systems.Damage
         public float DefenseDamageModifier = 1;
         public float SanDamageModifier = 1;
 
+        public bool UseDefense = true; // 是否计算护甲影响
+
         public BodyPartType bodyPartType = BodyPartType.None; // 击中部位
         public List<DamageInfluenceType> ignoredInfluenceTypes = new();
         
