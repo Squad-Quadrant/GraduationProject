@@ -526,6 +526,16 @@ namespace Presentation.Unit
 				OnLostSkill(logic);
 		}
 
+		public void ClearSkillPersistentVfx()
+		{
+			foreach (var go in _skillVFX.Values)
+			{
+				if (go) Destroy(go);
+			}
+
+			_skillVFX.Clear();
+		}
+
 		private void OnLostSkill(SkillLogic logic)
 		{
 			if (logic == null) return;

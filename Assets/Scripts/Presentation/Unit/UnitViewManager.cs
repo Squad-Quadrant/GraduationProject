@@ -67,6 +67,7 @@ namespace Presentation.Unit
             _eventBus.Subscribe<BuffLostEvent>(OnBuffLost);
             _eventBus.Subscribe<BuffTurnEvent>(OnBuffTurn);
             _eventBus.Subscribe<SkillUsedEvent>(OnSkillUsed);
+			_eventBus.Subscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
 			this.Log("Initialized");
 		}
 
@@ -88,6 +89,7 @@ namespace Presentation.Unit
             _eventBus.Unsubscribe<BuffLostEvent>(OnBuffLost);
             _eventBus.Unsubscribe<BuffTurnEvent>(OnBuffTurn);
             _eventBus.Unsubscribe<SkillUsedEvent>(OnSkillUsed);
+			_eventBus.Unsubscribe<UnitTurnEndedEvent>(OnUnitTurnEnded);
             
 			// destroy all remaining views to clean up the scene
 			foreach (var view in _views.Values.Where(view => view && view.gameObject))
@@ -516,6 +518,12 @@ namespace Presentation.Unit
 			}
 
 			view.OnUseSkill(e.Logic);
+		}
+
+		private void OnUnitTurnEnded(UnitTurnEndedEvent e)
+		{
+			if (!_views.TryGetValue(e.TurnUnitId, out var view)) return;
+			view.ClearSkillPersistentVfx();
 		}
 
         private void OnVisionChanged(VisionChangedEvent e)
