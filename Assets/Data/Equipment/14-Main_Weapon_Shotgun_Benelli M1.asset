@@ -26,19 +26,19 @@ MonoBehaviour:
   shotRanges:
   - min: 0
     hitRate: 1
-  - min: 1
-    hitRate: 0.8
   - min: 2
-    hitRate: 0.6
+    hitRate: 0.8
   - min: 3
-    hitRate: 0.45
+    hitRate: 0.6
   - min: 4
-    hitRate: 0.35
+    hitRate: 0.45
   - min: 5
-    hitRate: 0.3
+    hitRate: 0.35
   - min: 6
+    hitRate: 0.3
+  - min: 7
     hitRate: 0.25
-  - min: 8
+  - min: 9
     hitRate: 0.2
   damageAttenuation:
     perGrid: 2
@@ -51,6 +51,6 @@ MonoBehaviour:
   weightSpeed: 15
   weightMoveRange: 1
   animKey: shotgun
-  fireClip: {fileID: 8300000, guid: 9b741acaedf772e4388cdff82efb4f47, type: 3}
-  reloadClip: {fileID: 8300000, guid: d933f986c785f2941bcacb9cf643d84f, type: 3}
+  fireClip: {fileID: 8300000, guid: 1537cdc762cc14f47bb26b7f423c6fac, type: 3}
+  reloadClip: {fileID: 8300000, guid: 4d91e68701c280e4fb173469423ac72b, type: 3}
   emptyClip: {fileID: 8300000, guid: 75027bc777b7ffb4eaed1794617974d7, type: 3}

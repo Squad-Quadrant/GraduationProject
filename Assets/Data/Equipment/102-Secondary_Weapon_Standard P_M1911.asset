@@ -26,9 +26,9 @@ MonoBehaviour:
   shotRanges:
   - min: 0
     hitRate: 0.8
-  - min: 3
+  - min: 4
     hitRate: 0.65
-  - min: 7
+  - min: 8
     hitRate: 0.45
   damageAttenuation:
     perGrid: 2
