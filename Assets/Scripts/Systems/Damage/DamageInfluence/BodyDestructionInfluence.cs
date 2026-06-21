@@ -29,7 +29,7 @@ namespace Systems.Damage
     {
         public static Dictionary<BodyPartType, float> Rate = new()
         {
-            { BodyPartType.Legs, 111.15f },
+            { BodyPartType.Legs, 0.15f },
             { BodyPartType.Arms, 0.13f },
             { BodyPartType.Head, 0.08f },
             { BodyPartType.Torso, 0.64f },
