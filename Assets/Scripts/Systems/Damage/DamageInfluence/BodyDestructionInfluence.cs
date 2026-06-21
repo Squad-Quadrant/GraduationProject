@@ -81,7 +81,7 @@ namespace Systems.Damage
             Context.DamageModifier = hitPart.DamageMultiplier;
             Context.bodyPartType = hitPart.PartType;
 
-            if (hitPart.HasArmor)
+            if (hitPart.HasArmor && Context.Defender.CurrentDefense > 0)
             {
                 Context.DefenseDamageModifier = hitPart.DamageMultiplier;
             }
