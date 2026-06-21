@@ -63,13 +63,21 @@ namespace Systems.Damage
 
             float defenceMultiplier = 1 - Defender.defenseRate;
             
-            if (Context.DefenceDamage > Defender.maxDefense && Context.UseDefense)
+            if (Context.UseDefense)
             {
-                Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * defenceMultiplier + (Context.DefenceDamage - Defender.CurrentDefense));
+                if (Context.DefenceDamage > Defender.maxDefense)
+                {
+                    Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * defenceMultiplier +
+                                                       (Context.DefenceDamage - Defender.CurrentDefense));
+                }
+                else
+                {
+                    Context.Damage += Mathf.FloorToInt(damage * theWeapon.PenetrationRate() * defenceMultiplier);
+                }
             }
             else
             {
-                Context.Damage += Mathf.FloorToInt(damage);
+                Context.Damage = Mathf.FloorToInt(damage);
             }
         }
 
