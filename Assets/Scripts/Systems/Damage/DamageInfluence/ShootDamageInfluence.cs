@@ -77,7 +77,7 @@ namespace Systems.Damage
             }
             else
             {
-                Context.Damage = Mathf.FloorToInt(damage);
+                Context.Damage += Mathf.FloorToInt(damage);
             }
         }
 
