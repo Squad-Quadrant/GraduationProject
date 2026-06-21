@@ -29,10 +29,10 @@ namespace Systems.Damage
     {
         public static Dictionary<BodyPartType, float> Rate = new()
         {
-            { BodyPartType.Legs, 0.2f },
-            { BodyPartType.Arms, 0.2f },
-            { BodyPartType.Head, 0.1f },
-            { BodyPartType.Torso, 0.5f },
+            { BodyPartType.Legs, 0.15f },
+            { BodyPartType.Arms, 0.13f },
+            { BodyPartType.Head, 0.08f },
+            { BodyPartType.Torso, 0.64f },
         };
 
         public static Dictionary<BodyPartType, float> PreciseRate = new()

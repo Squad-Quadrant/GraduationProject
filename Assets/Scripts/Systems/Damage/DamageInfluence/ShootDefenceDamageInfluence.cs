@@ -16,6 +16,8 @@ namespace Systems.Damage
 
         public override void Execute()
         {
+            if (Context.bodyPartType != BodyPartType.Head && Context.bodyPartType != BodyPartType.Torso)
+                return;
             var theWeapon = (WeaponLogic)Owner;
             int defenceDamage = Mathf.FloorToInt(theWeapon.GetDamage() * (1 - Defender.defenseRate) * (1 - theWeapon.PenetrationRate())); 
             
