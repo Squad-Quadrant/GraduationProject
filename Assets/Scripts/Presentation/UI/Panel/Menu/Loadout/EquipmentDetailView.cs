@@ -57,9 +57,18 @@ namespace Presentation.UI.Panel.Menu.Loadout
 			switch (config)
 			{
 				case WeaponConfig weaponConfig:
-					detailLine1.text = $"伤害：　　{weaponConfig.damage}";
-					detailLine2.text = $"弹容量：　{weaponConfig.ammoCapacity}发";
-					detailLine3.text = $"射速：　　{weaponConfig.shootSpeed}发/AP";
+					if (weaponConfig.weaponType == WeaponType.Grapeshot)
+					{
+						detailLine1.text = $"伤害：　　{weaponConfig.damage}*{weaponConfig.shootSpeed}";
+						detailLine2.text = $"弹容量：　{weaponConfig.ammoCapacity/weaponConfig.shootSpeed}发";
+						detailLine3.text = $"射速：　　1发/AP";
+					}
+					else
+					{
+						detailLine1.text = $"伤害：　　{weaponConfig.damage}";
+						detailLine2.text = $"弹容量：　{weaponConfig.ammoCapacity}发";
+						detailLine3.text = $"射速：　　{weaponConfig.shootSpeed}发/AP";
+					}
 					detailLine4.text = $"穿透率：　{weaponConfig.penetrationRate:P1}";
 					break;
 				case TacticalItemConfig tacticalItemConfig:
