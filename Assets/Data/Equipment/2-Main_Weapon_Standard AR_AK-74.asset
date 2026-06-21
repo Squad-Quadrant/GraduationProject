@@ -21,13 +21,14 @@ MonoBehaviour:
   gripType: 0
   damage: 30
   mentalDamage: 0
+  weaponType: 0
   ammoCapacity: 30
   shotRanges:
   - min: 0
     hitRate: 0.85
-  - min: 5
+  - min: 6
     hitRate: 0.8
-  - min: 10
+  - min: 11
     hitRate: 0.75
   damageAttenuation:
     perGrid: 4
