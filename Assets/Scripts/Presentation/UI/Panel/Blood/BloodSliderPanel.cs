@@ -39,6 +39,9 @@ namespace Presentation.UI.Panel.Blood
         {
 	        EventBus.Unsubscribe<UnitCreatedEvent>(OnUnitCreated);
 	        EventBus.Unsubscribe<UnitDestroyedEvent>(OnUnitDestroyed);
+
+	        foreach (var slider in _bloodSliders.Values) Destroy(slider.gameObject);
+	        _bloodSliders.Clear();
         }
         
         private void OnUnitCreated(UnitCreatedEvent e)
