@@ -151,7 +151,8 @@ namespace Systems.Turn
 				_data.IsUnitActing = true; // 找到了一个可行动的单位，开始它的回合
 				next.OnTurnStart();
 
-				this.Log($"Unit '{next.Id}' turn started (Speed:{next.Speed})", true);
+				this.Log($"Unit '{next.Id}' turn started (Speed:{next.Speed})");
+				this.Log($"单位 '{next.Id}' 回合开始", true);
 
 				_eventBus.Publish(new TurnOrderChangedEvent(TurnOrderChangeReason.UnitAdvanced, next.Id));
 

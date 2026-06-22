@@ -36,8 +36,8 @@ namespace Presentation.UI.Panel.BattleFlow
 		private Sprite loseDescSprite;
 
 		[Title("Buttons")]
-		[SerializeField, Required, ChildGameObjectsOnly]
-		private Button restartButton;
+		// [SerializeField, ChildGameObjectsOnly]
+		// private Button restartButton;
 
 		[SerializeField, Required, ChildGameObjectsOnly]
 		private Button returnToMenuButton;
@@ -47,13 +47,13 @@ namespace Presentation.UI.Panel.BattleFlow
 			resultImage.sprite = data.IsVictory ? winSprite : loseSprite;
 			descImage.sprite = data.IsVictory ? winDescSprite : loseDescSprite;
 
-			restartButton.onClick.AddListener(() => data.OnRestart?.Invoke());
+			// restartButton.onClick.AddListener(() => data.OnRestart?.Invoke());
 			returnToMenuButton.onClick.AddListener(() => data.OnReturnToMenu?.Invoke());
 		}
 
 		protected override void OnClose()
 		{
-			restartButton.onClick.RemoveAllListeners();
+			// restartButton.onClick.RemoveAllListeners();
 			returnToMenuButton.onClick.RemoveAllListeners();
 		}
 	}
