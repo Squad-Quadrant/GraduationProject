@@ -65,7 +65,7 @@ namespace Presentation.Map
 
 		private void OnDisable()
 		{
-			if (!LevelContainer.Instance) return;
+			if (!RootContainer.Instance) return;
 			EventBus.Unsubscribe<MapViewInitEvent>(InitMap);
 			EventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
 			EventBus.Unsubscribe<TargetingEvent>(OnTargeting);
