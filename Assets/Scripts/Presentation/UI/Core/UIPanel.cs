@@ -129,6 +129,9 @@ namespace Presentation.UI.Core
 
 		protected virtual void OnDestroy()
 		{
+			if (IsOpen && RootContainer.Instance)
+				OnClose();
+
 			_animation?.CompleteImmediately();
 			this.Log($"Destroyed: {Config.PanelId}");
 		}
