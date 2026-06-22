@@ -136,6 +136,12 @@ namespace Presentation.Unit
 		[TitleGroup("Defaults")]
 		[SerializeField] private EGripType defaultGrip = EGripType.Default;
 
+		[TitleGroup("Defaults"), LabelText("Stance无关动作")]
+		[SerializeField] private List<string> stanceAgnosticActions = new() { "shoot", "reload" };
+		private HashSet<string> _agnostic;
+		private bool IsStanceAgnostic(string a) =>
+			(_agnostic ??= new HashSet<string>(stanceAgnosticActions)).Contains(a);
+
 		[TitleGroup("Fidget")]
 		[SerializeField, MinMaxSlider(1f, 30f, ShowFields = true)]
 		private Vector2 fidgetInterval = new(5f, 12f);
@@ -278,26 +284,19 @@ namespace Presentation.Unit
 		// 如果有多个相同状态相同名字的，会随机返回一个
 		public AnimationResult GetAnimation(string action, EUnitStance stance, EGripType grip, string weaponKey)
 		{
-			if (!string.IsNullOrEmpty(weaponKey))
-			{
-				var r = MatchAnimation(action, stance, grip, weaponKey);
-				if (r.IsValid) return r;
-			}
+			if (IsStanceAgnostic(action)) stance = defaultStance;
 
-			var result = MatchAnimation(action, stance, grip, null);
+			var result = MatchAnimation(action, stance, grip, weaponKey);
 			if (result.IsValid) return result;
 
-			if (grip != defaultGrip)
-			{
-				result = MatchAnimation(action, stance, defaultGrip, null);
-				if (result.IsValid) return result;
-			}
+			result = MatchAnimation(action, stance, grip, null);
+			if (result.IsValid) return result;
 
-			if (stance != defaultStance || grip != defaultGrip)
-			{
-				result = MatchAnimation(action, defaultStance, defaultGrip, null);
-				if (result.IsValid) return result;
-			}
+			result = MatchAnimation(action, stance, defaultGrip, null);
+			if (result.IsValid) return result;
+
+			result = MatchAnimation(action, defaultStance, defaultGrip, null);
+			if (result.IsValid) return result;
 
 			return AnimationResult.Empty;
 		}
