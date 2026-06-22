@@ -90,6 +90,11 @@ namespace Presentation.UI.Panel.Blood
 
         private void Refresh()
         {
+	        if (!canvasGroup ||
+	            !bloodSliderImage || !bloodSliderImage1 || !bloodSliderImage2 ||
+	            !defenseSliderImage || !defenseSliderImage1 || !defenseSliderImage2 ||
+	            !fullHide || !transform)
+		        return;
             canvasGroup.alpha = _unitView.GetVisible() ? 1 : 0;
             
             bool defenseSliderOn = _owner.maxDefense > 0;
