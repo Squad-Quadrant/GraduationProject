@@ -37,6 +37,10 @@ namespace Presentation.UI.Panel.ActionMenu
 		[Title("Dynamic Slot Display")]
 		[SerializeField] private TextMeshProUGUI usesText;
 
+		[Title("Disable Dimming")]
+		[SerializeField, Required] private CanvasGroup canvasGroup;
+		[SerializeField, Range(0f, 1f)] private float disabledAlpha = 0.5f;
+
 		[Title("Audio")]
 		[SerializeField] private UIButtonSfx sfx;
 
@@ -45,14 +49,23 @@ namespace Presentation.UI.Panel.ActionMenu
         public EActionType ActionType => actionType;
         public int Payload => payload;
 
+        private bool _isHovered;
+
         public bool Interactable
         {
-            get => button.interactable;
-            set => button.interactable = value;
+	        get => button.interactable;
+	        set
+	        {
+		        button.interactable = value;
+		        if (!value) _isHovered = false;
+		        RefreshVisuals();
+	        }
         }
 
-		public Action<string> OnHoverEnter;
+        public Action<string> OnHoverEnter;
 		public Action<string> OnHoverExit;
+
+		private void OnEnable() => RefreshVisuals();
 
 		public void SetContent(Sprite iconSprite, string desc, int? remainingUses)
 		{
@@ -70,20 +83,34 @@ namespace Presentation.UI.Panel.ActionMenu
 				iconAspectRatio.aspectRatio = icon.sprite.rect.width / icon.sprite.rect.height;
 		}
 
+		private void RefreshVisuals()
+		{
+			bool interactable = button.interactable;
+			canvasGroup.alpha = interactable ? 1f : disabledAlpha;
+
+			bool showHover = interactable && _isHovered;
+			button.image.sprite = showHover ? hoverSprite : normalSprite;
+
+			Color c = showHover ? hoverColor : normalColor;
+			icon.color = c;
+			if (usesText) usesText.color = c;
+		}
+
+
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			button.image.sprite = button.interactable ? hoverSprite : normalSprite;
-			icon.color = button.interactable ? hoverColor : normalColor;
-			if (usesText.isActiveAndEnabled) usesText.color = button.interactable ? hoverColor : normalColor;
 			OnHoverEnter?.Invoke(Description);
+			if (!button.interactable) return;
+			_isHovered = true;
+			RefreshVisuals();
 		}
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			button.image.sprite = normalSprite;
-			icon.color = normalColor;
-			if (usesText.isActiveAndEnabled) usesText.color = normalColor;
-			OnHoverExit?.Invoke(description);
+			OnHoverExit?.Invoke(Description);
+			if (!_isHovered) return;
+			_isHovered = false;
+			RefreshVisuals();
 		}
 
         public void SetActive(bool enable) => gameObject.SetActive(enable);

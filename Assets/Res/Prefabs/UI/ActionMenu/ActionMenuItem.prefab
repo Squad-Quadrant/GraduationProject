@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 2010246498418104544}
   - component: {fileID: 1470281411949280586}
   - component: {fileID: -1508960169985553338}
+  - component: {fileID: 6336686473835121169}
   m_Layer: 5
   m_Name: ActionMenuItem
   m_TagString: Untagged
@@ -360,13 +361,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.29803923}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -408,6 +409,8 @@ MonoBehaviour:
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   hoverColor: {r: 0, g: 0, b: 0, a: 1}
   usesText: {fileID: 8921453414546456519}
+  canvasGroup: {fileID: 6336686473835121169}
+  disabledAlpha: 0.3
   sfx: {fileID: -1508960169985553338}
 --- !u!114 &1470281411949280586
 MonoBehaviour:
@@ -443,3 +446,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onClickSfx: 1
   onHoverSfx: 3
+--- !u!225 &6336686473835121169
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8507568210659486334}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

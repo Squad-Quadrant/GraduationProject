@@ -10,18 +10,23 @@ using Systems.Unit.Equipment;
 using Systems.Unit.Equipment.Logic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Presentation.UI.Panel.ActionMenu
 {
     public class ActionMenuPanel : UIPanel, IInitializable<Systems.Unit.Unit>
     {
-	    [SerializeField, Required, ChildGameObjectsOnly] private GameObject actionDescPanel;
+	    [SerializeField, Required, ChildGameObjectsOnly] private Image actionDescPanel;
         [SerializeField, Required, ChildGameObjectsOnly] private TextMeshProUGUI actionDesc;
         [SerializeField, Required, ChildGameObjectsOnly] private Transform itemsParent;
 
         [SerializeField] private string playerLockedMessage = "行动选择";
         [SerializeField] private string allyLockedMessage = "未到该单位的回合，无法操作";
         [SerializeField] private string enemyLockedMessage = "敌方单位，无法操作";
+
+        [SerializeField] private Color normalColor;
+        [SerializeField] private Color disabledColor;
+        [SerializeField] private Color lockedColor;
 
         private List<ActionMenuItem> _items;
 
@@ -42,10 +47,11 @@ namespace Presentation.UI.Panel.ActionMenu
 		        item.Button.onClick.RemoveAllListeners();
 		        item.OnHoverEnter = null;
 		        item.OnHoverExit = null;
-		        item.Button.interactable = false;
+		        item.Interactable = false;
 		        item.SetAudioEnabled(false);
 	        }
 	        SetActionDesc(unit.faction == EUnitFaction.Player ? allyLockedMessage : enemyLockedMessage);
+	        SetActionDescColor(lockedColor);
         }
 
         public void ShowActions(Systems.Unit.Unit unit)
@@ -61,10 +67,16 @@ namespace Presentation.UI.Panel.ActionMenu
 		        {
 			        if (item.Interactable)
 				        EventBus.Publish(new ActionHoverEvent(item.ActionType, item.Payload, true));
+
+			        SetActionDescColor(item.Interactable ? normalColor : disabledColor);
 		        };
 
-		        item.OnHoverExit += _ => SetActionDesc(playerLockedMessage);
-		        item.OnHoverExit  += _ => EventBus.Publish(new ActionHoverEvent(item.ActionType, item.Payload, false));
+		        item.OnHoverExit += _ =>
+		        {
+			        SetActionDesc(playerLockedMessage);
+			        SetActionDescColor(normalColor);
+			        EventBus.Publish(new ActionHoverEvent(item.ActionType, item.Payload, false));
+		        };
 
 		        item.SetActive(false);
 		        item.SetAudioEnabled(true);
@@ -100,8 +112,14 @@ namespace Presentation.UI.Panel.ActionMenu
 
         private void SetActionDesc(string desc)
         {
-	        actionDescPanel.SetActive(!string.IsNullOrEmpty(desc));
+	        actionDescPanel.gameObject.SetActive(!string.IsNullOrEmpty(desc));
 	        actionDesc.text = desc;
+        }
+
+        private void SetActionDescColor(Color color)
+        {
+	        actionDescPanel.color = color;
+	        actionDesc.color = new Color(actionDesc.color.r, actionDesc.color.g, actionDesc.color.b, color.a);
         }
 
         private static void SetContent(ActionMenuItem item, Systems.Unit.Unit unit, ActionAbility action)

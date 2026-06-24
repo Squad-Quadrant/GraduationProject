@@ -73,12 +73,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1215ab1af3471db9e80f20cfb75bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionDescPanel: {fileID: 2015807141457314198}
+  actionDescPanel: {fileID: 2170110682118185847}
   actionDesc: {fileID: 1281431697676504866}
   itemsParent: {fileID: 8966414411069773189}
   playerLockedMessage: "\u884C\u52A8\u9009\u62E9"
   allyLockedMessage: "\u672A\u5230\u8BE5\u5355\u4F4D\u7684\u56DE\u5408\uFF0C\u65E0\u6CD5\u64CD\u4F5C"
   enemyLockedMessage: "\u654C\u65B9\u5355\u4F4D\uFF0C\u65E0\u6CD5\u64CD\u4F5C"
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 1, g: 1, b: 1, a: 0.5882353}
+  lockedColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &-6662409225614640804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +438,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8966414411069773189}
     m_Modifications:
+    - target: {fileID: 111364763168708277, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 111364763168708277, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 111364763168708277, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 539045832488201620, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -461,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 539045832488201620, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 61
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 539045832488201620, guid: e86c664348ccfb940a5ab0afa7d19561, type: 3}
       propertyPath: m_SizeDelta.y
