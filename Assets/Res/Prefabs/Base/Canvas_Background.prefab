@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rawImage: {fileID: 1020253938272058427}
   canvas: {fileID: 2882110784451496283}
-  deadZoneRadius: 0.3
-  maxOffset: 0.05
-  invert: 0
-  smoothTime: 0.3
+  deadZoneRadius: 0
+  maxOffset: 0.2
+  invert: 1
+  smoothTime: 0.5

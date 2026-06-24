@@ -41,16 +41,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChromaShift: 0.0005
+    - _ChromaShift: 0.00035
     - _EnableExternalAlpha: 0
-    - _FlickerIntensity: 0.03
-    - _RollIntensity: 0.15
-    - _RollSharpness: 16
-    - _RollSpeed: 0.3
-    - _ScanlineDarkResponse: 0.3
-    - _ScanlineDensity: 300
+    - _FlickerIntensity: 0.0455
+    - _RollIntensity: 0.234
+    - _RollSharpness: 25.6
+    - _RollSpeed: 0.5
+    - _ScanlineDarkResponse: 0.489
+    - _ScanlineDensity: 85.6
     - _ScanlineHard: 0
-    - _ScanlineIntensity: 0.4
+    - _ScanlineIntensity: 0.229
     - _VignetteIntensity: 0.513
     - _VignettePower: 3.71
     m_Colors:
