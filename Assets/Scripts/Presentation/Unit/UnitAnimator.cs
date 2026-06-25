@@ -158,8 +158,6 @@ namespace Presentation.Unit
 
 		private void PlayInternal(string animName, bool loop, Action onComplete = null)
 		{
-			this.Log($"[anim] f{Time.frameCount} Play '{animName}', onComplete: {onComplete != null}, loop: {loop} ");
-
 			ClearPendingCallback();
 			ClearPendingCallbackEvent();
 

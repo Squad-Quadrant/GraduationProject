@@ -93,6 +93,7 @@ namespace Systems.Interaction.States
                         Context.AudioService
                     );
                     Context.CommandQueue.EnqueueAndExecute(reloadCommand);
+                    Context.StateMachine.ChangeState<ExecutingState>();
                     break;
 
                 case EActionType.SwitchWeapon:
@@ -102,6 +103,7 @@ namespace Systems.Interaction.States
                         Context.EventBus
                     );
                     Context.CommandQueue.EnqueueAndExecute(switchWeaponCommand);
+                    Context.StateMachine.ChangeState<ExecutingState>();
                     break;
 
 				case EActionType.Interact:
