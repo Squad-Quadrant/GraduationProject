@@ -212,12 +212,6 @@ namespace Presentation.CameraControl
 			this.Log($"Focusing on {worldPos}");
 		}
 
-		public void FocusOnCell(Vector2Int cellPos)
-		{
-			var worldPos = _coordinateConverter.CellToWorld(cellPos);
-			FocusOn(worldPos);
-		}
-
 		public void FocusOnCellSequence(IReadOnlyList<Vector2Int> cellPositions)
 		{
 			if (cellPositions == null || cellPositions.Count == 0)

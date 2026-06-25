@@ -158,7 +158,6 @@ namespace Systems.BattleFlow
 					turnUnit.CellPosition)),
 				() => OnAfterUnitTransition(turnUnit),
 				cmd => cmd
-					.Expect(EPresentationCategory.Camera, PresentationType.Camera.Focus)
 					.Expect(EPresentationCategory.UI, PresentationType.UI.UnitTransition)
 			);
 
