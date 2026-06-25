@@ -25,10 +25,10 @@ MonoBehaviour:
   backBodySkin: ru1 back
   maxHp: 100
   speed: 80
-  moveRange: 3
+  moveRange: 4
   maxMovementAp: 2
   actionPoints: 3
-  visionRange: 5
+  visionRange: 6
   faction: 1
   defense: 135
   defenseRate: 0.3

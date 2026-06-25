@@ -25,7 +25,7 @@ MonoBehaviour:
   backBodySkin: pcb1 back
   maxHp: 100
   speed: 120
-  moveRange: 7
+  moveRange: 4
   maxMovementAp: 2
   actionPoints: 3
   visionRange: 6
