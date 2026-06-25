@@ -103,7 +103,7 @@ namespace Systems.Damage
             int currentPartDamage = Context.Defender.BodyPartInfo[hitPart.PartType];
             int beforePartDamage = Context.Defender.BodyPartInfo[hitPart.PartType] - Context.TotalDamage;
 
-            if (beforePartDamage < 1 && currentPartDamage >= 1)
+            if (beforePartDamage < 60 && currentPartDamage >= 60)
             {
                 switch (hitPart.PartType)
                 {
