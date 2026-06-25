@@ -386,12 +386,12 @@ namespace Presentation.Unit
             }
             view.PlayAction("reload", () =>
             {
-	            view.PlayAction("idle");
 	            _eventBus.Publish(new PresentationCompleteEvent(
                     category: EPresentationCategory.Animation,
                     type: PresentationType.Animation.Reload,
                     entityId: unit.id
                 ));
+	            view.PlayAction("idle");
             });
         }
 
