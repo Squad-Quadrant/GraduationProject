@@ -17,6 +17,7 @@ namespace Presentation.UI.Presenter
     public class CommonPanelPresenter : IDisposable
     {
         private readonly UIManager _uiManager;
+        private readonly IEventBus _eventBus;
         private readonly ICoordinateConverter  _coordinateConverter;
         private readonly IUnitService _unitService;
         private readonly UnitViewManager _unitViewManager;
@@ -34,15 +35,29 @@ namespace Presentation.UI.Presenter
 	        UnitViewManager unitViewManager)
         {
 	        _uiManager = uiManager ?? throw new ArgumentNullException(nameof(uiManager));
-            _coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
+	        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+	        _coordinateConverter = coordinateConverter ?? throw new ArgumentNullException(nameof(coordinateConverter));
             _unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             _unitViewManager =  unitViewManager ?? throw new ArgumentNullException(nameof(unitViewManager));
 
             eventBus.Subscribe<LevelLoadedEvent>(OnLevelLoaded);
             this.Log("Initialized");
         }
-        
-        public void Dispose() { }
+
+        public void Dispose()
+        {
+	        _eventBus.Unsubscribe<LevelLoadedEvent>(OnLevelLoaded);
+
+	        if (_bloodSliderPanel) _uiManager.Close(_bloodSliderPanel);
+	        if (_damageTextPanel) _uiManager.Close(_damageTextPanel);
+	        if (_gameLogger) _uiManager.Close(_gameLogger);
+	        if (_bodyPartPromptPanel) _uiManager.Close(_bodyPartPromptPanel);
+
+	        _bloodSliderPanel = null;
+	        _damageTextPanel = null;
+	        _gameLogger = null;
+	        _bodyPartPromptPanel = null;
+        }
 
         private void OnLevelLoaded(LevelLoadedEvent e)
         {

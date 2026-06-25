@@ -41,6 +41,7 @@ namespace Presentation.UI.Panel.Blood
         [SerializeField] private CanvasGroup canvasGroup;
         private ICoordinateConverter _coordinateConverter;
         private IEventBus _eventBus;
+        private Camera _camera;
         private float _originCameraSize;
 
         private float hpTarget = 1;
@@ -58,7 +59,8 @@ namespace Presentation.UI.Panel.Blood
 
         public void Init(Systems.Unit.Unit owner, ICoordinateConverter coordinateConverter, UnitView unitView, IEventBus eventBus)
         {
-            _originCameraSize = Camera.main.orthographicSize;
+	        _camera = Camera.main;
+            _originCameraSize = _camera.orthographicSize;
             _owner = owner;
             _unitView = unitView;
             _coordinateConverter = coordinateConverter;
@@ -84,8 +86,8 @@ namespace Presentation.UI.Panel.Blood
 
         private void OnDestroy()
         {
-            _eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
-            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+            _eventBus?.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            _eventBus?.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
 
         private void Refresh()
@@ -93,7 +95,8 @@ namespace Presentation.UI.Panel.Blood
 	        if (!canvasGroup ||
 	            !bloodSliderImage || !bloodSliderImage1 || !bloodSliderImage2 ||
 	            !defenseSliderImage || !defenseSliderImage1 || !defenseSliderImage2 ||
-	            !fullHide || !transform)
+	            !fullHide || !transform ||
+	            !_unitView || _owner == null || !_camera)
 		        return;
             canvasGroup.alpha = _unitView.GetVisible() ? 1 : 0;
             
