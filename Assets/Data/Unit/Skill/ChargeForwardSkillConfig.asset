@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kind: 4
   skillName: "\u51B2\u950B\u9677\u9635"
-  description: "\u6D88\u80171\u70B9AP\uFF0C\u51B7\u5374\u65F6\u95F45\u56DE\u5408\u3002\u4F7F\u81EA\u8EAB\u672C\u56DE\u5408\u4E2D\uFF0C\u79FB\u52A8\u529B+3\u683C/AP\u3002"
+  description: "\u6D88\u80171\u70B9AP\uFF0C\u51B7\u5374\u65F6\u95F43\u56DE\u5408\u3002\u4F7F\u81EA\u8EAB\u672C\u56DE\u5408\u4E2D\uFF0C\u79FB\u52A8\u529B+3\u683C/AP\u3002"
   icon: {fileID: 571752949, guid: 194f2c71bee55874bbca61bb3be255b7, type: 3}
   apCost: 1
-  cooldown: 5
+  cooldown: 3
   oneShotVfxPrefab: {fileID: 0}
   persistentUnitVfxPrefab: {fileID: 153838, guid: 8862ec797c822844a9caff161ec7eab6, type: 3}
   toAddType: 14
