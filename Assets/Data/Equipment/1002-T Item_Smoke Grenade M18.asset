@@ -13,16 +13,12 @@ MonoBehaviour:
   m_Name: 1002-T Item_Smoke Grenade M18
   m_EditorClassIdentifier: 
   id: 1002
-  nName: M18
+  displayName: M18
   type: "\u70DF\u96FE\u5F39"
   description: "\u6295\u63B7\u540E\u653E\u51FA\u5927\u91CF\u70DF\u96FE\u7684\u624B\u69B4\u5F39\uFF0C\u7528\u4E8E\u963B\u788D\u89C6\u7EBF\u3001\u63A9\u62A4\u76EE\u6807\u6216\u6807\u8BB0\u4F4D\u7F6E\u3002"
-  battleDescription: 
   icon: {fileID: -2111100431, guid: d723e6b88f967c846a38343439950a03, type: 3}
-  weight: 0
-  spineName: 
-  gripType: 1
   kind: 6
-  maxUsesPerBattle: 3
+  maxUsesPerBattle: 2
   apCost: 1
   throwRange: 6
   coverageOffsets:
@@ -53,6 +49,7 @@ MonoBehaviour:
   - {x: 1, y: 2}
   displayHealAmount: 20
   directDamage: 0
+  ApplyForPlayerFaction: 1
   appliedBuff: 3
   otherBuffs: 
   persistTurns: 2

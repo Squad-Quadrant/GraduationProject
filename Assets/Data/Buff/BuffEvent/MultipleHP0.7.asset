@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81fd00a57cb14606be2cb1ec931cf1d8, type: 3}
-  m_Name: ChangeHP10
+  m_Name: MultipleHP0.7
   m_EditorClassIdentifier: 
   priority: 0
-  changer: 10
-  multiplier: 1
+  changer: 0
+  multiplier: 0.7
   owner:
     buffData: {fileID: 0}
     durationCounter: 0

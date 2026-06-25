@@ -21,9 +21,9 @@ MonoBehaviour:
     unitConfig: {fileID: 11400000, guid: 6016853ee38d0c444add272affdca826, type: 2}
     startPosition: {x: 1, y: 2}
     initialLoadout:
-      mainWeaponId: 1
-      secondaryWeaponId: 101
-      tacticalItemIds: e9030000ea030000eb030000
+      mainWeaponId: 8
+      secondaryWeaponId: 103
+      tacticalItemIds: e9030000ea030000f1030000
     patrolWaypoints: []
     activationGroupId: 0
   - unitId: 002
@@ -32,16 +32,16 @@ MonoBehaviour:
     initialLoadout:
       mainWeaponId: 1
       secondaryWeaponId: 101
-      tacticalItemIds: e9030000ea030000eb030000
+      tacticalItemIds: ec030000eb030000f2030000
     patrolWaypoints: []
     activationGroupId: 0
   - unitId: 003
     unitConfig: {fileID: 11400000, guid: 3a567b98cf519e44fa8d4ad213860ca5, type: 2}
     startPosition: {x: 3, y: 2}
     initialLoadout:
-      mainWeaponId: 1
-      secondaryWeaponId: 101
-      tacticalItemIds: e9030000ea030000eb030000
+      mainWeaponId: 7
+      secondaryWeaponId: 104
+      tacticalItemIds: f0030000ea030000ef030000
     patrolWaypoints: []
     activationGroupId: 0
   - unitId: 1001
@@ -114,7 +114,7 @@ MonoBehaviour:
       secondaryWeaponId: 102
       tacticalItemIds: 000000000000000000000000
     patrolWaypoints: []
-    activationGroupId: 0
+    activationGroupId: 3
   - unitId: 4001
     unitConfig: {fileID: 11400000, guid: 8f56f230d7dcfa24ba7ee06a4a515cfd, type: 2}
     startPosition: {x: 12, y: 2}
@@ -126,7 +126,7 @@ MonoBehaviour:
     - {x: 11, y: 3}
     - {x: 13, y: 3}
     - {x: 12, y: 2}
-    activationGroupId: 0
+    activationGroupId: 3
   battleBgm: {fileID: 8300000, guid: 0825044c2d6047b4ba348c6dfd36e380, type: 3}
   bgmFadeIn: 1
   openingDialogue: {fileID: 11400000, guid: 645927391ae7e0945b38d5c7985267fb, type: 2}

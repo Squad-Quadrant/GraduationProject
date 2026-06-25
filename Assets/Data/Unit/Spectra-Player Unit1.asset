@@ -25,10 +25,10 @@ MonoBehaviour:
   backBodySkin: spectra back
   maxHp: 100
   speed: 110
-  moveRange: 6
+  moveRange: 4
   maxMovementAp: 2
   actionPoints: 3
-  visionRange: 8
+  visionRange: 7
   faction: 0
   defense: 75
   defenseRate: 0
