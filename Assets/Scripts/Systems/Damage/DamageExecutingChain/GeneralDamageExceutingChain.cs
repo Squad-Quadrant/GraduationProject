@@ -58,7 +58,7 @@ namespace Systems.Damage
             {
                 if(context.isMiss)
                 {
-                    this.Log($"Attack missed! Defender ID:{context.Defender.id}", true);
+                    this.Log($"目标:{context.Defender.id} - 攻击未命中！", true);
                 }
                 else
                 {
