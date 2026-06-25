@@ -43,7 +43,12 @@ namespace Presentation.UI.Presenter
 		{
 			_eventBus.Unsubscribe<TargetingEvent>(OnTargeting);
 			_eventBus.Unsubscribe<PointerHoverEvent>(OnPointerHover);
-			_panel =  null;
+
+			if (_panel)
+			{
+				_uiManager.Close(_panel);
+				_panel =  null;
+			}
 		}
 
 		private void OnTargeting(TargetingEvent e)

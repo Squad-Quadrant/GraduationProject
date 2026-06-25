@@ -24,6 +24,8 @@ namespace Presentation.UI.Presenter
 
 		private Tween _delayTween;
 
+		private BattleOverPanel _panel;
+
 		public BattleOverPresenter(
 			UIManager uiManager,
 			IEventBus eventBus,
@@ -47,6 +49,12 @@ namespace Presentation.UI.Presenter
 		{
 			_eventBus.Unsubscribe<BattleOverEvent>(OnBattleOver);
 			_delayTween?.Kill();
+
+			if (_panel)
+			{
+				_uiManager.Close<BattleOverPanel>();
+				_panel = null;
+			}
 			this.Log("Disposed");
 		}
 
@@ -71,7 +79,7 @@ namespace Presentation.UI.Presenter
 
 		private void ShowPanel(bool isVictory)
 		{
-			_uiManager.Open<BattleOverPanel, BattleOverPanelData>(new BattleOverPanelData
+			_panel = _uiManager.Open<BattleOverPanel, BattleOverPanelData>(new BattleOverPanelData
 			{
 				IsVictory = isVictory,
 				OnRestart = _gameFlowController.RestartCurrentLevel,

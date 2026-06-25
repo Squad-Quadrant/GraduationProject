@@ -25,7 +25,16 @@ namespace Presentation.UI.Presenter
 			this.Log("Initialized");
 		}
 
-		public void Dispose() => _eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
+		public void Dispose()
+		{
+			_eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
+
+			if (_attackPreviewPanel)
+			{
+				_uiManager.Close<AttackPreviewPanel>();
+				_attackPreviewPanel = null;
+			}
+		}
 
 		private void OnStateChanged(StateChangedEvent<InteractionContext> e)
 		{

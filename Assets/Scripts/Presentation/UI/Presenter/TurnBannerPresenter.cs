@@ -33,6 +33,12 @@ namespace Presentation.UI.Presenter
 	        _eventBus.Unsubscribe<TurnStartedEvent>(OnTurnStarted);
 	        _eventBus.Unsubscribe<UnitTurnStartedEvent>(OnUnitTurnStarted);
 	        _eventBus.Unsubscribe<TurnEndedEvent>(OnTurnEnded);
+
+	        if (_bannerPanel)
+	        {
+		        _uiManager.Close(_bannerPanel);
+		        _bannerPanel = null;
+	        }
         }
 
         private void OnTurnStarted(TurnStartedEvent e)

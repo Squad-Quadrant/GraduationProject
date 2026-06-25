@@ -46,6 +46,12 @@ namespace Presentation.UI.Presenter
 		{
 			EventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 			EventBus.Unsubscribe<EscInputEvent>(OnEscInput);
+
+			if (_battleSettingPanel)
+			{
+				UIManager.Close<BattleSettingPanel>();
+				_battleSettingPanel = null;
+			}
 		}
 
 		private void OnStateChanged(StateChangedEvent<InteractionContext> e)

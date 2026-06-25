@@ -30,7 +30,22 @@ namespace Presentation.UI.Presenter
 			this.Log("Initialized");
 		}
 
-		public void Dispose() => _eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
+		public void Dispose()
+		{
+			_eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
+
+			if (_tacticalItemPanel)
+			{
+				_uiManager.Close<TacticalItemMenuPanel>();
+				_tacticalItemPanel = null;
+			}
+
+			if (_skillPanel)
+			{
+				_uiManager.Close<SkillMenuPanel>();
+				_skillPanel = null;
+			}
+		}
 
 		private void OnStateChanged(StateChangedEvent<InteractionContext> e)
 		{

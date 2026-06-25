@@ -33,7 +33,12 @@ namespace Presentation.UI.Presenter
 			_eventBus.Unsubscribe<UnitSelectedEvent>(OnUnitSelected);
 			_eventBus.Unsubscribe<UnitDeselectedEvent>(OnUnitDeselected);
 			_eventBus.Unsubscribe<UnitInspectedEvent>(OnUnitInspected);
-			_panel = null;
+
+			if (_panel)
+			{
+				_uiManager.Close(_panel);
+				_panel = null;
+			}
 		}
 
 		private void OnUnitSelected(UnitSelectedEvent e) => ShowUnit(e.UnitId);

@@ -34,6 +34,12 @@ namespace Presentation.UI.Presenter
 		{
 			_eventBus.Unsubscribe<StateChangedEvent<InteractionContext>>(OnStateChanged);
 			// _eventBus.Unsubscribe<UnitInspectedEvent>(OnUnitInspected);
+
+			if (_panel)
+			{
+				_uiManager.Close<ActionMenuPanel>();
+				_panel = null;
+			}
 		}
 
         private void OnStateChanged(StateChangedEvent<InteractionContext> e)
