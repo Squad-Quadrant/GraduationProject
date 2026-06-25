@@ -47,6 +47,9 @@ namespace Presentation.UI.Panel.Menu.Loadout
 		[SerializeField, AssetsOnly] private GameObject apPrefab;
 		[SerializeField, ChildGameObjectsOnly] private Button leftButton;
 		[SerializeField, ChildGameObjectsOnly] private Button rightButton;
+		[SerializeField, ChildGameObjectsOnly] private GameObject skillRoot;
+		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI skillNameText;
+		[SerializeField, ChildGameObjectsOnly] private TextMeshProUGUI skillDescText;
 
 		[Title("装备槽")]
 		[SerializeField, Required, ChildGameObjectsOnly] private EquipmentSlotView mainWeaponSlot;
@@ -218,6 +221,19 @@ namespace Presentation.UI.Panel.Menu.Loadout
 				Destroy(apRoot.GetChild(i).gameObject);
 			for (int i = 0; i < unit.actionPoints; i++)
 				Instantiate(apPrefab, apRoot);
+
+			if (unit.skillConfig)
+			{
+				skillRoot.SetActive(true);
+				if (skillNameText) skillNameText.text = unit.skillConfig.skillName;
+				if (skillDescText) skillDescText.text = unit.skillConfig.description;
+			}
+			else
+			{
+				skillRoot.SetActive(false);
+				if (skillNameText) skillNameText.text = "";
+				if (skillDescText) skillDescText.text = "";
+			}
 		}
 
 		private void RefreshStatSliders(UnitConfig unit)
