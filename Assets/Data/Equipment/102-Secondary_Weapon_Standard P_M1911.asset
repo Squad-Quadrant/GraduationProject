@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 2077321407, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_m1911
   gripType: 1
-  damage: 23
+  damage: 25
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 8
@@ -27,7 +27,7 @@ MonoBehaviour:
   - min: 0
     hitRate: 0.8
   - min: 4
-    hitRate: 0.65
+    hitRate: 0.7
   - min: 8
     hitRate: 0.45
   damageAttenuation:

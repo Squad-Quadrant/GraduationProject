@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 1913119533, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_glock
   gripType: 1
-  damage: 20
+  damage: 23
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 15
@@ -27,7 +27,7 @@ MonoBehaviour:
   - min: 0
     hitRate: 0.85
   - min: 4
-    hitRate: 0.65
+    hitRate: 0.7
   - min: 8
     hitRate: 0.45
   damageAttenuation:

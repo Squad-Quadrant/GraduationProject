@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 1011357527, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_ar10
   gripType: 0
-  damage: 38
+  damage: 36
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 20
@@ -33,7 +33,7 @@ MonoBehaviour:
   damageAttenuation:
     perGrid: 4
     multiplier: 0.85
-  penetrationRate: 0.7
+  penetrationRate: 0.8
   shootSpeed: 4
   canPreciseShoot: 1
   preciseShootSpeed: 2

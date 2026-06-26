@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 7
   displayName: M16 SPR
-  type: "\u7A7F\u7532\u7279\u5316\u7A81\u51FB\u6B65\u67AA"
-  description: "\u5B89\u88C5\u6709\u7784\u51C6\u955C\u4E0E\u957F\u6D88\u97F3\u5668\u7684\u6539\u88C5\u578BM16A1\u6B65\u67AA\uFF0C\u901A\u5E38\u7528\u4E8E\u6267\u884C\u4E2D\u8DDD\u79BB\u7684\u7CBE\u786E\u5C04\u51FB\u4EFB\u52A1\uFF0C\u540C\u65F6\u914D\u5907\u4E86\u7279\u79CD\u7528\u7A7F\u7532\u5F39\u3002"
+  type: "\u7CBE\u51C6\u5C04\u624B\u6B65\u67AA"
+  description: "\u5B89\u88C5\u6709\u7784\u51C6\u955C\u4E0E\u957F\u6D88\u97F3\u5668\u7684\u6539\u88C5\u578BM16A1\u6B65\u67AA\uFF0C\u901A\u5E38\u7528\u4E8E\u6267\u884C\u4E2D\u8DDD\u79BB\u7684\u7CBE\u786E\u5C04\u51FB\u4EFB\u52A1\u3002"
   icon: {fileID: -290963117, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_a1spr
   gripType: 0
-  damage: 25
+  damage: 28
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 25
@@ -35,12 +35,12 @@ MonoBehaviour:
   damageAttenuation:
     perGrid: 5
     multiplier: 0.95
-  penetrationRate: 0.95
-  shootSpeed: 4
+  penetrationRate: 0.75
+  shootSpeed: 3
   canPreciseShoot: 1
-  preciseShootSpeed: 2
-  preciseShootHitRateBonus: 0.25
-  weightSpeed: 25
+  preciseShootSpeed: 1
+  preciseShootHitRateBonus: 0.3
+  weightSpeed: 20
   weightMoveRange: 1
   animKey: m16spr
   fireClip: {fileID: 8300000, guid: 65971a7b2fd9f17448b951f9a7d57976, type: 3}

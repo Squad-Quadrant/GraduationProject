@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 733355011, guid: d723e6b88f967c846a38343439950a03, type: 3}
   spineName: weapon_mk22
   gripType: 1
-  damage: 20
+  damage: 23
   mentalDamage: 0
   weaponType: 0
   ammoCapacity: 8

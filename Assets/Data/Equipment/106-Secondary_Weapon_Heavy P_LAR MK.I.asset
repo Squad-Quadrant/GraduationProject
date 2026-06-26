@@ -25,7 +25,7 @@ MonoBehaviour:
   ammoCapacity: 7
   shotRanges:
   - min: 0
-    hitRate: 0.75
+    hitRate: 0.8
   - min: 4
     hitRate: 0.6
   - min: 9
