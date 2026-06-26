@@ -19,7 +19,7 @@ MonoBehaviour:
   maxStack: 1
   tags: []
   showInUI: 1
-  durationTurn: 3
+  durationTurn: 2
   attachType: 2
   lostType: 1
   oneShotVfxPrefab: {fileID: 0}
