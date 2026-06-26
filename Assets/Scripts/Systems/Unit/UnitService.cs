@@ -30,7 +30,11 @@ namespace Systems.Unit
 			this.Log("Initialized");
 		}
 
-		public void Dispose() => this.Log("Disposed");
+		public void Dispose()
+		{
+			Clear();
+			this.Log("Disposed");
+		}
 
 		public Unit CreateUnit(
 			string unitId,

@@ -52,6 +52,8 @@ namespace Presentation.UI.Panel.Blood
         private float hpSpeed;
         private float defenseSpeed;
 
+        private bool _isInitialized = false;
+
         private void FixedUpdate()
         {
             Refresh();
@@ -79,6 +81,8 @@ namespace Presentation.UI.Panel.Blood
             buffList.Init(owner);
             
             Refresh();
+
+            _isInitialized = true;
             
             _eventBus.Subscribe<DamageAppliedEvent>(OnDamageApplied);
             _eventBus.Subscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
@@ -86,8 +90,9 @@ namespace Presentation.UI.Panel.Blood
 
         private void OnDestroy()
         {
-            _eventBus?.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
-            _eventBus?.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
+	        if (!_isInitialized) return;
+            _eventBus.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
+            _eventBus.Unsubscribe<UnitInfoChangedEvent>(OnUnitInfoChanged);
         }
 
         private void Refresh()

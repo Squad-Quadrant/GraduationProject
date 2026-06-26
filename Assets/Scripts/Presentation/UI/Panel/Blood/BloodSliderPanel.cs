@@ -23,10 +23,7 @@ namespace Presentation.UI.Panel.Blood
             _unitViewManager = unitViewManager;
 
             var allUnits = _unitService.GetAllUnits();
-            foreach (var unit in allUnits)
-            {
-                OnUnitCreated(unit);
-            }
+            foreach (var unit in allUnits) CreateUnitBloodSlider(unit);
         }
 
         protected override void OnOpen()
@@ -44,28 +41,23 @@ namespace Presentation.UI.Panel.Blood
 	        _bloodSliders.Clear();
         }
         
-        private void OnUnitCreated(UnitCreatedEvent e)
-        {
-            OnUnitCreated(e.Unit);
-        }
+        private void OnUnitCreated(UnitCreatedEvent e) => CreateUnitBloodSlider(e.Unit);
 
-        private void OnUnitCreated(Systems.Unit.Unit unit)
+        private void CreateUnitBloodSlider(Systems.Unit.Unit unit)
         {
+	        if (_bloodSliders.ContainsKey(unit)) return;
+
             var slider = Instantiate(bloodSliderPrototype, transform);
             slider.Init(unit, _coordinateConverter, _unitViewManager.GetView(unit.id), EventBus);
             _bloodSliders.Add(unit, slider);
         }
         
-        private void OnUnitDestroyed(UnitDestroyedEvent e)
-        {
-            OnUnitDestroyed(e.Unit);
-        }
+        private void OnUnitDestroyed(UnitDestroyedEvent e) => OnUnitDestroyed(e.Unit);
 
         private void OnUnitDestroyed(Systems.Unit.Unit unit)
         {
-            var slider = _bloodSliders[unit];
-            _bloodSliders.Remove(unit);
-            Destroy(slider.gameObject);
+	        if (!_bloodSliders.Remove(unit, out var slider)) return;
+	        Destroy(slider.gameObject);
         }
     }
 }
